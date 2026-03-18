@@ -26,13 +26,13 @@ const PACKAGES: Pkg[] = [
     id: 'essential', name: 'Essential', tagline: 'The perfect fresh start', duration: '2–3 hrs',
     featured: false,
     price: { hatchback: 89, suv: 109, prestige: 149 },
-    includes: ['Hand wash & hand dry', 'Wheel & tyre clean', 'Glass cleaned inside & out', 'Full interior vacuum', 'Dashboard wipe-down'],
+    includes: ['Hand wash & hand dry', 'Wheel & tyre clean', 'Glass inside & out', 'Full interior vacuum', 'Dashboard wipe-down'],
   },
   {
-    id: 'deep-clean', name: 'Deep Clean', tagline: 'A proper inside-out refresh', duration: '4–5 hrs',
+    id: 'deep-clean', name: 'Deep Clean', tagline: 'A proper inside-out reset', duration: '4–5 hrs',
     featured: false,
     price: { hatchback: 179, suv: 219, prestige: 279 },
-    includes: ['Everything in Essential', 'Interior steam clean', 'Leather conditioning', 'Carpet shampoo & extraction', 'Exterior wax & sealant', 'Engine bay wipe'],
+    includes: ['Everything in Essential', 'Interior steam clean', 'Leather conditioning', 'Carpet shampoo & extract', 'Exterior wax & sealant', 'Engine bay wipe'],
   },
   {
     id: 'premium', name: 'Premium', tagline: 'The full transformation', duration: '6–8 hrs',
@@ -61,32 +61,29 @@ export default function Packages({
     <section
       id="packages"
       style={{
-        position: 'relative',
-        background: '#F4F0E8',
-        clipPath: 'polygon(0 0, 100% 5vw, 100% 100%, 0 100%)',
-        marginTop: '-5vw',
-        paddingTop: 'clamp(72px, 13vw, 170px)',
-        paddingBottom: 'clamp(64px, 9vw, 130px)',
-        zIndex: 4,
+        background: '#fff',
+        paddingTop:    'clamp(64px, 10vw, 140px)',
+        paddingBottom: 'clamp(64px, 10vw, 140px)',
       }}
     >
-      <div style={{ maxWidth: '1380px', margin: '0 auto', padding: '0 clamp(24px, 5vw, 80px)' }}>
+      <div style={{ maxWidth: '1400px', margin: '0 auto', padding: '0 clamp(24px, 5vw, 72px)' }}>
 
-        {/* Header + vehicle selector */}
+        {/* Header row */}
         <motion.div
-          initial={{ opacity: 0, y: 22 }}
+          initial={{ opacity: 0, y: 16 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          transition={{ duration: 0.65, ease }}
+          transition={{ duration: 0.6, ease }}
           style={{
             display: 'flex', flexWrap: 'wrap', alignItems: 'flex-end',
-            justifyContent: 'space-between', gap: '32px',
+            justifyContent: 'space-between', gap: '28px',
             marginBottom: 'clamp(40px, 5vw, 64px)',
           }}
         >
+          {/* Section label + headline */}
           <div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '20px' }}>
-              <span style={{ width: 20, height: 1, background: '#E84A0C', flexShrink: 0 }} />
+            <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '18px' }}>
+              <span style={{ width: 20, height: '1.5px', background: '#E84A0C', flexShrink: 0 }} />
               <span style={{
                 fontFamily: 'var(--font-body)', fontWeight: 600, fontSize: '11px',
                 letterSpacing: '0.2em', textTransform: 'uppercase', color: 'rgba(12,12,12,0.35)',
@@ -94,46 +91,42 @@ export default function Packages({
                 Packages
               </span>
             </div>
-            <h2
-              style={{
-                fontFamily: 'var(--font-display)',
-                fontSize: 'clamp(52px, 8vw, 108px)',
-                letterSpacing: '0.025em',
-                color: '#0A0A0A', lineHeight: 0.88,
-              }}
-            >
+            <h2 style={{
+              fontFamily: 'var(--font-display)',
+              fontSize: 'clamp(52px, 7.5vw, 104px)',
+              letterSpacing: '0.025em',
+              color: '#0C0C0C', lineHeight: 0.88,
+            }}>
               PICK YOUR<br />
-              LEVEL OF{' '}
-              <span style={{ color: '#E84A0C' }}>CLEAN.</span>
+              LEVEL OF <span style={{ color: '#E84A0C' }}>CLEAN.</span>
             </h2>
           </div>
 
-          {/* Vehicle selector — sharp corners, precision feel */}
-          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: '14px' }}>
+          {/* Vehicle selector */}
+          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: '12px' }}>
             <p style={{
-              fontFamily: 'var(--font-body)', fontSize: '13px', color: 'rgba(12,12,12,0.45)',
-              textAlign: 'right', maxWidth: '240px', lineHeight: 1.6,
+              fontFamily: 'var(--font-body)', fontSize: '13px',
+              color: 'rgba(12,12,12,0.42)', textAlign: 'right', maxWidth: '220px', lineHeight: 1.6,
             }}>
-              Select your vehicle type — prices update instantly. All fixed, no extras.
+              Select your vehicle type — prices update instantly.
             </p>
             {/*
-              Vehicle tabs — sharp corners (no border-radius).
-              Automotive instruments don't have rounded corners.
+              Vehicle tabs — sharp corners, no radius.
+              Clean, precise selector like a model configurator.
             */}
             <div style={{
               display: 'inline-flex',
               border: '1px solid rgba(12,12,12,0.12)',
-              overflow: 'hidden',
             }}>
               {VEHICLES.map(({ key, label, sub }) => (
                 <button
                   key={key}
                   onClick={() => setVehicle(key)}
                   style={{
-                    padding: '12px 18px',
-                    background: vehicle === key ? '#0A0A0A' : 'transparent',
+                    padding: '11px 18px',
+                    background: vehicle === key ? '#0C0C0C' : 'transparent',
                     cursor: 'pointer', border: 'none',
-                    borderRight: key !== 'prestige' ? '1px solid rgba(12,12,12,0.1)' : 'none',
+                    borderRight: key !== 'prestige' ? '1px solid rgba(12,12,12,0.12)' : 'none',
                     transition: 'background 0.15s',
                   }}
                 >
@@ -141,14 +134,16 @@ export default function Packages({
                     display: 'block',
                     fontFamily: 'var(--font-body)', fontWeight: 600, fontSize: '12px',
                     letterSpacing: '0.04em', textTransform: 'uppercase', lineHeight: 1,
-                    color: vehicle === key ? 'white' : 'rgba(12,12,12,0.55)',
+                    color: vehicle === key ? 'white' : 'rgba(12,12,12,0.5)',
+                    transition: 'color 0.15s',
                   }}>
                     {label}
                   </span>
                   <span style={{
                     display: 'block', marginTop: '3px',
-                    fontFamily: 'var(--font-body)', fontSize: '11px', lineHeight: 1,
-                    color: vehicle === key ? 'rgba(255,255,255,0.45)' : 'rgba(12,12,12,0.3)',
+                    fontFamily: 'var(--font-body)', fontSize: '10px', lineHeight: 1,
+                    color: vehicle === key ? 'rgba(255,255,255,0.4)' : 'rgba(12,12,12,0.28)',
+                    transition: 'color 0.15s',
                   }}>
                     {sub}
                   </span>
@@ -158,14 +153,21 @@ export default function Packages({
           </div>
         </motion.div>
 
-        {/* Package cards — sharp corners, no radius, clean grid */}
+        {/*
+          Package cards grid.
+          The PRICE is the visual hero element on each card — large, confident,
+          unapologetic. This is how premium services display pricing.
+          Sharp corners throughout. No shadows on standard cards.
+          Featured card (Premium) is black — the single high-contrast card in the row.
+        */}
         <div
           style={{
             display: 'grid',
             gridTemplateColumns: 'repeat(4, 1fr)',
-            gap: '1px',
-            background: 'rgba(12,12,12,0.08)',
-            border: '1px solid rgba(12,12,12,0.08)',
+            border: '1px solid rgba(12,12,12,0.1)',
+            /* Gap via border trick — cleaner than gap with individual borders */
+            borderRight: 'none',
+            borderBottom: 'none',
           }}
           className="grid-cols-1 sm:grid-cols-2 lg:grid-cols-4"
         >
@@ -179,27 +181,28 @@ export default function Packages({
               style={{
                 position: 'relative',
                 display: 'flex', flexDirection: 'column',
-                background: pkg.featured ? '#0A0A0A' : '#F4F0E8',
-                /* Featured: lift with margin — same concept but sharper */
-                marginTop: pkg.featured ? '-16px' : '0',
-                marginBottom: pkg.featured ? '-16px' : '0',
-                zIndex: pkg.featured ? 10 : 1,
+                borderRight: '1px solid rgba(12,12,12,0.1)',
+                borderBottom: '1px solid rgba(12,12,12,0.1)',
+                background: pkg.featured ? '#0C0C0C' : '#fff',
+                /* Featured lifts slightly */
+                marginTop: pkg.featured ? '-1px' : 0,
+                zIndex: pkg.featured ? 2 : 1,
               }}
             >
-              {/* Featured: orange top accent bar */}
+              {/* Featured: 3px orange top accent */}
               {pkg.featured && (
                 <div style={{ height: '3px', background: '#E84A0C', flexShrink: 0 }} />
               )}
 
               <div style={{
                 flex: 1, display: 'flex', flexDirection: 'column',
-                padding: pkg.featured ? 'clamp(24px, 2.5vw, 36px)' : 'clamp(20px, 2vw, 28px)',
+                padding: 'clamp(24px, 2.5vw, 36px)',
               }}>
 
-                {/* Header row: most popular label + duration badge */}
+                {/* Top row: label + duration */}
                 <div style={{
                   display: 'flex', justifyContent: 'space-between',
-                  alignItems: 'flex-start', marginBottom: '16px',
+                  alignItems: 'center', marginBottom: '20px',
                 }}>
                   {pkg.featured ? (
                     <span style={{
@@ -212,7 +215,7 @@ export default function Packages({
                   <span style={{
                     fontFamily: 'var(--font-body)', fontWeight: 600, fontSize: '10px',
                     letterSpacing: '0.1em', textTransform: 'uppercase',
-                    color: pkg.featured ? 'rgba(255,255,255,0.3)' : 'rgba(12,12,12,0.3)',
+                    color: pkg.featured ? 'rgba(255,255,255,0.28)' : 'rgba(12,12,12,0.28)',
                     border: `1px solid ${pkg.featured ? 'rgba(255,255,255,0.1)' : 'rgba(12,12,12,0.1)'}`,
                     padding: '3px 8px',
                   }}>
@@ -223,65 +226,69 @@ export default function Packages({
                 {/* Package name */}
                 <h3 style={{
                   fontFamily: 'var(--font-display)',
-                  fontSize: 'clamp(26px, 2.8vw, 34px)',
+                  fontSize: 'clamp(24px, 2.5vw, 32px)',
                   letterSpacing: '0.03em',
-                  color: pkg.featured ? 'white' : '#0A0A0A',
-                  lineHeight: 0.9, marginBottom: '6px',
+                  color: pkg.featured ? 'white' : '#0C0C0C',
+                  lineHeight: 0.92, marginBottom: '4px',
                 }}>
                   {pkg.name}
                 </h3>
                 <p style={{
                   fontFamily: 'var(--font-body)', fontSize: '13px',
-                  color: pkg.featured ? 'rgba(255,255,255,0.4)' : 'rgba(12,12,12,0.4)',
-                  marginBottom: '18px',
+                  color: pkg.featured ? 'rgba(255,255,255,0.35)' : 'rgba(12,12,12,0.38)',
+                  marginBottom: '20px',
                 }}>
                   {pkg.tagline}
                 </p>
 
-                {/* Price */}
-                <div style={{ marginBottom: '20px' }}>
-                  <div style={{ display: 'flex', alignItems: 'baseline', gap: '4px' }}>
-                    <span style={{
-                      fontFamily: 'var(--font-body)', fontSize: '12px',
-                      color: pkg.featured ? 'rgba(255,255,255,0.35)' : 'rgba(12,12,12,0.35)',
-                    }}>
-                      from
-                    </span>
+                {/*
+                  THE PRICE — the most important element on the card.
+                  Large, confident, immediately readable.
+                  "from" sits small above the number.
+                */}
+                <div style={{ marginBottom: '24px' }}>
+                  <span style={{
+                    display: 'block',
+                    fontFamily: 'var(--font-body)', fontSize: '11px', fontWeight: 500,
+                    letterSpacing: '0.06em',
+                    color: pkg.featured ? 'rgba(255,255,255,0.3)' : 'rgba(12,12,12,0.3)',
+                    marginBottom: '2px',
+                  }}>
+                    from
+                  </span>
+                  <div style={{ display: 'flex', alignItems: 'baseline', gap: '1px' }}>
                     <span style={{
                       fontFamily: 'var(--font-display)',
-                      fontSize: 'clamp(40px, 4.5vw, 54px)',
-                      letterSpacing: '0.02em',
-                      color: pkg.featured ? 'white' : '#0A0A0A',
-                      lineHeight: 1,
+                      fontSize: 'clamp(52px, 5.5vw, 72px)',
+                      letterSpacing: '0.01em', lineHeight: 1,
+                      color: pkg.featured ? 'white' : '#0C0C0C',
                     }}>
                       £{pkg.price[vehicle]}
                     </span>
                   </div>
                 </div>
 
-                {/* Divider */}
+                {/* Thin divider */}
                 <div style={{
                   height: '1px',
-                  background: pkg.featured ? 'rgba(255,255,255,0.08)' : 'rgba(12,12,12,0.07)',
+                  background: pkg.featured ? 'rgba(255,255,255,0.07)' : 'rgba(12,12,12,0.07)',
                   marginBottom: '20px',
                 }} />
 
-                {/* Includes list — water-bead dots as list markers */}
-                <ul style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: '10px', marginBottom: '24px' }}>
+                {/* Feature list */}
+                <ul style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: '9px', marginBottom: '24px' }}>
                   {pkg.includes.map((item) => (
-                    <li key={item} style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                      {/*
-                        Water-bead dot list marker — same shape language as
-                        the navbar indicator and stats accent.
-                      */}
+                    <li key={item} style={{ display: 'flex', alignItems: 'flex-start', gap: '10px' }}>
                       <span style={{
-                        width: 4, height: 6, flexShrink: 0,
-                        background: pkg.featured ? '#E84A0C' : 'rgba(12,12,12,0.18)',
-                        borderRadius: '50% 50% 45% 45% / 55% 55% 45% 45%',
-                      }} />
+                        fontFamily: 'var(--font-body)', fontWeight: 600, fontSize: '11px',
+                        color: pkg.featured ? '#E84A0C' : 'rgba(12,12,12,0.25)',
+                        flexShrink: 0, marginTop: '2px', letterSpacing: '0.02em',
+                      }}>
+                        {pkg.featured ? '→' : '–'}
+                      </span>
                       <span style={{
-                        fontFamily: 'var(--font-body)', fontSize: '13px', lineHeight: 1.45,
-                        color: pkg.featured ? 'rgba(255,255,255,0.5)' : 'rgba(12,12,12,0.55)',
+                        fontFamily: 'var(--font-body)', fontSize: '13px', lineHeight: 1.5,
+                        color: pkg.featured ? 'rgba(255,255,255,0.48)' : 'rgba(12,12,12,0.52)',
                       }}>
                         {item}
                       </span>
@@ -289,7 +296,7 @@ export default function Packages({
                   ))}
                 </ul>
 
-                {/* CTA button — sharp corners */}
+                {/* CTA button — sharp corners, full width */}
                 <button
                   onClick={() => onBookPack(pkg.name, vehicle, pkg.price[vehicle])}
                   style={{
@@ -298,21 +305,19 @@ export default function Packages({
                     letterSpacing: '0.08em', textTransform: 'uppercase',
                     display: 'flex', alignItems: 'center', justifyContent: 'space-between',
                     padding: '14px 18px', cursor: 'pointer', border: 'none',
-                    background: pkg.featured ? '#E84A0C' : 'rgba(12,12,12,0.06)',
-                    color: pkg.featured ? 'white' : 'rgba(12,12,12,0.6)',
-                    transition: 'all 0.2s',
+                    background: pkg.featured ? '#E84A0C' : '#0C0C0C',
+                    color: 'white',
+                    transition: 'background 0.2s',
                   }}
                   onMouseEnter={e => {
-                    e.currentTarget.style.background = pkg.featured ? '#C53D08' : '#0A0A0A'
-                    e.currentTarget.style.color = 'white'
+                    e.currentTarget.style.background = pkg.featured ? '#C53D08' : '#E84A0C'
                   }}
                   onMouseLeave={e => {
-                    e.currentTarget.style.background = pkg.featured ? '#E84A0C' : 'rgba(12,12,12,0.06)'
-                    e.currentTarget.style.color = pkg.featured ? 'white' : 'rgba(12,12,12,0.6)'
+                    e.currentTarget.style.background = pkg.featured ? '#E84A0C' : '#0C0C0C'
                   }}
                 >
                   Book This Pack
-                  <span style={{ width: 6, height: 6, borderRadius: '50%', background: 'currentColor', opacity: 0.5, flexShrink: 0 }} />
+                  <span style={{ width: 5, height: 5, borderRadius: '50%', background: 'rgba(255,255,255,0.45)', flexShrink: 0 }} />
                 </button>
 
               </div>
@@ -325,32 +330,35 @@ export default function Packages({
           initial={{ opacity: 0 }}
           whileInView={{ opacity: 1 }}
           viewport={{ once: true }}
-          transition={{ duration: 0.5, delay: 0.2 }}
+          transition={{ duration: 0.5, delay: 0.15 }}
           style={{
-            marginTop: 'clamp(40px, 5vw, 64px)',
-            border: '1px solid rgba(12,12,12,0.1)',
+            marginTop: 'clamp(36px, 4vw, 56px)',
+            border: '1px solid rgba(12,12,12,0.08)',
             padding: 'clamp(16px, 2vw, 24px) clamp(20px, 3vw, 36px)',
-            display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: '16px 32px',
+            display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: '12px 28px',
+            background: '#F5F4F1',
           }}
         >
           <span style={{
-            fontFamily: 'var(--font-body)', fontWeight: 600, fontSize: '11px',
-            letterSpacing: '0.2em', textTransform: 'uppercase', color: 'rgba(12,12,12,0.3)',
-            flexShrink: 0,
+            fontFamily: 'var(--font-body)', fontWeight: 600, fontSize: '10px',
+            letterSpacing: '0.2em', textTransform: 'uppercase',
+            color: 'rgba(12,12,12,0.3)', flexShrink: 0,
           }}>
             Add-ons
           </span>
-          <span style={{ width: 1, height: 20, background: 'rgba(12,12,12,0.1)', flexShrink: 0 }} className="hidden sm:block" />
+          <span style={{ display: 'block', width: 1, height: 18, background: 'rgba(12,12,12,0.1)' }} className="hidden sm:block" />
           {[
-            ['Engine Bay Detail',    '£50'],
-            ['Headlight Restoration','£40'],
-            ['Odour Elimination',    '£60'],
-            ['Pet Hair Removal',     '£30'],
+            ['Engine Bay Detail',     '£50'],
+            ['Headlight Restoration', '£40'],
+            ['Odour Elimination',     '£60'],
+            ['Pet Hair Removal',      '£30'],
           ].map(([name, price]) => (
-            <div key={name} style={{ display: 'flex', alignItems: 'baseline', gap: '8px' }}>
-              <span style={{ fontFamily: 'var(--font-body)', fontSize: '13px', color: 'rgba(12,12,12,0.4)' }}>{name}</span>
+            <div key={name} style={{ display: 'flex', alignItems: 'baseline', gap: '6px' }}>
+              <span style={{ fontFamily: 'var(--font-body)', fontSize: '13px', color: 'rgba(12,12,12,0.42)' }}>
+                {name}
+              </span>
               <span style={{
-                fontFamily: 'var(--font-display)', fontSize: '16px',
+                fontFamily: 'var(--font-display)', fontSize: '15px',
                 letterSpacing: '0.03em', color: '#E84A0C',
               }}>
                 {price}

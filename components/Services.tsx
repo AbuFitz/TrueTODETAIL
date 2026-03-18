@@ -8,22 +8,22 @@ const ease = [0.22, 1, 0.36, 1] as [number, number, number, number]
 const SERVICES = [
   {
     n: '01', title: 'Exterior Detail',
-    desc: 'Hand wash, clay bar decon, machine polish and protective sealant — delivered to your door with pro-grade products.',
+    desc: 'Hand wash, clay bar decon, machine polish and protective sealant — professional grade products, delivered to your door.',
     price: 'From £89',
   },
   {
     n: '02', title: 'Interior Detail',
-    desc: 'Steam clean, leather conditioning, carpet shampoo and extraction, and complete interior sanitisation.',
+    desc: 'Steam clean, leather conditioning, carpet shampoo and extraction. Complete interior sanitisation.',
     price: 'From £89',
   },
   {
     n: '03', title: 'Paint Correction',
-    desc: 'Single or multi-stage machine polishing to remove swirl marks, fine scratches and paint oxidation.',
+    desc: 'Single or multi-stage machine polishing to eliminate swirl marks, fine scratches and paint oxidation.',
     price: 'POA',
   },
   {
     n: '04', title: 'Ceramic Coating',
-    desc: 'Bond-level paint protection delivering up to 2 years of hydrophobic, scratch-resistant gloss.',
+    desc: 'Bond-level protection delivering up to 2 years of hydrophobic, scratch-resistant gloss. With certificate.',
     price: 'From £549',
   },
 ]
@@ -33,177 +33,167 @@ export default function Services() {
     <section
       id="services"
       style={{
-        background: '#0A0A0A',
-        position: 'relative',
-        overflow: 'hidden',
+        background: '#F5F4F1',
         paddingTop: 'clamp(64px, 9vw, 130px)',
         paddingBottom: 'clamp(64px, 9vw, 130px)',
       }}
     >
-      <div style={{ maxWidth: '1380px', margin: '0 auto', padding: '0 clamp(24px, 5vw, 80px)' }}>
+      <div style={{ maxWidth: '1400px', margin: '0 auto', padding: '0 clamp(24px, 5vw, 72px)' }}>
 
-        <div className="grid grid-cols-1 lg:grid-cols-[44%_1fr] gap-12 lg:gap-16 items-start">
-
-          {/* Left — sticky headline + clean rectangular image */}
-          <div className="lg:sticky lg:top-24">
-
-            <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '28px' }}>
-              <span style={{ width: 20, height: 1, background: '#E84A0C', flexShrink: 0 }} />
+        {/* Section header */}
+        <div style={{
+          display: 'flex', flexWrap: 'wrap', alignItems: 'flex-end',
+          justifyContent: 'space-between', gap: '24px',
+          marginBottom: 'clamp(40px, 5vw, 64px)',
+        }}>
+          <div>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '16px' }}>
+              <span style={{ width: 20, height: '1.5px', background: '#E84A0C', flexShrink: 0 }} />
               <span style={{
                 fontFamily: 'var(--font-body)', fontWeight: 600, fontSize: '11px',
-                letterSpacing: '0.2em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.3)',
+                letterSpacing: '0.2em', textTransform: 'uppercase', color: 'rgba(12,12,12,0.35)',
               }}>
                 What We Do
               </span>
             </div>
-
             <motion.h2
-              initial={{ opacity: 0, y: 22 }}
+              initial={{ opacity: 0, y: 16 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              transition={{ duration: 0.7, ease }}
+              transition={{ duration: 0.65, ease }}
               style={{
                 fontFamily: 'var(--font-display)',
-                fontSize: 'clamp(52px, 8vw, 108px)',
+                fontSize: 'clamp(52px, 7.5vw, 104px)',
                 letterSpacing: '0.025em',
-                color: 'white', lineHeight: 0.88, marginBottom: '36px',
+                color: '#0C0C0C', lineHeight: 0.88,
               }}
             >
               EVERY<br />SERVICE<br />COVERED.
             </motion.h2>
-
-            {/*
-              Clean rectangular image — sharp crop, no organic pill shapes.
-              Precision over decoration. A thin orange left border grounds it.
-            */}
-            <motion.div
-              initial={{ opacity: 0, x: -20 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.85, ease }}
-              style={{
-                position: 'relative',
-                marginLeft: 'clamp(-24px, -3vw, -40px)',
-                height: 'clamp(280px, 32vw, 460px)',
-                display: 'flex',
-              }}
-            >
-              {/* Orange left accent stripe */}
-              <div style={{
-                width: '3px', flexShrink: 0,
-                background: '#E84A0C',
-                alignSelf: 'stretch',
-              }} />
-              <div style={{ flex: 1, position: 'relative', overflow: 'hidden' }}>
-                <Image
-                  src="https://images.unsplash.com/photo-1553440569-bcc63803a83d?w=1000&q=90&fit=crop&crop=center"
-                  alt="Professional detailing work"
-                  fill
-                  sizes="(max-width: 1024px) 100vw, 44vw"
-                  style={{ objectFit: 'cover', objectPosition: 'center' }}
-                />
-              </div>
-            </motion.div>
-
-            <motion.p
-              initial={{ opacity: 0 }}
-              whileInView={{ opacity: 1 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.5, delay: 0.2 }}
-              style={{
-                fontFamily: 'var(--font-body)', fontSize: '13px', lineHeight: 1.7,
-                color: 'rgba(255,255,255,0.3)', marginTop: '20px',
-                maxWidth: '280px', paddingLeft: 'clamp(24px, 3vw, 40px)',
-              }}
-            >
-              All services are fully mobile. Covering Hemel Hempstead and the whole of Hertfordshire.
-            </motion.p>
-
           </div>
 
-          {/* Right — service rows */}
-          <div>
-            {SERVICES.map((s, i) => (
-              <motion.div
-                key={s.n}
-                initial={{ opacity: 0, y: 16 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, margin: '-20px' }}
-                transition={{ duration: 0.5, ease, delay: i * 0.07 }}
-                style={{ position: 'relative' }}
-                className="group"
-              >
-                <div
-                  style={{
-                    display: 'flex', alignItems: 'flex-start', gap: '20px',
-                    padding: 'clamp(22px, 2.5vw, 36px) 0',
-                    borderBottom: '1px solid rgba(255,255,255,0.06)',
-                  }}
-                  className="first:border-t first:border-t-white/[0.06]"
-                >
-                  {/* Small number label */}
-                  <span style={{
-                    fontFamily: 'var(--font-body)', fontWeight: 600, fontSize: '10px',
-                    letterSpacing: '0.2em', color: 'rgba(255,255,255,0.2)',
-                    paddingTop: '6px', flexShrink: 0, width: '24px',
-                  }}>
-                    {s.n}
-                  </span>
-
-                  {/* Content */}
-                  <div style={{ flex: 1 }}>
-                    <div style={{
-                      display: 'flex', alignItems: 'flex-start',
-                      justifyContent: 'space-between', gap: '16px', marginBottom: '10px',
-                    }}>
-                      <h3
-                        style={{
-                          fontFamily: 'var(--font-display)',
-                          fontSize: 'clamp(28px, 3.5vw, 44px)',
-                          letterSpacing: '0.025em',
-                          color: 'white', lineHeight: 0.9,
-                          transition: 'color 0.2s',
-                        }}
-                        className="group-hover:text-orange"
-                      >
-                        {s.title}
-                      </h3>
-                      <span style={{
-                        fontFamily: 'var(--font-body)', fontWeight: 600, fontSize: '11px',
-                        letterSpacing: '0.06em', color: 'rgba(255,255,255,0.28)',
-                        border: '1px solid rgba(255,255,255,0.1)',
-                        padding: '4px 10px', flexShrink: 0, marginTop: '4px',
-                      }}>
-                        {s.price}
-                      </span>
-                    </div>
-                    <p style={{
-                      fontFamily: 'var(--font-body)', fontSize: '14px', lineHeight: 1.72,
-                      color: 'rgba(255,255,255,0.38)',
-                    }}>
-                      {s.desc}
-                    </p>
-                  </div>
-
-                  {/* Arrow */}
-                  <div
-                    style={{
-                      flexShrink: 0, width: '32px', height: '32px', marginTop: '4px',
-                      border: '1px solid rgba(255,255,255,0.1)',
-                      display: 'flex', alignItems: 'center', justifyContent: 'center',
-                      fontSize: '12px', color: 'rgba(255,255,255,0.2)',
-                      transition: 'all 0.2s',
-                    }}
-                    className="group-hover:bg-orange group-hover:border-orange group-hover:text-white"
-                  >
-                    →
-                  </div>
-                </div>
-              </motion.div>
-            ))}
-          </div>
-
+          <p style={{
+            fontFamily: 'var(--font-body)', fontSize: '14px', lineHeight: 1.75,
+            color: 'rgba(12,12,12,0.45)', maxWidth: '280px',
+          }}>
+            Fully mobile. We bring everything needed to your door — power, water, equipment.
+            Covering all of Hertfordshire.
+          </p>
         </div>
+
+        {/*
+          Full-width image strip.
+          No overlay, no text on top. Just the work — clean and honest.
+          Like turning the page in a catalog and seeing a full-bleed photograph.
+        */}
+        <motion.div
+          initial={{ opacity: 0, y: 12 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.8, ease }}
+          style={{
+            position: 'relative',
+            height: 'clamp(200px, 22vw, 360px)',
+            overflow: 'hidden',
+            marginBottom: 'clamp(48px, 6vw, 80px)',
+          }}
+        >
+          <Image
+            src="https://images.unsplash.com/photo-1553440569-bcc63803a83d?w=1600&q=90&fit=crop&crop=center"
+            alt="Professional detailing work"
+            fill
+            sizes="(max-width: 1400px) 100vw"
+            style={{ objectFit: 'cover', objectPosition: 'center 40%' }}
+          />
+        </motion.div>
+
+        {/*
+          Service catalog rows.
+          Like a premium restaurant menu or luxury fashion catalog.
+          Each service gets a full-width row, clear hierarchy,
+          clean rules separating them.
+        */}
+        {SERVICES.map((s, i) => (
+          <motion.div
+            key={s.n}
+            initial={{ opacity: 0, y: 12 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: '-20px' }}
+            transition={{ duration: 0.45, ease, delay: i * 0.06 }}
+            className="group"
+          >
+            <div
+              style={{
+                display: 'grid',
+                gridTemplateColumns: '40px 1fr auto auto',
+                gap: '0 clamp(16px, 2.5vw, 36px)',
+                alignItems: 'center',
+                padding: 'clamp(20px, 2.5vw, 32px) 0',
+                borderTop: '1px solid rgba(12,12,12,0.08)',
+                borderBottom: i === SERVICES.length - 1 ? '1px solid rgba(12,12,12,0.08)' : 'none',
+                cursor: 'default',
+              }}
+            >
+              {/* Number */}
+              <span style={{
+                fontFamily: 'var(--font-body)', fontWeight: 600, fontSize: '10px',
+                letterSpacing: '0.22em', color: 'rgba(12,12,12,0.25)',
+                paddingTop: '3px', alignSelf: 'start',
+              }}>
+                {s.n}
+              </span>
+
+              {/* Title + description */}
+              <div>
+                <h3
+                  style={{
+                    fontFamily: 'var(--font-display)',
+                    fontSize: 'clamp(26px, 3.2vw, 44px)',
+                    letterSpacing: '0.025em',
+                    color: '#0C0C0C', lineHeight: 0.9,
+                    marginBottom: '8px',
+                    transition: 'color 0.2s',
+                  }}
+                  className="group-hover:text-orange"
+                >
+                  {s.title}
+                </h3>
+                <p style={{
+                  fontFamily: 'var(--font-body)', fontSize: '13px', lineHeight: 1.68,
+                  color: 'rgba(12,12,12,0.45)', maxWidth: '520px',
+                }}>
+                  {s.desc}
+                </p>
+              </div>
+
+              {/* Price badge */}
+              <span style={{
+                fontFamily: 'var(--font-body)', fontWeight: 600, fontSize: '11px',
+                letterSpacing: '0.06em',
+                color: 'rgba(12,12,12,0.32)',
+                border: '1px solid rgba(12,12,12,0.1)',
+                padding: '5px 12px', flexShrink: 0, alignSelf: 'start',
+              }}>
+                {s.price}
+              </span>
+
+              {/* Arrow */}
+              <div
+                style={{
+                  flexShrink: 0, width: '36px', height: '36px',
+                  border: '1px solid rgba(12,12,12,0.1)',
+                  display: 'flex', alignItems: 'center', justifyContent: 'center',
+                  fontSize: '13px', color: 'rgba(12,12,12,0.22)',
+                  transition: 'all 0.2s', alignSelf: 'start',
+                }}
+                className="group-hover:bg-ink group-hover:border-ink group-hover:text-white"
+              >
+                →
+              </div>
+            </div>
+          </motion.div>
+        ))}
+
       </div>
     </section>
   )

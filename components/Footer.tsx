@@ -1,45 +1,47 @@
+'use client'
+
 const YEAR = new Date().getFullYear()
 
 export default function Footer({ onBookNow }: { onBookNow: () => void }) {
   return (
-    <footer style={{ background: '#0A0A0A' }}>
+    <footer style={{ background: '#fff', borderTop: '1px solid rgba(12,12,12,0.07)' }}>
 
-      {/* Main footer content — 3 columns */}
+      {/* Main 3-column grid */}
       <div
         style={{
-          maxWidth: '1380px', margin: '0 auto',
-          padding: 'clamp(48px, 7vw, 96px) clamp(24px, 5vw, 80px) clamp(36px, 5vw, 64px)',
+          maxWidth: '1400px', margin: '0 auto',
+          padding: 'clamp(48px, 7vw, 96px) clamp(24px, 5vw, 72px) clamp(40px, 5vw, 72px)',
           display: 'grid',
           gridTemplateColumns: 'repeat(3, 1fr)',
-          gap: 'clamp(32px, 5vw, 80px)',
+          gap: 'clamp(32px, 5vw, 72px)',
         }}
         className="grid-cols-1 md:grid-cols-3"
       >
 
         {/* Col 1 — Brand */}
         <div>
-          <a href="#" style={{ textDecoration: 'none', display: 'inline-flex', alignItems: 'center', gap: '8px', marginBottom: '16px' }}>
+          <a
+            href="#"
+            style={{ textDecoration: 'none', display: 'inline-flex', alignItems: 'center', gap: '7px', marginBottom: '18px' }}
+          >
             <span style={{
-              fontFamily: 'var(--font-display)', fontSize: '20px',
-              letterSpacing: '0.07em', color: 'rgba(255,255,255,0.88)',
+              fontFamily: 'var(--font-display)', fontSize: '18px',
+              letterSpacing: '0.07em', color: '#0C0C0C',
             }}>
               TRUE TO
             </span>
-            {/* Water-bead dot — consistent with navbar logo */}
             <span
               aria-hidden
               style={{
-                display: 'inline-block',
-                width: '5px', height: '7px',
+                display: 'inline-block', width: '5px', height: '7px',
                 background: '#E84A0C',
                 borderRadius: '50% 50% 45% 45% / 55% 55% 45% 45%',
-                flexShrink: 0,
-                marginBottom: '-1px',
+                flexShrink: 0, marginBottom: '-1px',
               }}
             />
             <span style={{
-              fontFamily: 'var(--font-display)', fontSize: '20px',
-              letterSpacing: '0.07em', color: 'rgba(255,255,255,0.88)',
+              fontFamily: 'var(--font-display)', fontSize: '18px',
+              letterSpacing: '0.07em', color: '#0C0C0C',
             }}>
               DETAIL
             </span>
@@ -47,29 +49,33 @@ export default function Footer({ onBookNow }: { onBookNow: () => void }) {
 
           <p style={{
             fontFamily: 'var(--font-body)', fontSize: '14px', lineHeight: 1.72,
-            color: 'rgba(255,255,255,0.32)', marginBottom: '24px', maxWidth: '240px',
+            color: 'rgba(12,12,12,0.42)', marginBottom: '24px', maxWidth: '220px',
           }}>
             Professional mobile car detailing in Hertfordshire. We come to you.
           </p>
 
           <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-            <a href="tel:+447984237149" style={{
-              fontFamily: 'var(--font-body)', fontSize: '13px',
-              color: 'rgba(255,255,255,0.32)', textDecoration: 'none',
-              transition: 'color 0.2s',
-            }}
-              onMouseEnter={e => (e.currentTarget.style.color = 'rgba(255,255,255,0.7)')}
-              onMouseLeave={e => (e.currentTarget.style.color = 'rgba(255,255,255,0.32)')}
+            <a
+              href="tel:+447984237149"
+              style={{
+                fontFamily: 'var(--font-body)', fontSize: '13px',
+                color: 'rgba(12,12,12,0.38)', textDecoration: 'none',
+                transition: 'color 0.2s',
+              }}
+              onMouseEnter={e => (e.currentTarget.style.color = '#0C0C0C')}
+              onMouseLeave={e => (e.currentTarget.style.color = 'rgba(12,12,12,0.38)')}
             >
               07984 237149
             </a>
-            <a href="mailto:hello@truetodetail.co.uk" style={{
-              fontFamily: 'var(--font-body)', fontSize: '13px',
-              color: 'rgba(255,255,255,0.32)', textDecoration: 'none',
-              transition: 'color 0.2s',
-            }}
-              onMouseEnter={e => (e.currentTarget.style.color = 'rgba(255,255,255,0.7)')}
-              onMouseLeave={e => (e.currentTarget.style.color = 'rgba(255,255,255,0.32)')}
+            <a
+              href="mailto:hello@truetodetail.co.uk"
+              style={{
+                fontFamily: 'var(--font-body)', fontSize: '13px',
+                color: 'rgba(12,12,12,0.38)', textDecoration: 'none',
+                transition: 'color 0.2s',
+              }}
+              onMouseEnter={e => (e.currentTarget.style.color = '#0C0C0C')}
+              onMouseLeave={e => (e.currentTarget.style.color = 'rgba(12,12,12,0.38)')}
             >
               hello@truetodetail.co.uk
             </a>
@@ -81,27 +87,27 @@ export default function Footer({ onBookNow }: { onBookNow: () => void }) {
           <p style={{
             fontFamily: 'var(--font-body)', fontWeight: 600, fontSize: '10px',
             letterSpacing: '0.2em', textTransform: 'uppercase',
-            color: 'rgba(255,255,255,0.2)', marginBottom: '20px',
+            color: 'rgba(12,12,12,0.25)', marginBottom: '20px',
           }}>
             Navigation
           </p>
           <nav style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
             {[
-              ['Services',  '#services'],
-              ['Packages',  '#packages'],
-              ['About',     '#about'],
-              ['Contact',   '#contact'],
+              ['Services', '#services'],
+              ['Packages', '#packages'],
+              ['About',    '#about'],
+              ['Contact',  '#contact'],
             ].map(([label, href]) => (
               <a
                 key={label}
                 href={href}
                 style={{
                   fontFamily: 'var(--font-body)', fontSize: '14px',
-                  color: 'rgba(255,255,255,0.32)', textDecoration: 'none',
+                  color: 'rgba(12,12,12,0.38)', textDecoration: 'none',
                   transition: 'color 0.2s',
                 }}
-                onMouseEnter={e => (e.currentTarget.style.color = 'rgba(255,255,255,0.7)')}
-                onMouseLeave={e => (e.currentTarget.style.color = 'rgba(255,255,255,0.32)')}
+                onMouseEnter={e => (e.currentTarget.style.color = '#0C0C0C')}
+                onMouseLeave={e => (e.currentTarget.style.color = 'rgba(12,12,12,0.38)')}
               >
                 {label}
               </a>
@@ -109,22 +115,22 @@ export default function Footer({ onBookNow }: { onBookNow: () => void }) {
           </nav>
         </div>
 
-        {/* Col 3 — Book + hours */}
+        {/* Col 3 — Book */}
         <div>
           <p style={{
             fontFamily: 'var(--font-body)', fontWeight: 600, fontSize: '10px',
             letterSpacing: '0.2em', textTransform: 'uppercase',
-            color: 'rgba(255,255,255,0.2)', marginBottom: '20px',
+            color: 'rgba(12,12,12,0.25)', marginBottom: '20px',
           }}>
             Book A Detail
           </p>
 
           <p style={{
             fontFamily: 'var(--font-body)', fontSize: '14px', lineHeight: 1.72,
-            color: 'rgba(255,255,255,0.32)', marginBottom: '20px',
+            color: 'rgba(12,12,12,0.42)', marginBottom: '24px',
           }}>
             Mon–Sat, 8am–7pm<br />
-            Hertfordshire & surrounds
+            Hertfordshire &amp; surrounds
           </p>
 
           <button
@@ -132,19 +138,19 @@ export default function Footer({ onBookNow }: { onBookNow: () => void }) {
             style={{
               fontFamily: 'var(--font-body)', fontWeight: 600, fontSize: '12px',
               letterSpacing: '0.09em', textTransform: 'uppercase',
-              background: '#E84A0C', color: 'white', border: 'none',
+              background: '#0C0C0C', color: 'white', border: 'none',
               padding: '14px 24px', cursor: 'pointer',
-              display: 'flex', alignItems: 'center', gap: '12px',
-              transition: 'background 0.18s',
+              display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+              gap: '16px',
+              transition: 'background 0.2s',
             }}
-            onMouseEnter={e => (e.currentTarget.style.background = '#C53D08')}
-            onMouseLeave={e => (e.currentTarget.style.background = '#E84A0C')}
+            onMouseEnter={e => (e.currentTarget.style.background = '#E84A0C')}
+            onMouseLeave={e => (e.currentTarget.style.background = '#0C0C0C')}
           >
             Book Now
             <span style={{
-              display: 'inline-block',
-              width: '4px', height: '6px',
-              background: 'rgba(255,255,255,0.55)',
+              display: 'inline-block', width: '4px', height: '6px',
+              background: 'rgba(255,255,255,0.5)',
               borderRadius: '50% 50% 45% 45% / 55% 55% 45% 45%',
               flexShrink: 0,
             }} />
@@ -153,23 +159,45 @@ export default function Footer({ onBookNow }: { onBookNow: () => void }) {
 
       </div>
 
-      {/* Bottom bar */}
-      <div style={{ borderTop: '1px solid rgba(255,255,255,0.05)' }}>
+      {/*
+        Massive wordmark stamp.
+        Architectural brand element — the same way luxury brands print their name
+        as a watermark across the bottom of their website.
+        Very low opacity — present but not competing.
+      */}
+      <div style={{ overflow: 'hidden', borderTop: '1px solid rgba(12,12,12,0.06)' }}>
         <div style={{
-          maxWidth: '1380px', margin: '0 auto',
-          padding: '16px clamp(24px, 5vw, 80px)',
+          fontFamily: 'var(--font-display)',
+          fontSize: 'clamp(56px, 14vw, 220px)',
+          letterSpacing: '0.04em',
+          color: 'rgba(12,12,12,0.045)',
+          lineHeight: 0.85,
+          whiteSpace: 'nowrap',
+          padding: '0 clamp(16px, 3vw, 48px)',
+          userSelect: 'none',
+          paddingBottom: 'clamp(8px, 1.5vw, 20px)',
+        }}>
+          TRUE TO DETAIL
+        </div>
+      </div>
+
+      {/* Bottom bar */}
+      <div style={{ borderTop: '1px solid rgba(12,12,12,0.06)' }}>
+        <div style={{
+          maxWidth: '1400px', margin: '0 auto',
+          padding: '16px clamp(24px, 5vw, 72px)',
           display: 'flex', alignItems: 'center', justifyContent: 'space-between',
           gap: '12px', flexWrap: 'wrap',
         }}>
           <span style={{
             fontFamily: 'var(--font-body)', fontSize: '11px',
-            color: 'rgba(255,255,255,0.16)', letterSpacing: '0.04em',
+            color: 'rgba(12,12,12,0.25)', letterSpacing: '0.04em',
           }}>
             © {YEAR} True To Detail · Hertfordshire, UK
           </span>
           <span style={{
             fontFamily: 'var(--font-body)', fontSize: '11px',
-            color: 'rgba(255,255,255,0.16)', letterSpacing: '0.04em',
+            color: 'rgba(12,12,12,0.25)', letterSpacing: '0.04em',
           }}>
             hello@truetodetail.co.uk
           </span>

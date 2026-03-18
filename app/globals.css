@@ -7,8 +7,8 @@ html { scroll-behavior: smooth; }
 *, *::before, *::after { box-sizing: border-box; }
 
 body {
-  background: #0A0A0A;
-  color: #0A0A0A;
+  background: #ffffff;
+  color: #0C0C0C;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
@@ -19,19 +19,22 @@ body {
   to   { transform: translateX(-50%); }
 }
 .animate-marquee {
-  animation: marquee 36s linear infinite;
+  animation: marquee 42s linear infinite;
   will-change: transform;
 }
 
-/* ── Group hover utilities needed for dark sections ── */
-.group:hover .group-hover\:text-orange { color: #E84A0C !important; }
-.group:hover .group-hover\:bg-orange   { background: #E84A0C !important; }
-.group:hover .group-hover\:border-orange { border-color: #E84A0C !important; }
-.group:hover .group-hover\:text-white  { color: white !important; }
+/* ── Group hover — light sections (ink/orange on white) ── */
+.group:hover .group-hover\:text-orange  { color: #E84A0C !important; }
+.group:hover .group-hover\:bg-orange    { background: #E84A0C !important; }
+.group:hover .group-hover\:border-orange{ border-color: #E84A0C !important; }
+.group:hover .group-hover\:text-ink     { color: #0C0C0C !important; }
+.group:hover .group-hover\:bg-ink       { background: #0C0C0C !important; }
+.group:hover .group-hover\:border-ink   { border-color: #0C0C0C !important; }
+.group:hover .group-hover\:text-white   { color: white !important; }
 
 /* ── Scrollbar ── */
 ::-webkit-scrollbar { width: 3px; }
-::-webkit-scrollbar-track { background: #F4F0E8; }
+::-webkit-scrollbar-track { background: #F5F4F1; }
 ::-webkit-scrollbar-thumb { background: #E84A0C; }
 
 /* ── Focus ── */
@@ -39,5 +42,4 @@ body {
 
 input, textarea, select { -webkit-appearance: none; appearance: none; }
 
-/* ── Clip-path sections need z-index stacking context ── */
 section { isolation: isolate; }

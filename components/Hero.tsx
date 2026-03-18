@@ -10,245 +10,250 @@ const TICKER = [
   'Ceramic Coating', 'Book Online', 'We Come To You', 'Professional Grade',
 ]
 
+const QUICK_STATS = [
+  { val: '100%',  label: 'Fully Mobile' },
+  { val: '£0',    label: 'Hidden Charges' },
+  { val: '2 YR',  label: 'Ceramic Warranty' },
+  { val: '5★',    label: 'Rated Service' },
+]
+
 export default function Hero({ onBookNow }: { onBookNow: () => void }) {
   return (
-    <div style={{ paddingTop: '64px' }}>
+    <div style={{ paddingTop: '68px' }}>
 
       {/* ── Main hero ── */}
       <section
         style={{
           position: 'relative',
+          display: 'flex',
+          minHeight: 'calc(100vh - 68px)',
+          background: '#fff',
           overflow: 'hidden',
-          minHeight: 'calc(100vh - 64px)',
-          background: '#0A0A0A',
         }}
       >
 
-        {/*
-          Car image — right side, revealed through a hard diagonal cut.
-          No gradients. The clean angular edge IS the design statement.
-          The image container starts at 38% from left (62% width),
-          and the clip-path creates a diagonal left edge:
-            top-left point:  22% into container = ~51.6% from viewport left
-            bottom-left point: 0% into container = 38% from viewport left
-        */}
+        {/* ── Left: content ── */}
         <div
           style={{
-            position: 'absolute',
-            top: 0, right: 0,
-            width: '62%',
-            height: '100%',
-            clipPath: 'polygon(22% 0, 100% 0, 100% 100%, 0 100%)',
-            zIndex: 1,
-          }}
-        >
-          <Image
-            src="https://images.unsplash.com/photo-1607860108855-64acf2078ed9?w=1800&q=90&fit=crop&crop=center"
-            alt="Premium car detailing"
-            fill
-            priority
-            style={{ objectFit: 'cover' }}
-          />
-          {/* Very slight flat tint — not a gradient, just a uniform tone-down */}
-          <div style={{ position: 'absolute', inset: 0, background: 'rgba(10,10,10,0.1)' }} />
-        </div>
-
-        {/*
-          Thin diagonal accent line along the exact image split edge.
-          Calculated from the clip-path geometry:
-          - image container starts at 38% from left (100% - 62%)
-          - clip left-top: 22% of 62% = ~13.64% offset = 38 + 13.64 = 51.64% from left
-          - clip left-bottom: 0% of 62% = 0% offset = 38% from left
-          SVG viewBox 0 0 100 100 maps to percentage coordinates.
-        */}
-        <svg
-          aria-hidden
-          style={{
-            position: 'absolute', inset: 0,
-            width: '100%', height: '100%',
-            zIndex: 2, pointerEvents: 'none',
-          }}
-          viewBox="0 0 100 100"
-          preserveAspectRatio="none"
-        >
-          <line
-            x1="51.64" y1="0"
-            x2="38" y2="100"
-            stroke="#E84A0C"
-            strokeWidth="0.12"
-            strokeOpacity="0.55"
-          />
-        </svg>
-
-        {/* Main content */}
-        <div
-          style={{
-            position: 'absolute', inset: 0, zIndex: 10,
-            display: 'flex', flexDirection: 'column', justifyContent: 'space-between',
-            padding: 'clamp(28px, 5vw, 80px)',
-            paddingTop: 'clamp(36px, 5vw, 72px)',
-            paddingBottom: 'clamp(36px, 5vw, 72px)',
+            flex: '0 0 54%',
+            display: 'flex',
+            flexDirection: 'column',
+            justifyContent: 'space-between',
+            padding: 'clamp(36px, 5vw, 72px)',
+            paddingLeft: 'clamp(24px, 4.5vw, 72px)',
           }}
         >
 
-          {/* Brand label */}
+          {/* Top label */}
           <motion.p
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 0.8, ease }}
             style={{
-              fontFamily: 'var(--font-body)', fontSize: '11px',
-              letterSpacing: '0.22em', textTransform: 'uppercase',
-              color: 'rgba(255,255,255,0.28)', fontWeight: 600,
+              fontFamily: 'var(--font-body)', fontSize: '11px', fontWeight: 600,
+              letterSpacing: '0.2em', textTransform: 'uppercase',
+              color: 'rgba(12,12,12,0.35)',
             }}
           >
-            True To Detail — Hertfordshire, UK
+            Mobile Detailing · Hertfordshire, UK
           </motion.p>
 
-          {/* Cascading staircase headline — kept as it's genuinely strong */}
+          {/* Staircase headline — on white, this is iconic */}
           <motion.div
-            initial={{ opacity: 0, y: 44 }}
+            initial={{ opacity: 0, y: 32 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 1.1, delay: 0.1, ease }}
+            transition={{ duration: 1, delay: 0.1, ease }}
             style={{ pointerEvents: 'none' }}
           >
             <div>
               <span style={{
                 fontFamily: 'var(--font-display)',
-                fontSize: 'clamp(76px, 21vw, 300px)',
-                letterSpacing: '0.025em',
-                color: 'white',
+                fontSize: 'clamp(80px, 18vw, 260px)',
+                letterSpacing: '0.02em',
+                color: '#0C0C0C',
                 display: 'block',
-                lineHeight: 0.87,
+                lineHeight: 0.86,
               }}>
                 DETAIL
               </span>
             </div>
-            <div style={{ paddingLeft: 'clamp(24px, 8vw, 120px)' }}>
+            <div style={{ paddingLeft: 'clamp(20px, 6vw, 88px)' }}>
               <span style={{
                 fontFamily: 'var(--font-display)',
-                fontSize: 'clamp(56px, 16vw, 224px)',
-                letterSpacing: '0.025em',
-                color: 'rgba(255,255,255,0.78)',
+                fontSize: 'clamp(58px, 13vw, 192px)',
+                letterSpacing: '0.02em',
+                color: 'rgba(12,12,12,0.22)',
                 display: 'block',
-                lineHeight: 0.87,
+                lineHeight: 0.86,
               }}>
                 DONE
               </span>
             </div>
-            <div style={{ paddingLeft: 'clamp(48px, 16vw, 244px)' }}>
+            <div style={{ paddingLeft: 'clamp(40px, 12vw, 176px)' }}>
               <span style={{
                 fontFamily: 'var(--font-display)',
-                fontSize: 'clamp(38px, 11vw, 150px)',
-                letterSpacing: '0.025em',
-                color: 'rgba(255,255,255,0.58)',
+                fontSize: 'clamp(40px, 9vw, 128px)',
+                letterSpacing: '0.02em',
+                color: 'rgba(12,12,12,0.14)',
                 display: 'block',
-                lineHeight: 0.87,
+                lineHeight: 0.86,
               }}>
                 RIGHT<span style={{ color: '#E84A0C' }}>.</span>
               </span>
             </div>
           </motion.div>
 
-          {/* Bottom row: description + CTA + mini stats */}
+          {/* Bottom: description + CTAs */}
           <motion.div
-            initial={{ opacity: 0, y: 22 }}
+            initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7, delay: 0.35, ease }}
-            style={{
-              display: 'flex', flexWrap: 'wrap', alignItems: 'flex-end',
-              justifyContent: 'space-between', gap: '28px',
-            }}
+            transition={{ duration: 0.7, delay: 0.3, ease }}
           >
-            <div>
-              <p style={{
-                fontFamily: 'var(--font-body)', fontSize: '15px', lineHeight: 1.75,
-                color: 'rgba(255,255,255,0.38)', maxWidth: '320px', marginBottom: '22px',
-              }}>
-                Professional mobile detailing straight to your driveway.
-                Fixed prices, no drop-off needed, results that speak for themselves.
-              </p>
-              <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: '12px' }}>
-                <button
-                  onClick={onBookNow}
-                  style={{
-                    fontFamily: 'var(--font-body)', fontWeight: 600, fontSize: '12px',
-                    letterSpacing: '0.1em', textTransform: 'uppercase',
-                    background: '#E84A0C', color: 'white', border: 'none', cursor: 'pointer',
-                    padding: '14px 28px', display: 'flex', alignItems: 'center', gap: '14px',
-                    transition: 'background 0.2s',
-                  }}
-                  onMouseEnter={e => (e.currentTarget.style.background = '#C53D08')}
-                  onMouseLeave={e => (e.currentTarget.style.background = '#E84A0C')}
-                >
-                  Book Your Detail
-                  <span style={{ width: 6, height: 6, borderRadius: '50%', background: 'rgba(255,255,255,0.5)', flexShrink: 0 }} />
-                </button>
-                <a
-                  href="tel:+447984237149"
-                  style={{
-                    fontFamily: 'var(--font-body)', fontSize: '13px',
-                    color: 'rgba(255,255,255,0.28)', textDecoration: 'none',
-                  }}
-                >
-                  07984 237149
-                </a>
-              </div>
-            </div>
+            {/* Thin top rule */}
+            <div style={{
+              width: '40px', height: '1px',
+              background: '#E84A0C', marginBottom: '20px',
+            }} />
 
-            {/* Mini stat cluster */}
-            <div style={{ display: 'flex', gap: 'clamp(20px, 3vw, 40px)', alignItems: 'flex-end' }}>
-              {[
-                { val: '100%', label: 'mobile\nservice'   },
-                { val: '£0',   label: 'hidden\ncharges'   },
-                { val: '2YR',  label: 'ceramic\nwarranty' },
-              ].map(({ val, label }) => (
-                <div key={val} style={{ textAlign: 'center' }}>
-                  <div style={{
-                    fontFamily: 'var(--font-display)',
-                    fontSize: 'clamp(26px, 3.2vw, 40px)',
-                    letterSpacing: '0.03em', color: 'white', lineHeight: 1,
-                  }}>
-                    {val}
-                  </div>
-                  <div style={{
-                    fontFamily: 'var(--font-body)', fontSize: '9px', fontWeight: 600,
-                    color: 'rgba(255,255,255,0.28)', textTransform: 'uppercase',
-                    letterSpacing: '0.15em', lineHeight: 1.45, marginTop: '4px',
-                    whiteSpace: 'pre-line',
-                  }}>
-                    {label}
-                  </div>
-                </div>
-              ))}
+            <p style={{
+              fontFamily: 'var(--font-body)', fontSize: '15px', lineHeight: 1.78,
+              color: 'rgba(12,12,12,0.48)', maxWidth: '340px', marginBottom: '28px',
+            }}>
+              Professional mobile detailing straight to your driveway.
+              Fixed prices, no drop-off, results you&apos;ll notice immediately.
+            </p>
+
+            <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: '12px' }}>
+              <button
+                onClick={onBookNow}
+                style={{
+                  fontFamily: 'var(--font-body)', fontWeight: 600, fontSize: '12px',
+                  letterSpacing: '0.09em', textTransform: 'uppercase',
+                  background: '#0C0C0C', color: '#fff', border: 'none', cursor: 'pointer',
+                  padding: '14px 28px',
+                  display: 'flex', alignItems: 'center', gap: '12px',
+                  transition: 'background 0.2s',
+                }}
+                onMouseEnter={e => (e.currentTarget.style.background = '#E84A0C')}
+                onMouseLeave={e => (e.currentTarget.style.background = '#0C0C0C')}
+              >
+                Book Your Detail
+                <span style={{ width: 5, height: 5, borderRadius: '50%', background: 'rgba(255,255,255,0.5)', flexShrink: 0 }} />
+              </button>
+              <a
+                href="tel:+447984237149"
+                style={{
+                  fontFamily: 'var(--font-body)', fontWeight: 500, fontSize: '13px',
+                  color: 'rgba(12,12,12,0.35)', textDecoration: 'none',
+                  letterSpacing: '0.02em',
+                  transition: 'color 0.2s',
+                }}
+                onMouseEnter={e => (e.currentTarget.style.color = '#0C0C0C')}
+                onMouseLeave={e => (e.currentTarget.style.color = 'rgba(12,12,12,0.35)')}
+              >
+                07984 237149
+              </a>
             </div>
           </motion.div>
 
         </div>
+
+        {/*
+          ── Orange separator ──
+          A precise 3px vertical stripe between the content
+          and the image. Like a detailing pin stripe on a car.
+        */}
+        <div style={{ width: '3px', background: '#E84A0C', flexShrink: 0, alignSelf: 'stretch' }} />
+
+        {/*
+          ── Right: car image flush to viewport edge ──
+          No padding, no border, no overlay. The image is
+          a clean window into the work.
+        */}
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 1.2, ease }}
+          style={{ flex: 1, position: 'relative', overflow: 'hidden', minHeight: '480px' }}
+        >
+          <Image
+            src="https://images.unsplash.com/photo-1607860108855-64acf2078ed9?w=1600&q=90&fit=crop&crop=center"
+            alt="Premium car detailing"
+            fill
+            priority
+            sizes="46vw"
+            style={{ objectFit: 'cover', objectPosition: 'center' }}
+          />
+        </motion.div>
+
       </section>
 
       {/*
-        ── Ticker strip ──
-        Solid orange background — a bold brand stamp between the dark hero
-        and the light stats section. No gradients. Pure flat colour.
+        ── Quick stats strip ──
+        4 key facts in a horizontal band immediately below the hero.
+        Clean, precise, like an automotive specification plate.
+        Dark background creates contrast with the white hero.
       */}
       <div style={{
-        background: '#E84A0C',
-        padding: '11px 0',
+        background: '#0C0C0C',
+        borderTop: '3px solid #E84A0C',
+      }}>
+        <div style={{
+          maxWidth: '1400px', margin: '0 auto',
+          display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)',
+        }}>
+          {QUICK_STATS.map((s, i) => (
+            <div
+              key={s.val}
+              style={{
+                padding: 'clamp(16px, 2vw, 24px) clamp(20px, 3vw, 40px)',
+                borderRight: i < 3 ? '1px solid rgba(255,255,255,0.07)' : 'none',
+                display: 'flex', alignItems: 'center', gap: '14px',
+              }}
+            >
+              <span style={{
+                fontFamily: 'var(--font-display)',
+                fontSize: 'clamp(22px, 2.5vw, 30px)',
+                letterSpacing: '0.04em', color: '#fff', lineHeight: 1,
+                flexShrink: 0,
+              }}>
+                {s.val}
+              </span>
+              <span style={{
+                fontFamily: 'var(--font-body)', fontWeight: 500, fontSize: '11px',
+                letterSpacing: '0.12em', textTransform: 'uppercase',
+                color: 'rgba(255,255,255,0.3)', lineHeight: 1.3,
+              }}>
+                {s.label}
+              </span>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/*
+        ── Ticker strip ──
+        Moving credential band. White on near-black, deliberate pace.
+      */}
+      <div style={{
+        background: '#F5F4F1',
+        borderBottom: '1px solid rgba(12,12,12,0.07)',
+        padding: '12px 0',
         overflow: 'hidden',
       }}>
         <div className="animate-marquee" style={{ display: 'flex', whiteSpace: 'nowrap', userSelect: 'none' }}>
           {[...TICKER, ...TICKER].map((item, i) => (
-            <span key={i} style={{ display: 'inline-flex', alignItems: 'center', gap: '18px', margin: '0 20px' }}>
+            <span key={i} style={{ display: 'inline-flex', alignItems: 'center', gap: '20px', margin: '0 24px' }}>
               <span style={{
-                fontFamily: 'var(--font-display)', color: 'rgba(255,255,255,0.92)',
-                textTransform: 'uppercase', fontSize: '11px', letterSpacing: '0.22em',
+                fontFamily: 'var(--font-body)', fontWeight: 500,
+                color: 'rgba(12,12,12,0.38)',
+                textTransform: 'uppercase', fontSize: '11px', letterSpacing: '0.18em',
               }}>
                 {item}
               </span>
               <span style={{
                 width: 3, height: 3, borderRadius: '50%',
-                background: 'rgba(255,255,255,0.45)', flexShrink: 0,
+                background: '#E84A0C', flexShrink: 0, opacity: 0.7,
               }} />
             </span>
           ))}

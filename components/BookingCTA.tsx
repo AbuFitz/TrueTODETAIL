@@ -9,23 +9,12 @@ export default function BookingCTA({ onBookNow }: { onBookNow: () => void }) {
     <section
       id="contact"
       style={{
-        position: 'relative',
-        background: '#0A0A0A',
-        overflow: 'hidden',
+        background: '#0C0C0C',
         paddingTop: 'clamp(72px, 12vw, 160px)',
         paddingBottom: 'clamp(72px, 10vw, 130px)',
-        zIndex: 2,
-        clipPath: 'polygon(0 5vw, 100% 0, 100% 100%, 0 100%)',
-        marginTop: '-5vw',
       }}
     >
-      {/*
-        No radial glow. No gradient.
-        Instead: a thin horizontal rule across the top of the section content
-        and a thin vertical orange rule on the left edge — precision accents only.
-      */}
-
-      <div style={{ maxWidth: '1380px', margin: '0 auto', padding: '0 clamp(24px, 5vw, 80px)' }}>
+      <div style={{ maxWidth: '1400px', margin: '0 auto', padding: '0 clamp(24px, 5vw, 72px)' }}>
 
         {/* Section label */}
         <motion.div
@@ -35,7 +24,7 @@ export default function BookingCTA({ onBookNow }: { onBookNow: () => void }) {
           transition={{ duration: 0.6, ease }}
           style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: 'clamp(24px, 4vw, 48px)' }}
         >
-          <span style={{ width: 20, height: 1, background: '#E84A0C', flexShrink: 0 }} />
+          <span style={{ width: 20, height: '1.5px', background: '#E84A0C', flexShrink: 0 }} />
           <span style={{
             fontFamily: 'var(--font-body)', fontWeight: 600, fontSize: '11px',
             letterSpacing: '0.2em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.28)',
@@ -44,8 +33,12 @@ export default function BookingCTA({ onBookNow }: { onBookNow: () => void }) {
           </span>
         </motion.div>
 
-        {/* Wall-to-wall headline */}
-        <div style={{ overflow: 'hidden', marginBottom: 'clamp(8px, 1.5vw, 20px)' }}>
+        {/*
+          Wall-to-wall headline.
+          BOOK — white. NOW. — orange. No gradients, no glow.
+          Pure typographic contrast is enough.
+        */}
+        <div style={{ overflow: 'hidden', marginBottom: 'clamp(6px, 1vw, 14px)' }}>
           <motion.div
             initial={{ y: '100%' }}
             whileInView={{ y: '0%' }}
@@ -54,7 +47,7 @@ export default function BookingCTA({ onBookNow }: { onBookNow: () => void }) {
           >
             <div style={{
               fontFamily: 'var(--font-display)',
-              fontSize: 'clamp(80px, 30vw, 440px)',
+              fontSize: 'clamp(80px, 24vw, 380px)',
               letterSpacing: '-0.01em',
               color: 'white',
               lineHeight: 0.85,
@@ -65,21 +58,16 @@ export default function BookingCTA({ onBookNow }: { onBookNow: () => void }) {
           </motion.div>
         </div>
 
-        <div style={{ overflow: 'hidden', marginBottom: 'clamp(32px, 5vw, 64px)' }}>
+        <div style={{ overflow: 'hidden', marginBottom: 'clamp(40px, 6vw, 80px)' }}>
           <motion.div
             initial={{ y: '100%' }}
             whileInView={{ y: '0%' }}
             viewport={{ once: true }}
-            transition={{ duration: 0.9, ease, delay: 0.08 }}
+            transition={{ duration: 0.9, ease, delay: 0.07 }}
           >
-            {/*
-              "NOW" is orange — full weight, full colour.
-              The contrast between white BOOK and orange NOW creates
-              maximum impact without any gradient or glow.
-            */}
             <div style={{
               fontFamily: 'var(--font-display)',
-              fontSize: 'clamp(80px, 30vw, 440px)',
+              fontSize: 'clamp(80px, 24vw, 380px)',
               letterSpacing: '-0.01em',
               lineHeight: 0.85,
               whiteSpace: 'nowrap',
@@ -106,10 +94,10 @@ export default function BookingCTA({ onBookNow }: { onBookNow: () => void }) {
           {/* Tagline */}
           <p style={{
             fontFamily: 'var(--font-body)', fontSize: '15px', lineHeight: 1.75,
-            color: 'rgba(255,255,255,0.35)', maxWidth: '320px',
+            color: 'rgba(255,255,255,0.35)', maxWidth: '300px',
           }}>
             Book online in minutes. Pick your date, we&apos;ll be there.
-            No drop-off, no waiting. Just results.
+            No drop-off. No waiting. Just results.
           </p>
 
           {/* CTAs */}
@@ -120,14 +108,15 @@ export default function BookingCTA({ onBookNow }: { onBookNow: () => void }) {
                 fontFamily: 'var(--font-body)', fontWeight: 600, fontSize: '12px',
                 letterSpacing: '0.1em', textTransform: 'uppercase',
                 background: '#E84A0C', color: 'white', border: 'none', cursor: 'pointer',
-                padding: '16px 24px', display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+                padding: '16px 24px',
+                display: 'flex', alignItems: 'center', justifyContent: 'space-between',
                 transition: 'background 0.2s',
               }}
               onMouseEnter={e => (e.currentTarget.style.background = '#C53D08')}
               onMouseLeave={e => (e.currentTarget.style.background = '#E84A0C')}
             >
               Book Your Pack
-              <span style={{ width: 6, height: 6, borderRadius: '50%', background: 'rgba(255,255,255,0.5)', flexShrink: 0 }} />
+              <span style={{ width: 5, height: 5, borderRadius: '50%', background: 'rgba(255,255,255,0.45)', flexShrink: 0 }} />
             </button>
             <a
               href="tel:+447984237149"
@@ -136,7 +125,8 @@ export default function BookingCTA({ onBookNow }: { onBookNow: () => void }) {
                 letterSpacing: '0.08em', textTransform: 'uppercase',
                 border: '1px solid rgba(255,255,255,0.12)',
                 color: 'rgba(255,255,255,0.42)', textDecoration: 'none',
-                padding: '16px 24px', display: 'flex', alignItems: 'center', justifyContent: 'center',
+                padding: '16px 24px',
+                display: 'flex', alignItems: 'center', justifyContent: 'center',
                 transition: 'all 0.2s',
               }}
               onMouseEnter={e => {
@@ -153,7 +143,7 @@ export default function BookingCTA({ onBookNow }: { onBookNow: () => void }) {
           </div>
 
           {/* Contact info grid */}
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px 32px' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px 36px' }}>
             {[
               ['Area',  'Hertfordshire & surrounds'],
               ['Hours', 'Mon–Sat, 8am–7pm'],
