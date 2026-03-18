@@ -132,7 +132,6 @@ export default function Packages({
                   onClick={() => setVehicle(key)}
                   style={{
                     padding: '12px 18px',
-                    borderRight: '1px solid rgba(12,12,12,0.1)',
                     background: vehicle === key ? '#0A0A0A' : 'transparent',
                     cursor: 'pointer', border: 'none',
                     borderRight: key !== 'prestige' ? '1px solid rgba(12,12,12,0.1)' : 'none',
