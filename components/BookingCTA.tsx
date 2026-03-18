@@ -6,88 +6,88 @@ const ease = [0.22, 1, 0.36, 1] as [number, number, number, number]
 
 export default function BookingCTA({ onBookNow }: { onBookNow: () => void }) {
   return (
-    <section id="contact" className="relative bg-orange overflow-hidden">
+    <section
+      id="contact"
+      className="relative bg-ink overflow-hidden border-t border-white/[0.05]"
+      style={{ paddingTop: 'clamp(80px, 10vw, 140px)', paddingBottom: 'clamp(80px, 10vw, 140px)' }}
+    >
 
-      {/* Decorative large background text */}
+      {/* Large ghost text */}
       <div
-        className="absolute inset-0 flex items-center justify-end overflow-hidden pointer-events-none select-none pr-8"
+        className="absolute inset-0 flex items-center justify-end overflow-hidden
+                   pointer-events-none select-none"
         aria-hidden
       >
         <span
-          className="font-display uppercase leading-none text-site-black/[0.08] whitespace-nowrap"
-          style={{ fontSize: 'clamp(8rem, 20vw, 24rem)', letterSpacing: '0.04em' }}
+          className="font-display text-white/[0.03] whitespace-nowrap leading-none pr-0"
+          style={{ fontSize: 'clamp(120px, 22vw, 280px)', letterSpacing: '0.04em' }}
         >
-          TTD
+          BOOK NOW
         </span>
       </div>
 
-      <div className="relative z-10 max-w-7xl mx-auto px-6 md:px-12 py-20 md:py-28">
+      <div className="relative z-10 max-w-[1380px] mx-auto px-6 md:px-10">
         <motion.div
-          initial={{ opacity: 0, y: 24 }}
+          initial={{ opacity: 0, y: 28 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: '-60px' }}
-          transition={{ duration: 0.6, ease }}
-          className="flex flex-col md:flex-row md:items-end justify-between gap-10"
-        >
-          <div>
-            <p className="font-body text-[11px] tracking-[0.28em] uppercase text-site-black/40 mb-6">
-              Ready To Book
-            </p>
-            <h2
-              className="font-display uppercase leading-[0.9] text-site-black"
-              style={{ fontSize: 'clamp(3.8rem, 8vw, 9rem)', letterSpacing: '0.02em' }}
-            >
-              READY WHEN
-              <br />
-              YOU ARE.
-            </h2>
-            <p className="font-body text-[16px] text-site-black/55 mt-6 max-w-sm leading-relaxed">
-              Book online in minutes, pick your date and we&apos;ll be there. No drop-off. No waiting. Just results.
-            </p>
-          </div>
-
-          <div className="flex flex-col gap-3 flex-shrink-0">
-            <button
-              onClick={onBookNow}
-              className="flex items-center justify-between gap-12 bg-site-black text-white
-                         px-10 py-5 font-body font-semibold text-[11px] tracking-[0.14em] uppercase
-                         hover:bg-site-dark transition-colors duration-200 group"
-            >
-              BOOK YOUR PACK
-              <span className="w-2 h-2 rounded-full bg-white/50 group-hover:bg-white/70 transition-colors duration-200" />
-            </button>
-            <a
-              href="tel:+447984237149"
-              className="flex items-center justify-center px-10 py-5 border border-site-black/20
-                         font-body font-semibold text-[11px] tracking-[0.14em] uppercase text-site-black
-                         hover:border-site-black hover:bg-site-black/5 transition-all duration-200"
-            >
-              CALL 07984 237149
-            </a>
-          </div>
-        </motion.div>
-
-        {/* Info strip */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
           viewport={{ once: true }}
-          transition={{ duration: 0.5, ease, delay: 0.2 }}
-          className="mt-14 pt-8 border-t border-site-black/12 flex flex-wrap items-center gap-x-8 gap-y-3"
+          transition={{ duration: 0.7, ease }}
+          className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-end"
         >
-          {[
-            '100% Mobile Service',
-            'Hemel Hempstead & Hertfordshire',
-            'Mon–Sat · 8am–7pm',
-            'hello@truetodetail.co.uk',
-          ].map((item, i) => (
-            <span key={item} className="flex items-center gap-3">
-              {i > 0 && <span className="hidden sm:block w-px h-3 bg-site-black/15" />}
-              <span className="font-body text-[11px] tracking-[0.2em] uppercase text-site-black/40">
-                {item}
-              </span>
-            </span>
-          ))}
+
+          {/* Left: headline */}
+          <div>
+            <div className="flex items-center gap-3 mb-8">
+              <span className="w-5 h-px bg-orange flex-shrink-0" />
+              <span className="section-label text-white/25">Ready To Book</span>
+            </div>
+            <h2
+              className="font-display text-white leading-[0.88] mb-6"
+              style={{ fontSize: 'clamp(64px, 10vw, 130px)', letterSpacing: '0.025em' }}
+            >
+              READY<br />WHEN YOU<br /><span className="text-orange">ARE.</span>
+            </h2>
+            <p className="font-body text-[15px] text-white/40 leading-[1.75] max-w-sm">
+              Book online in minutes. Pick your date, we&apos;ll be there. No drop-off, no waiting. Just results.
+            </p>
+          </div>
+
+          {/* Right: CTAs + info strip */}
+          <div>
+            <div className="flex flex-col gap-3 mb-10">
+              <button
+                onClick={onBookNow}
+                className="btn-cta w-full py-5 text-[13px]"
+              >
+                Book Your Pack
+                <span className="dot" />
+              </button>
+              <a
+                href="tel:+447984237149"
+                className="w-full flex items-center justify-center py-5 border border-white/15
+                           font-body font-semibold text-[12px] tracking-[0.08em] uppercase
+                           text-white/50 hover:border-white/35 hover:text-white/80
+                           transition-all duration-200"
+              >
+                Call 07984 237149
+              </a>
+            </div>
+
+            {/* Info items */}
+            <div className="border-t border-white/[0.07] pt-8 grid grid-cols-2 gap-y-5 gap-x-8">
+              {[
+                ['Service Area',   'Hemel Hempstead & Hertfordshire'],
+                ['Hours',          'Mon–Sat, 8am–7pm'],
+                ['Phone',          '07984 237149'],
+                ['Email',          'hello@truetodetail.co.uk'],
+              ].map(([label, val]) => (
+                <div key={label}>
+                  <p className="section-label text-white/20 mb-1">{label}</p>
+                  <p className="font-body text-[13px] text-white/50">{val}</p>
+                </div>
+              ))}
+            </div>
+          </div>
         </motion.div>
       </div>
     </section>

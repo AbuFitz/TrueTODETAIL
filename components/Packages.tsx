@@ -5,27 +5,26 @@ import { motion } from 'framer-motion'
 
 type VehicleType = 'hatchback' | 'suv' | 'prestige'
 
-const vehicleTypes: { key: VehicleType; label: string; sub: string }[] = [
+const VEHICLES: { key: VehicleType; label: string; sub: string }[] = [
   { key: 'hatchback', label: 'Hatchback', sub: '/ Saloon' },
-  { key: 'suv', label: 'SUV', sub: '/ 4×4' },
-  { key: 'prestige', label: 'Sports', sub: '/ Prestige' },
+  { key: 'suv',       label: 'SUV',       sub: '/ 4×4'   },
+  { key: 'prestige',  label: 'Sports',    sub: '/ Prestige' },
 ]
 
-interface Package {
-  id: string
-  name: string
-  tagline: string
-  price: Record<VehicleType, number>
-  includes: string[]
-  popular: boolean
+interface Pkg {
+  id:       string
+  name:     string
+  tagline:  string
   duration: string
+  price:    Record<VehicleType, number>
+  includes: string[]
+  featured: boolean
 }
 
-const packages: Package[] = [
+const PACKAGES: Pkg[] = [
   {
-    id: 'essential',
-    name: 'Essential',
-    tagline: 'A thorough hand wash & tidy',
+    id: 'essential', name: 'Essential', tagline: 'A thorough hand wash & tidy',
+    duration: '2–3 hrs', featured: false,
     price: { hatchback: 89, suv: 109, prestige: 149 },
     includes: [
       'Hand wash & hand dry',
@@ -34,13 +33,10 @@ const packages: Package[] = [
       'Full interior vacuum',
       'Dashboard & console wipe',
     ],
-    popular: false,
-    duration: '2–3 hrs',
   },
   {
-    id: 'deep-clean',
-    name: 'Deep Clean',
-    tagline: 'A complete inside-out refresh',
+    id: 'deep-clean', name: 'Deep Clean', tagline: 'A complete inside-out refresh',
+    duration: '4–5 hrs', featured: false,
     price: { hatchback: 179, suv: 219, prestige: 279 },
     includes: [
       'Everything in Essential',
@@ -50,13 +46,10 @@ const packages: Package[] = [
       'Exterior wax & sealant',
       'Engine bay wipe-down',
     ],
-    popular: false,
-    duration: '4–5 hrs',
   },
   {
-    id: 'premium',
-    name: 'Premium',
-    tagline: 'Our most complete transformation',
+    id: 'premium', name: 'Premium', tagline: 'Our most complete transformation',
+    duration: '6–8 hrs', featured: true,
     price: { hatchback: 299, suv: 369, prestige: 479 },
     includes: [
       'Everything in Deep Clean',
@@ -66,13 +59,10 @@ const packages: Package[] = [
       'Ozone odour treatment',
       'Full glass coating',
     ],
-    popular: true,
-    duration: '6–8 hrs',
   },
   {
-    id: 'elite-ceramic',
-    name: 'Elite Ceramic',
-    tagline: 'Maximum protection. Lasting gloss.',
+    id: 'elite', name: 'Elite Ceramic', tagline: 'Maximum protection. Lasting gloss.',
+    duration: '1–2 days', featured: false,
     price: { hatchback: 549, suv: 679, prestige: 849 },
     includes: [
       'Everything in Premium',
@@ -82,184 +72,199 @@ const packages: Package[] = [
       'Headlight restoration',
       'Certificate of completion',
     ],
-    popular: false,
-    duration: '1–2 days',
   },
 ]
 
 const ease = [0.22, 1, 0.36, 1] as [number, number, number, number]
 
-export default function Packages({ onBookPack }: { onBookPack: (pkg: string, vehicle: VehicleType, price: number) => void }) {
+export default function Packages({
+  onBookPack,
+}: {
+  onBookPack: (pkg: string, vehicle: VehicleType, price: number) => void
+}) {
   const [vehicle, setVehicle] = useState<VehicleType>('hatchback')
 
   return (
-    <section id="packages" className="py-20 md:py-28 bg-site-light">
-      <div className="max-w-7xl mx-auto px-6 md:px-12">
+    <section
+      id="packages"
+      className="bg-ink border-t border-white/[0.06]"
+      style={{ paddingTop: 'clamp(64px, 8vw, 120px)', paddingBottom: 'clamp(64px, 8vw, 120px)' }}
+    >
+      <div className="max-w-[1380px] mx-auto px-6 md:px-10">
 
-        {/* Section header */}
+        {/* Header row */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: '-60px' }}
-          transition={{ duration: 0.55, ease }}
-          className="flex flex-col md:flex-row md:items-end justify-between gap-8 mb-12"
+          viewport={{ once: true }}
+          transition={{ duration: 0.65, ease }}
+          className="flex flex-col md:flex-row md:items-end justify-between gap-8 mb-12 md:mb-16"
         >
           <div>
-            <p className="font-body text-[11px] tracking-[0.28em] uppercase text-black/30 mb-5">
-              Choose Your Pack
-            </p>
+            <div className="flex items-center gap-3 mb-6">
+              <span className="w-5 h-px bg-orange flex-shrink-0" />
+              <span className="section-label text-white/30">Packages</span>
+            </div>
             <h2
-              className="font-display uppercase leading-[0.9] text-site-black"
-              style={{ fontSize: 'clamp(3.2rem, 6vw, 6.5rem)', letterSpacing: '0.02em' }}
+              className="font-display text-white leading-[0.88]"
+              style={{ fontSize: 'clamp(54px, 7.5vw, 96px)', letterSpacing: '0.025em' }}
             >
-              PICK YOUR
-              <br />
-              LEVEL OF
-              <br />
-              <span className="text-orange">CLEAN.</span>
+              PICK YOUR<br />LEVEL OF<br /><span className="text-orange">CLEAN.</span>
             </h2>
           </div>
 
-          <div className="flex flex-col gap-4 md:items-end">
-            <p className="font-body text-[14px] text-black/45 max-w-xs leading-relaxed md:text-right">
-              Select your vehicle type — your price updates instantly. All prices are fixed with no surprises on the day.
+          <div className="flex flex-col items-start md:items-end gap-4">
+            <p className="font-body text-[14px] text-white/35 max-w-xs leading-relaxed md:text-right">
+              Select your vehicle — your price updates instantly. All prices are fixed with no surprises on the day.
             </p>
-            {/* Vehicle selector */}
-            <div className="inline-flex bg-white border border-black/8 overflow-hidden">
-              {vehicleTypes.map(({ key, label, sub }) => (
+
+            {/* Vehicle type tabs */}
+            <div className="inline-flex border border-white/[0.1] overflow-hidden">
+              {VEHICLES.map(({ key, label, sub }) => (
                 <button
                   key={key}
                   onClick={() => setVehicle(key)}
-                  className={`px-6 py-4 text-left transition-colors duration-150 border-r border-black/8 last:border-r-0 ${
-                    vehicle === key ? 'bg-site-black text-white' : 'bg-white text-site-black hover:bg-site-light'
+                  className={`px-5 py-3.5 text-left border-r border-white/[0.08] last:border-r-0
+                              transition-colors duration-150 ${
+                    vehicle === key
+                      ? 'bg-white text-ink'
+                      : 'bg-transparent text-white/50 hover:text-white hover:bg-white/[0.05]'
                   }`}
                 >
-                  <span className="font-body font-semibold text-[13px] uppercase block leading-none">{label}</span>
-                  <span className={`font-body text-[11px] mt-1 block ${vehicle === key ? 'text-white/40' : 'text-black/30'}`}>{sub}</span>
+                  <span className="font-body font-semibold text-[12px] tracking-[0.04em] uppercase block leading-none">
+                    {label}
+                  </span>
+                  <span className={`font-body text-[11px] mt-1 block ${vehicle === key ? 'text-ink/40' : 'text-white/25'}`}>
+                    {sub}
+                  </span>
                 </button>
               ))}
             </div>
           </div>
         </motion.div>
 
-        {/* Package cards */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-px bg-black/8">
-          {packages.map((pkg, i) => {
-            const isPopular = pkg.popular
-            return (
-              <motion.div
-                key={pkg.id}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, margin: '-40px' }}
-                transition={{ duration: 0.5, ease, delay: i * 0.07 }}
-                className={`relative flex flex-col group ${isPopular ? 'bg-orange' : 'bg-white'}`}
-              >
-                {/* Popular top bar */}
-                {isPopular && (
-                  <div className="absolute top-0 left-0 right-0 h-[3px] bg-site-black" />
-                )}
-                {/* Non-popular hover bar */}
-                {!isPopular && (
-                  <span className="absolute top-0 left-0 right-0 h-[2px] bg-orange scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left" />
-                )}
+        {/* Cards grid */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-px bg-white/[0.06]">
+          {PACKAGES.map((pkg, i) => (
+            <motion.div
+              key={pkg.id}
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: '-30px' }}
+              transition={{ duration: 0.5, ease, delay: i * 0.07 }}
+              className={`relative flex flex-col group ${
+                pkg.featured ? 'bg-white' : 'bg-ink-1'
+              }`}
+            >
+              {/* Featured top bar */}
+              {pkg.featured && (
+                <div className="h-[3px] bg-orange w-full flex-shrink-0" />
+              )}
 
-                <div className="flex flex-col flex-1 p-7 md:p-8">
+              <div className="flex flex-col flex-1 p-7 md:p-8">
 
-                  {/* Header */}
-                  <div className="flex items-start justify-between gap-3 mb-5">
-                    <div>
-                      {isPopular && (
-                        <span className="font-body text-[10px] tracking-[0.22em] uppercase block mb-2 text-site-black/55">
-                          Most Popular
-                        </span>
-                      )}
-                      <h3 className="font-display uppercase leading-[0.9] text-site-black" style={{ fontSize: '2rem', letterSpacing: '0.02em' }}>
-                        {pkg.name}
-                      </h3>
-                    </div>
-                    <span className={`font-body text-[10px] tracking-wide uppercase border px-2.5 py-1.5 flex-shrink-0 mt-1 ${
-                      isPopular ? 'border-site-black/20 text-site-black/45' : 'border-black/10 text-black/35'
-                    }`}>
-                      {pkg.duration}
-                    </span>
+                {/* Name + duration */}
+                <div className="flex items-start justify-between gap-3 mb-5">
+                  <div>
+                    {pkg.featured && (
+                      <span className="section-label text-ink/35 block mb-2">Most Popular</span>
+                    )}
+                    <h3
+                      className={`font-display leading-[0.9] ${pkg.featured ? 'text-ink' : 'text-white'}`}
+                      style={{ fontSize: 'clamp(28px, 3vw, 34px)', letterSpacing: '0.03em' }}
+                    >
+                      {pkg.name}
+                    </h3>
                   </div>
-
-                  {/* Price */}
-                  <div className="mb-5">
-                    <div className="flex items-baseline gap-1.5">
-                      <span className={`font-body text-[12px] ${isPopular ? 'text-site-black/45' : 'text-black/30'}`}>from</span>
-                      <span
-                        className="font-display leading-none text-site-black"
-                        style={{ fontSize: 'clamp(2.8rem, 4vw, 3.8rem)', letterSpacing: '0.02em' }}
-                      >
-                        £{pkg.price[vehicle]}
-                      </span>
-                    </div>
-                    <p className={`font-body text-[13px] mt-2 ${isPopular ? 'text-site-black/50' : 'text-black/40'}`}>
-                      {pkg.tagline}
-                    </p>
-                  </div>
-
-                  <div className={`h-px mb-5 ${isPopular ? 'bg-site-black/12' : 'bg-black/8'}`} />
-
-                  {/* Includes */}
-                  <ul className="flex flex-col gap-2.5 flex-1 mb-7">
-                    {pkg.includes.map((item) => (
-                      <li key={item} className="flex items-start gap-3">
-                        <span className={`mt-[6px] w-1 h-1 rounded-full flex-shrink-0 ${isPopular ? 'bg-site-black/35' : 'bg-orange'}`} />
-                        <span className={`font-body text-[13px] leading-snug ${isPopular ? 'text-site-black/65' : 'text-black/55'}`}>
-                          {item}
-                        </span>
-                      </li>
-                    ))}
-                  </ul>
-
-                  {/* CTA */}
-                  <button
-                    onClick={() => onBookPack(pkg.name, vehicle, pkg.price[vehicle])}
-                    className={`w-full py-4 font-body font-semibold text-[11px] tracking-[0.14em] uppercase
-                                flex items-center justify-between px-5 transition-colors duration-200 ${
-                      isPopular
-                        ? 'bg-site-black text-white hover:bg-site-dark'
-                        : 'bg-site-black text-white hover:bg-orange'
+                  <span
+                    className={`font-body text-[10px] tracking-wider uppercase border px-2 py-1 flex-shrink-0 mt-1 ${
+                      pkg.featured ? 'border-ink/15 text-ink/35' : 'border-white/15 text-white/30'
                     }`}
                   >
-                    BOOK THIS PACK
-                    <span className="w-2 h-2 rounded-full bg-white/40 flex-shrink-0" />
-                  </button>
+                    {pkg.duration}
+                  </span>
                 </div>
-              </motion.div>
-            )
-          })}
+
+                {/* Price */}
+                <div className="mb-5">
+                  <div className="flex items-baseline gap-1.5">
+                    <span className={`font-body text-[12px] ${pkg.featured ? 'text-ink/40' : 'text-white/30'}`}>
+                      from
+                    </span>
+                    <span
+                      className={`font-display leading-none ${pkg.featured ? 'text-ink' : 'text-white'}`}
+                      style={{ fontSize: 'clamp(40px, 5vw, 52px)', letterSpacing: '0.02em' }}
+                    >
+                      £{pkg.price[vehicle]}
+                    </span>
+                  </div>
+                  <p className={`font-body text-[13px] mt-2 ${pkg.featured ? 'text-ink/45' : 'text-white/35'}`}>
+                    {pkg.tagline}
+                  </p>
+                </div>
+
+                <div className={`h-px mb-5 ${pkg.featured ? 'bg-ink/8' : 'bg-white/[0.07]'}`} />
+
+                {/* Includes */}
+                <ul className="flex flex-col gap-2.5 flex-1 mb-7">
+                  {pkg.includes.map((item) => (
+                    <li key={item} className="flex items-start gap-3">
+                      <span
+                        className={`mt-[7px] w-1 h-1 rounded-full flex-shrink-0 ${
+                          pkg.featured ? 'bg-orange' : 'bg-white/25'
+                        }`}
+                      />
+                      <span className={`font-body text-[13px] leading-snug ${pkg.featured ? 'text-ink/60' : 'text-white/40'}`}>
+                        {item}
+                      </span>
+                    </li>
+                  ))}
+                </ul>
+
+                {/* CTA */}
+                <button
+                  onClick={() => onBookPack(pkg.name, vehicle, pkg.price[vehicle])}
+                  className={`w-full py-4 font-body font-semibold text-[12px] tracking-[0.08em]
+                              uppercase flex items-center justify-between px-5
+                              transition-colors duration-200 ${
+                    pkg.featured
+                      ? 'bg-orange text-white hover:bg-orange-dark'
+                      : 'bg-white/[0.07] text-white/70 hover:bg-orange hover:text-white'
+                  }`}
+                >
+                  Book This Pack
+                  <span className={`w-1.5 h-1.5 rounded-full flex-shrink-0 ${pkg.featured ? 'bg-white/60' : 'bg-white/30'}`} />
+                </button>
+
+              </div>
+            </motion.div>
+          ))}
         </div>
 
         {/* Add-ons */}
         <motion.div
-          initial={{ opacity: 0, y: 14 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: '-40px' }}
-          transition={{ duration: 0.45, ease, delay: 0.2 }}
-          className="mt-4 bg-white border border-black/6 px-8 py-6"
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.5, delay: 0.2 }}
+          className="mt-4 border border-white/[0.07] px-8 py-5 flex flex-col sm:flex-row items-start sm:items-center gap-5 sm:gap-10"
         >
-          <div className="flex flex-col sm:flex-row sm:items-center gap-5 sm:gap-10">
-            <p className="font-body font-semibold text-[11px] tracking-[0.22em] uppercase text-black/35 flex-shrink-0">
-              Add-ons
-            </p>
-            <div className="hidden sm:block w-px h-5 bg-black/10 flex-shrink-0" />
-            <div className="flex flex-wrap gap-x-8 gap-y-2.5">
-              {[
-                ['Engine Bay Detail', '£50'],
-                ['Headlight Restoration', '£40'],
-                ['Odour Elimination', '£60'],
-                ['Pet Hair Removal', '£30'],
-              ].map(([name, price]) => (
-                <div key={name} className="flex items-baseline gap-2">
-                  <span className="font-body text-[13px] text-black/55">{name}</span>
-                  <span className="font-display font-black text-sm text-orange">{price}</span>
-                </div>
-              ))}
-            </div>
+          <p className="section-label text-white/25 flex-shrink-0">Add-ons</p>
+          <div className="hidden sm:block w-px h-5 bg-white/10 flex-shrink-0" />
+          <div className="flex flex-wrap gap-x-8 gap-y-2">
+            {[
+              ['Engine Bay Detail', '£50'],
+              ['Headlight Restoration', '£40'],
+              ['Odour Elimination', '£60'],
+              ['Pet Hair Removal', '£30'],
+            ].map(([name, price]) => (
+              <div key={name} className="flex items-baseline gap-2">
+                <span className="font-body text-[13px] text-white/35">{name}</span>
+                <span className="font-display text-[15px] text-orange" style={{ letterSpacing: '0.03em' }}>
+                  {price}
+                </span>
+              </div>
+            ))}
           </div>
         </motion.div>
 

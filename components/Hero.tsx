@@ -5,170 +5,138 @@ import Image from 'next/image'
 
 const ease = [0.22, 1, 0.36, 1] as [number, number, number, number]
 
-const NAV_H = 64
+const TICKER = [
+  'Mobile Service',
+  'Fixed Pricing',
+  'Hertfordshire',
+  'No Drop-Off',
+  'Ceramic Coating',
+  'Book Online',
+  'Professional Grade',
+  'We Come To You',
+]
 
 export default function Hero({ onBookNow }: { onBookNow: () => void }) {
   return (
-    <section
-      className="flex flex-col md:grid md:grid-cols-[1fr_460px] lg:grid-cols-[1fr_500px]"
-      style={{ minHeight: `calc(100vh - ${NAV_H}px)`, marginTop: `${NAV_H}px` }}
-    >
+    <div style={{ paddingTop: '64px' }}>
 
-      {/* ── LEFT: clean photo + orange headline box (no dark overlay) ── */}
-      <div className="relative min-h-[65vw] md:min-h-0 overflow-hidden bg-[#E8E8E8]">
+      {/* ── Main hero split ── */}
+      <section
+        className="grid grid-cols-1 md:grid-cols-[55%_45%]"
+        style={{ minHeight: 'calc(100vh - 64px)' }}
+      >
 
-        <Image
-          src="https://images.unsplash.com/photo-1607860108855-64acf2078ed9?w=1800&q=85&fit=crop&crop=center"
-          alt="Premium car detailing"
-          fill
-          priority
-          sizes="(max-width: 768px) 100vw, 60vw"
-          className="object-cover"
-        />
+        {/* LEFT — ink panel, all text */}
+        <div className="bg-ink flex flex-col justify-between px-8 md:px-14 lg:px-20 py-14 md:py-16">
 
-        {/* Orange headline box — centred on photo, like the reference */}
-        <motion.div
-          initial={{ opacity: 0, y: 32 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.15, ease }}
-          className="absolute left-0 top-1/2 -translate-y-1/2"
-          style={{ left: 'clamp(32px, 8vw, 100px)' }}
-        >
-          <div className="bg-orange" style={{ padding: 'clamp(28px, 3.5vw, 48px) clamp(24px, 3vw, 42px)' }}>
+          {/* Top brand label */}
+          <motion.p
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.6, ease }}
+            className="section-label text-white/20"
+          >
+            True To Detail — Hertfordshire, UK
+          </motion.p>
+
+          {/* Centre: massive headline */}
+          <motion.div
+            initial={{ opacity: 0, y: 48 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 1, delay: 0.1, ease }}
+          >
             <h1
-              className="font-display uppercase text-site-black"
+              className="font-display text-white leading-[0.88]"
               style={{
-                fontSize: 'clamp(5rem, 9vw, 10rem)',
-                lineHeight: 0.9,
-                letterSpacing: '0.02em',
+                fontSize: 'clamp(72px, 13vw, 156px)',
+                letterSpacing: '0.025em',
               }}
             >
-              DETAILING
-              <br />YOU CAN
-              <br />TRUST.
+              DETAIL<br />DONE<br />RIGHT.
             </h1>
-          </div>
-        </motion.div>
-      </div>
-
-      {/* ── RIGHT PANEL ── */}
-      <div className="bg-white flex flex-col border-t md:border-t-0 md:border-l border-black/8">
-
-        {/* TOP: white space + description + CTA — mirrors reference */}
-        <div className="flex flex-col justify-center flex-1 px-10 py-12 md:py-16" style={{ minHeight: '45%' }}>
-
-          <motion.p
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.5, delay: 0.35, ease }}
-            className="font-body text-[11px] tracking-[0.28em] uppercase text-black/30 mb-8"
-          >
-            Professional Car Detailing
-          </motion.p>
-
-          <motion.p
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.55, delay: 0.45, ease }}
-            className="font-body text-[16px] leading-[1.7] text-black/55 mb-10"
-          >
-            We bring certified detailers directly to your driveway — pro-grade products, fixed prices, no drop-off required.
-          </motion.p>
-
-          {/* Feature points */}
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.45, delay: 0.55, ease }}
-            className="flex flex-col gap-3 mb-10"
-          >
-            {[
-              'We come to you — driveway or car park',
-              'Fixed prices with no hidden charges',
-              'Professional-grade products only',
-            ].map((item) => (
-              <div key={item} className="flex items-center gap-3">
-                <span className="w-1.5 h-1.5 rounded-full bg-orange flex-shrink-0" />
-                <span className="font-body text-sm text-black/50">{item}</span>
-              </div>
-            ))}
           </motion.div>
 
-          {/* CTA button — same style as reference "SCHEDULE SERVICE" */}
-          <motion.button
-            initial={{ opacity: 0, y: 8 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.45, delay: 0.65, ease }}
-            onClick={onBookNow}
-            className="w-full bg-site-black text-white px-7 py-5
-                       font-body font-semibold text-[11px] tracking-[0.14em] uppercase
-                       flex items-center justify-between
-                       hover:bg-orange transition-colors duration-200 group"
-          >
-            BOOK YOUR PACK
-            <span className="w-2 h-2 rounded-full bg-white/50 flex-shrink-0 group-hover:bg-white/70 transition-colors duration-200" />
-          </motion.button>
-
-          {/* Contact */}
+          {/* Bottom: desc + CTA */}
           <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.4, delay: 0.75, ease }}
-            className="mt-6 flex items-center gap-5"
+            initial={{ opacity: 0, y: 24 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.7, delay: 0.3, ease }}
+            className="space-y-7"
           >
-            <a
-              href="tel:+447984237149"
-              className="font-body text-[12px] text-black/40 hover:text-site-black transition-colors duration-150"
-            >
-              07984 237149
-            </a>
-            <span className="w-px h-3 bg-black/15" />
-            <span className="font-body text-[12px] text-black/30">Mon–Sat · 8am–7pm</span>
+            <p className="font-body text-[15px] leading-[1.75] text-white/40 max-w-[340px]">
+              Professional mobile detailing straight to your driveway. Fixed prices, no drop-off needed, results that speak for themselves.
+            </p>
+
+            <div className="flex flex-wrap items-center gap-4">
+              <button
+                onClick={onBookNow}
+                className="font-body font-semibold text-[12px] tracking-[0.1em] uppercase
+                           bg-orange text-white px-8 py-4
+                           hover:bg-orange-dark transition-colors duration-200
+                           flex items-center gap-4"
+              >
+                Book Your Detail
+                <span className="w-1.5 h-1.5 rounded-full bg-white/60 flex-shrink-0" />
+              </button>
+
+              <a
+                href="tel:+447984237149"
+                className="font-body text-[13px] text-white/30
+                           hover:text-white/60 transition-colors duration-200"
+              >
+                07984 237149
+              </a>
+            </div>
+
+            {/* Three quick facts */}
+            <div className="flex flex-wrap gap-x-6 gap-y-2 pt-2">
+              {['100% mobile', 'Fixed prices', 'No drop-off'].map((fact) => (
+                <span key={fact} className="flex items-center gap-2">
+                  <span className="w-1 h-1 rounded-full bg-orange flex-shrink-0" />
+                  <span className="font-body text-[12px] text-white/30">{fact}</span>
+                </span>
+              ))}
+            </div>
           </motion.div>
         </div>
 
-        {/* DIVIDER */}
-        <div className="h-px bg-black/8 flex-shrink-0" />
+        {/* RIGHT — full-bleed photo */}
+        <div className="relative min-h-[60vw] md:min-h-0 overflow-hidden bg-ink-1">
+          <Image
+            src="https://images.unsplash.com/photo-1607860108855-64acf2078ed9?w=1400&q=90&fit=crop&crop=center"
+            alt="Premium car being detailed"
+            fill
+            priority
+            sizes="(max-width: 768px) 100vw, 45vw"
+            className="object-cover"
+          />
+          {/* Subtle left bleed into dark panel */}
+          <div
+            className="absolute inset-0 pointer-events-none"
+            style={{
+              background: 'linear-gradient(to right, rgba(12,12,12,0.35) 0%, transparent 30%)',
+            }}
+          />
+        </div>
+      </section>
 
-        {/* BOTTOM: VIDEO — autoplay, muted, looping background video */}
-        <div className="relative flex-1 min-h-[280px] overflow-hidden bg-site-black">
-          {/*
-            Free stock video: "Person Doing a Car Wash" — Pexels ID 4863282
-            License: Pexels License (free for commercial use, no attribution required)
-            Replace with your own branded video for production.
-          */}
-          <video
-            autoPlay
-            muted
-            loop
-            playsInline
-            className="absolute inset-0 w-full h-full object-cover"
-          >
-            <source
-              src="https://videos.pexels.com/video-files/4863282/4863282-hd_1920_1080_25fps.mp4"
-              type="video/mp4"
-            />
-            {/* Fallback embed if direct MP4 is blocked */}
-            <iframe
-              src="https://www.pexels.com/video/4863282/embed?autoplay=1&loop=1"
-              className="absolute inset-0 w-full h-full"
-              style={{ border: 'none' }}
-              allow="autoplay; fullscreen"
-              title="Car detailing video"
-            />
-          </video>
-          {/* Bottom info strip */}
-          <div className="absolute bottom-0 left-0 right-0 pointer-events-none
-                          bg-gradient-to-t from-site-black/70 to-transparent px-8 py-5
-                          flex items-center justify-between">
-            <span className="font-body text-[11px] tracking-[0.18em] uppercase text-white/40">
-              Professional Detail
+      {/* ── Ticker strip ── */}
+      <div className="bg-ink border-t border-white/[0.05] py-3.5 overflow-hidden">
+        <div className="flex animate-marquee whitespace-nowrap select-none">
+          {[...TICKER, ...TICKER].map((item, i) => (
+            <span key={i} className="inline-flex items-center gap-5 mx-6">
+              <span
+                className="font-display text-white/30 uppercase"
+                style={{ fontSize: '12px', letterSpacing: '0.2em' }}
+              >
+                {item}
+              </span>
+              <span className="w-[3px] h-[3px] rounded-full bg-orange/50 flex-shrink-0" />
             </span>
-            <span className="w-1.5 h-1.5 rounded-full bg-orange/70" />
-          </div>
+          ))}
         </div>
-
       </div>
-    </section>
+
+    </div>
   )
 }

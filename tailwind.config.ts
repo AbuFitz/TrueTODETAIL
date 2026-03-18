@@ -9,21 +9,30 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
+        // Brand
         orange: '#E84A0C',
         'orange-dark': '#C53D08',
-        'site-black': '#0A0A0A',
-        'site-light': '#EBEBEB',
-        'site-gray': '#F2F2F2',
-        'site-dark': '#1A1A1A',
+        // Dark palette
+        ink: '#0C0C0C',
+        'ink-1': '#161614',
+        'ink-2': '#242420',
+        // Light palette
+        parchment: '#FAFAF8',
+        'parchment-2': '#F0EDE8',
+        // Legacy aliases (keep so BookingModal doesn't break)
+        'site-black': '#0C0C0C',
+        'site-light': '#F0EDE8',
+        'site-gray': '#FAFAF8',
+        'site-dark': '#161614',
       },
       fontFamily: {
-        // Bebas Neue — condensed display font for all headlines
         display: ['var(--font-display)', 'sans-serif'],
-        // DM Sans — clean geometric sans for all body, nav, UI labels
         body: ['var(--font-body)', 'sans-serif'],
+        // legacy alias
+        wordmark: ['var(--font-display)', 'sans-serif'],
       },
       animation: {
-        marquee: 'marquee 30s linear infinite',
+        marquee: 'marquee 36s linear infinite',
       },
       keyframes: {
         marquee: {
