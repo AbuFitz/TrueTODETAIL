@@ -1,16 +1,16 @@
 import type { Metadata } from 'next'
-import { Barlow, Barlow_Condensed, Inter, JetBrains_Mono } from 'next/font/google'
+import { Space_Grotesk, Barlow_Condensed, Inter } from 'next/font/google'
 import './globals.css'
 
-// Logo / wordmark — normal-width Barlow 900 with wide tracking = "dragged" effect
-const barlowWordmark = Barlow({
+// Wordmark / logo — Space Grotesk Bold matches the heavy grotesque style in the reference
+const spaceGrotesk = Space_Grotesk({
   subsets: ['latin'],
-  weight: ['900'],
+  weight: ['500', '600', '700'],
   variable: '--font-wordmark',
   display: 'swap',
 })
 
-// Section headings — condensed Barlow 800, Benzin Bold equivalent
+// Section headings — Barlow Condensed ultra-bold for the big condensed headline look
 const barlowCondensed = Barlow_Condensed({
   subsets: ['latin'],
   weight: ['700', '800', '900'],
@@ -18,7 +18,7 @@ const barlowCondensed = Barlow_Condensed({
   display: 'swap',
 })
 
-// Body — Inter, closest to Neue Haas Unica Pro available on Google
+// Body text — Inter for all body copy, labels and UI text
 const inter = Inter({
   subsets: ['latin'],
   weight: ['400', '500', '600', '700'],
@@ -26,19 +26,11 @@ const inter = Inter({
   display: 'swap',
 })
 
-// UI labels / overlines / nav — JetBrains Mono
-const jetbrainsMono = JetBrains_Mono({
-  subsets: ['latin'],
-  weight: ['500', '600'],
-  variable: '--font-mono',
-  display: 'swap',
-})
-
 export const metadata: Metadata = {
-  title: 'TRUE TO DETAIL — Premium Auto Detailing',
+  title: 'TRUE TO DETAIL — Premium Mobile Auto Detailing',
   description:
-    'Professional car detailing packages that transform your vehicle. Book mobile detailing, paint correction, ceramic coatings and more.',
-  keywords: ['car detailing', 'auto detailing', 'ceramic coating', 'paint correction', 'mobile detailing'],
+    'Professional mobile car detailing in Hemel Hempstead & Hertfordshire. Book online for hand wash, paint correction, ceramic coating and more.',
+  keywords: ['car detailing', 'mobile detailing', 'ceramic coating', 'paint correction', 'Hemel Hempstead'],
 }
 
 export default function RootLayout({
@@ -47,8 +39,8 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="en" className={`${barlowWordmark.variable} ${barlowCondensed.variable} ${inter.variable} ${jetbrainsMono.variable}`}>
-      <body className="bg-white text-site-black font-body">{children}</body>
+    <html lang="en" className={`${spaceGrotesk.variable} ${barlowCondensed.variable} ${inter.variable}`}>
+      <body className="bg-white text-site-black font-body antialiased">{children}</body>
     </html>
   )
 }

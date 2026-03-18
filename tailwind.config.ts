@@ -13,29 +13,25 @@ const config: Config = {
         'orange-dark': '#C53D08',
         'site-black': '#0A0A0A',
         'site-light': '#EBEBEB',
+        'site-gray': '#F2F2F2',
         'site-dark': '#1A1A1A',
       },
       fontFamily: {
+        // Space Grotesk — bold grotesque for logo / wordmark
         wordmark: ['var(--font-wordmark)', 'sans-serif'],
+        // Barlow Condensed — ultra-bold condensed for big display headings
         display: ['var(--font-display)', 'sans-serif'],
+        // Inter — clean body text and UI labels
         body: ['var(--font-body)', 'sans-serif'],
-        mono: ['var(--font-mono)', 'monospace'],
-      },
-      letterSpacing: {
-        widest2: '0.2em',
-        widest3: '0.3em',
       },
       animation: {
-        marquee: 'marquee 32s linear infinite',
+        marquee: 'marquee 30s linear infinite',
       },
       keyframes: {
         marquee: {
           from: { transform: 'translateX(0)' },
           to: { transform: 'translateX(-50%)' },
         },
-      },
-      transitionDuration: {
-        '400': '400ms',
       },
     },
   },
