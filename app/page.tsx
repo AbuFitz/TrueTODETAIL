@@ -15,11 +15,16 @@ type VehicleType = 'hatchback' | 'suv' | 'prestige'
 
 export default function HomePage() {
   const [modalOpen, setModalOpen] = useState(false)
-  const [selectedPack, setSelectedPack] = useState('Premium')
-  const [selectedVehicle, setSelectedVehicle] = useState<VehicleType>('hatchback')
-  const [selectedPrice, setSelectedPrice] = useState(299)
+  const [selectedPack, setSelectedPack] = useState('')
+  const [selectedVehicle, setSelectedVehicle] = useState<VehicleType | ''>('')
+  const [selectedPrice, setSelectedPrice] = useState(0)
 
-  const openModal = () => setModalOpen(true)
+  const openModal = () => {
+    setSelectedPack('')
+    setSelectedVehicle('')
+    setSelectedPrice(0)
+    setModalOpen(true)
+  }
 
   const handleBookPack = (pack: string, vehicle: VehicleType, price: number) => {
     setSelectedPack(pack)

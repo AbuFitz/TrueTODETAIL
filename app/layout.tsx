@@ -1,18 +1,18 @@
 import type { Metadata } from 'next'
-import { Anton, Inter } from 'next/font/google'
+import { Barlow_Condensed, DM_Sans } from 'next/font/google'
 import './globals.css'
 
-const anton = Anton({
+const barlow = Barlow_Condensed({
   subsets: ['latin'],
-  weight: '400',
-  variable: '--font-anton',
+  weight: ['600', '700', '800'],
+  variable: '--font-display',
   display: 'swap',
 })
 
-const inter = Inter({
+const dmSans = DM_Sans({
   subsets: ['latin'],
-  weight: ['400', '500', '600', '700', '800', '900'],
-  variable: '--font-inter',
+  weight: ['400', '500', '600', '700'],
+  variable: '--font-body',
   display: 'swap',
 })
 
@@ -29,7 +29,7 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="en" className={`${anton.variable} ${inter.variable}`}>
+    <html lang="en" className={`${barlow.variable} ${dmSans.variable}`}>
       <body className="bg-white text-site-black font-body">{children}</body>
     </html>
   )

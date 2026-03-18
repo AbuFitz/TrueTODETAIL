@@ -9,7 +9,7 @@ interface BookingModalProps {
   isOpen: boolean
   onClose: () => void
   initialPack?: string
-  initialVehicle?: VehicleType
+  initialVehicle?: VehicleType | ''
   initialPrice?: number
 }
 
@@ -31,13 +31,13 @@ const priceMap: Record<string, Record<VehicleType, number>> = {
 export default function BookingModal({
   isOpen,
   onClose,
-  initialPack = 'Premium',
-  initialVehicle = 'hatchback',
-  initialPrice = 299,
+  initialPack = '',
+  initialVehicle = '',
+  initialPrice = 0,
 }: BookingModalProps) {
   const [step, setStep] = useState<Step>(1)
   const [pack, setPack] = useState(initialPack)
-  const [vehicle, setVehicle] = useState<VehicleType>(initialVehicle as VehicleType)
+  const [vehicle, setVehicle] = useState<VehicleType | ''>(initialVehicle as VehicleType | '')
   const [date, setDate] = useState('')
   const [time, setTime] = useState('')
   const [name, setName] = useState('')
@@ -49,7 +49,7 @@ export default function BookingModal({
   const [apiError, setApiError] = useState('')
   const [bookingId, setBookingId] = useState('')
 
-  const price = priceMap[pack]?.[vehicle] ?? initialPrice
+  const price = pack && vehicle ? (priceMap[pack]?.[vehicle as VehicleType] ?? 0) : null
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -84,6 +84,8 @@ export default function BookingModal({
     onClose()
     setTimeout(() => {
       setStep(1)
+      setPack(initialPack)
+      setVehicle(initialVehicle as VehicleType | '')
       setName('')
       setPhone('')
       setEmail('')
@@ -199,18 +201,22 @@ export default function BookingModal({
               <div className="bg-site-light p-6 flex items-center justify-between">
                 <div>
                   <p className="font-body text-[10px] text-black/40 tracking-[0.15em] uppercase">Estimated Price</p>
-                  <p className="font-display text-5xl mt-1">£{price}</p>
+                  {price !== null
+                    ? <p className="font-display text-5xl mt-1">£{price}</p>
+                    : <p className="font-display text-3xl mt-1 text-black/25">—</p>
+                  }
                 </div>
                 <div className="text-right">
-                  <p className="font-body text-xs font-semibold text-black/50">{pack}</p>
-                  <p className="font-body text-xs text-black/40">{vehicleLabels[vehicle]}</p>
+                  <p className="font-body text-xs font-semibold text-black/50">{pack || 'No pack selected'}</p>
+                  <p className="font-body text-xs text-black/40">{vehicle ? vehicleLabels[vehicle as VehicleType] : 'No vehicle selected'}</p>
                   <p className="font-body text-[10px] text-black/30 mt-1">Mobile — we come to you</p>
                 </div>
               </div>
 
               <button
                 onClick={() => setStep(2)}
-                className="w-full bg-orange text-white py-5 font-body font-bold text-[11px] tracking-[0.15em] uppercase flex items-center justify-between px-6 hover:bg-orange-dark transition-colors"
+                disabled={!pack || !vehicle}
+                className="w-full bg-orange text-white py-5 font-body font-bold text-[11px] tracking-[0.15em] uppercase flex items-center justify-between px-6 hover:bg-orange-dark transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
               >
                 NEXT: SCHEDULE
                 <span className="text-lg">→</span>
@@ -367,7 +373,7 @@ export default function BookingModal({
                 </div>
                 <div className="flex justify-between">
                   <span>Vehicle</span>
-                  <span className="font-semibold text-site-black">{vehicleLabels[vehicle]}</span>
+                  <span className="font-semibold text-site-black">{vehicle ? vehicleLabels[vehicle as VehicleType] : '—'}</span>
                 </div>
                 <div className="flex justify-between">
                   <span>Date &amp; Time</span>
@@ -379,7 +385,7 @@ export default function BookingModal({
                 </div>
                 <div className="border-t border-black/10 pt-3 flex justify-between">
                   <span className="font-bold text-site-black text-sm">TOTAL</span>
-                  <span className="font-display text-site-black text-xl">£{price}</span>
+                  <span className="font-display text-site-black text-xl">{price !== null ? `£${price}` : '—'}</span>
                 </div>
               </div>
 

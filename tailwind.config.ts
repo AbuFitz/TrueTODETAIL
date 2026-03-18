@@ -16,8 +16,8 @@ const config: Config = {
         'site-dark': '#1A1A1A',
       },
       fontFamily: {
-        display: ['var(--font-anton)', 'sans-serif'],
-        body: ['var(--font-inter)', 'sans-serif'],
+        display: ['var(--font-display)', 'sans-serif'],
+        body: ['var(--font-body)', 'sans-serif'],
       },
       letterSpacing: {
         widest2: '0.2em',

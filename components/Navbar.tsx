@@ -47,9 +47,14 @@ export default function Navbar({ onBookNow }: { onBookNow: () => void }) {
           {/* Brand */}
           <a
             href="#"
-            className="flex items-center px-8 font-display text-[21px] uppercase tracking-tight border-r border-black/10 hover:bg-site-light transition-colors duration-200 flex-shrink-0"
+            className="flex items-center px-7 border-r border-black/10 hover:bg-site-light transition-colors duration-200 flex-shrink-0"
           >
-            TRUE&nbsp;TO&nbsp;<span className="text-orange ml-1">DETAIL</span>
+            <span
+              className="font-display font-extrabold uppercase text-[19px]"
+              style={{ letterSpacing: '0.12em', display: 'inline-block', transform: 'scaleX(1.06)', transformOrigin: 'left center' }}
+            >
+              TRUE TO <span className="text-orange">DETAIL</span>
+            </span>
           </a>
 
           {/* Spacer */}
