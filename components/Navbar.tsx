@@ -3,10 +3,10 @@
 import { useState, useEffect } from 'react'
 
 const NAV_LINKS = [
-  { label: 'Services', href: '#services' },
-  { label: 'Packages', href: '#packages' },
-  { label: 'About',    href: '#about'    },
-  { label: 'Contact',  href: '#contact'  },
+  { label: 'Services', href: '#services'  },
+  { label: 'Packages', href: '#packages'  },
+  { label: 'About',    href: '#about'     },
+  { label: 'Contact',  href: '#contact'   },
 ]
 
 export default function Navbar({ onBookNow }: { onBookNow: () => void }) {
@@ -14,7 +14,7 @@ export default function Navbar({ onBookNow }: { onBookNow: () => void }) {
   const [open, setOpen]         = useState(false)
 
   useEffect(() => {
-    const fn = () => setScrolled(window.scrollY > 8)
+    const fn = () => setScrolled(window.scrollY > 12)
     window.addEventListener('scroll', fn, { passive: true })
     return () => window.removeEventListener('scroll', fn)
   }, [])
@@ -27,52 +27,82 @@ export default function Navbar({ onBookNow }: { onBookNow: () => void }) {
   return (
     <>
       <nav
-        className={`fixed top-0 inset-x-0 z-50 h-16 flex items-center transition-all duration-300 ${
-          scrolled
-            ? 'bg-white/96 backdrop-blur-md shadow-[0_1px_0_rgba(12,12,12,0.06)]'
-            : 'bg-white border-b border-[#0C0C0C]/[0.05]'
-        }`}
+        style={{
+          position: 'fixed', top: 0, left: 0, right: 0, zIndex: 50,
+          height: '64px',
+          display: 'flex', alignItems: 'center',
+          background: scrolled ? 'rgba(255,255,255,0.97)' : 'white',
+          backdropFilter: scrolled ? 'blur(12px)' : 'none',
+          borderBottom: scrolled
+            ? '1px solid rgba(12,12,12,0.07)'
+            : '1px solid rgba(12,12,12,0.05)',
+          transition: 'background 0.3s, box-shadow 0.3s, border-color 0.3s',
+          boxShadow: scrolled ? '0 1px 0 rgba(12,12,12,0.05)' : 'none',
+        }}
       >
-        <div className="w-full max-w-[1380px] mx-auto px-6 md:px-10 flex items-center h-full">
+        <div style={{
+          width: '100%', maxWidth: '1380px', margin: '0 auto',
+          padding: '0 clamp(20px, 4vw, 64px)',
+          display: 'flex', alignItems: 'center', height: '100%',
+        }}>
 
           {/* Logo */}
-          <a href="#" className="flex-shrink-0 select-none">
-            <span className="font-display tracking-[0.07em] text-ink" style={{ fontSize: '19px' }}>
+          <a href="#" style={{ textDecoration: 'none', flexShrink: 0 }}>
+            <span style={{
+              fontFamily: 'var(--font-display)', fontSize: '18px',
+              letterSpacing: '0.07em', color: '#0A0A0A',
+            }}>
               TRUE TO
             </span>
-            <span className="font-display tracking-[0.07em] text-orange" style={{ fontSize: '19px' }}>
+            <span style={{
+              fontFamily: 'var(--font-display)', fontSize: '18px',
+              letterSpacing: '0.07em', color: '#E84A0C',
+            }}>
               &nbsp;DETAIL
             </span>
           </a>
 
-          <div className="flex-1" />
+          <div style={{ flex: 1 }} />
 
           {/* Desktop links */}
-          <div className="hidden md:flex items-center">
+          <div className="hidden md:flex items-center" style={{ gap: 0 }}>
             {NAV_LINKS.map((l) => (
               <a
                 key={l.label}
                 href={l.href}
-                className="px-5 h-16 inline-flex items-center font-body font-medium
-                           text-[13px] tracking-[0.04em] text-ink/45 hover:text-ink
-                           transition-colors duration-200 relative group"
+                style={{
+                  fontFamily: 'var(--font-body)', fontWeight: 500, fontSize: '13px',
+                  letterSpacing: '0.03em', color: 'rgba(12,12,12,0.45)',
+                  textDecoration: 'none',
+                  padding: '0 18px', height: '64px',
+                  display: 'flex', alignItems: 'center',
+                  position: 'relative',
+                  transition: 'color 0.2s',
+                }}
+                onMouseEnter={e => (e.currentTarget.style.color = '#0A0A0A')}
+                onMouseLeave={e => (e.currentTarget.style.color = 'rgba(12,12,12,0.45)')}
               >
                 {l.label}
-                <span
-                  className="absolute bottom-0 left-5 right-5 h-[2px] bg-orange
-                             scale-x-0 group-hover:scale-x-100 transition-transform
-                             duration-250 origin-left"
-                />
               </a>
             ))}
 
-            <div className="w-px h-5 bg-ink/10 mx-3 flex-shrink-0" />
+            <div style={{
+              width: 1, height: 18,
+              background: 'rgba(12,12,12,0.1)',
+              margin: '0 12px', flexShrink: 0,
+            }} />
 
             <button
               onClick={onBookNow}
-              className="font-body font-semibold text-[12px] tracking-[0.08em] uppercase
-                         bg-ink text-white px-5 py-2.5 ml-1
-                         hover:bg-orange transition-colors duration-200 flex-shrink-0"
+              style={{
+                fontFamily: 'var(--font-body)', fontWeight: 600, fontSize: '12px',
+                letterSpacing: '0.08em', textTransform: 'uppercase',
+                background: '#0A0A0A', color: 'white', border: 'none',
+                padding: '10px 20px', cursor: 'pointer', flexShrink: 0,
+                transition: 'background 0.2s',
+              }}
+              onMouseEnter={e => (e.currentTarget.style.background = '#E84A0C')}
+              onMouseLeave={e => (e.currentTarget.style.background = '#0A0A0A')}
             >
               Book Now
             </button>
@@ -80,70 +110,111 @@ export default function Navbar({ onBookNow }: { onBookNow: () => void }) {
 
           {/* Mobile hamburger */}
           <button
-            className="md:hidden flex flex-col justify-center gap-[5px] w-10 h-10"
+            className="md:hidden"
             onClick={() => setOpen(!open)}
             aria-label={open ? 'Close menu' : 'Open menu'}
+            style={{
+              display: 'flex', flexDirection: 'column', justifyContent: 'center',
+              gap: '5px', width: '40px', height: '40px',
+              background: 'none', border: 'none', cursor: 'pointer', padding: 0,
+            }}
           >
-            <span
-              className={`h-[1.5px] bg-ink transition-all duration-300 origin-center ${
-                open ? 'w-6 rotate-45 translate-y-[6.5px]' : 'w-6'
-              }`}
-            />
-            <span
-              className={`h-[1.5px] bg-ink transition-all duration-300 ${
-                open ? 'opacity-0 w-4' : 'w-4'
-              }`}
-            />
-            <span
-              className={`h-[1.5px] bg-ink transition-all duration-300 origin-center ${
-                open ? 'w-6 -rotate-45 -translate-y-[6.5px]' : 'w-6'
-              }`}
-            />
+            {[0, 1, 2].map((j) => (
+              <span
+                key={j}
+                style={{
+                  height: '1.5px', background: '#0A0A0A', display: 'block',
+                  width: j === 1 ? '16px' : '24px',
+                  transformOrigin: 'center',
+                  transition: 'all 0.28s',
+                  transform:
+                    open
+                      ? j === 0 ? 'rotate(45deg) translate(4.5px, 4.5px)'
+                        : j === 1 ? 'scaleX(0) translateX(-10px)'
+                        : 'rotate(-45deg) translate(4.5px, -4.5px)'
+                      : 'none',
+                  opacity: open && j === 1 ? 0 : 1,
+                }}
+              />
+            ))}
           </button>
+
         </div>
       </nav>
 
       {/* Mobile full-screen menu */}
       <div
-        className={`fixed inset-0 z-40 bg-ink flex flex-col pt-16 transition-opacity duration-300 ${
-          open ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'
-        }`}
+        style={{
+          position: 'fixed', inset: 0, zIndex: 40,
+          background: '#0A0A0A',
+          paddingTop: '64px',
+          display: 'flex', flexDirection: 'column',
+          opacity: open ? 1 : 0,
+          pointerEvents: open ? 'auto' : 'none',
+          transition: 'opacity 0.28s',
+        }}
       >
-        <div className="flex-1 flex flex-col justify-center px-8 py-6">
-          <p className="section-label text-white/20 mb-8">Navigation</p>
+        <div style={{ flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center', padding: '0 clamp(28px, 6vw, 60px)' }}>
+          <p style={{
+            fontFamily: 'var(--font-body)', fontWeight: 600, fontSize: '10px',
+            letterSpacing: '0.22em', textTransform: 'uppercase',
+            color: 'rgba(255,255,255,0.2)', marginBottom: '28px',
+          }}>
+            Navigation
+          </p>
+
           {NAV_LINKS.map((l, i) => (
             <a
               key={l.label}
               href={l.href}
               onClick={() => setOpen(false)}
-              className="flex items-center justify-between py-5 border-b border-white/[0.06] group"
+              style={{
+                display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+                padding: '18px 0',
+                borderBottom: '1px solid rgba(255,255,255,0.06)',
+                textDecoration: 'none',
+              }}
             >
-              <div className="flex items-baseline gap-4">
-                <span className="font-body text-[10px] text-white/20 w-5 tabular-nums">0{i + 1}</span>
-                <span
-                  className="font-display text-white group-hover:text-orange
-                             transition-colors duration-200 leading-none"
-                  style={{ fontSize: '52px', letterSpacing: '0.04em' }}
-                >
+              <div style={{ display: 'flex', alignItems: 'baseline', gap: '16px' }}>
+                <span style={{
+                  fontFamily: 'var(--font-body)', fontSize: '10px', fontWeight: 600,
+                  color: 'rgba(255,255,255,0.2)', width: '20px',
+                }}>0{i + 1}</span>
+                <span style={{
+                  fontFamily: 'var(--font-display)',
+                  fontSize: 'clamp(40px, 11vw, 60px)',
+                  letterSpacing: '0.04em', color: 'white', lineHeight: 1,
+                }}>
                   {l.label}
                 </span>
               </div>
-              <span className="text-white/20 group-hover:text-orange transition-colors text-sm">↗</span>
+              <span style={{ color: 'rgba(255,255,255,0.2)', fontSize: '14px' }}>↗</span>
             </a>
           ))}
         </div>
 
-        <div className="px-8 pb-10 border-t border-white/[0.06] pt-6">
+        <div style={{
+          padding: 'clamp(20px, 4vw, 36px) clamp(28px, 6vw, 60px)',
+          borderTop: '1px solid rgba(255,255,255,0.06)',
+        }}>
           <button
             onClick={() => { setOpen(false); onBookNow() }}
-            className="w-full bg-orange text-white font-body font-semibold
-                       text-[12px] tracking-[0.1em] uppercase flex items-center
-                       justify-between px-6 py-4 hover:bg-orange-dark transition-colors"
+            style={{
+              width: '100%',
+              fontFamily: 'var(--font-body)', fontWeight: 600, fontSize: '12px',
+              letterSpacing: '0.1em', textTransform: 'uppercase',
+              background: '#E84A0C', color: 'white', border: 'none', cursor: 'pointer',
+              padding: '16px 24px',
+              display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+            }}
           >
             Book Your Detail
-            <span className="w-1.5 h-1.5 rounded-full bg-white/50" />
+            <span style={{ width: 6, height: 6, borderRadius: '50%', background: 'rgba(255,255,255,0.5)' }} />
           </button>
-          <p className="font-body text-[11px] text-white/20 mt-4 tracking-wider">
+          <p style={{
+            fontFamily: 'var(--font-body)', fontSize: '11px',
+            color: 'rgba(255,255,255,0.2)', marginTop: '12px', letterSpacing: '0.08em',
+          }}>
             07984 237149 · Mon–Sat 8am–7pm
           </p>
         </div>

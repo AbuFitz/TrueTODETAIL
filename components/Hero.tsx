@@ -6,132 +6,248 @@ import Image from 'next/image'
 const ease = [0.22, 1, 0.36, 1] as [number, number, number, number]
 
 const TICKER = [
-  'Mobile Service',
-  'Fixed Pricing',
-  'Hertfordshire',
-  'No Drop-Off',
-  'Ceramic Coating',
-  'Book Online',
-  'Professional Grade',
-  'We Come To You',
+  'Mobile Service', 'Fixed Pricing', 'Hertfordshire', 'No Drop-Off',
+  'Ceramic Coating', 'Book Online', 'We Come To You', 'Professional Grade',
 ]
 
 export default function Hero({ onBookNow }: { onBookNow: () => void }) {
   return (
     <div style={{ paddingTop: '64px' }}>
 
-      {/* ── Main hero split ── */}
+      {/* ── Main hero ── */}
       <section
-        className="grid grid-cols-1 md:grid-cols-[55%_45%]"
-        style={{ minHeight: 'calc(100vh - 64px)' }}
+        style={{
+          position: 'relative',
+          overflow: 'hidden',
+          minHeight: 'calc(100vh - 64px)',
+          background: '#0A0A0A',
+        }}
       >
 
-        {/* LEFT — ink panel, all text */}
-        <div className="bg-ink flex flex-col justify-between px-8 md:px-14 lg:px-20 py-14 md:py-16">
+        {/* Tilted car image — right half of screen */}
+        <div
+          style={{
+            position: 'absolute',
+            top: '-8%',
+            right: '-3%',
+            width: '62%',
+            height: '116%',
+            borderRadius: '32px 0 0 32px',
+            overflow: 'hidden',
+            transform: 'rotate(-7deg)',
+            transformOrigin: 'right top',
+            zIndex: 1,
+          }}
+        >
+          <Image
+            src="https://images.unsplash.com/photo-1607860108855-64acf2078ed9?w=1800&q=90&fit=crop&crop=center"
+            alt="Premium car detailing"
+            fill
+            priority
+            style={{ objectFit: 'cover', transform: 'scale(1.12)' }}
+          />
+          {/* Inner subtle darkening at edges */}
+          <div style={{
+            position: 'absolute', inset: 0,
+            background: 'linear-gradient(135deg, rgba(10,10,10,0.3) 0%, transparent 50%)',
+          }} />
+        </div>
 
-          {/* Top brand label */}
+        {/* Gradient: image bleeds into dark bg on the left */}
+        <div style={{
+          position: 'absolute', inset: 0, zIndex: 2,
+          background: 'linear-gradient(to right, #0A0A0A 28%, rgba(10,10,10,0.75) 50%, rgba(10,10,10,0.1) 72%, transparent 90%)',
+          pointerEvents: 'none',
+        }} />
+
+        {/* Gradient: bottom section fades to black */}
+        <div style={{
+          position: 'absolute', bottom: 0, left: 0, right: 0, height: '38%', zIndex: 2,
+          background: 'linear-gradient(to top, #0A0A0A 0%, transparent 100%)',
+          pointerEvents: 'none',
+        }} />
+
+        {/* Main content */}
+        <div
+          style={{
+            position: 'absolute', inset: 0, zIndex: 10,
+            display: 'flex', flexDirection: 'column', justifyContent: 'space-between',
+            padding: 'clamp(28px, 5vw, 80px)',
+            paddingTop: 'clamp(36px, 5vw, 72px)',
+            paddingBottom: 'clamp(36px, 5vw, 72px)',
+          }}
+        >
+
+          {/* Brand label */}
           <motion.p
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            transition={{ duration: 0.6, ease }}
-            className="section-label text-white/20"
+            transition={{ duration: 0.8, ease }}
+            style={{
+              fontFamily: 'var(--font-body)', fontSize: '11px',
+              letterSpacing: '0.22em', textTransform: 'uppercase',
+              color: 'rgba(255,255,255,0.28)', fontWeight: 600,
+            }}
           >
             True To Detail — Hertfordshire, UK
           </motion.p>
 
-          {/* Centre: massive headline */}
+          {/* Cascading staircase headline */}
           <motion.div
-            initial={{ opacity: 0, y: 48 }}
+            initial={{ opacity: 0, y: 44 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 1, delay: 0.1, ease }}
+            transition={{ duration: 1.1, delay: 0.1, ease }}
+            style={{ pointerEvents: 'none' }}
           >
-            <h1
-              className="font-display text-white leading-[0.88]"
-              style={{
-                fontSize: 'clamp(72px, 13vw, 156px)',
-                letterSpacing: '0.025em',
-              }}
-            >
-              DETAIL<br />DONE<br />RIGHT.
-            </h1>
+            {/* DETAIL — largest, leftmost */}
+            <div>
+              <span
+                style={{
+                  fontFamily: 'var(--font-display)',
+                  fontSize: 'clamp(76px, 21vw, 300px)',
+                  letterSpacing: '0.025em',
+                  color: 'white',
+                  display: 'block',
+                  lineHeight: 0.87,
+                }}
+              >
+                DETAIL
+              </span>
+            </div>
+            {/* DONE — medium, step right */}
+            <div style={{ paddingLeft: 'clamp(24px, 8vw, 120px)' }}>
+              <span
+                style={{
+                  fontFamily: 'var(--font-display)',
+                  fontSize: 'clamp(56px, 16vw, 224px)',
+                  letterSpacing: '0.025em',
+                  color: 'rgba(255,255,255,0.82)',
+                  display: 'block',
+                  lineHeight: 0.87,
+                }}
+              >
+                DONE
+              </span>
+            </div>
+            {/* RIGHT. — smallest, most right, orange full stop */}
+            <div style={{ paddingLeft: 'clamp(48px, 16vw, 244px)' }}>
+              <span
+                style={{
+                  fontFamily: 'var(--font-display)',
+                  fontSize: 'clamp(38px, 11vw, 150px)',
+                  letterSpacing: '0.025em',
+                  color: 'rgba(255,255,255,0.65)',
+                  display: 'block',
+                  lineHeight: 0.87,
+                }}
+              >
+                RIGHT<span style={{ color: '#E84A0C' }}>.</span>
+              </span>
+            </div>
           </motion.div>
 
-          {/* Bottom: desc + CTA */}
+          {/* Bottom row: description + CTA + mini stats */}
           <motion.div
-            initial={{ opacity: 0, y: 24 }}
+            initial={{ opacity: 0, y: 22 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7, delay: 0.3, ease }}
-            className="space-y-7"
+            transition={{ duration: 0.7, delay: 0.35, ease }}
+            style={{
+              display: 'flex', flexWrap: 'wrap', alignItems: 'flex-end',
+              justifyContent: 'space-between', gap: '28px',
+            }}
           >
-            <p className="font-body text-[15px] leading-[1.75] text-white/40 max-w-[340px]">
-              Professional mobile detailing straight to your driveway. Fixed prices, no drop-off needed, results that speak for themselves.
-            </p>
-
-            <div className="flex flex-wrap items-center gap-4">
-              <button
-                onClick={onBookNow}
-                className="font-body font-semibold text-[12px] tracking-[0.1em] uppercase
-                           bg-orange text-white px-8 py-4
-                           hover:bg-orange-dark transition-colors duration-200
-                           flex items-center gap-4"
+            {/* Description + CTAs */}
+            <div>
+              <p
+                style={{
+                  fontFamily: 'var(--font-body)', fontSize: '15px', lineHeight: 1.75,
+                  color: 'rgba(255,255,255,0.38)', maxWidth: '320px', marginBottom: '22px',
+                }}
               >
-                Book Your Detail
-                <span className="w-1.5 h-1.5 rounded-full bg-white/60 flex-shrink-0" />
-              </button>
-
-              <a
-                href="tel:+447984237149"
-                className="font-body text-[13px] text-white/30
-                           hover:text-white/60 transition-colors duration-200"
-              >
-                07984 237149
-              </a>
+                Professional mobile detailing straight to your driveway. Fixed prices, no drop-off needed, results that speak for themselves.
+              </p>
+              <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: '12px' }}>
+                <button
+                  onClick={onBookNow}
+                  style={{
+                    fontFamily: 'var(--font-body)', fontWeight: 600, fontSize: '12px',
+                    letterSpacing: '0.1em', textTransform: 'uppercase',
+                    background: '#E84A0C', color: 'white', border: 'none', cursor: 'pointer',
+                    padding: '14px 28px', display: 'flex', alignItems: 'center', gap: '14px',
+                    transition: 'background 0.2s',
+                  }}
+                  onMouseEnter={e => (e.currentTarget.style.background = '#C53D08')}
+                  onMouseLeave={e => (e.currentTarget.style.background = '#E84A0C')}
+                >
+                  Book Your Detail
+                  <span style={{ width: 6, height: 6, borderRadius: '50%', background: 'rgba(255,255,255,0.5)', flexShrink: 0 }} />
+                </button>
+                <a
+                  href="tel:+447984237149"
+                  style={{
+                    fontFamily: 'var(--font-body)', fontSize: '13px',
+                    color: 'rgba(255,255,255,0.28)', textDecoration: 'none',
+                  }}
+                >
+                  07984 237149
+                </a>
+              </div>
             </div>
 
-            {/* Three quick facts */}
-            <div className="flex flex-wrap gap-x-6 gap-y-2 pt-2">
-              {['100% mobile', 'Fixed prices', 'No drop-off'].map((fact) => (
-                <span key={fact} className="flex items-center gap-2">
-                  <span className="w-1 h-1 rounded-full bg-orange flex-shrink-0" />
-                  <span className="font-body text-[12px] text-white/30">{fact}</span>
-                </span>
+            {/* Mini stat cluster */}
+            <div style={{ display: 'flex', gap: 'clamp(20px, 3vw, 40px)', alignItems: 'flex-end' }}>
+              {[
+                { val: '100%', label: 'mobile\nservice'   },
+                { val: '£0',   label: 'hidden\ncharges'   },
+                { val: '2YR',  label: 'ceramic\nwarranty' },
+              ].map(({ val, label }) => (
+                <div key={val} style={{ textAlign: 'center' }}>
+                  <div
+                    style={{
+                      fontFamily: 'var(--font-display)',
+                      fontSize: 'clamp(26px, 3.2vw, 40px)',
+                      letterSpacing: '0.03em', color: 'white', lineHeight: 1,
+                    }}
+                  >
+                    {val}
+                  </div>
+                  <div
+                    style={{
+                      fontFamily: 'var(--font-body)', fontSize: '9px', fontWeight: 600,
+                      color: 'rgba(255,255,255,0.28)', textTransform: 'uppercase',
+                      letterSpacing: '0.15em', lineHeight: 1.45, marginTop: '4px',
+                      whiteSpace: 'pre-line',
+                    }}
+                  >
+                    {label}
+                  </div>
+                </div>
               ))}
             </div>
           </motion.div>
-        </div>
 
-        {/* RIGHT — full-bleed photo */}
-        <div className="relative min-h-[60vw] md:min-h-0 overflow-hidden bg-ink-1">
-          <Image
-            src="https://images.unsplash.com/photo-1607860108855-64acf2078ed9?w=1400&q=90&fit=crop&crop=center"
-            alt="Premium car being detailed"
-            fill
-            priority
-            sizes="(max-width: 768px) 100vw, 45vw"
-            className="object-cover"
-          />
-          {/* Subtle left bleed into dark panel */}
-          <div
-            className="absolute inset-0 pointer-events-none"
-            style={{
-              background: 'linear-gradient(to right, rgba(12,12,12,0.35) 0%, transparent 30%)',
-            }}
-          />
         </div>
       </section>
 
       {/* ── Ticker strip ── */}
-      <div className="bg-ink border-t border-white/[0.05] py-3.5 overflow-hidden">
-        <div className="flex animate-marquee whitespace-nowrap select-none">
+      <div style={{
+        background: '#0A0A0A',
+        borderTop: '1px solid rgba(255,255,255,0.05)',
+        padding: '13px 0',
+        overflow: 'hidden',
+      }}>
+        <div className="animate-marquee" style={{ display: 'flex', whiteSpace: 'nowrap', userSelect: 'none' }}>
           {[...TICKER, ...TICKER].map((item, i) => (
-            <span key={i} className="inline-flex items-center gap-5 mx-6">
+            <span key={i} style={{ display: 'inline-flex', alignItems: 'center', gap: '18px', margin: '0 20px' }}>
               <span
-                className="font-display text-white/30 uppercase"
-                style={{ fontSize: '12px', letterSpacing: '0.2em' }}
+                style={{
+                  fontFamily: 'var(--font-display)', color: 'rgba(255,255,255,0.28)',
+                  textTransform: 'uppercase', fontSize: '11px', letterSpacing: '0.22em',
+                }}
               >
                 {item}
               </span>
-              <span className="w-[3px] h-[3px] rounded-full bg-orange/50 flex-shrink-0" />
+              <span style={{ width: 3, height: 3, borderRadius: '50%', background: 'rgba(232,74,12,0.6)', flexShrink: 0 }} />
             </span>
           ))}
         </div>

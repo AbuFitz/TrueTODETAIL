@@ -8,86 +8,182 @@ export default function BookingCTA({ onBookNow }: { onBookNow: () => void }) {
   return (
     <section
       id="contact"
-      className="relative bg-ink overflow-hidden border-t border-white/[0.05]"
-      style={{ paddingTop: 'clamp(80px, 10vw, 140px)', paddingBottom: 'clamp(80px, 10vw, 140px)' }}
+      style={{
+        position: 'relative',
+        background: '#0A0A0A',
+        overflow: 'hidden',
+        paddingTop: 'clamp(72px, 12vw, 160px)',
+        paddingBottom: 'clamp(72px, 10vw, 130px)',
+        zIndex: 2,
+        /* Diagonal top to flow from HowItWorks */
+        clipPath: 'polygon(0 5vw, 100% 0, 100% 100%, 0 100%)',
+        marginTop: '-5vw',
+      }}
     >
 
-      {/* Large ghost text */}
-      <div
-        className="absolute inset-0 flex items-center justify-end overflow-hidden
-                   pointer-events-none select-none"
-        aria-hidden
-      >
-        <span
-          className="font-display text-white/[0.03] whitespace-nowrap leading-none pr-0"
-          style={{ fontSize: 'clamp(120px, 22vw, 280px)', letterSpacing: '0.04em' }}
-        >
-          BOOK NOW
-        </span>
-      </div>
+      {/* Orange glow in background */}
+      <div style={{
+        position: 'absolute',
+        bottom: '-20%', left: '50%', transform: 'translateX(-50%)',
+        width: '60%', height: '60%',
+        borderRadius: '50%',
+        background: 'radial-gradient(circle, rgba(232,74,12,0.12) 0%, transparent 70%)',
+        pointerEvents: 'none',
+      }} />
 
-      <div className="relative z-10 max-w-[1380px] mx-auto px-6 md:px-10">
+      <div style={{ maxWidth: '1380px', margin: '0 auto', padding: '0 clamp(24px, 5vw, 80px)' }}>
+
+        {/* Section label */}
         <motion.div
-          initial={{ opacity: 0, y: 28 }}
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6, ease }}
+          style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: 'clamp(24px, 4vw, 48px)' }}
+        >
+          <span style={{ width: 20, height: 1, background: '#E84A0C', flexShrink: 0 }} />
+          <span style={{
+            fontFamily: 'var(--font-body)', fontWeight: 600, fontSize: '11px',
+            letterSpacing: '0.2em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.28)',
+          }}>
+            Ready To Book
+          </span>
+        </motion.div>
+
+        {/* Wall-to-wall headline */}
+        <div style={{ overflow: 'hidden', marginBottom: 'clamp(16px, 3vw, 36px)' }}>
+          <motion.div
+            initial={{ y: '100%' }}
+            whileInView={{ y: '0%' }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.9, ease }}
+          >
+            {/* "BOOK" spans full width */}
+            <div
+              style={{
+                fontFamily: 'var(--font-display)',
+                /* Scale to fill width: BOOK = 4 chars at ~0.55em each ≈ 2.2em total → 100vw/2.2 = ~45vw */
+                fontSize: 'clamp(80px, 30vw, 440px)',
+                letterSpacing: '-0.01em',
+                color: 'white',
+                lineHeight: 0.85,
+                whiteSpace: 'nowrap',
+              }}
+            >
+              BOOK
+            </div>
+          </motion.div>
+        </div>
+        <div style={{ overflow: 'hidden', marginBottom: 'clamp(32px, 5vw, 64px)' }}>
+          <motion.div
+            initial={{ y: '100%' }}
+            whileInView={{ y: '0%' }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.9, ease, delay: 0.08 }}
+          >
+            {/* "NOW." same size — aligns perfectly with BOOK */}
+            <div
+              style={{
+                fontFamily: 'var(--font-display)',
+                fontSize: 'clamp(80px, 30vw, 440px)',
+                letterSpacing: '-0.01em',
+                lineHeight: 0.85,
+                whiteSpace: 'nowrap',
+              }}
+            >
+              <span style={{ color: 'rgba(255,255,255,0.12)' }}>NOW</span>
+              <span style={{ color: '#E84A0C' }}>.</span>
+            </div>
+          </motion.div>
+        </div>
+
+        {/* Bottom row: tagline + CTAs + contact */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          transition={{ duration: 0.7, ease }}
-          className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-end"
+          transition={{ duration: 0.65, ease, delay: 0.2 }}
+          style={{
+            display: 'flex', flexWrap: 'wrap', alignItems: 'flex-start',
+            justifyContent: 'space-between', gap: '32px',
+            borderTop: '1px solid rgba(255,255,255,0.07)',
+            paddingTop: 'clamp(24px, 3.5vw, 44px)',
+          }}
         >
+          {/* Tagline */}
+          <p style={{
+            fontFamily: 'var(--font-body)', fontSize: '15px', lineHeight: 1.75,
+            color: 'rgba(255,255,255,0.35)', maxWidth: '320px',
+          }}>
+            Book online in minutes. Pick your date, we&apos;ll be there. No drop-off, no waiting. Just results.
+          </p>
 
-          {/* Left: headline */}
-          <div>
-            <div className="flex items-center gap-3 mb-8">
-              <span className="w-5 h-px bg-orange flex-shrink-0" />
-              <span className="section-label text-white/25">Ready To Book</span>
-            </div>
-            <h2
-              className="font-display text-white leading-[0.88] mb-6"
-              style={{ fontSize: 'clamp(64px, 10vw, 130px)', letterSpacing: '0.025em' }}
+          {/* CTAs */}
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', minWidth: '240px' }}>
+            <button
+              onClick={onBookNow}
+              style={{
+                fontFamily: 'var(--font-body)', fontWeight: 600, fontSize: '12px',
+                letterSpacing: '0.1em', textTransform: 'uppercase',
+                background: '#E84A0C', color: 'white', border: 'none', cursor: 'pointer',
+                padding: '16px 24px', display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+                transition: 'background 0.2s',
+              }}
+              onMouseEnter={e => (e.currentTarget.style.background = '#C53D08')}
+              onMouseLeave={e => (e.currentTarget.style.background = '#E84A0C')}
             >
-              READY<br />WHEN YOU<br /><span className="text-orange">ARE.</span>
-            </h2>
-            <p className="font-body text-[15px] text-white/40 leading-[1.75] max-w-sm">
-              Book online in minutes. Pick your date, we&apos;ll be there. No drop-off, no waiting. Just results.
-            </p>
+              Book Your Pack
+              <span style={{ width: 6, height: 6, borderRadius: '50%', background: 'rgba(255,255,255,0.5)', flexShrink: 0 }} />
+            </button>
+            <a
+              href="tel:+447984237149"
+              style={{
+                fontFamily: 'var(--font-body)', fontWeight: 600, fontSize: '12px',
+                letterSpacing: '0.08em', textTransform: 'uppercase',
+                border: '1px solid rgba(255,255,255,0.12)',
+                color: 'rgba(255,255,255,0.42)', textDecoration: 'none',
+                padding: '16px 24px', display: 'flex', alignItems: 'center', justifyContent: 'center',
+                transition: 'all 0.2s',
+              }}
+              onMouseEnter={e => {
+                e.currentTarget.style.borderColor = 'rgba(255,255,255,0.35)'
+                e.currentTarget.style.color = 'rgba(255,255,255,0.75)'
+              }}
+              onMouseLeave={e => {
+                e.currentTarget.style.borderColor = 'rgba(255,255,255,0.12)'
+                e.currentTarget.style.color = 'rgba(255,255,255,0.42)'
+              }}
+            >
+              Call 07984 237149
+            </a>
           </div>
 
-          {/* Right: CTAs + info strip */}
-          <div>
-            <div className="flex flex-col gap-3 mb-10">
-              <button
-                onClick={onBookNow}
-                className="btn-cta w-full py-5 text-[13px]"
-              >
-                Book Your Pack
-                <span className="dot" />
-              </button>
-              <a
-                href="tel:+447984237149"
-                className="w-full flex items-center justify-center py-5 border border-white/15
-                           font-body font-semibold text-[12px] tracking-[0.08em] uppercase
-                           text-white/50 hover:border-white/35 hover:text-white/80
-                           transition-all duration-200"
-              >
-                Call 07984 237149
-              </a>
-            </div>
-
-            {/* Info items */}
-            <div className="border-t border-white/[0.07] pt-8 grid grid-cols-2 gap-y-5 gap-x-8">
-              {[
-                ['Service Area',   'Hemel Hempstead & Hertfordshire'],
-                ['Hours',          'Mon–Sat, 8am–7pm'],
-                ['Phone',          '07984 237149'],
-                ['Email',          'hello@truetodetail.co.uk'],
-              ].map(([label, val]) => (
-                <div key={label}>
-                  <p className="section-label text-white/20 mb-1">{label}</p>
-                  <p className="font-body text-[13px] text-white/50">{val}</p>
-                </div>
-              ))}
-            </div>
+          {/* Contact info */}
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px 32px' }}>
+            {[
+              ['Area',    'Hertfordshire & surrounds'],
+              ['Hours',   'Mon–Sat, 8am–7pm'],
+              ['Phone',   '07984 237149'],
+              ['Email',   'hello@truetodetail.co.uk'],
+            ].map(([label, val]) => (
+              <div key={label}>
+                <p style={{
+                  fontFamily: 'var(--font-body)', fontWeight: 600, fontSize: '10px',
+                  letterSpacing: '0.18em', textTransform: 'uppercase',
+                  color: 'rgba(255,255,255,0.2)', marginBottom: '4px',
+                }}>
+                  {label}
+                </p>
+                <p style={{
+                  fontFamily: 'var(--font-body)', fontSize: '13px',
+                  color: 'rgba(255,255,255,0.42)',
+                }}>
+                  {val}
+                </p>
+              </div>
+            ))}
           </div>
+
         </motion.div>
       </div>
     </section>

@@ -2,13 +2,13 @@
 @tailwind components;
 @tailwind utilities;
 
+/* ── Base ── */
 html { scroll-behavior: smooth; }
-
 *, *::before, *::after { box-sizing: border-box; }
 
 body {
-  background: #FAFAF8;
-  color: #0C0C0C;
+  background: #0A0A0A;
+  color: #0A0A0A;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
@@ -23,27 +23,21 @@ body {
   will-change: transform;
 }
 
-/* ── Primary CTA button (black → orange) ── */
-.btn-cta {
-  @apply inline-flex items-center justify-between gap-8
-         bg-ink text-white font-body font-semibold
-         text-[12px] tracking-[0.1em] uppercase
-         px-7 py-4 hover:bg-orange transition-colors duration-200;
-}
-.btn-cta .dot {
-  @apply w-1.5 h-1.5 rounded-full bg-white/40 flex-shrink-0;
-}
-
-/* ── Section label ── */
-.section-label {
-  @apply font-body font-semibold text-[11px] tracking-[0.2em] uppercase;
-}
+/* ── Group hover utilities needed for dark sections ── */
+.group:hover .group-hover\:text-orange { color: #E84A0C !important; }
+.group:hover .group-hover\:bg-orange   { background: #E84A0C !important; }
+.group:hover .group-hover\:border-orange { border-color: #E84A0C !important; }
+.group:hover .group-hover\:text-white  { color: white !important; }
 
 /* ── Scrollbar ── */
 ::-webkit-scrollbar { width: 3px; }
-::-webkit-scrollbar-track { background: #F0EDE8; }
+::-webkit-scrollbar-track { background: #F4F0E8; }
 ::-webkit-scrollbar-thumb { background: #E84A0C; }
 
+/* ── Focus ── */
 :focus-visible { outline: 2px solid #E84A0C; outline-offset: 3px; }
 
 input, textarea, select { -webkit-appearance: none; appearance: none; }
+
+/* ── Clip-path sections need z-index stacking context ── */
+section { isolation: isolate; }

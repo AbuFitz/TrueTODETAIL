@@ -6,9 +6,9 @@ import { motion } from 'framer-motion'
 type VehicleType = 'hatchback' | 'suv' | 'prestige'
 
 const VEHICLES: { key: VehicleType; label: string; sub: string }[] = [
-  { key: 'hatchback', label: 'Hatchback', sub: '/ Saloon' },
-  { key: 'suv',       label: 'SUV',       sub: '/ 4×4'   },
-  { key: 'prestige',  label: 'Sports',    sub: '/ Prestige' },
+  { key: 'hatchback', label: 'Hatchback', sub: '/ Saloon'   },
+  { key: 'suv',       label: 'SUV',       sub: '/ 4×4'      },
+  { key: 'prestige',  label: 'Sports',    sub: '/ Prestige'  },
 ]
 
 interface Pkg {
@@ -23,55 +23,28 @@ interface Pkg {
 
 const PACKAGES: Pkg[] = [
   {
-    id: 'essential', name: 'Essential', tagline: 'A thorough hand wash & tidy',
-    duration: '2–3 hrs', featured: false,
+    id: 'essential', name: 'Essential', tagline: 'The perfect fresh start', duration: '2–3 hrs',
+    featured: false,
     price: { hatchback: 89, suv: 109, prestige: 149 },
-    includes: [
-      'Hand wash & hand dry',
-      'Wheel & tyre clean',
-      'All glass cleaned',
-      'Full interior vacuum',
-      'Dashboard & console wipe',
-    ],
+    includes: ['Hand wash & hand dry', 'Wheel & tyre clean', 'Glass cleaned inside & out', 'Full interior vacuum', 'Dashboard wipe-down'],
   },
   {
-    id: 'deep-clean', name: 'Deep Clean', tagline: 'A complete inside-out refresh',
-    duration: '4–5 hrs', featured: false,
+    id: 'deep-clean', name: 'Deep Clean', tagline: 'A proper inside-out refresh', duration: '4–5 hrs',
+    featured: false,
     price: { hatchback: 179, suv: 219, prestige: 279 },
-    includes: [
-      'Everything in Essential',
-      'Interior steam clean',
-      'Leather seat conditioning',
-      'Carpet shampoo & extraction',
-      'Exterior wax & sealant',
-      'Engine bay wipe-down',
-    ],
+    includes: ['Everything in Essential', 'Interior steam clean', 'Leather conditioning', 'Carpet shampoo & extraction', 'Exterior wax & sealant', 'Engine bay wipe'],
   },
   {
-    id: 'premium', name: 'Premium', tagline: 'Our most complete transformation',
-    duration: '6–8 hrs', featured: true,
+    id: 'premium', name: 'Premium', tagline: 'The full transformation', duration: '6–8 hrs',
+    featured: true,
     price: { hatchback: 299, suv: 369, prestige: 479 },
-    includes: [
-      'Everything in Deep Clean',
-      'Clay bar decontamination',
-      'Single-stage machine polish',
-      'Paint sealant application',
-      'Ozone odour treatment',
-      'Full glass coating',
-    ],
+    includes: ['Everything in Deep Clean', 'Clay bar decontamination', 'Single-stage machine polish', 'Paint sealant application', 'Ozone odour treatment', 'Glass coating'],
   },
   {
-    id: 'elite', name: 'Elite Ceramic', tagline: 'Maximum protection. Lasting gloss.',
-    duration: '1–2 days', featured: false,
+    id: 'elite', name: 'Elite Ceramic', tagline: 'Maximum protection. Lasting gloss.', duration: '1–2 days',
+    featured: false,
     price: { hatchback: 549, suv: 679, prestige: 849 },
-    includes: [
-      'Everything in Premium',
-      'Two-stage paint correction',
-      'Ceramic coating — 2 year',
-      'Fabric & carpet protection',
-      'Headlight restoration',
-      'Certificate of completion',
-    ],
+    includes: ['Everything in Premium', 'Two-stage paint correction', 'Ceramic coating — 2 year', 'Fabric & carpet protection', 'Headlight restoration', 'Completion certificate'],
   },
 ]
 
@@ -87,54 +60,98 @@ export default function Packages({
   return (
     <section
       id="packages"
-      className="bg-ink border-t border-white/[0.06]"
-      style={{ paddingTop: 'clamp(64px, 8vw, 120px)', paddingBottom: 'clamp(64px, 8vw, 120px)' }}
+      style={{
+        position: 'relative',
+        background: '#F4F0E8',
+        /* Diagonal top going the other way — cuts up right to left */
+        clipPath: 'polygon(0 0, 100% 5vw, 100% 100%, 0 100%)',
+        marginTop: '-5vw',
+        paddingTop: 'clamp(72px, 13vw, 170px)',
+        paddingBottom: 'clamp(64px, 9vw, 130px)',
+        zIndex: 4,
+      }}
     >
-      <div className="max-w-[1380px] mx-auto px-6 md:px-10">
+      <div style={{ maxWidth: '1380px', margin: '0 auto', padding: '0 clamp(24px, 5vw, 80px)' }}>
 
-        {/* Header row */}
+        {/* Header + vehicle selector */}
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 0, y: 22 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.65, ease }}
-          className="flex flex-col md:flex-row md:items-end justify-between gap-8 mb-12 md:mb-16"
+          style={{
+            display: 'flex', flexWrap: 'wrap', alignItems: 'flex-end',
+            justifyContent: 'space-between', gap: '32px',
+            marginBottom: 'clamp(40px, 5vw, 64px)',
+          }}
         >
+          {/* Headline */}
           <div>
-            <div className="flex items-center gap-3 mb-6">
-              <span className="w-5 h-px bg-orange flex-shrink-0" />
-              <span className="section-label text-white/30">Packages</span>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '20px' }}>
+              <span style={{ width: 20, height: 1, background: '#E84A0C', flexShrink: 0 }} />
+              <span style={{
+                fontFamily: 'var(--font-body)', fontWeight: 600, fontSize: '11px',
+                letterSpacing: '0.2em', textTransform: 'uppercase', color: 'rgba(12,12,12,0.35)',
+              }}>
+                Packages
+              </span>
             </div>
             <h2
-              className="font-display text-white leading-[0.88]"
-              style={{ fontSize: 'clamp(54px, 7.5vw, 96px)', letterSpacing: '0.025em' }}
+              style={{
+                fontFamily: 'var(--font-display)',
+                fontSize: 'clamp(52px, 8vw, 108px)',
+                letterSpacing: '0.025em',
+                color: '#0A0A0A', lineHeight: 0.88,
+              }}
             >
-              PICK YOUR<br />LEVEL OF<br /><span className="text-orange">CLEAN.</span>
+              PICK YOUR<br />
+              LEVEL OF{' '}
+              <span style={{ color: '#E84A0C' }}>CLEAN.</span>
             </h2>
           </div>
 
-          <div className="flex flex-col items-start md:items-end gap-4">
-            <p className="font-body text-[14px] text-white/35 max-w-xs leading-relaxed md:text-right">
-              Select your vehicle — your price updates instantly. All prices are fixed with no surprises on the day.
+          {/* Vehicle tabs + caption */}
+          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: '14px' }}>
+            <p style={{
+              fontFamily: 'var(--font-body)', fontSize: '13px', color: 'rgba(12,12,12,0.45)',
+              textAlign: 'right', maxWidth: '240px', lineHeight: 1.6,
+            }}>
+              Select your vehicle type — prices update instantly. All fixed, no extras.
             </p>
 
-            {/* Vehicle type tabs */}
-            <div className="inline-flex border border-white/[0.1] overflow-hidden">
+            {/* Vehicle tabs */}
+            <div style={{
+              display: 'inline-flex',
+              border: '1px solid rgba(12,12,12,0.12)',
+              borderRadius: '8px',
+              overflow: 'hidden',
+            }}>
               {VEHICLES.map(({ key, label, sub }) => (
                 <button
                   key={key}
                   onClick={() => setVehicle(key)}
-                  className={`px-5 py-3.5 text-left border-r border-white/[0.08] last:border-r-0
-                              transition-colors duration-150 ${
-                    vehicle === key
-                      ? 'bg-white text-ink'
-                      : 'bg-transparent text-white/50 hover:text-white hover:bg-white/[0.05]'
-                  }`}
+                  style={{
+                    padding: '12px 18px',
+                    borderRight: '1px solid rgba(12,12,12,0.1)',
+                    background: vehicle === key ? '#0A0A0A' : 'transparent',
+                    cursor: 'pointer', border: 'none',
+                    borderRight: key !== 'prestige' ? '1px solid rgba(12,12,12,0.1)' : 'none',
+                    transition: 'background 0.15s',
+                  }}
                 >
-                  <span className="font-body font-semibold text-[12px] tracking-[0.04em] uppercase block leading-none">
+                  <span style={{
+                    display: 'block',
+                    fontFamily: 'var(--font-body)', fontWeight: 600, fontSize: '12px',
+                    letterSpacing: '0.04em', textTransform: 'uppercase', lineHeight: 1,
+                    color: vehicle === key ? 'white' : 'rgba(12,12,12,0.55)',
+                  }}>
                     {label}
                   </span>
-                  <span className={`font-body text-[11px] mt-1 block ${vehicle === key ? 'text-ink/40' : 'text-white/25'}`}>
+                  <span style={{
+                    display: 'block', marginTop: '3px',
+                    fontFamily: 'var(--font-body)', fontSize: '11px', lineHeight: 1,
+                    color: vehicle === key ? 'rgba(255,255,255,0.45)' : 'rgba(12,12,12,0.3)',
+                  }}>
                     {sub}
                   </span>
                 </button>
@@ -143,97 +160,164 @@ export default function Packages({
           </div>
         </motion.div>
 
-        {/* Cards grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-px bg-white/[0.06]">
+        {/* Cards — featured card pops out of the row */}
+        <div
+          style={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(4, 1fr)',
+            gap: '12px',
+            alignItems: 'stretch',
+          }}
+          className="grid-cols-1 sm:grid-cols-2 lg:grid-cols-4"
+        >
           {PACKAGES.map((pkg, i) => (
             <motion.div
               key={pkg.id}
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: '-30px' }}
+              viewport={{ once: true, margin: '-20px' }}
               transition={{ duration: 0.5, ease, delay: i * 0.07 }}
-              className={`relative flex flex-col group ${
-                pkg.featured ? 'bg-white' : 'bg-ink-1'
-              }`}
+              style={{
+                position: 'relative',
+                display: 'flex', flexDirection: 'column',
+                borderRadius: pkg.featured ? '20px' : '16px',
+                overflow: 'hidden',
+                background: pkg.featured ? '#0A0A0A' : 'white',
+                /* Featured card breaks out of the row vertically */
+                marginTop: pkg.featured ? '-20px' : '0',
+                marginBottom: pkg.featured ? '-20px' : '0',
+                boxShadow: pkg.featured
+                  ? '0 32px 80px rgba(10,10,10,0.35), 0 4px 16px rgba(10,10,10,0.2)'
+                  : '0 1px 4px rgba(12,12,12,0.06)',
+                zIndex: pkg.featured ? 10 : 1,
+              }}
             >
-              {/* Featured top bar */}
+              {/* Featured: orange top bar */}
               {pkg.featured && (
-                <div className="h-[3px] bg-orange w-full flex-shrink-0" />
+                <div style={{ height: '3px', background: '#E84A0C', flexShrink: 0 }} />
               )}
 
-              <div className="flex flex-col flex-1 p-7 md:p-8">
+              <div style={{
+                flex: 1, display: 'flex', flexDirection: 'column',
+                padding: pkg.featured ? 'clamp(24px, 2.5vw, 32px)' : 'clamp(20px, 2vw, 28px)',
+              }}>
 
-                {/* Name + duration */}
-                <div className="flex items-start justify-between gap-3 mb-5">
-                  <div>
-                    {pkg.featured && (
-                      <span className="section-label text-ink/35 block mb-2">Most Popular</span>
-                    )}
-                    <h3
-                      className={`font-display leading-[0.9] ${pkg.featured ? 'text-ink' : 'text-white'}`}
-                      style={{ fontSize: 'clamp(28px, 3vw, 34px)', letterSpacing: '0.03em' }}
-                    >
-                      {pkg.name}
-                    </h3>
-                  </div>
-                  <span
-                    className={`font-body text-[10px] tracking-wider uppercase border px-2 py-1 flex-shrink-0 mt-1 ${
-                      pkg.featured ? 'border-ink/15 text-ink/35' : 'border-white/15 text-white/30'
-                    }`}
-                  >
+                {/* Duration badge */}
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '16px' }}>
+                  {pkg.featured && (
+                    <span style={{
+                      fontFamily: 'var(--font-body)', fontWeight: 600, fontSize: '10px',
+                      letterSpacing: '0.18em', textTransform: 'uppercase',
+                      color: '#E84A0C', display: 'block', marginBottom: '0',
+                    }}>
+                      Most Popular
+                    </span>
+                  )}
+                  {!pkg.featured && <span />}
+                  <span style={{
+                    fontFamily: 'var(--font-body)', fontWeight: 600, fontSize: '10px',
+                    letterSpacing: '0.1em', textTransform: 'uppercase',
+                    color: pkg.featured ? 'rgba(255,255,255,0.3)' : 'rgba(12,12,12,0.3)',
+                    border: `1px solid ${pkg.featured ? 'rgba(255,255,255,0.1)' : 'rgba(12,12,12,0.1)'}`,
+                    padding: '3px 8px', borderRadius: '4px',
+                  }}>
                     {pkg.duration}
                   </span>
                 </div>
 
+                {/* Package name */}
+                <h3
+                  style={{
+                    fontFamily: 'var(--font-display)',
+                    fontSize: 'clamp(26px, 2.8vw, 34px)',
+                    letterSpacing: '0.03em',
+                    color: pkg.featured ? 'white' : '#0A0A0A',
+                    lineHeight: 0.9, marginBottom: '6px',
+                  }}
+                >
+                  {pkg.name}
+                </h3>
+                <p style={{
+                  fontFamily: 'var(--font-body)', fontSize: '13px',
+                  color: pkg.featured ? 'rgba(255,255,255,0.4)' : 'rgba(12,12,12,0.4)',
+                  marginBottom: '18px',
+                }}>
+                  {pkg.tagline}
+                </p>
+
                 {/* Price */}
-                <div className="mb-5">
-                  <div className="flex items-baseline gap-1.5">
-                    <span className={`font-body text-[12px] ${pkg.featured ? 'text-ink/40' : 'text-white/30'}`}>
+                <div style={{ marginBottom: '20px' }}>
+                  <div style={{ display: 'flex', alignItems: 'baseline', gap: '4px' }}>
+                    <span style={{
+                      fontFamily: 'var(--font-body)', fontSize: '12px',
+                      color: pkg.featured ? 'rgba(255,255,255,0.35)' : 'rgba(12,12,12,0.35)',
+                    }}>
                       from
                     </span>
                     <span
-                      className={`font-display leading-none ${pkg.featured ? 'text-ink' : 'text-white'}`}
-                      style={{ fontSize: 'clamp(40px, 5vw, 52px)', letterSpacing: '0.02em' }}
+                      style={{
+                        fontFamily: 'var(--font-display)',
+                        fontSize: 'clamp(40px, 4.5vw, 54px)',
+                        letterSpacing: '0.02em',
+                        color: pkg.featured ? 'white' : '#0A0A0A',
+                        lineHeight: 1,
+                      }}
                     >
                       £{pkg.price[vehicle]}
                     </span>
                   </div>
-                  <p className={`font-body text-[13px] mt-2 ${pkg.featured ? 'text-ink/45' : 'text-white/35'}`}>
-                    {pkg.tagline}
-                  </p>
                 </div>
 
-                <div className={`h-px mb-5 ${pkg.featured ? 'bg-ink/8' : 'bg-white/[0.07]'}`} />
+                {/* Divider */}
+                <div style={{
+                  height: '1px',
+                  background: pkg.featured ? 'rgba(255,255,255,0.08)' : 'rgba(12,12,12,0.07)',
+                  marginBottom: '20px',
+                }} />
 
-                {/* Includes */}
-                <ul className="flex flex-col gap-2.5 flex-1 mb-7">
+                {/* Includes list */}
+                <ul style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: '10px', marginBottom: '24px' }}>
                   {pkg.includes.map((item) => (
-                    <li key={item} className="flex items-start gap-3">
-                      <span
-                        className={`mt-[7px] w-1 h-1 rounded-full flex-shrink-0 ${
-                          pkg.featured ? 'bg-orange' : 'bg-white/25'
-                        }`}
-                      />
-                      <span className={`font-body text-[13px] leading-snug ${pkg.featured ? 'text-ink/60' : 'text-white/40'}`}>
+                    <li key={item} style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                      <span style={{
+                        width: 4, height: 4, borderRadius: '50%', flexShrink: 0,
+                        background: pkg.featured ? '#E84A0C' : 'rgba(12,12,12,0.2)',
+                      }} />
+                      <span style={{
+                        fontFamily: 'var(--font-body)', fontSize: '13px', lineHeight: 1.45,
+                        color: pkg.featured ? 'rgba(255,255,255,0.5)' : 'rgba(12,12,12,0.55)',
+                      }}>
                         {item}
                       </span>
                     </li>
                   ))}
                 </ul>
 
-                {/* CTA */}
+                {/* CTA button */}
                 <button
                   onClick={() => onBookPack(pkg.name, vehicle, pkg.price[vehicle])}
-                  className={`w-full py-4 font-body font-semibold text-[12px] tracking-[0.08em]
-                              uppercase flex items-center justify-between px-5
-                              transition-colors duration-200 ${
-                    pkg.featured
-                      ? 'bg-orange text-white hover:bg-orange-dark'
-                      : 'bg-white/[0.07] text-white/70 hover:bg-orange hover:text-white'
-                  }`}
+                  style={{
+                    width: '100%',
+                    fontFamily: 'var(--font-body)', fontWeight: 600, fontSize: '12px',
+                    letterSpacing: '0.08em', textTransform: 'uppercase',
+                    display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+                    padding: '14px 18px', cursor: 'pointer', border: 'none',
+                    borderRadius: '8px',
+                    background: pkg.featured ? '#E84A0C' : 'rgba(12,12,12,0.06)',
+                    color: pkg.featured ? 'white' : 'rgba(12,12,12,0.6)',
+                    transition: 'all 0.2s',
+                  }}
+                  onMouseEnter={e => {
+                    e.currentTarget.style.background = pkg.featured ? '#C53D08' : '#0A0A0A'
+                    e.currentTarget.style.color = 'white'
+                  }}
+                  onMouseLeave={e => {
+                    e.currentTarget.style.background = pkg.featured ? '#E84A0C' : 'rgba(12,12,12,0.06)'
+                    e.currentTarget.style.color = pkg.featured ? 'white' : 'rgba(12,12,12,0.6)'
+                  }}
                 >
                   Book This Pack
-                  <span className={`w-1.5 h-1.5 rounded-full flex-shrink-0 ${pkg.featured ? 'bg-white/60' : 'bg-white/30'}`} />
+                  <span style={{ width: 6, height: 6, borderRadius: '50%', background: 'currentColor', opacity: 0.5, flexShrink: 0 }} />
                 </button>
 
               </div>
@@ -241,31 +325,44 @@ export default function Packages({
           ))}
         </div>
 
-        {/* Add-ons */}
+        {/* Add-ons strip */}
         <motion.div
           initial={{ opacity: 0 }}
           whileInView={{ opacity: 1 }}
           viewport={{ once: true }}
           transition={{ duration: 0.5, delay: 0.2 }}
-          className="mt-4 border border-white/[0.07] px-8 py-5 flex flex-col sm:flex-row items-start sm:items-center gap-5 sm:gap-10"
+          style={{
+            marginTop: 'clamp(40px, 5vw, 64px)',
+            border: '1px solid rgba(12,12,12,0.1)',
+            borderRadius: '12px',
+            padding: 'clamp(16px, 2vw, 24px) clamp(20px, 3vw, 36px)',
+            display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: '16px 32px',
+          }}
         >
-          <p className="section-label text-white/25 flex-shrink-0">Add-ons</p>
-          <div className="hidden sm:block w-px h-5 bg-white/10 flex-shrink-0" />
-          <div className="flex flex-wrap gap-x-8 gap-y-2">
-            {[
-              ['Engine Bay Detail', '£50'],
-              ['Headlight Restoration', '£40'],
-              ['Odour Elimination', '£60'],
-              ['Pet Hair Removal', '£30'],
-            ].map(([name, price]) => (
-              <div key={name} className="flex items-baseline gap-2">
-                <span className="font-body text-[13px] text-white/35">{name}</span>
-                <span className="font-display text-[15px] text-orange" style={{ letterSpacing: '0.03em' }}>
-                  {price}
-                </span>
-              </div>
-            ))}
-          </div>
+          <span style={{
+            fontFamily: 'var(--font-body)', fontWeight: 600, fontSize: '11px',
+            letterSpacing: '0.2em', textTransform: 'uppercase', color: 'rgba(12,12,12,0.3)',
+            flexShrink: 0,
+          }}>
+            Add-ons
+          </span>
+          <span style={{ width: 1, height: 20, background: 'rgba(12,12,12,0.1)', flexShrink: 0 }} className="hidden sm:block" />
+          {[
+            ['Engine Bay Detail', '£50'],
+            ['Headlight Restoration', '£40'],
+            ['Odour Elimination', '£60'],
+            ['Pet Hair Removal', '£30'],
+          ].map(([name, price]) => (
+            <div key={name} style={{ display: 'flex', alignItems: 'baseline', gap: '8px' }}>
+              <span style={{ fontFamily: 'var(--font-body)', fontSize: '13px', color: 'rgba(12,12,12,0.4)' }}>{name}</span>
+              <span style={{
+                fontFamily: 'var(--font-display)', fontSize: '16px',
+                letterSpacing: '0.03em', color: '#E84A0C',
+              }}>
+                {price}
+              </span>
+            </div>
+          ))}
         </motion.div>
 
       </div>

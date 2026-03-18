@@ -5,102 +5,179 @@ import Image from 'next/image'
 
 const ease = [0.22, 1, 0.36, 1] as [number, number, number, number]
 
-const REASONS = [
+const POINTS = [
   {
-    n:     '01',
-    title: 'Precision Every Time',
-    body:  "We won't start a job we can't finish properly. Every detail is carried out to a standard we're proud to put our name on.",
+    n: '01', title: 'Precision Every Time',
+    body: "We won't start a job we can't finish properly. Every detail is carried out to a standard we're proud to put our name on.",
   },
   {
-    n:     '02',
-    title: 'We Come To You',
-    body:  'Fully mobile and self-sufficient. You keep your routine — we show up wherever suits you.',
+    n: '02', title: 'We Come To You',
+    body: 'Fully mobile and self-sufficient. You keep your routine — we show up wherever suits you.',
   },
   {
-    n:     '03',
-    title: 'Transparent Pricing',
-    body:  'Your price is locked in before you book. No surprises, no upsells, no extra charges on the day.',
+    n: '03', title: 'Transparent Pricing',
+    body: 'Your price is locked in before you book. No surprises, no upsells, no extra charges on the day.',
   },
   {
-    n:     '04',
-    title: 'We Stand Behind Our Work',
-    body:  "If you're not happy, we'll make it right. No awkward conversations — that's simply how we operate.",
+    n: '04', title: 'We Stand Behind Our Work',
+    body: "If you're not completely happy, we'll make it right. No awkward conversations — that's simply how we operate.",
   },
 ]
 
 export default function HowItWorks({ onBookNow }: { onBookNow: () => void }) {
   return (
     <section
-      className="bg-white border-t border-ink/[0.06]"
-      style={{ paddingTop: 'clamp(64px, 8vw, 120px)', paddingBottom: 'clamp(64px, 8vw, 120px)' }}
+      style={{
+        position: 'relative',
+        background: '#0A0A0A',
+        /* Diagonal both edges — parallelogram feel */
+        clipPath: 'polygon(0 5vw, 100% 0, 100% calc(100% - 5vw), 0 100%)',
+        marginTop: '-5vw',
+        paddingTop: 'clamp(80px, 14vw, 180px)',
+        paddingBottom: 'clamp(80px, 14vw, 180px)',
+        zIndex: 3,
+        overflow: 'hidden',
+      }}
     >
-      <div className="max-w-[1380px] mx-auto px-6 md:px-10">
+      <div style={{ maxWidth: '1380px', margin: '0 auto', padding: '0 clamp(24px, 5vw, 80px)' }}>
 
-        {/* Section label */}
-        <div className="flex items-center gap-3 mb-14 md:mb-20">
-          <span className="w-5 h-px bg-orange flex-shrink-0" />
-          <span className="section-label text-ink/35">Why Choose Us</span>
-        </div>
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 lg:gap-24 items-start">
 
-        {/* Two-col layout */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-start">
-
-          {/* Left — headline + photo */}
+          {/* Left: tilted polaroid image stack + headline */}
           <motion.div
-            initial={{ opacity: 0, y: 24 }}
-            whileInView={{ opacity: 1, y: 0 }}
+            initial={{ opacity: 0, x: -24 }}
+            whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
-            transition={{ duration: 0.7, ease }}
+            transition={{ duration: 0.85, ease }}
           >
+            {/* Section label */}
+            <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '28px' }}>
+              <span style={{ width: 20, height: 1, background: '#E84A0C', flexShrink: 0 }} />
+              <span style={{
+                fontFamily: 'var(--font-body)', fontWeight: 600, fontSize: '11px',
+                letterSpacing: '0.2em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.28)',
+              }}>
+                Why Choose Us
+              </span>
+            </div>
+
             <h2
-              className="font-display text-ink leading-[0.88] mb-8"
-              style={{ fontSize: 'clamp(54px, 7.5vw, 96px)', letterSpacing: '0.025em' }}
+              style={{
+                fontFamily: 'var(--font-display)',
+                fontSize: 'clamp(52px, 8vw, 108px)',
+                letterSpacing: '0.025em',
+                color: 'white', lineHeight: 0.88, marginBottom: '36px',
+              }}
             >
               MEET<br />TRUE TO<br />DETAIL.
             </h2>
-            <p className="font-body text-[15px] leading-[1.75] text-ink/45 mb-10 max-w-sm">
-              We built this business on doing the job properly — not on cutting corners or chasing volume. Here&apos;s what that means in practice.
+
+            <p style={{
+              fontFamily: 'var(--font-body)', fontSize: '15px', lineHeight: 1.75,
+              color: 'rgba(255,255,255,0.38)', marginBottom: '40px', maxWidth: '340px',
+            }}>
+              We built this business on doing the job properly — not on cutting corners or chasing volume.
             </p>
 
-            {/* Photo */}
-            <div
-              className="relative overflow-hidden"
-              style={{ height: 'clamp(220px, 26vw, 380px)' }}
-            >
-              <Image
-                src="https://images.unsplash.com/photo-1563720223185-11003d516935?w=900&q=90&fit=crop&crop=center"
-                alt="Detailer working on a car"
-                fill
-                sizes="(max-width: 1024px) 100vw, 50vw"
-                className="object-cover"
-              />
+            {/* Polaroid-style tilted image stack */}
+            <div style={{ position: 'relative', height: 'clamp(260px, 32vw, 440px)' }}>
+
+              {/* Back image — rotated, offset */}
+              <div style={{
+                position: 'absolute',
+                top: 0, left: '8%',
+                width: '80%', height: '90%',
+                borderRadius: '16px',
+                overflow: 'hidden',
+                transform: 'rotate(6deg)',
+                transformOrigin: 'bottom left',
+                background: '#1a1a1a',
+                boxShadow: '0 20px 60px rgba(0,0,0,0.5)',
+              }}>
+                <Image
+                  src="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=800&q=80&fit=crop&crop=center"
+                  alt="Detailing process"
+                  fill
+                  style={{ objectFit: 'cover', opacity: 0.7 }}
+                />
+              </div>
+
+              {/* Front image — straight, slightly left-shifted */}
+              <div style={{
+                position: 'absolute',
+                bottom: 0, left: 0,
+                width: '78%', height: '88%',
+                borderRadius: '16px',
+                overflow: 'hidden',
+                transform: 'rotate(-3deg)',
+                transformOrigin: 'bottom right',
+                boxShadow: '0 28px 80px rgba(0,0,0,0.6)',
+              }}>
+                <Image
+                  src="https://images.unsplash.com/photo-1563720223185-11003d516935?w=900&q=90&fit=crop&crop=center"
+                  alt="Professional detailer at work"
+                  fill
+                  style={{ objectFit: 'cover' }}
+                />
+                {/* Subtle vignette */}
+                <div style={{
+                  position: 'absolute', inset: 0,
+                  background: 'linear-gradient(to top, rgba(10,10,10,0.3) 0%, transparent 50%)',
+                }} />
+              </div>
+
+              {/* Floating orange accent dot */}
+              <div style={{
+                position: 'absolute', right: '4%', top: '20%',
+                width: 12, height: 12, borderRadius: '50%',
+                background: '#E84A0C',
+                boxShadow: '0 0 20px rgba(232,74,12,0.6)',
+              }} />
             </div>
+
           </motion.div>
 
-          {/* Right — reasons */}
-          <div className="flex flex-col justify-between gap-0">
-            {REASONS.map((r, i) => (
+          {/* Right: numbered points + CTAs */}
+          <div>
+            {POINTS.map((p, i) => (
               <motion.div
-                key={r.n}
+                key={p.n}
                 initial={{ opacity: 0, x: 20 }}
                 whileInView={{ opacity: 1, x: 0 }}
                 viewport={{ once: true, margin: '-20px' }}
                 transition={{ duration: 0.5, ease, delay: i * 0.07 }}
-                className="grid grid-cols-[auto_1fr] gap-x-7 py-7
-                           border-b border-ink/[0.07] first:border-t group cursor-default"
+                style={{
+                  display: 'grid',
+                  gridTemplateColumns: 'auto 1fr',
+                  gap: '20px',
+                  padding: 'clamp(20px, 2.5vw, 32px) 0',
+                  borderBottom: '1px solid rgba(255,255,255,0.06)',
+                }}
+                className="first:border-t first:border-t-white/[0.06] group cursor-default"
               >
-                <span className="font-body text-[10px] font-semibold text-ink/20 tracking-wider pt-1.5 flex-shrink-0 w-6">
-                  {r.n}
+                <span style={{
+                  fontFamily: 'var(--font-body)', fontWeight: 600, fontSize: '10px',
+                  letterSpacing: '0.2em', color: 'rgba(255,255,255,0.2)',
+                  paddingTop: '5px', width: '24px', flexShrink: 0,
+                }}>
+                  {p.n}
                 </span>
                 <div>
                   <h3
-                    className="font-body font-semibold text-[15px] text-ink mb-2
-                               group-hover:text-orange transition-colors duration-200"
+                    style={{
+                      fontFamily: 'var(--font-body)', fontWeight: 600, fontSize: '15px',
+                      color: 'white', marginBottom: '8px',
+                      transition: 'color 0.2s',
+                    }}
+                    className="group-hover:text-orange"
                   >
-                    {r.title}
+                    {p.title}
                   </h3>
-                  <p className="font-body text-[14px] leading-[1.7] text-ink/45">
-                    {r.body}
+                  <p style={{
+                    fontFamily: 'var(--font-body)', fontSize: '14px', lineHeight: 1.72,
+                    color: 'rgba(255,255,255,0.38)',
+                  }}>
+                    {p.body}
                   </p>
                 </div>
               </motion.div>
@@ -111,21 +188,44 @@ export default function HowItWorks({ onBookNow }: { onBookNow: () => void }) {
               initial={{ opacity: 0, y: 12 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              transition={{ duration: 0.5, ease, delay: 0.25 }}
-              className="flex flex-col sm:flex-row gap-3 pt-8"
+              transition={{ duration: 0.5, ease, delay: 0.28 }}
+              style={{ display: 'flex', gap: '12px', paddingTop: '32px', flexWrap: 'wrap' }}
             >
               <button
                 onClick={onBookNow}
-                className="btn-cta flex-1 justify-between"
+                style={{
+                  flex: '1 1 auto', minWidth: '160px',
+                  fontFamily: 'var(--font-body)', fontWeight: 600, fontSize: '12px',
+                  letterSpacing: '0.1em', textTransform: 'uppercase',
+                  background: '#E84A0C', color: 'white', border: 'none', cursor: 'pointer',
+                  padding: '16px 24px', display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+                  transition: 'background 0.2s',
+                }}
+                onMouseEnter={e => (e.currentTarget.style.background = '#C53D08')}
+                onMouseLeave={e => (e.currentTarget.style.background = '#E84A0C')}
               >
                 Book Your Pack
-                <span className="dot" />
+                <span style={{ width: 6, height: 6, borderRadius: '50%', background: 'rgba(255,255,255,0.5)', flexShrink: 0 }} />
               </button>
               <a
                 href="tel:+447984237149"
-                className="flex-1 flex items-center justify-center border border-ink/12 py-4
-                           font-body font-semibold text-[12px] tracking-[0.08em] uppercase
-                           text-ink/50 hover:border-ink/30 hover:text-ink transition-all duration-200"
+                style={{
+                  flex: '1 1 auto', minWidth: '140px',
+                  fontFamily: 'var(--font-body)', fontWeight: 600, fontSize: '12px',
+                  letterSpacing: '0.08em', textTransform: 'uppercase',
+                  border: '1px solid rgba(255,255,255,0.15)',
+                  color: 'rgba(255,255,255,0.45)', textDecoration: 'none',
+                  padding: '16px 24px', display: 'flex', alignItems: 'center', justifyContent: 'center',
+                  transition: 'all 0.2s',
+                }}
+                onMouseEnter={e => {
+                  e.currentTarget.style.borderColor = 'rgba(255,255,255,0.4)'
+                  e.currentTarget.style.color = 'rgba(255,255,255,0.8)'
+                }}
+                onMouseLeave={e => {
+                  e.currentTarget.style.borderColor = 'rgba(255,255,255,0.15)'
+                  e.currentTarget.style.color = 'rgba(255,255,255,0.45)'
+                }}
               >
                 07984 237149
               </a>
