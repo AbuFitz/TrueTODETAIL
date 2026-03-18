@@ -30,7 +30,6 @@ export default function HowItWorks({ onBookNow }: { onBookNow: () => void }) {
       style={{
         position: 'relative',
         background: '#0A0A0A',
-        /* Diagonal both edges — parallelogram feel */
         clipPath: 'polygon(0 5vw, 100% 0, 100% calc(100% - 5vw), 0 100%)',
         marginTop: '-5vw',
         paddingTop: 'clamp(80px, 14vw, 180px)',
@@ -43,14 +42,13 @@ export default function HowItWorks({ onBookNow }: { onBookNow: () => void }) {
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 lg:gap-24 items-start">
 
-          {/* Left: tilted polaroid image stack + headline */}
+          {/* Left — headline + clean image (no rotation, no polaroid tricks) */}
           <motion.div
             initial={{ opacity: 0, x: -24 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.85, ease }}
           >
-            {/* Section label */}
             <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '28px' }}>
               <span style={{ width: 20, height: 1, background: '#E84A0C', flexShrink: 0 }} />
               <span style={{
@@ -61,83 +59,65 @@ export default function HowItWorks({ onBookNow }: { onBookNow: () => void }) {
               </span>
             </div>
 
-            <h2
-              style={{
-                fontFamily: 'var(--font-display)',
-                fontSize: 'clamp(52px, 8vw, 108px)',
-                letterSpacing: '0.025em',
-                color: 'white', lineHeight: 0.88, marginBottom: '36px',
-              }}
-            >
+            <h2 style={{
+              fontFamily: 'var(--font-display)',
+              fontSize: 'clamp(52px, 8vw, 108px)',
+              letterSpacing: '0.025em',
+              color: 'white', lineHeight: 0.88, marginBottom: '36px',
+            }}>
               MEET<br />TRUE TO<br />DETAIL.
             </h2>
 
             <p style={{
               fontFamily: 'var(--font-body)', fontSize: '15px', lineHeight: 1.75,
-              color: 'rgba(255,255,255,0.38)', marginBottom: '40px', maxWidth: '340px',
+              color: 'rgba(255,255,255,0.38)', marginBottom: '36px', maxWidth: '340px',
             }}>
               We built this business on doing the job properly — not on cutting corners or chasing volume.
             </p>
 
-            {/* Polaroid-style tilted image stack */}
-            <div style={{ position: 'relative', height: 'clamp(260px, 32vw, 440px)' }}>
-
-              {/* Back image — rotated, offset */}
-              <div style={{
-                position: 'absolute',
-                top: 0, left: '8%',
-                width: '80%', height: '90%',
-                borderRadius: '16px',
-                overflow: 'hidden',
-                transform: 'rotate(6deg)',
-                transformOrigin: 'bottom left',
-                background: '#1a1a1a',
-                boxShadow: '0 20px 60px rgba(0,0,0,0.5)',
-              }}>
+            {/*
+              Clean two-image grid — no rotation, no polaroid, no shadow theatre.
+              Just the work. Let it speak.
+              Left image: tall. Right image: shorter, offset from top.
+              Sharp corners. No overlays.
+            */}
+            <div style={{
+              display: 'grid',
+              gridTemplateColumns: '1fr 1fr',
+              gridTemplateRows: 'auto',
+              gap: '4px',
+              height: 'clamp(300px, 36vw, 500px)',
+            }}>
+              {/* Left image — taller */}
+              <div style={{ position: 'relative', overflow: 'hidden' }}>
                 <Image
-                  src="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=800&q=80&fit=crop&crop=center"
+                  src="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=800&q=85&fit=crop&crop=center"
                   alt="Detailing process"
-                  fill
-                  style={{ objectFit: 'cover', opacity: 0.7 }}
-                />
-              </div>
-
-              {/* Front image — straight, slightly left-shifted */}
-              <div style={{
-                position: 'absolute',
-                bottom: 0, left: 0,
-                width: '78%', height: '88%',
-                borderRadius: '16px',
-                overflow: 'hidden',
-                transform: 'rotate(-3deg)',
-                transformOrigin: 'bottom right',
-                boxShadow: '0 28px 80px rgba(0,0,0,0.6)',
-              }}>
-                <Image
-                  src="https://images.unsplash.com/photo-1563720223185-11003d516935?w=900&q=90&fit=crop&crop=center"
-                  alt="Professional detailer at work"
                   fill
                   style={{ objectFit: 'cover' }}
                 />
-                {/* Subtle vignette */}
-                <div style={{
-                  position: 'absolute', inset: 0,
-                  background: 'linear-gradient(to top, rgba(10,10,10,0.3) 0%, transparent 50%)',
-                }} />
               </div>
-
-              {/* Floating orange accent dot */}
+              {/* Right image — top-aligned, leaves gap at bottom */}
               <div style={{
-                position: 'absolute', right: '4%', top: '20%',
-                width: 12, height: 12, borderRadius: '50%',
-                background: '#E84A0C',
-                boxShadow: '0 0 20px rgba(232,74,12,0.6)',
-              }} />
+                display: 'grid',
+                gridTemplateRows: '1fr 36px',
+              }}>
+                <div style={{ position: 'relative', overflow: 'hidden' }}>
+                  <Image
+                    src="https://images.unsplash.com/photo-1563720223185-11003d516935?w=900&q=90&fit=crop&crop=center"
+                    alt="Professional detailer at work"
+                    fill
+                    style={{ objectFit: 'cover' }}
+                  />
+                </div>
+                {/* Orange accent block at bottom-right — a water-bead reference in architectural form */}
+                <div style={{ background: '#E84A0C' }} />
+              </div>
             </div>
 
           </motion.div>
 
-          {/* Right: numbered points + CTAs */}
+          {/* Right — numbered benefit points + CTAs */}
           <div>
             {POINTS.map((p, i) => (
               <motion.div

@@ -7,6 +7,7 @@ import Stats from '@/components/Stats'
 import Packages from '@/components/Packages'
 import Services from '@/components/Services'
 import HowItWorks from '@/components/HowItWorks'
+import Testimonials from '@/components/Testimonials'
 import BookingCTA from '@/components/BookingCTA'
 import BookingModal from '@/components/BookingModal'
 import Footer from '@/components/Footer'
@@ -43,6 +44,7 @@ export default function HomePage() {
         <Packages onBookPack={handleBookPack} />
         <Services />
         <HowItWorks onBookNow={openModal} />
+        <Testimonials />
         <BookingCTA onBookNow={openModal} />
       </main>
 

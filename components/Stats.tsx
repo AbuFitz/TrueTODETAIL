@@ -6,24 +6,24 @@ const ease = [0.22, 1, 0.36, 1] as [number, number, number, number]
 
 const FACTS = [
   {
-    n:     '01',
-    big:   'Fully\nMobile',
-    body:  'We come to your home, office or car park — fully self-sufficient with our own power and water supply.',
+    n:    '01',
+    big:  'Fully\nMobile',
+    body: 'We come to your home, office or car park — fully self-sufficient with our own power and water supply.',
   },
   {
-    n:     '02',
-    big:   'Fixed\nPricing',
-    body:  'Your price is locked in before you book. Zero hidden charges, zero surprises on the day.',
+    n:    '02',
+    big:  'Fixed\nPricing',
+    body: 'Your price is locked in before you book. Zero hidden charges, zero surprises on the day.',
   },
   {
-    n:     '03',
-    big:   'No\nDrop-Off',
-    body:  'Keep your day exactly as planned. Your car stays right where it is while we work.',
+    n:    '03',
+    big:  'No\nDrop-Off',
+    body: 'Keep your day exactly as planned. Your car stays right where it is while we work.',
   },
   {
-    n:     '04',
-    big:   'Based In\nHerts',
-    body:  'Hemel Hempstead and the whole of Hertfordshire — wherever you are, we cover it.',
+    n:    '04',
+    big:  'Based In\nHerts',
+    body: 'Hemel Hempstead and the whole of Hertfordshire — wherever you are, we cover it.',
   },
 ]
 
@@ -35,7 +35,6 @@ export default function Stats() {
         position: 'relative',
         zIndex: 5,
         background: '#F4F0E8',
-        /* Diagonal top edge — slices down from top-right to bottom-left */
         clipPath: 'polygon(0 5vw, 100% 0, 100% 100%, 0 100%)',
         marginTop: '-5vw',
         paddingTop: 'clamp(64px, 12vw, 160px)',
@@ -69,35 +68,31 @@ export default function Stats() {
                 overflow: 'hidden',
                 padding: 'clamp(28px, 3.5vw, 52px)',
                 borderRight: i < 3 ? '1px solid rgba(12,12,12,0.07)' : 'none',
-                borderBottom: 'none',
               }}
               className={i < 2 ? 'border-b border-ink/[0.07] lg:border-b-0' : ''}
             >
-              {/* Ghost watermark number */}
+              {/*
+                Water-droplet accent — a tiny orange bead shape in the top-left.
+                The water detailing motif carried through the light sections.
+                Same border-radius language as the navbar bead indicator.
+              */}
               <span
                 aria-hidden
                 style={{
-                  position: 'absolute',
-                  bottom: '-20px',
-                  right: '-10px',
-                  fontFamily: 'var(--font-display)',
-                  fontSize: 'clamp(100px, 14vw, 180px)',
-                  lineHeight: 1,
-                  letterSpacing: '0.04em',
-                  color: 'rgba(12,12,12,0.04)',
-                  userSelect: 'none',
-                  pointerEvents: 'none',
+                  display: 'inline-block',
+                  width: '5px', height: '7px',
+                  background: '#E84A0C',
+                  borderRadius: '50% 50% 45% 45% / 55% 55% 45% 45%',
+                  marginBottom: '18px',
                 }}
-              >
-                {f.n}
-              </span>
+              />
 
-              {/* Small label */}
+              {/* Small index label */}
               <span style={{
                 display: 'block',
                 fontFamily: 'var(--font-body)', fontWeight: 600, fontSize: '10px',
                 letterSpacing: '0.22em', textTransform: 'uppercase', color: 'rgba(12,12,12,0.28)',
-                marginBottom: '16px',
+                marginBottom: '14px',
               }}>
                 {f.n}
               </span>

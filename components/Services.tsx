@@ -10,25 +10,21 @@ const SERVICES = [
     n: '01', title: 'Exterior Detail',
     desc: 'Hand wash, clay bar decon, machine polish and protective sealant — delivered to your door with pro-grade products.',
     price: 'From £89',
-    indent: 0,
   },
   {
     n: '02', title: 'Interior Detail',
     desc: 'Steam clean, leather conditioning, carpet shampoo and extraction, and complete interior sanitisation.',
     price: 'From £89',
-    indent: 1,
   },
   {
     n: '03', title: 'Paint Correction',
     desc: 'Single or multi-stage machine polishing to remove swirl marks, fine scratches and paint oxidation.',
     price: 'POA',
-    indent: 2,
   },
   {
     n: '04', title: 'Ceramic Coating',
     desc: 'Bond-level paint protection delivering up to 2 years of hydrophobic, scratch-resistant gloss.',
     price: 'From £549',
-    indent: 1,
   },
 ]
 
@@ -44,34 +40,13 @@ export default function Services() {
         paddingBottom: 'clamp(64px, 9vw, 130px)',
       }}
     >
-      {/* Large ghost text in background */}
-      <span
-        aria-hidden
-        style={{
-          position: 'absolute', right: '-4vw', top: '50%',
-          transform: 'translateY(-50%) rotate(90deg)',
-          transformOrigin: 'center center',
-          fontFamily: 'var(--font-display)',
-          fontSize: 'clamp(80px, 15vw, 200px)',
-          letterSpacing: '0.1em',
-          color: 'rgba(255,255,255,0.025)',
-          whiteSpace: 'nowrap',
-          userSelect: 'none', pointerEvents: 'none',
-          lineHeight: 1,
-        }}
-      >
-        SERVICES
-      </span>
-
       <div style={{ maxWidth: '1380px', margin: '0 auto', padding: '0 clamp(24px, 5vw, 80px)' }}>
 
-        {/* Two-col: image left (organic shape), content right */}
         <div className="grid grid-cols-1 lg:grid-cols-[44%_1fr] gap-12 lg:gap-16 items-start">
 
-          {/* Left — sticky headline + half-pill image */}
+          {/* Left — sticky headline + clean rectangular image */}
           <div className="lg:sticky lg:top-24">
 
-            {/* Section label */}
             <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '28px' }}>
               <span style={{ width: 20, height: 1, background: '#E84A0C', flexShrink: 0 }} />
               <span style={{
@@ -97,7 +72,10 @@ export default function Services() {
               EVERY<br />SERVICE<br />COVERED.
             </motion.h2>
 
-            {/* Half-pill image — flat left, curved right, extends off left edge */}
+            {/*
+              Clean rectangular image — sharp crop, no organic pill shapes.
+              Precision over decoration. A thin orange left border grounds it.
+            */}
             <motion.div
               initial={{ opacity: 0, x: -20 }}
               whileInView={{ opacity: 1, x: 0 }}
@@ -105,26 +83,26 @@ export default function Services() {
               transition={{ duration: 0.85, ease }}
               style={{
                 position: 'relative',
-                /* Extends 24px beyond the column's left edge */
                 marginLeft: 'clamp(-24px, -3vw, -40px)',
                 height: 'clamp(280px, 32vw, 460px)',
-                /* Half-pill: flat left, curved right */
-                borderRadius: '0 clamp(80px, 12vw, 180px) clamp(80px, 12vw, 180px) 0',
-                overflow: 'hidden',
+                display: 'flex',
               }}
             >
-              <Image
-                src="https://images.unsplash.com/photo-1553440569-bcc63803a83d?w=1000&q=90&fit=crop&crop=center"
-                alt="Professional detailing work"
-                fill
-                sizes="(max-width: 1024px) 100vw, 44vw"
-                style={{ objectFit: 'cover', objectPosition: 'center' }}
-              />
-              {/* Subtle dark overlay */}
+              {/* Orange left accent stripe */}
               <div style={{
-                position: 'absolute', inset: 0,
-                background: 'linear-gradient(135deg, rgba(10,10,10,0.2) 0%, transparent 60%)',
+                width: '3px', flexShrink: 0,
+                background: '#E84A0C',
+                alignSelf: 'stretch',
               }} />
+              <div style={{ flex: 1, position: 'relative', overflow: 'hidden' }}>
+                <Image
+                  src="https://images.unsplash.com/photo-1553440569-bcc63803a83d?w=1000&q=90&fit=crop&crop=center"
+                  alt="Professional detailing work"
+                  fill
+                  sizes="(max-width: 1024px) 100vw, 44vw"
+                  style={{ objectFit: 'cover', objectPosition: 'center' }}
+                />
+              </div>
             </motion.div>
 
             <motion.p
@@ -134,7 +112,8 @@ export default function Services() {
               transition={{ duration: 0.5, delay: 0.2 }}
               style={{
                 fontFamily: 'var(--font-body)', fontSize: '13px', lineHeight: 1.7,
-                color: 'rgba(255,255,255,0.3)', marginTop: '20px', maxWidth: '280px',
+                color: 'rgba(255,255,255,0.3)', marginTop: '20px',
+                maxWidth: '280px', paddingLeft: 'clamp(24px, 3vw, 40px)',
               }}
             >
               All services are fully mobile. Covering Hemel Hempstead and the whole of Hertfordshire.
@@ -142,7 +121,7 @@ export default function Services() {
 
           </div>
 
-          {/* Right — staggered service rows */}
+          {/* Right — service rows */}
           <div>
             {SERVICES.map((s, i) => (
               <motion.div
@@ -151,10 +130,7 @@ export default function Services() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, margin: '-20px' }}
                 transition={{ duration: 0.5, ease, delay: i * 0.07 }}
-                style={{
-                  position: 'relative',
-                  paddingLeft: `${s.indent * 32}px`,
-                }}
+                style={{ position: 'relative' }}
                 className="group"
               >
                 <div
@@ -165,22 +141,6 @@ export default function Services() {
                   }}
                   className="first:border-t first:border-t-white/[0.06]"
                 >
-                  {/* Ghost large number behind */}
-                  <span
-                    aria-hidden
-                    style={{
-                      position: 'absolute',
-                      right: 0, top: '50%', transform: 'translateY(-50%)',
-                      fontFamily: 'var(--font-display)',
-                      fontSize: 'clamp(60px, 10vw, 130px)',
-                      letterSpacing: '0.04em',
-                      color: 'rgba(255,255,255,0.03)',
-                      userSelect: 'none', pointerEvents: 'none', lineHeight: 1,
-                    }}
-                  >
-                    {s.n}
-                  </span>
-
                   {/* Small number label */}
                   <span style={{
                     fontFamily: 'var(--font-body)', fontWeight: 600, fontSize: '10px',
@@ -192,7 +152,10 @@ export default function Services() {
 
                   {/* Content */}
                   <div style={{ flex: 1 }}>
-                    <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: '16px', marginBottom: '10px' }}>
+                    <div style={{
+                      display: 'flex', alignItems: 'flex-start',
+                      justifyContent: 'space-between', gap: '16px', marginBottom: '10px',
+                    }}>
                       <h3
                         style={{
                           fontFamily: 'var(--font-display)',
