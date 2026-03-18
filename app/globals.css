@@ -1,0 +1,67 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --orange: #E84A0C;
+  --black: #0A0A0A;
+  --light: #EBEBEB;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  background-color: #ffffff;
+  color: #0A0A0A;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Utility: display font */
+.font-display {
+  font-family: var(--font-anton), sans-serif;
+}
+
+/* Orange dot button style */
+.btn-primary {
+  @apply inline-flex items-center gap-3 bg-site-black text-white px-8 py-4 font-display font-black tracking-widest uppercase text-sm transition-colors duration-200 hover:bg-orange;
+}
+
+.btn-primary::after {
+  content: '';
+  @apply w-2 h-2 rounded-full bg-orange flex-shrink-0;
+}
+
+.btn-primary:hover::after {
+  @apply bg-white;
+}
+
+.btn-outline {
+  @apply inline-flex items-center gap-3 border-2 border-site-black text-site-black px-8 py-4 font-display font-black tracking-widest uppercase text-sm transition-colors duration-200 hover:bg-site-black hover:text-white;
+}
+
+/* Card transitions */
+.detail-card {
+  @apply transition-transform duration-300 ease-out;
+}
+
+.detail-card:hover {
+  @apply -translate-y-1;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 4px;
+}
+::-webkit-scrollbar-track {
+  background: #EBEBEB;
+}
+::-webkit-scrollbar-thumb {
+  background: #E84A0C;
+}
