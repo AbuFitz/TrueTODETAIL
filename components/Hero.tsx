@@ -131,20 +131,34 @@ export default function Hero({ onBookNow }: { onBookNow: () => void }) {
         {/* DIVIDER */}
         <div className="h-px bg-black/8 flex-shrink-0" />
 
-        {/* BOTTOM: VIDEO — replaces the static photo from before */}
+        {/* BOTTOM: VIDEO — autoplay, muted, looping background video */}
         <div className="relative flex-1 min-h-[280px] overflow-hidden bg-site-black">
           {/*
-            Pexels video: "A Person Detailing the Interior of the Car"
-            Replace the src with your own video URL for production.
+            Free stock video: "Person Doing a Car Wash" — Pexels ID 4863282
+            License: Pexels License (free for commercial use, no attribution required)
+            Replace with your own branded video for production.
           */}
-          <iframe
-            src="https://www.pexels.com/video/6158073/embed?autoplay=1&loop=1"
-            className="absolute inset-0 w-full h-full"
-            style={{ border: 'none' }}
-            allow="autoplay; fullscreen"
-            title="Car detailing video"
-          />
-          {/* Bottom info strip over the video */}
+          <video
+            autoPlay
+            muted
+            loop
+            playsInline
+            className="absolute inset-0 w-full h-full object-cover"
+          >
+            <source
+              src="https://videos.pexels.com/video-files/4863282/4863282-hd_1920_1080_25fps.mp4"
+              type="video/mp4"
+            />
+            {/* Fallback embed if direct MP4 is blocked */}
+            <iframe
+              src="https://www.pexels.com/video/4863282/embed?autoplay=1&loop=1"
+              className="absolute inset-0 w-full h-full"
+              style={{ border: 'none' }}
+              allow="autoplay; fullscreen"
+              title="Car detailing video"
+            />
+          </video>
+          {/* Bottom info strip */}
           <div className="absolute bottom-0 left-0 right-0 pointer-events-none
                           bg-gradient-to-t from-site-black/70 to-transparent px-8 py-5
                           flex items-center justify-between">
