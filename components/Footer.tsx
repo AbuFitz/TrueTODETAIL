@@ -20,9 +20,9 @@ const tableData: Record<ColKey, { rows: ColItem[]; isMenu: boolean }> = {
   'CONTACT INFO': {
     isMenu: false,
     rows: [
-      { label: '123 Detail Lane, Manchester, M1 1AA', href: null },
-      { label: 'hello@truetodetail.co.uk', href: 'mailto:hello@truetodetail.co.uk' },
-      { label: '+44 7700 900 000', href: 'tel:+447700900000' },
+      { label: 'Hemel Hempstead, Hertfordshire & Surrounding Areas', href: null },
+      { label: 'bookings@truetodetail.co.uk', href: 'mailto:bookings@truetodetail.co.uk' },
+      { label: '07984 237149', href: 'tel:+447984237149' },
       { label: 'Mon–Sat: 8am – 7pm', href: null },
     ],
   },
@@ -127,7 +127,7 @@ export default function Footer({ onBookNow }: { onBookNow: () => void }) {
           © {currentYear} True To Detail. All rights reserved.
         </span>
         <span className="font-body text-[11px] text-black/30">
-          Professional Auto Detailing · Manchester &amp; Surrounding Areas
+          Professional Auto Detailing · Hemel Hempstead &amp; Surrounding Areas
         </span>
       </div>
     </footer>

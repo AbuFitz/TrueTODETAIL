@@ -33,7 +33,7 @@ export default function Navbar({ onBookNow }: { onBookNow: () => void }) {
           <span className="text-orange font-semibold">·</span>&nbsp;
           Same-Day Slots Available&nbsp;
           <span className="text-orange font-semibold">·</span>&nbsp;
-          Manchester &amp; Surrounding Areas
+          Hemel Hempstead &amp; Surrounding Areas
         </p>
       </div>
 

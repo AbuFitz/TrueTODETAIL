@@ -326,7 +326,7 @@ export default function BookingModal({
                     type="tel"
                     value={phone}
                     onChange={(e) => setPhone(e.target.value)}
-                    placeholder="07700 900000"
+                    placeholder="07984 237149"
                     className="w-full border border-black/15 px-4 py-4 font-body text-sm focus:outline-none focus:border-site-black"
                   />
                 </div>

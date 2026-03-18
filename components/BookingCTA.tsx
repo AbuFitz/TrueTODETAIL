@@ -41,10 +41,10 @@ export default function BookingCTA({ onBookNow }: { onBookNow: () => void }) {
               <span className="w-2.5 h-2.5 rounded-full bg-white group-hover:bg-orange flex-shrink-0" />
             </button>
             <a
-              href="tel:+447700900000"
+              href="tel:+447984237149"
               className="border-2 border-white/30 text-white px-10 py-6 font-display font-black text-sm tracking-widest flex items-center justify-center gap-3 hover:border-white transition-colors duration-200"
             >
-              CALL US NOW
+              CALL&nbsp;&nbsp;07984 237149
             </a>
           </div>
         </div>

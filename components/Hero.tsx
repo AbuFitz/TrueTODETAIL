@@ -40,7 +40,7 @@ export default function Hero({ onBookNow }: { onBookNow: () => void }) {
           </p>
           <span className="flex items-center gap-2 font-body text-[10px] tracking-[0.15em] uppercase text-white/40">
             <span className="w-1.5 h-1.5 rounded-full bg-orange" />
-            Manchester &amp; Surrounding Areas
+            Hemel Hempstead &amp; Surrounding Areas
           </span>
         </div>
 
