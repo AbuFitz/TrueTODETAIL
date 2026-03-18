@@ -40,7 +40,7 @@ export default function BookingCTA({ onBookNow }: { onBookNow: () => void }) {
             </button>
             <a
               href="tel:+447984237149"
-              className="border-2 border-site-black/20 text-site-black px-10 py-5 font-body font-semibold text-[11px] tracking-[0.18em] uppercase inline-flex items-center justify-center hover:border-site-black transition-colors duration-200"
+              className="border-2 border-site-black/20 text-site-black px-10 py-5 font-mono font-semibold text-[11px] tracking-[0.18em] uppercase inline-flex items-center justify-center hover:border-site-black transition-colors duration-200"
             >
               CALL &nbsp; 07984 237149
             </a>
@@ -61,7 +61,7 @@ export default function BookingCTA({ onBookNow }: { onBookNow: () => void }) {
             'Mon–Sat · 8am–7pm',
             'hello@truetodetail.co.uk',
           ].map((item) => (
-            <span key={item} className="font-body text-[10px] tracking-[0.2em] uppercase text-site-black/45">
+            <span key={item} className="font-mono text-[10px] tracking-[0.2em] uppercase text-site-black/45">
               {item}
             </span>
           ))}

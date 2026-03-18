@@ -1,25 +1,36 @@
 import type { Metadata } from 'next'
-import { Barlow, JetBrains_Mono, Inter } from 'next/font/google'
+import { Barlow, Barlow_Condensed, Inter, JetBrains_Mono } from 'next/font/google'
 import './globals.css'
 
-const barlow = Barlow({
+// Logo / wordmark — normal-width Barlow 900 with wide tracking = "dragged" effect
+const barlowWordmark = Barlow({
+  subsets: ['latin'],
+  weight: ['900'],
+  variable: '--font-wordmark',
+  display: 'swap',
+})
+
+// Section headings — condensed Barlow 800, Benzin Bold equivalent
+const barlowCondensed = Barlow_Condensed({
   subsets: ['latin'],
   weight: ['700', '800', '900'],
   variable: '--font-display',
   display: 'swap',
 })
 
-const jetbrainsMono = JetBrains_Mono({
-  subsets: ['latin'],
-  weight: ['400', '500', '600'],
-  variable: '--font-mono',
-  display: 'swap',
-})
-
+// Body — Inter, closest to Neue Haas Unica Pro available on Google
 const inter = Inter({
   subsets: ['latin'],
   weight: ['400', '500', '600', '700'],
   variable: '--font-body',
+  display: 'swap',
+})
+
+// UI labels / overlines / nav — JetBrains Mono
+const jetbrainsMono = JetBrains_Mono({
+  subsets: ['latin'],
+  weight: ['500', '600'],
+  variable: '--font-mono',
   display: 'swap',
 })
 
@@ -36,7 +47,7 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="en" className={`${barlow.variable} ${jetbrainsMono.variable} ${inter.variable}`}>
+    <html lang="en" className={`${barlowWordmark.variable} ${barlowCondensed.variable} ${inter.variable} ${jetbrainsMono.variable}`}>
       <body className="bg-white text-site-black font-body">{children}</body>
     </html>
   )

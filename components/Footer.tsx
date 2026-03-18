@@ -53,12 +53,12 @@ export default function Footer({ onBookNow }: { onBookNow: () => void }) {
     <footer className="bg-white border-t border-black/10">
       {/* Brand row */}
       <div className="max-w-[1400px] mx-auto px-6 pt-12 pb-8 flex flex-col md:flex-row md:items-end md:justify-between gap-6">
-        <a href="#" className="font-display text-5xl md:text-7xl uppercase leading-none">
+        <a href="#" className="font-wordmark font-black text-5xl md:text-7xl uppercase leading-none" style={{ letterSpacing: '0.2em' }}>
           TRUE TO <span className="text-orange">DETAIL</span>
         </a>
         <button
           onClick={onBookNow}
-          className="self-start md:self-auto flex items-center gap-3 bg-site-black text-white px-7 py-4 font-body font-bold text-[11px] tracking-[0.15em] uppercase hover:bg-orange transition-colors duration-150"
+          className="self-start md:self-auto flex items-center gap-3 bg-site-black text-white px-7 py-4 font-mono font-semibold text-[11px] tracking-[0.15em] uppercase hover:bg-orange transition-colors duration-150"
         >
           BOOK NOW
           <span className="w-2 h-2 rounded-full bg-orange flex-shrink-0" />

@@ -112,7 +112,7 @@ export default function Packages({ onBookPack }: { onBookPack: (pkg: string, veh
           <div>
             <div className="flex items-center gap-3 mb-5">
               <span className="w-5 h-px bg-orange" />
-              <p className="font-body text-[10px] tracking-[0.3em] uppercase text-black/40">Choose Your Pack</p>
+              <p className="font-mono text-[10px] tracking-[0.3em] uppercase text-black/40">Choose Your Pack</p>
             </div>
             <h2 className="font-display font-black text-5xl md:text-6xl xl:text-7xl uppercase leading-[0.88]">
               PICK YOUR

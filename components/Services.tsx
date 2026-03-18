@@ -53,7 +53,7 @@ export default function Services() {
           <div>
             <div className="flex items-center gap-3 mb-5">
               <span className="w-5 h-px bg-orange" />
-              <p className="font-body text-[10px] tracking-[0.3em] uppercase text-black/40">What We Do</p>
+              <p className="font-mono text-[10px] tracking-[0.3em] uppercase text-black/40">What We Do</p>
             </div>
             <h2 className="font-display font-black text-5xl md:text-6xl xl:text-7xl uppercase leading-[0.88]">
               EVERY SERVICE
@@ -97,7 +97,7 @@ export default function Services() {
               </span>
 
               {/* Title */}
-              <h3 className={`relative z-10 font-display text-3xl md:text-4xl uppercase leading-[0.9] whitespace-pre-line flex-shrink-0 md:w-56 ${svc.highlight ? 'text-white' : 'text-site-black'}`}>
+              <h3 className={`relative z-10 font-display font-extrabold text-3xl md:text-4xl uppercase leading-[0.9] whitespace-pre-line flex-shrink-0 md:w-56 ${svc.highlight ? 'text-white' : 'text-site-black'}`}>
                 {svc.title}
               </h3>
 

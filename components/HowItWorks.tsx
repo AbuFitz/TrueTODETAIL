@@ -50,7 +50,7 @@ export default function HowItWorks({ onBookNow }: { onBookNow: () => void }) {
           <div>
             <div className="flex items-center gap-3 mb-5">
               <span className="w-5 h-px bg-orange" />
-              <p className="font-body text-[10px] tracking-[0.3em] uppercase text-white/30">Why Choose Us</p>
+              <p className="font-mono text-[10px] tracking-[0.3em] uppercase text-white/30">Why Choose Us</p>
             </div>
             <h2 className="font-display font-black text-5xl md:text-6xl xl:text-7xl uppercase leading-[0.88] text-white">
               TRUE TO
@@ -77,7 +77,7 @@ export default function HowItWorks({ onBookNow }: { onBookNow: () => void }) {
               className="grid grid-cols-[48px_1fr] md:grid-cols-[80px_220px_1fr] gap-0 border-b border-white/8 py-7 md:py-9 items-start md:items-center"
             >
               <span className="font-display text-2xl text-white/15 leading-none pt-1">{r.number}</span>
-              <h3 className="font-display text-xl md:text-2xl uppercase leading-tight text-white pr-8">{r.title}</h3>
+              <h3 className="font-display font-extrabold text-xl md:text-2xl uppercase leading-tight text-white pr-8">{r.title}</h3>
               <p className="font-body text-sm text-white/40 leading-relaxed col-start-2 md:col-start-3 mt-2 md:mt-0 max-w-lg">{r.desc}</p>
             </motion.div>
           ))}

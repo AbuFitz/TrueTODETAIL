@@ -46,7 +46,7 @@ export default function Stats() {
           className="flex items-center gap-3 mb-12"
         >
           <span className="w-5 h-px bg-orange" />
-          <p className="font-body text-[10px] tracking-[0.3em] uppercase text-black/40">Why True To Detail</p>
+          <p className="font-mono text-[10px] tracking-[0.3em] uppercase text-black/40">Why True To Detail</p>
         </motion.div>
 
         {/* Split: headline left, pillars right */}
@@ -87,7 +87,7 @@ export default function Stats() {
                   {p.number}
                 </span>
                 <div>
-                  <h3 className={`font-display text-2xl uppercase leading-tight whitespace-pre-line ${p.light ? 'text-site-black' : 'text-white'}`}>
+                  <h3 className={`font-display font-extrabold text-2xl uppercase leading-tight whitespace-pre-line ${p.light ? 'text-site-black' : 'text-white'}`}>
                     {p.heading}
                   </h3>
                   <p className={`font-body text-sm leading-relaxed mt-3 ${p.light ? 'text-black/50' : 'text-white/45'}`}>
