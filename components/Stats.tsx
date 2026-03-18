@@ -1,100 +1,105 @@
-import Image from 'next/image'
+'use client'
+
 import { motion } from 'framer-motion'
 
-const reveal = {
-  hidden: { opacity: 0, y: 28 },
-  show: (i: number) => ({
-    opacity: 1,
-    y: 0,
-    transition: { duration: 0.6, ease: [0.22, 1, 0.36, 1] as [number, number, number, number], delay: i * 0.1 },
-  }),
-}
+const ease = [0.22, 1, 0.36, 1] as [number, number, number, number]
 
-const stats = [
+const pillars = [
   {
-    value: '500+',
-    label: 'Cars Detailed This Year',
-    bg: 'bg-site-light',
-    textColor: 'text-site-black',
+    number: '01',
+    heading: 'Expert\nTechnicians',
+    body: 'Trained, certified detailers who treat your car with the same care they\'d give their own.',
+    light: true,
   },
   {
-    value: '5★',
-    label: 'Google & Facebook Rated',
-    bg: 'bg-site-black',
-    textColor: 'text-white',
+    number: '02',
+    heading: 'Premium\nProducts',
+    body: 'We use professional-grade chemicals, compounds and coatings — the same as trade specialists.',
+    light: false,
   },
   {
-    value: '10+',
-    label: 'Years In The Industry',
-    bg: 'bg-site-black',
-    textColor: 'text-white',
+    number: '03',
+    heading: 'We Come\nTo You',
+    body: 'Fully mobile and self-contained. We bring everything — water, power, equipment.',
+    light: false,
   },
   {
-    value: 'CERTIFIED',
-    label: 'Professional Detailers',
-    bg: 'bg-site-light',
-    textColor: 'text-site-black',
+    number: '04',
+    heading: 'Honest\nPricing',
+    body: 'See your price before you book. No surprises, no hidden add-ons, no upselling at the door.',
+    light: true,
   },
 ]
 
 export default function Stats() {
   return (
-    <section id="about" className="py-20 md:py-28 px-6">
-      <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-16 items-start">
-        {/* Left: headline + image */}
+    <section id="about" className="py-24 md:py-32 bg-white">
+      <div className="max-w-7xl mx-auto px-6 md:px-12">
+
+        {/* Section label */}
         <motion.div
-          initial={{ opacity: 0, y: 28 }}
+          initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: '-80px' }}
-          transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] as [number, number, number, number] }}
+          viewport={{ once: true, margin: '-60px' }}
+          transition={{ duration: 0.55, ease }}
+          className="flex items-center gap-3 mb-12"
         >
-          <h2 className="font-display text-5xl md:text-6xl lg:text-7xl uppercase leading-none mb-12">
-            THE REGION&apos;S
-            <br />
-            BEST MOBILE
-            <br />
-            DETAILER
-          </h2>
-          <div className="relative h-72 md:h-80 overflow-hidden">
-            <Image
-              src="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=900&q=80"
-              alt="Professional detailer at work"
-              fill
-              className="object-cover object-center"
-            />
-          </div>
+          <span className="w-5 h-px bg-orange" />
+          <p className="font-body text-[10px] tracking-[0.3em] uppercase text-black/40">Why True To Detail</p>
         </motion.div>
 
-        {/* Right: 2x2 bento stat grid */}
-        <div className="grid grid-cols-2 gap-0 border border-black/10">
-          {stats.map((stat, i) => (
-            <motion.div
-              key={i}
-              custom={i}
-              initial="hidden"
-              whileInView="show"
-              viewport={{ once: true, margin: '-60px' }}
-              variants={reveal}
-              className={`${stat.bg} ${stat.textColor} p-8 flex flex-col justify-between min-h-48 border border-black/10`}
-            >
-              <span
-                className={`font-display font-black text-4xl md:text-5xl lg:text-6xl uppercase leading-none ${
-                  stat.bg === 'bg-site-black' ? 'text-white' : 'text-site-black'
-                }`}
+        {/* Split: headline left, pillars right */}
+        <div className="grid grid-cols-1 lg:grid-cols-[1fr_2fr] gap-16 lg:gap-24 items-start">
+
+          {/* Headline */}
+          <motion.div
+            initial={{ opacity: 0, y: 24 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: '-60px' }}
+            transition={{ duration: 0.65, ease }}
+          >
+            <h2 className="font-display text-5xl md:text-6xl xl:text-7xl uppercase leading-[0.88] text-site-black">
+              BUILT ON
+              <br />
+              <span className="text-orange">DOING IT</span>
+              <br />
+              RIGHT.
+            </h2>
+            <p className="font-body text-sm text-black/45 leading-relaxed mt-8 max-w-xs">
+              Every job is carried out to a standard we&apos;re proud to put our name on.
+              No shortcuts. No half-measures.
+            </p>
+          </motion.div>
+
+          {/* 2x2 pillars grid */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-px bg-black/8">
+            {pillars.map((p, i) => (
+              <motion.div
+                key={p.number}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: '-40px' }}
+                transition={{ duration: 0.55, ease, delay: i * 0.08 }}
+                className={`p-8 md:p-10 flex flex-col gap-5 ${p.light ? 'bg-site-light' : 'bg-site-black'}`}
               >
-                {stat.value}
-              </span>
-              <span
-                className={`font-body text-xs tracking-widest uppercase mt-6 ${
-                  stat.bg === 'bg-site-black' ? 'text-white/60' : 'text-site-black/50'
-                }`}
-              >
-                {stat.label}
-              </span>
-            </motion.div>
-          ))}
+                <span className={`font-display text-5xl leading-none ${p.light ? 'text-black/12' : 'text-white/10'}`}>
+                  {p.number}
+                </span>
+                <div>
+                  <h3 className={`font-display text-2xl uppercase leading-tight whitespace-pre-line ${p.light ? 'text-site-black' : 'text-white'}`}>
+                    {p.heading}
+                  </h3>
+                  <p className={`font-body text-sm leading-relaxed mt-3 ${p.light ? 'text-black/50' : 'text-white/45'}`}>
+                    {p.body}
+                  </p>
+                </div>
+              </motion.div>
+            ))}
+          </div>
+
         </div>
       </div>
     </section>
   )
 }
+

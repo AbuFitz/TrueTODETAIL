@@ -1,65 +1,74 @@
-import Image from 'next/image'
+'use client'
+
+import { motion } from 'framer-motion'
+
+const ease = [0.22, 1, 0.36, 1] as [number, number, number, number]
 
 export default function BookingCTA({ onBookNow }: { onBookNow: () => void }) {
   return (
-    <section id="contact" className="relative overflow-hidden">
-      {/* Background */}
-      <div className="absolute inset-0">
-        <Image
-          src="https://images.unsplash.com/photo-1552519507-da3b142c6e3d?w=1800&q=80"
-          alt="Luxury car ready to be detailed"
-          fill
-          className="object-cover object-center"
-        />
-        <div className="absolute inset-0 bg-site-black/85" />
-      </div>
+    <section id="contact" className="bg-orange">
+      <div className="max-w-7xl mx-auto px-6 md:px-12 py-24 md:py-32">
 
-      {/* Content */}
-      <div className="relative z-10 max-w-7xl mx-auto px-6 py-28 md:py-40">
-        <div className="max-w-3xl">
-          <p className="font-body text-xs tracking-widest uppercase text-orange mb-6">
-            — Ready to transform your ride?
-          </p>
-          <h2 className="font-display font-black text-6xl md:text-8xl lg:text-9xl uppercase leading-none text-white mb-8">
-            YOUR CAR
-            <br />
-            <span className="text-orange">DESERVES</span>
-            <br />
-            THE BEST.
-          </h2>
-          <p className="font-body text-base text-white/60 max-w-md mb-12 leading-relaxed">
-            We come to you. No drop-offs, no waiting rooms — just a professional
-            mobile detailer arriving at your door and leaving your car looking
-            better than the day you bought it.
-          </p>
-          <div className="flex flex-col sm:flex-row gap-4">
+        <motion.div
+          initial={{ opacity: 0, y: 24 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: '-60px' }}
+          transition={{ duration: 0.65, ease }}
+          className="flex flex-col md:flex-row md:items-end justify-between gap-12"
+        >
+          {/* Headline */}
+          <div>
+            <h2 className="font-display text-6xl md:text-7xl xl:text-8xl uppercase leading-[0.85] text-site-black">
+              READY WHEN
+              <br />
+              YOU ARE.
+            </h2>
+            <p className="font-body text-base text-site-black/60 mt-6 max-w-sm leading-relaxed">
+              Book online in minutes, pick your date and we&apos;ll be there.
+              No drop-off. No waiting. Just results.
+            </p>
+          </div>
+
+          {/* CTAs */}
+          <div className="flex flex-col gap-3 flex-shrink-0">
             <button
               onClick={onBookNow}
-              className="bg-orange text-white px-10 py-6 font-display font-black text-sm tracking-widest flex items-center justify-between gap-8 hover:bg-white hover:text-site-black transition-colors duration-200"
+              className="bg-site-black text-white px-10 py-5 font-display font-black text-sm tracking-[0.15em] uppercase inline-flex items-center justify-between gap-12 hover:bg-site-dark transition-colors duration-200"
             >
               BOOK YOUR PACK
-              <span className="w-2.5 h-2.5 rounded-full bg-white group-hover:bg-orange flex-shrink-0" />
+              <span className="text-base">→</span>
             </button>
             <a
               href="tel:+447984237149"
-              className="border-2 border-white/30 text-white px-10 py-6 font-display font-black text-sm tracking-widest flex items-center justify-center gap-3 hover:border-white transition-colors duration-200"
+              className="border-2 border-site-black/20 text-site-black px-10 py-5 font-body font-semibold text-[11px] tracking-[0.18em] uppercase inline-flex items-center justify-center hover:border-site-black transition-colors duration-200"
             >
-              CALL&nbsp;&nbsp;07984 237149
+              CALL &nbsp; 07984 237149
             </a>
           </div>
-        </div>
-      </div>
+        </motion.div>
 
-      {/* Bottom strip */}
-      <div className="relative z-10 border-t border-white/10 bg-site-black/50">
-        <div className="max-w-7xl mx-auto px-6 py-5 flex flex-col sm:flex-row items-center justify-between gap-4 text-white/50 font-body text-xs tracking-wider">
-          <span>100% Mobile — We come to your door, driveway or office</span>
-          <span className="flex items-center gap-2">
-            <span className="w-2 h-2 rounded-full bg-orange" />
-            Same-week slots available
-          </span>
-        </div>
+        {/* Bottom strip */}
+        <motion.div
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.5, ease, delay: 0.2 }}
+          className="mt-16 pt-8 border-t border-site-black/15 flex flex-wrap items-center gap-x-10 gap-y-3"
+        >
+          {[
+            '100% Mobile Service',
+            'Hemel Hempstead & Hertfordshire',
+            'Mon–Sat · 8am–7pm',
+            'hello@truetodetail.co.uk',
+          ].map((item) => (
+            <span key={item} className="font-body text-[10px] tracking-[0.2em] uppercase text-site-black/45">
+              {item}
+            </span>
+          ))}
+        </motion.div>
+
       </div>
     </section>
   )
 }
+
