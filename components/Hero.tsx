@@ -1,96 +1,138 @@
+'use client'
+
 import Image from 'next/image'
+import { motion } from 'framer-motion'
+
+const fadeUp = {
+  hidden: { opacity: 0, y: 36 },
+  show: (i: number) => ({
+    opacity: 1,
+    y: 0,
+    transition: {
+      duration: 0.75,
+      ease: [0.22, 1, 0.36, 1] as [number, number, number, number],
+      delay: i * 0.11,
+    },
+  }),
+}
 
 export default function Hero({ onBookNow }: { onBookNow: () => void }) {
   return (
-    <section className="pt-[88px] min-h-screen grid grid-cols-1 md:grid-cols-2">
+    <section className="relative min-h-screen flex flex-col justify-end overflow-hidden bg-site-black">
 
-      {/* LEFT — full-bleed image + orange headline block */}
-      <div className="relative overflow-hidden min-h-[65vh] md:min-h-screen">
-        <Image
-          src="https://images.unsplash.com/photo-1603584173870-7f23fdae1b7a?w=1600&q=90"
-          alt="Glossy detailed car"
-          fill
-          className="object-cover object-center"
-          priority
-        />
-        {/* Dark gradient at bottom */}
-        <div className="absolute inset-0 bg-gradient-to-t from-site-black/40 via-transparent to-transparent" />
+      {/* ── Background image ── */}
+      <Image
+        src="https://images.unsplash.com/photo-1603584173870-7f23fdae1b7a?w=2200&q=90"
+        alt="A professionally detailed car"
+        fill
+        className="object-cover object-center"
+        priority
+      />
 
-        {/* Orange headline band — positioned like Sanders & Young reference */}
-        <div className="absolute inset-0 flex items-center">
-          <div className="bg-orange ml-0 mr-8 px-8 py-10 max-w-[280px] md:max-w-[320px]">
-            <h1 className="font-display text-[52px] md:text-[62px] lg:text-[72px] uppercase leading-[0.92] text-site-black">
-              DETAILING
-              <br />
-              YOU CAN
-              <br />
-              TRUST.
-            </h1>
-          </div>
+      {/* ── Dark gradient layers for legibility ── */}
+      <div className="absolute inset-0 bg-gradient-to-t from-site-black via-site-black/60 to-transparent" />
+      <div className="absolute inset-0 bg-gradient-to-r from-site-black/55 via-transparent to-transparent" />
+
+      {/* ── Content ── */}
+      <div className="relative z-10 w-full max-w-[1440px] mx-auto px-6 md:px-12 lg:px-20 pb-14 md:pb-20 pt-[110px]">
+
+        {/* Overline */}
+        <motion.div
+          custom={0}
+          initial="hidden"
+          animate="show"
+          variants={fadeUp}
+          className="flex items-center gap-3 mb-10"
+        >
+          <span className="w-8 h-px bg-orange flex-shrink-0" />
+          <p className="font-body text-[11px] tracking-[0.28em] uppercase text-white/50">
+            Hemel Hempstead &amp; Surrounding Areas &nbsp;·&nbsp; 100% Mobile Service
+          </p>
+        </motion.div>
+
+        {/* Main headline — three lines, last word in orange */}
+        <div className="mb-10 md:mb-14">
+          {['MAKE YOUR', 'CAR LOOK', 'FLAWLESS.'].map((line, i) => (
+            <motion.h1
+              key={line}
+              custom={i + 1}
+              initial="hidden"
+              animate="show"
+              variants={fadeUp}
+              className="font-display text-[17vw] sm:text-[13vw] md:text-[10.5vw] lg:text-[9vw] uppercase leading-[0.88] text-white"
+            >
+              {i === 2 ? (
+                <>
+                  <span className="text-orange">FLAWLESS</span>
+                  <span className="text-white">.</span>
+                </>
+              ) : (
+                line
+              )}
+            </motion.h1>
+          ))}
         </div>
-      </div>
 
-      {/* RIGHT — white panel with editorial layout */}
-      <div className="flex flex-col bg-white">
+        {/* Body + CTAs row */}
+        <div className="flex flex-col md:flex-row gap-8 md:items-end justify-between">
 
-        {/* Top: black header strip — mirrors nav style */}
-        <div className="bg-site-black px-8 md:px-12 py-6 flex items-center justify-between flex-shrink-0">
-          <p className="font-body text-[10px] tracking-[0.22em] uppercase text-white/40">
-            100% Mobile Service
-          </p>
-          <span className="flex items-center gap-2 font-body text-[10px] tracking-[0.15em] uppercase text-white/40">
-            <span className="w-1.5 h-1.5 rounded-full bg-orange" />
-            Hemel Hempstead &amp; Surrounding Areas
-          </span>
-        </div>
+          <motion.p
+            custom={4}
+            initial="hidden"
+            animate="show"
+            variants={fadeUp}
+            className="font-body text-white/50 text-base md:text-lg max-w-[360px] leading-relaxed"
+          >
+            Pro-grade detailing packs delivered to your door across Hertfordshire.
+            Book in minutes — we arrive fully equipped.
+          </motion.p>
 
-        {/* Middle: tagline + CTA */}
-        <div className="flex-1 flex flex-col justify-center px-8 md:px-12 py-10">
-          <p className="font-body text-sm text-black/40 tracking-wider uppercase mb-5">
-            — We come to you
-          </p>
-          <p className="font-body text-base md:text-lg text-black/65 max-w-sm leading-relaxed mb-10">
-            Professional mobile detailing packs delivered to your door. We use
-            pro-grade products and precision techniques to give your car the
-            finish it deserves.
-          </p>
-
-          <div className="flex flex-col sm:flex-row gap-3">
+          <motion.div
+            custom={5}
+            initial="hidden"
+            animate="show"
+            variants={fadeUp}
+            className="flex flex-col sm:flex-row gap-3 flex-shrink-0"
+          >
             <button
               onClick={onBookNow}
-              className="bg-site-black text-white px-8 py-5 font-body font-bold text-[11px] tracking-[0.15em] flex items-center justify-between gap-6 hover:bg-orange transition-colors duration-200"
+              className="bg-orange text-white px-9 py-5 font-display font-black text-sm tracking-[0.15em] uppercase inline-flex items-center justify-between gap-8 hover:bg-orange-dark transition-colors duration-200"
             >
               SHOP PACKS
-              <span className="w-2 h-2 rounded-full bg-orange flex-shrink-0" />
+              <span className="text-xl leading-none">→</span>
             </button>
             <a
               href="#services"
-              className="border-2 border-black/20 text-site-black px-8 py-5 font-body font-bold text-[11px] tracking-[0.15em] flex items-center justify-center hover:border-site-black transition-colors duration-200"
+              className="border border-white/20 text-white px-9 py-5 font-display font-black text-sm tracking-[0.15em] uppercase inline-flex items-center justify-center hover:border-white/50 hover:bg-white/5 transition-colors duration-200"
             >
               SEE SERVICES
             </a>
-          </div>
+          </motion.div>
         </div>
 
-        {/* Bottom: secondary car image with badge */}
-        <div className="relative h-60 md:h-72 flex-shrink-0">
-          <Image
-            src="https://images.unsplash.com/photo-1547245324-d777c6f05e80?w=900&q=80"
-            alt="Car paint perfection close-up"
-            fill
-            className="object-cover object-center"
-          />
-          <div className="absolute inset-0 bg-site-black/30" />
-          {/* Bottom info strip */}
-          <div className="absolute bottom-0 left-0 right-0 bg-site-black px-6 py-4 flex items-center justify-between">
-            <span className="font-body font-semibold text-white text-[10px] tracking-[0.2em] uppercase">
-              Schedule &amp; Get Same-Day Slots
-            </span>
-            <span className="w-2 h-2 rounded-full bg-orange flex-shrink-0" />
-          </div>
-        </div>
+        {/* Trust strip */}
+        <motion.div
+          custom={6}
+          initial="hidden"
+          animate="show"
+          variants={fadeUp}
+          className="mt-10 md:mt-14 pt-7 border-t border-white/10 flex flex-wrap items-center gap-x-10 gap-y-4"
+        >
+          {[
+            ['500+', 'Cars Detailed'],
+            ['5★', 'Google Rated'],
+            ['10+', 'Years Experience'],
+            ['CERTIFIED', 'Detailers'],
+          ].map(([val, label]) => (
+            <div key={val} className="flex items-center gap-3">
+              <span className="font-display text-2xl text-white leading-none">{val}</span>
+              <span className="font-body text-[10px] tracking-widest uppercase text-white/40 leading-tight">
+                {label}
+              </span>
+            </div>
+          ))}
+        </motion.div>
       </div>
-
     </section>
   )
 }

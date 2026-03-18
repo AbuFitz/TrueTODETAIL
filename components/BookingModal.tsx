@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 
-type VehicleType = 'sedan' | 'suv' | 'exotic'
+type VehicleType = 'hatchback' | 'suv' | 'prestige'
 type Step = 1 | 2 | 3 | 4
 
 interface BookingModalProps {
@@ -15,29 +15,29 @@ interface BookingModalProps {
 
 const packOptions = ['Essential', 'Deep Clean', 'Premium', 'Elite Ceramic']
 const vehicleLabels: Record<VehicleType, string> = {
-  sedan: 'Sedan / Hatch',
-  suv: 'SUV / Truck',
-  exotic: 'Sports / Exotic',
+  hatchback: 'Hatchback / Saloon',
+  suv: 'SUV / 4×4',
+  prestige: 'Sports / Prestige',
 }
 const timeSlots = ['8:00 AM', '10:00 AM', '12:00 PM', '2:00 PM', '4:00 PM', '6:00 PM']
 
 const priceMap: Record<string, Record<VehicleType, number>> = {
-  'Essential':     { sedan: 89,  suv: 109, exotic: 149 },
-  'Deep Clean':    { sedan: 179, suv: 219, exotic: 279 },
-  'Premium':       { sedan: 299, suv: 369, exotic: 479 },
-  'Elite Ceramic': { sedan: 549, suv: 679, exotic: 849 },
+  'Essential':     { hatchback: 89,  suv: 109, prestige: 149 },
+  'Deep Clean':    { hatchback: 179, suv: 219, prestige: 279 },
+  'Premium':       { hatchback: 299, suv: 369, prestige: 479 },
+  'Elite Ceramic': { hatchback: 549, suv: 679, prestige: 849 },
 }
 
 export default function BookingModal({
   isOpen,
   onClose,
   initialPack = 'Premium',
-  initialVehicle = 'sedan',
+  initialVehicle = 'hatchback',
   initialPrice = 299,
 }: BookingModalProps) {
   const [step, setStep] = useState<Step>(1)
   const [pack, setPack] = useState(initialPack)
-  const [vehicle, setVehicle] = useState<VehicleType>(initialVehicle)
+  const [vehicle, setVehicle] = useState<VehicleType>(initialVehicle as VehicleType)
   const [date, setDate] = useState('')
   const [time, setTime] = useState('')
   const [name, setName] = useState('')

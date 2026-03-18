@@ -23,7 +23,7 @@ const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 const PHONE_RE = /^[\d\s\+\-\(\)]{7,20}$/
 
 const VALID_PACKS = ['Essential', 'Deep Clean', 'Premium', 'Elite Ceramic']
-const VALID_VEHICLES = ['sedan', 'suv', 'exotic']
+const VALID_VEHICLES = ['hatchback', 'suv', 'prestige']
 const VALID_TIMES = ['8:00 AM', '10:00 AM', '12:00 PM', '2:00 PM', '4:00 PM', '6:00 PM']
 
 export async function POST(req: NextRequest) {

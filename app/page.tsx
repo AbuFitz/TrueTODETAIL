@@ -12,12 +12,12 @@ import BookingCTA from '@/components/BookingCTA'
 import BookingModal from '@/components/BookingModal'
 import Footer from '@/components/Footer'
 
-type VehicleType = 'sedan' | 'suv' | 'exotic'
+type VehicleType = 'hatchback' | 'suv' | 'prestige'
 
 export default function HomePage() {
   const [modalOpen, setModalOpen] = useState(false)
   const [selectedPack, setSelectedPack] = useState('Premium')
-  const [selectedVehicle, setSelectedVehicle] = useState<VehicleType>('sedan')
+  const [selectedVehicle, setSelectedVehicle] = useState<VehicleType>('hatchback')
   const [selectedPrice, setSelectedPrice] = useState(299)
 
   const openModal = () => setModalOpen(true)

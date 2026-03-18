@@ -2,13 +2,14 @@
 
 import { useState } from 'react'
 import Image from 'next/image'
+import { motion } from 'framer-motion'
 
-type VehicleType = 'sedan' | 'suv' | 'exotic'
+type VehicleType = 'hatchback' | 'suv' | 'prestige'
 
 const vehicleTypes: { key: VehicleType; label: string }[] = [
-  { key: 'sedan', label: 'Sedan / Hatch' },
-  { key: 'suv', label: 'SUV / Truck' },
-  { key: 'exotic', label: 'Sports / Exotic' },
+  { key: 'hatchback', label: 'Hatchback / Saloon' },
+  { key: 'suv', label: 'SUV / 4×4' },
+  { key: 'prestige', label: 'Sports / Prestige' },
 ]
 
 interface Package {
@@ -29,7 +30,7 @@ const packages: Package[] = [
     id: 'essential',
     name: 'ESSENTIAL',
     tagline: 'The perfect entry-level clean',
-    price: { sedan: 89, suv: 109, exotic: 149 },
+    price: { hatchback: 89, suv: 109, prestige: 149 },
     bg: 'light',
     includes: [
       'Hand wash & hand dry',
@@ -47,7 +48,7 @@ const packages: Package[] = [
     id: 'deep-clean',
     name: 'DEEP CLEAN',
     tagline: 'A thorough inside-out refresh',
-    price: { sedan: 179, suv: 219, exotic: 279 },
+    price: { hatchback: 179, suv: 219, prestige: 279 },
     bg: 'black',
     includes: [
       'Everything in Essential',
@@ -66,7 +67,7 @@ const packages: Package[] = [
     id: 'premium',
     name: 'PREMIUM',
     tagline: 'Our most popular transformation',
-    price: { sedan: 299, suv: 369, exotic: 479 },
+    price: { hatchback: 299, suv: 369, prestige: 479 },
     bg: 'orange',
     includes: [
       'Everything in Deep Clean',
@@ -85,7 +86,7 @@ const packages: Package[] = [
     id: 'elite-ceramic',
     name: 'ELITE CERAMIC',
     tagline: 'Maximum protection. Lasting gloss.',
-    price: { sedan: 549, suv: 679, exotic: 849 },
+    price: { hatchback: 549, suv: 679, prestige: 849 },
     bg: 'dark',
     includes: [
       'Everything in Premium',
@@ -142,12 +143,18 @@ const cardStyles: Record<Package['bg'], { wrapper: string; badge: string; priceB
 }
 
 export default function Packages({ onBookPack }: { onBookPack: (pkg: string, vehicle: VehicleType, price: number) => void }) {
-  const [vehicle, setVehicle] = useState<VehicleType>('sedan')
+  const [vehicle, setVehicle] = useState<VehicleType>('hatchback')
 
   return (
     <section id="packages" className="py-20 md:py-28 bg-white">
       {/* Section header */}
-      <div className="max-w-7xl mx-auto px-6 mb-14">
+      <motion.div
+        className="max-w-7xl mx-auto px-6 mb-14"
+        initial={{ opacity: 0, y: 28 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, margin: '-80px' }}
+        transition={{ duration: 0.65, ease: [0.22, 1, 0.36, 1] }}
+      >
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
           <div>
             <p className="font-body text-xs tracking-widest uppercase text-orange mb-3">
@@ -185,14 +192,21 @@ export default function Packages({ onBookPack }: { onBookPack: (pkg: string, veh
             ))}
           </div>
         </div>
-      </div>
+      </motion.div>
 
       {/* Package cards grid */}
       <div className="max-w-7xl mx-auto px-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-0 border border-black/10">
-        {packages.map((pkg) => {
+        {packages.map((pkg, cardIdx) => {
           const styles = cardStyles[pkg.bg]
           return (
-            <div key={pkg.id} className={`${styles.wrapper} relative flex flex-col border border-black/10 group detail-card`}>
+            <motion.div
+              key={pkg.id}
+              initial={{ opacity: 0, y: 24 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: '-40px' }}
+              transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1], delay: cardIdx * 0.08 }}
+              className={`${styles.wrapper} relative flex flex-col border border-black/10 group detail-card`}
+            >
               {/* Popular badge */}
               {pkg.popular && (
                 <div className={`absolute top-4 right-4 z-10 ${styles.badge} text-[10px] font-display font-black tracking-widest px-3 py-1.5 uppercase`}>
@@ -227,10 +241,10 @@ export default function Packages({ onBookPack }: { onBookPack: (pkg: string, veh
                 {/* Price */}
                 <div className="mb-7">
                   <span className={`font-display font-black text-5xl leading-none ${styles.text}`}>
-                    ${pkg.price[vehicle]}
+                    £{pkg.price[vehicle]}
                   </span>
                   <span className={`font-body text-xs ${styles.subtext} ml-2`}>
-                    {vehicle === 'exotic' ? '/ exotic' : vehicle === 'suv' ? '/ suv' : '/ sedan'}
+                    {vehicle === 'prestige' ? '/ prestige' : vehicle === 'suv' ? '/ suv' : '/ hatchback'}
                   </span>
                 </div>
 
@@ -255,7 +269,7 @@ export default function Packages({ onBookPack }: { onBookPack: (pkg: string, veh
                   <span className="text-lg leading-none">→</span>
                 </button>
               </div>
-            </div>
+            </motion.div>
           )
         })}
       </div>
@@ -268,10 +282,10 @@ export default function Packages({ onBookPack }: { onBookPack: (pkg: string, veh
           </p>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
             {[
-              { name: 'Engine Bay Detail', price: '+$50' },
-              { name: 'Headlight Restoration', price: '+$40' },
-              { name: 'Odour Elimination', price: '+$60' },
-              { name: 'Pet Hair Removal', price: '+$30' },
+              { name: 'Engine Bay Detail', price: '+£50' },
+              { name: 'Headlight Restoration', price: '+£40' },
+              { name: 'Odour Elimination', price: '+£60' },
+              { name: 'Pet Hair Removal', price: '+£30' },
             ].map((addon) => (
               <div key={addon.name} className="bg-white border border-black/10 p-5 flex flex-col gap-1">
                 <span className="font-display font-bold text-sm uppercase tracking-wide text-site-black">
