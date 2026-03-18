@@ -1,27 +1,21 @@
 import type { Metadata } from 'next'
-import { Space_Grotesk, Barlow_Condensed, Inter } from 'next/font/google'
+import { Bebas_Neue, DM_Sans } from 'next/font/google'
 import './globals.css'
 
-// Wordmark / logo — Space Grotesk Bold matches the heavy grotesque style in the reference
-const spaceGrotesk = Space_Grotesk({
+// Bebas Neue — single-weight display font for all major headlines
+// Clean, condensed, ultra-bold. Industry standard for premium automotive brands.
+const bebasNeue = Bebas_Neue({
   subsets: ['latin'],
-  weight: ['500', '600', '700'],
-  variable: '--font-wordmark',
-  display: 'swap',
-})
-
-// Section headings — Barlow Condensed ultra-bold for the big condensed headline look
-const barlowCondensed = Barlow_Condensed({
-  subsets: ['latin'],
-  weight: ['700', '800', '900'],
+  weight: ['400'],
   variable: '--font-display',
   display: 'swap',
 })
 
-// Body text — Inter for all body copy, labels and UI text
-const inter = Inter({
+// DM Sans — geometric humanist sans for all body, nav, labels, UI
+// Much cleaner and more premium-feeling than Inter for this brand style.
+const dmSans = DM_Sans({
   subsets: ['latin'],
-  weight: ['400', '500', '600', '700'],
+  weight: ['300', '400', '500', '600', '700'],
   variable: '--font-body',
   display: 'swap',
 })
@@ -39,7 +33,7 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="en" className={`${spaceGrotesk.variable} ${barlowCondensed.variable} ${inter.variable}`}>
+    <html lang="en" className={`${bebasNeue.variable} ${dmSans.variable}`}>
       <body className="bg-white text-site-black font-body antialiased">{children}</body>
     </html>
   )

@@ -14,8 +14,8 @@ export default function BookingCTA({ onBookNow }: { onBookNow: () => void }) {
         aria-hidden
       >
         <span
-          className="font-display font-black uppercase leading-none text-site-black/[0.07] whitespace-nowrap"
-          style={{ fontSize: 'clamp(6rem, 16vw, 20rem)' }}
+          className="font-display uppercase leading-none text-site-black/[0.08] whitespace-nowrap"
+          style={{ fontSize: 'clamp(8rem, 20vw, 24rem)', letterSpacing: '0.04em' }}
         >
           TTD
         </span>
@@ -34,8 +34,8 @@ export default function BookingCTA({ onBookNow }: { onBookNow: () => void }) {
               Ready To Book
             </p>
             <h2
-              className="font-display font-black uppercase leading-[0.88] text-site-black"
-              style={{ fontSize: 'clamp(3.2rem, 7vw, 7.5rem)' }}
+              className="font-display uppercase leading-[0.9] text-site-black"
+              style={{ fontSize: 'clamp(3.8rem, 8vw, 9rem)', letterSpacing: '0.02em' }}
             >
               READY WHEN
               <br />

@@ -109,8 +109,8 @@ export default function Packages({ onBookPack }: { onBookPack: (pkg: string, veh
               Choose Your Pack
             </p>
             <h2
-              className="font-display font-black uppercase leading-[0.88] text-site-black"
-              style={{ fontSize: 'clamp(2.8rem, 5.5vw, 5.5rem)' }}
+              className="font-display uppercase leading-[0.9] text-site-black"
+              style={{ fontSize: 'clamp(3.2rem, 6vw, 6.5rem)', letterSpacing: '0.02em' }}
             >
               PICK YOUR
               <br />
@@ -174,7 +174,7 @@ export default function Packages({ onBookPack }: { onBookPack: (pkg: string, veh
                           Most Popular
                         </span>
                       )}
-                      <h3 className={`font-display font-black text-3xl uppercase leading-[0.88] ${isPopular ? 'text-site-black' : 'text-site-black'}`}>
+                      <h3 className="font-display uppercase leading-[0.9] text-site-black" style={{ fontSize: '2rem', letterSpacing: '0.02em' }}>
                         {pkg.name}
                       </h3>
                     </div>
@@ -190,8 +190,8 @@ export default function Packages({ onBookPack }: { onBookPack: (pkg: string, veh
                     <div className="flex items-baseline gap-1.5">
                       <span className={`font-body text-[12px] ${isPopular ? 'text-site-black/45' : 'text-black/30'}`}>from</span>
                       <span
-                        className={`font-display font-black leading-none ${isPopular ? 'text-site-black' : 'text-site-black'}`}
-                        style={{ fontSize: 'clamp(2.5rem, 4vw, 3.5rem)' }}
+                        className="font-display leading-none text-site-black"
+                        style={{ fontSize: 'clamp(2.8rem, 4vw, 3.8rem)', letterSpacing: '0.02em' }}
                       >
                         £{pkg.price[vehicle]}
                       </span>

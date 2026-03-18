@@ -54,8 +54,8 @@ export default function Services() {
               What We Do
             </p>
             <h2
-              className="font-display font-black uppercase leading-[0.88] text-site-black"
-              style={{ fontSize: 'clamp(2.8rem, 5.5vw, 5.5rem)' }}
+              className="font-display uppercase leading-[0.9] text-site-black"
+              style={{ fontSize: 'clamp(3.2rem, 6vw, 6.5rem)', letterSpacing: '0.02em' }}
             >
               EVERY SERVICE
               <br />
@@ -110,12 +110,12 @@ export default function Services() {
 
               {/* Title */}
               <h3
-                className={`relative z-10 font-display font-black uppercase leading-[0.88] flex-shrink-0 md:w-56 transition-colors duration-200 ${
+                className={`relative z-10 font-display uppercase leading-[0.9] flex-shrink-0 md:w-56 transition-colors duration-200 ${
                   svc.highlight
                     ? 'text-white'
                     : 'text-site-black group-hover:text-orange'
                 }`}
-                style={{ fontSize: 'clamp(1.6rem, 3vw, 2.2rem)' }}
+                style={{ fontSize: 'clamp(1.8rem, 3vw, 2.6rem)', letterSpacing: '0.02em' }}
               >
                 {svc.title}
               </h3>

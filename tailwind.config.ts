@@ -17,11 +17,9 @@ const config: Config = {
         'site-dark': '#1A1A1A',
       },
       fontFamily: {
-        // Space Grotesk — bold grotesque for logo / wordmark
-        wordmark: ['var(--font-wordmark)', 'sans-serif'],
-        // Barlow Condensed — ultra-bold condensed for big display headings
+        // Bebas Neue — condensed display font for all headlines
         display: ['var(--font-display)', 'sans-serif'],
-        // Inter — clean body text and UI labels
+        // DM Sans — clean geometric sans for all body, nav, UI labels
         body: ['var(--font-body)', 'sans-serif'],
       },
       animation: {

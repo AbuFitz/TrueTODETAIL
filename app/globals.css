@@ -33,24 +33,32 @@ body {
   will-change: transform;
 }
 
-/* ── Primary button (black bg, orange dot) ── */
+/* ── Primary button ── */
 .btn-primary {
   @apply inline-flex items-center justify-between gap-4 bg-site-black text-white
-         font-body font-semibold tracking-[0.12em] uppercase text-[11px]
+         font-body font-semibold tracking-[0.1em] uppercase text-[12px]
          transition-colors duration-200 hover:bg-orange;
 }
 .btn-primary .btn-dot {
-  @apply w-2 h-2 rounded-full bg-white/50 flex-shrink-0 transition-colors duration-200;
+  @apply w-2 h-2 rounded-full bg-white/40 flex-shrink-0 transition-colors duration-200;
 }
 .btn-primary:hover .btn-dot {
-  @apply bg-white;
+  @apply bg-white/70;
 }
 
-/* ── Orange nav link button ── */
+/* ── Nav link — clean text, no background box ── */
 .btn-nav {
-  @apply flex items-center px-6 bg-orange text-white font-body font-semibold
-         text-[11px] tracking-[0.1em] uppercase border-l border-[#C53D08]/40
-         hover:bg-[#C53D08] transition-colors duration-150;
+  @apply flex items-center px-5 text-site-black/60 font-body font-medium
+         text-[12px] tracking-[0.12em] uppercase relative
+         hover:text-site-black transition-colors duration-150;
+}
+.btn-nav::after {
+  content: '';
+  @apply absolute bottom-0 left-5 right-5 h-[2px] bg-orange
+         scale-x-0 transition-transform duration-200 origin-left;
+}
+.btn-nav:hover::after {
+  @apply scale-x-100;
 }
 
 /* ── Custom scrollbar ── */

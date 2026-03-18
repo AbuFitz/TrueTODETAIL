@@ -5,8 +5,7 @@ import Image from 'next/image'
 
 const ease = [0.22, 1, 0.36, 1] as [number, number, number, number]
 
-// Nav height is 68px (no announcement bar)
-const NAV_H = 68
+const NAV_H = 64
 
 export default function Hero({ onBookNow }: { onBookNow: () => void }) {
   return (
@@ -37,11 +36,11 @@ export default function Hero({ onBookNow }: { onBookNow: () => void }) {
         >
           <div className="bg-orange" style={{ padding: 'clamp(28px, 3.5vw, 48px) clamp(24px, 3vw, 42px)' }}>
             <h1
-              className="font-display font-black uppercase text-site-black"
+              className="font-display uppercase text-site-black"
               style={{
-                fontSize: 'clamp(4rem, 8vw, 8.5rem)',
-                lineHeight: 0.88,
-                letterSpacing: '-0.01em',
+                fontSize: 'clamp(5rem, 9vw, 10rem)',
+                lineHeight: 0.9,
+                letterSpacing: '0.02em',
               }}
             >
               DETAILING
@@ -71,7 +70,7 @@ export default function Hero({ onBookNow }: { onBookNow: () => void }) {
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.55, delay: 0.45, ease }}
-            className="font-body text-[17px] leading-[1.65] text-black/60 mb-10"
+            className="font-body text-[16px] leading-[1.7] text-black/55 mb-10"
           >
             We bring certified detailers directly to your driveway — pro-grade products, fixed prices, no drop-off required.
           </motion.p>

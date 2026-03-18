@@ -48,8 +48,8 @@ export default function Stats() {
               Why True To Detail
             </p>
             <h2
-              className="font-display font-black uppercase text-site-black leading-[0.88] mb-12"
-              style={{ fontSize: 'clamp(2.8rem, 5vw, 5rem)' }}
+              className="font-display uppercase text-site-black leading-[0.9] mb-12"
+              style={{ fontSize: 'clamp(3.2rem, 5.5vw, 6rem)', letterSpacing: '0.02em' }}
             >
               HERTFORDSHIRE'S
               <br />
@@ -85,10 +85,10 @@ export default function Stats() {
               >
                 {/* Big bold heading — fills the card like reference */}
                 <h3
-                  className={`font-display font-black uppercase leading-[0.85] whitespace-pre-line ${
+                  className={`font-display uppercase leading-[0.9] whitespace-pre-line ${
                     card.light ? 'text-site-black' : 'text-white'
                   }`}
-                  style={{ fontSize: 'clamp(2rem, 4vw, 3.2rem)' }}
+                  style={{ fontSize: 'clamp(2.4rem, 4.5vw, 3.8rem)', letterSpacing: '0.02em' }}
                 >
                   {card.heading}
                 </h3>

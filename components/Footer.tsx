@@ -57,9 +57,9 @@ export default function Footer({ onBookNow }: { onBookNow: () => void }) {
         <div>
           <a
             href="#"
-            className="font-wordmark font-bold uppercase text-site-black leading-none block mb-2
+            className="font-display uppercase text-site-black leading-none block mb-2
                        hover:opacity-70 transition-opacity duration-150"
-            style={{ fontSize: 'clamp(2rem, 5.5vw, 5rem)', letterSpacing: '0.04em' }}
+            style={{ fontSize: 'clamp(2.5rem, 6vw, 6rem)', letterSpacing: '0.06em' }}
           >
             TRUE TO <span className="text-orange">DETAIL</span>
           </a>
@@ -118,7 +118,7 @@ export default function Footer({ onBookNow }: { onBookNow: () => void }) {
                       key={col}
                       className={`px-6 py-4 border-b border-r last:border-r-0 transition-colors duration-150 ${
                         isMenu
-                          ? 'bg-orange border-white/15 hover:bg-[#C53D08]'
+                          ? 'bg-site-black border-white/[0.06] hover:bg-site-dark'
                           : 'bg-site-light border-white group-hover/row:bg-[#E3E3E3]'
                       }`}
                     >

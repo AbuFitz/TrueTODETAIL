@@ -42,8 +42,8 @@ export default function HowItWorks({ onBookNow }: { onBookNow: () => void }) {
       >
         <div className="max-w-7xl mx-auto">
           <h2
-            className="font-display font-black uppercase text-white leading-none"
-            style={{ fontSize: 'clamp(2.5rem, 6vw, 6rem)', letterSpacing: '-0.01em' }}
+            className="font-display uppercase text-white leading-none"
+            style={{ fontSize: 'clamp(3rem, 6.5vw, 7rem)', letterSpacing: '0.03em' }}
           >
             MEET TRUE TO DETAIL
           </h2>
