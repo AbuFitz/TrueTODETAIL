@@ -18,7 +18,7 @@ export default function BookingCTA({ onBookNow }: { onBookNow: () => void }) {
         >
           {/* Headline */}
           <div>
-            <h2 className="font-display text-6xl md:text-7xl xl:text-8xl uppercase leading-[0.85] text-site-black">
+            <h2 className="font-display font-black text-6xl md:text-7xl xl:text-8xl uppercase leading-[0.85] text-site-black">
               READY WHEN
               <br />
               YOU ARE.

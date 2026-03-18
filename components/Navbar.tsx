@@ -27,32 +27,32 @@ export default function Navbar({ onBookNow }: { onBookNow: () => void }) {
   return (
     <>
       {/* Announcement bar */}
-      <div className="fixed top-0 left-0 right-0 z-50 h-8 bg-site-black flex items-center justify-center overflow-hidden">
-        <p className="font-body text-[10px] tracking-[0.22em] uppercase text-white/50 whitespace-nowrap">
-          100% Mobile — We Come To You&nbsp;
-          <span className="text-orange font-semibold">·</span>&nbsp;
-          Same-Day Slots Available&nbsp;
-          <span className="text-orange font-semibold">·</span>&nbsp;
-          Hemel Hempstead &amp; Surrounding Areas
+      <div className="fixed top-0 left-0 right-0 z-50 h-7 bg-site-black flex items-center justify-center overflow-hidden">
+        <p className="font-mono text-[9px] tracking-[0.2em] uppercase text-white/40 whitespace-nowrap">
+          100% Mobile&nbsp;
+          <span className="text-orange">·</span>&nbsp;
+          We Come To You&nbsp;
+          <span className="text-orange">·</span>&nbsp;
+          Same-Day Slots&nbsp;
+          <span className="text-orange">·</span>&nbsp;
+          Hemel Hempstead &amp; Hertfordshire
         </p>
       </div>
 
       {/* Main nav */}
       <nav
-        className={`fixed top-8 left-0 right-0 z-50 bg-white border-b border-black/10 transition-shadow duration-300 ${
-          scrolled ? 'shadow-sm' : ''
+        className={`fixed top-7 left-0 right-0 z-50 bg-white border-b border-black/10 transition-shadow duration-300 overflow-visible ${
+          scrolled ? 'shadow-[0_2px_16px_rgba(0,0,0,0.07)]' : ''
         }`}
       >
-        <div className="flex items-stretch h-[56px]">
-          {/* Brand */}
+        <div className="flex items-stretch h-[72px]">
+
+          {/* Brand — Barlow Black, heavyweight, clean */}
           <a
             href="#"
-            className="flex items-center px-7 border-r border-black/10 hover:bg-site-light transition-colors duration-200 flex-shrink-0"
+            className="flex items-center px-8 border-r border-black/10 hover:bg-site-light transition-colors duration-200 flex-shrink-0"
           >
-            <span
-              className="font-display font-extrabold uppercase text-[19px]"
-              style={{ letterSpacing: '0.12em', display: 'inline-block', transform: 'scaleX(1.06)', transformOrigin: 'left center' }}
-            >
+            <span className="font-display font-black text-[26px] uppercase leading-none tracking-[-0.02em]">
               TRUE TO <span className="text-orange">DETAIL</span>
             </span>
           </a>
@@ -60,23 +60,26 @@ export default function Navbar({ onBookNow }: { onBookNow: () => void }) {
           {/* Spacer */}
           <div className="flex-1" />
 
-          {/* Desktop nav */}
+          {/* Desktop nav links — white with hover:orange (previous style) */}
           <div className="hidden md:flex items-stretch">
             {navLinks.map((link) => (
               <a
                 key={link.label}
                 href={link.href}
-                className="flex items-center px-6 font-body font-semibold text-[11px] tracking-[0.14em] uppercase border-l border-black/10 hover:bg-orange hover:text-white transition-colors duration-150"
+                className="flex items-center px-6 font-mono font-semibold text-[11px] tracking-[0.1em] uppercase border-l border-black/10 hover:bg-orange hover:text-white transition-colors duration-150"
               >
                 {link.label}
               </a>
             ))}
+
+            {/* BOOK NOW — wider, protruding slightly below nav */}
             <button
               onClick={onBookNow}
-              className="flex items-center gap-3 pl-7 pr-5 bg-site-black text-white font-body font-bold text-[11px] tracking-[0.14em] uppercase border-l border-black/10 hover:bg-orange transition-colors duration-150 flex-shrink-0"
+              className="relative flex items-center justify-between gap-5 bg-site-black text-white font-mono font-semibold text-[11px] tracking-[0.12em] uppercase border-l border-site-black hover:bg-orange transition-colors duration-150 flex-shrink-0"
+              style={{ minWidth: '220px', paddingLeft: '32px', paddingRight: '24px', height: '84px', marginTop: '-6px', marginBottom: '-6px' }}
             >
               BOOK NOW
-              <span className="w-2 h-2 rounded-full bg-orange flex-shrink-0" />
+              <span className="w-2 h-2 rounded-full bg-white flex-shrink-0" />
             </button>
           </div>
 
@@ -87,21 +90,9 @@ export default function Navbar({ onBookNow }: { onBookNow: () => void }) {
             aria-label="Toggle menu"
           >
             <div className="flex flex-col gap-[5px]">
-              <span
-                className={`block h-[1.5px] bg-site-black transition-all duration-300 ${
-                  menuOpen ? 'w-6 rotate-45 translate-y-[6.5px]' : 'w-6'
-                }`}
-              />
-              <span
-                className={`block h-[1.5px] bg-site-black transition-all duration-300 ${
-                  menuOpen ? 'opacity-0 w-4' : 'w-4'
-                }`}
-              />
-              <span
-                className={`block h-[1.5px] bg-site-black transition-all duration-300 ${
-                  menuOpen ? 'w-6 -rotate-45 -translate-y-[6.5px]' : 'w-6'
-                }`}
-              />
+              <span className={`block h-[1.5px] bg-site-black transition-all duration-300 ${menuOpen ? 'w-6 rotate-45 translate-y-[6.5px]' : 'w-6'}`} />
+              <span className={`block h-[1.5px] bg-site-black transition-all duration-300 ${menuOpen ? 'opacity-0 w-4' : 'w-4'}`} />
+              <span className={`block h-[1.5px] bg-site-black transition-all duration-300 ${menuOpen ? 'w-6 -rotate-45 -translate-y-[6.5px]' : 'w-6'}`} />
             </div>
           </button>
         </div>
@@ -109,11 +100,9 @@ export default function Navbar({ onBookNow }: { onBookNow: () => void }) {
 
       {/* Mobile fullscreen menu */}
       {menuOpen && (
-        <div className="fixed inset-0 z-40 bg-site-black flex flex-col pt-[88px] overflow-y-auto">
+        <div className="fixed inset-0 z-40 bg-site-black flex flex-col pt-[96px] overflow-y-auto">
           <div className="px-8 pt-8 pb-4">
-            <p className="font-body text-[10px] tracking-[0.22em] uppercase text-white/25">
-              Navigation
-            </p>
+            <p className="font-mono text-[9px] tracking-[0.22em] uppercase text-white/25">Navigation</p>
           </div>
           {navLinks.map((link, i) => (
             <a
@@ -123,23 +112,18 @@ export default function Navbar({ onBookNow }: { onBookNow: () => void }) {
               className="flex items-center justify-between px-8 py-8 border-t border-white/10 group"
             >
               <div className="flex items-baseline gap-5">
-                <span className="font-body text-[10px] tracking-widest text-white/25 tabular-nums">
-                  0{i + 1}
-                </span>
-                <span className="font-display text-5xl uppercase text-white group-hover:text-orange transition-colors duration-150">
+                <span className="font-mono text-[9px] tracking-widest text-white/25 tabular-nums">0{i + 1}</span>
+                <span className="font-display font-black text-5xl uppercase text-white group-hover:text-orange transition-colors duration-150">
                   {link.label}
                 </span>
               </div>
-              <span className="text-white/30 text-xl font-body">↗</span>
+              <span className="text-white/30 text-xl font-mono">↗</span>
             </a>
           ))}
           <div className="px-8 py-8 mt-auto border-t border-white/10">
             <button
-              onClick={() => {
-                setMenuOpen(false)
-                onBookNow()
-              }}
-              className="w-full bg-orange text-white py-5 font-body font-bold text-[12px] tracking-[0.14em] uppercase flex items-center justify-between px-6"
+              onClick={() => { setMenuOpen(false); onBookNow() }}
+              className="w-full bg-orange text-white py-5 font-mono font-semibold text-[12px] tracking-[0.12em] uppercase flex items-center justify-between px-6"
             >
               BOOK YOUR PACK
               <span className="w-2.5 h-2.5 rounded-full bg-white flex-shrink-0" />

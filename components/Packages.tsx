@@ -114,7 +114,7 @@ export default function Packages({ onBookPack }: { onBookPack: (pkg: string, veh
               <span className="w-5 h-px bg-orange" />
               <p className="font-body text-[10px] tracking-[0.3em] uppercase text-black/40">Choose Your Pack</p>
             </div>
-            <h2 className="font-display text-5xl md:text-6xl xl:text-7xl uppercase leading-[0.88]">
+            <h2 className="font-display font-black text-5xl md:text-6xl xl:text-7xl uppercase leading-[0.88]">
               PICK YOUR
               <br />
               LEVEL OF
@@ -127,20 +127,20 @@ export default function Packages({ onBookPack }: { onBookPack: (pkg: string, veh
               Select your vehicle type. Your price updates instantly.
               All prices are fixed — no surprises on the day.
             </p>
-            {/* Vehicle selector */}
+            {/* Vehicle selector — bigger, spacious buttons */}
             <div className="inline-flex bg-white border border-black/12">
               {vehicleTypes.map(({ key, label, sub }) => (
                 <button
                   key={key}
                   onClick={() => setVehicle(key)}
-                  className={`px-5 py-3 text-left transition-colors duration-150 border-r border-black/12 last:border-r-0 ${
+                  className={`px-8 py-5 text-left transition-colors duration-150 border-r border-black/12 last:border-r-0 ${
                     vehicle === key
                       ? 'bg-site-black text-white'
                       : 'bg-white text-site-black hover:bg-site-light'
                   }`}
                 >
-                  <span className="font-display font-bold text-xs tracking-widest uppercase block leading-none">{label}</span>
-                  <span className={`font-body text-[9px] tracking-wider mt-0.5 block ${vehicle === key ? 'text-white/50' : 'text-black/40'}`}>{sub}</span>
+                  <span className="font-display font-black text-sm tracking-wider uppercase block leading-none">{label}</span>
+                  <span className={`font-mono text-[10px] tracking-wide mt-1.5 block ${vehicle === key ? 'text-white/50' : 'text-black/40'}`}>{sub}</span>
                 </button>
               ))}
             </div>

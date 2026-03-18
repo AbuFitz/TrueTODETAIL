@@ -1,6 +1,7 @@
 'use client'
 
 import { motion } from 'framer-motion'
+import Image from 'next/image'
 
 const ease = [0.22, 1, 0.36, 1] as [number, number, number, number]
 
@@ -54,7 +55,7 @@ export default function Services() {
               <span className="w-5 h-px bg-orange" />
               <p className="font-body text-[10px] tracking-[0.3em] uppercase text-black/40">What We Do</p>
             </div>
-            <h2 className="font-display text-5xl md:text-6xl xl:text-7xl uppercase leading-[0.88]">
+            <h2 className="font-display font-black text-5xl md:text-6xl xl:text-7xl uppercase leading-[0.88]">
               EVERY SERVICE
               <br />
               <span className="text-orange">COVERED.</span>
@@ -75,23 +76,36 @@ export default function Services() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: '-30px' }}
               transition={{ duration: 0.5, ease, delay: i * 0.06 }}
-              className={`flex flex-col md:flex-row md:items-center gap-6 py-8 md:py-10 ${svc.highlight ? 'bg-site-black -mx-6 md:-mx-12 px-6 md:px-12' : ''}`}
+              className={`relative flex flex-col md:flex-row md:items-center gap-6 py-8 md:py-10 ${svc.highlight ? 'overflow-hidden -mx-6 md:-mx-12 px-6 md:px-12' : ''}`}
             >
+              {/* Ceramic row: background image with dark overlay */}
+              {svc.highlight && (
+                <>
+                  <Image
+                    src="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=1400&q=80&fit=crop&crop=center"
+                    alt=""
+                    fill
+                    sizes="100vw"
+                    className="object-cover opacity-20"
+                  />
+                  <div className="absolute inset-0 bg-site-black/85" />
+                </>
+              )}
               {/* Number */}
-              <span className={`font-display text-5xl leading-none flex-shrink-0 w-16 ${svc.highlight ? 'text-white/15' : 'text-black/10'}`}>
+              <span className={`relative z-10 font-display text-5xl leading-none flex-shrink-0 w-16 ${svc.highlight ? 'text-white/15' : 'text-black/10'}`}>
                 {svc.index}
               </span>
 
               {/* Title */}
-              <h3 className={`font-display text-3xl md:text-4xl uppercase leading-[0.9] whitespace-pre-line flex-shrink-0 md:w-56 ${svc.highlight ? 'text-white' : 'text-site-black'}`}>
+              <h3 className={`relative z-10 font-display text-3xl md:text-4xl uppercase leading-[0.9] whitespace-pre-line flex-shrink-0 md:w-56 ${svc.highlight ? 'text-white' : 'text-site-black'}`}>
                 {svc.title}
               </h3>
 
               {/* Divider */}
-              <div className={`hidden md:block h-px flex-1 ${svc.highlight ? 'bg-white/10' : 'bg-black/8'}`} />
+              <div className={`relative z-10 hidden md:block h-px flex-1 ${svc.highlight ? 'bg-white/10' : 'bg-black/8'}`} />
 
               {/* Description */}
-              <p className={`font-body text-sm leading-relaxed md:w-80 flex-shrink-0 ${svc.highlight ? 'text-white/55' : 'text-black/50'}`}>
+              <p className={`relative z-10 font-body text-sm leading-relaxed md:w-80 flex-shrink-0 ${svc.highlight ? 'text-white/55' : 'text-black/50'}`}>
                 {svc.desc}
               </p>
 
@@ -99,7 +113,7 @@ export default function Services() {
               {svc.highlight && (
                 <a
                   href="#packages"
-                  className="flex-shrink-0 bg-orange text-white px-7 py-4 font-display font-black text-xs tracking-[0.15em] uppercase flex items-center gap-4 hover:bg-white hover:text-site-black transition-colors duration-200"
+                  className="relative z-10 flex-shrink-0 bg-orange text-white px-7 py-4 font-display font-black text-xs tracking-[0.15em] uppercase flex items-center gap-4 hover:bg-white hover:text-site-black transition-colors duration-200"
                 >
                   VIEW PACK →
                 </a>

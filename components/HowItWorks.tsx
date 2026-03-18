@@ -1,6 +1,7 @@
 'use client'
 
 import { motion } from 'framer-motion'
+import Image from 'next/image'
 
 const ease = [0.22, 1, 0.36, 1] as [number, number, number, number]
 
@@ -32,7 +33,13 @@ export default function HowItWorks({ onBookNow }: { onBookNow: () => void }) {
     <section className="py-24 md:py-32 bg-site-black">
       <div className="max-w-7xl mx-auto px-6 md:px-12">
 
-        {/* Header */}
+        {/* Header + two-column layout: text left, photo right on desktop */}
+        <div className="grid grid-cols-1 lg:grid-cols-[1fr_360px] gap-16 lg:gap-0 items-stretch">
+
+          {/* LEFT COLUMN */}
+          <div className="lg:pr-16">
+
+          {/* Header */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -45,7 +52,7 @@ export default function HowItWorks({ onBookNow }: { onBookNow: () => void }) {
               <span className="w-5 h-px bg-orange" />
               <p className="font-body text-[10px] tracking-[0.3em] uppercase text-white/30">Why Choose Us</p>
             </div>
-            <h2 className="font-display text-5xl md:text-6xl xl:text-7xl uppercase leading-[0.88] text-white">
+            <h2 className="font-display font-black text-5xl md:text-6xl xl:text-7xl uppercase leading-[0.88] text-white">
               TRUE TO
               <br />
               <span className="text-orange">DETAIL.</span>
@@ -58,7 +65,7 @@ export default function HowItWorks({ onBookNow }: { onBookNow: () => void }) {
           </p>
         </motion.div>
 
-        {/* Reasons — clean horizontal rows */}
+          {/* Reasons */}
         <div className="flex flex-col gap-0 border-t border-white/8">
           {reasons.map((r, i) => (
             <motion.div
@@ -98,6 +105,28 @@ export default function HowItWorks({ onBookNow }: { onBookNow: () => void }) {
             OR CALL 07984 237149
           </a>
         </motion.div>
+
+          </div>{/* end left column */}
+
+          {/* RIGHT COLUMN: photo panel */}
+          <div className="hidden lg:block relative border-l border-white/8 overflow-hidden min-h-[500px]">
+            <Image
+              src="https://images.unsplash.com/photo-1563720223185-11003d516935?w=800&q=85&fit=crop&crop=center"
+              alt="Detailer at work"
+              fill
+              sizes="360px"
+              className="object-cover"
+            />
+            <div className="absolute inset-0 bg-site-black/60" />
+            <div className="absolute bottom-8 left-8 right-8">
+              <p className="font-mono text-[9px] tracking-[0.28em] uppercase text-white/35 mb-2">
+                Certified detailers
+              </p>
+              <div className="w-8 h-px bg-orange" />
+            </div>
+          </div>
+
+        </div>{/* end two-column grid */}
 
       </div>
     </section>

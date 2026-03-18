@@ -1,15 +1,22 @@
 import type { Metadata } from 'next'
-import { Barlow_Condensed, DM_Sans } from 'next/font/google'
+import { Barlow, JetBrains_Mono, Inter } from 'next/font/google'
 import './globals.css'
 
-const barlow = Barlow_Condensed({
+const barlow = Barlow({
   subsets: ['latin'],
-  weight: ['600', '700', '800'],
+  weight: ['700', '800', '900'],
   variable: '--font-display',
   display: 'swap',
 })
 
-const dmSans = DM_Sans({
+const jetbrainsMono = JetBrains_Mono({
+  subsets: ['latin'],
+  weight: ['400', '500', '600'],
+  variable: '--font-mono',
+  display: 'swap',
+})
+
+const inter = Inter({
   subsets: ['latin'],
   weight: ['400', '500', '600', '700'],
   variable: '--font-body',
@@ -29,7 +36,7 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="en" className={`${barlow.variable} ${dmSans.variable}`}>
+    <html lang="en" className={`${barlow.variable} ${jetbrainsMono.variable} ${inter.variable}`}>
       <body className="bg-white text-site-black font-body">{children}</body>
     </html>
   )

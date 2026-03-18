@@ -1,6 +1,7 @@
 'use client'
 
 import { motion } from 'framer-motion'
+import Image from 'next/image'
 
 const ease = [0.22, 1, 0.36, 1] as [number, number, number, number]
 
@@ -58,7 +59,7 @@ export default function Stats() {
             viewport={{ once: true, margin: '-60px' }}
             transition={{ duration: 0.65, ease }}
           >
-            <h2 className="font-display text-5xl md:text-6xl xl:text-7xl uppercase leading-[0.88] text-site-black">
+            <h2 className="font-display font-black text-5xl md:text-6xl xl:text-7xl uppercase leading-[0.88] text-site-black">
               BUILT ON
               <br />
               <span className="text-orange">DOING IT</span>
@@ -99,6 +100,32 @@ export default function Stats() {
 
         </div>
       </div>
+
+      {/* Full-width photo strip — relevant detailing imagery */}
+      <motion.div
+        initial={{ opacity: 0 }}
+        whileInView={{ opacity: 1 }}
+        viewport={{ once: true, margin: '-60px' }}
+        transition={{ duration: 0.9, ease }}
+        className="relative mt-16 md:mt-24 h-[300px] md:h-[420px] overflow-hidden"
+      >
+        <Image
+          src="https://images.unsplash.com/photo-1520340356584-f9917d1eea6f?w=1800&q=85&fit=crop&crop=center"
+          alt="Car detailing in progress"
+          fill
+          sizes="100vw"
+          className="object-cover"
+        />
+        <div className="absolute inset-0 bg-gradient-to-t from-site-black/30 to-transparent" />
+        {/* Bottom overlay strip */}
+        <div className="absolute bottom-0 left-0 right-0 px-8 md:px-12 py-6 flex items-center gap-4">
+          <span className="w-5 h-px bg-orange" />
+          <p className="font-mono text-[9px] tracking-[0.28em] uppercase text-white/45">
+            Every detail. Every time.
+          </p>
+        </div>
+      </motion.div>
+
     </section>
   )
 }
