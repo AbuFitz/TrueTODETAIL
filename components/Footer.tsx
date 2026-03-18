@@ -50,19 +50,37 @@ const colKeys = Object.keys(tableData) as ColKey[]
 
 export default function Footer({ onBookNow }: { onBookNow: () => void }) {
   return (
-    <footer className="bg-white border-t border-black/10">
+    <footer className="bg-white border-t border-black/8">
+
       {/* Brand row */}
-      <div className="max-w-[1400px] mx-auto px-6 pt-12 pb-8 flex flex-col md:flex-row md:items-end md:justify-between gap-6">
-        <a href="#" className="font-wordmark font-black text-5xl md:text-7xl uppercase leading-none" style={{ letterSpacing: '0.2em' }}>
-          TRUE TO <span className="text-orange">DETAIL</span>
-        </a>
-        <button
-          onClick={onBookNow}
-          className="self-start md:self-auto flex items-center gap-3 bg-site-black text-white px-7 py-4 font-mono font-semibold text-[11px] tracking-[0.15em] uppercase hover:bg-orange transition-colors duration-150"
-        >
-          BOOK NOW
-          <span className="w-2 h-2 rounded-full bg-orange flex-shrink-0" />
-        </button>
+      <div className="max-w-[1400px] mx-auto px-6 pt-14 pb-10 flex flex-col md:flex-row md:items-end md:justify-between gap-8">
+        <div>
+          <a
+            href="#"
+            className="font-wordmark font-black uppercase leading-none text-site-black hover:text-orange transition-colors duration-200 block mb-3"
+            style={{ fontSize: 'clamp(2.5rem, 6vw, 5rem)', letterSpacing: '0.22em' }}
+          >
+            TRUE TO <span className="text-orange">DETAIL</span>
+          </a>
+          <p className="font-mono text-[10px] tracking-[0.22em] uppercase text-black/30">
+            Premium Mobile Detailing · Hertfordshire
+          </p>
+        </div>
+        <div className="flex flex-col sm:flex-row gap-3 md:items-end">
+          <button
+            onClick={onBookNow}
+            className="btn-sweep flex items-center gap-3 bg-site-black text-white px-7 py-4 font-mono font-semibold text-[11px] tracking-[0.16em] uppercase hover:bg-orange transition-colors duration-200"
+          >
+            BOOK NOW
+            <span className="w-1.5 h-1.5 rounded-full bg-orange" style={{ backgroundColor: 'rgba(255,255,255,0.5)' }} />
+          </button>
+          <a
+            href="tel:+447984237149"
+            className="flex items-center justify-center gap-2 border border-black/10 text-black/50 px-7 py-4 font-mono font-semibold text-[11px] tracking-[0.16em] uppercase hover:border-black/25 hover:text-site-black transition-all duration-200"
+          >
+            07984 237149
+          </a>
+        </div>
       </div>
 
       {/* Table grid */}
@@ -73,7 +91,7 @@ export default function Footer({ onBookNow }: { onBookNow: () => void }) {
               {colKeys.map((col) => (
                 <th
                   key={col}
-                  className="bg-site-black text-white text-left px-6 py-3 font-body font-semibold text-[10px] tracking-[0.2em] uppercase border-r border-white/10 last:border-r-0"
+                  className="bg-site-black text-white text-left px-6 py-3.5 font-mono font-semibold text-[9px] tracking-[0.22em] uppercase border-r border-white/8 last:border-r-0"
                 >
                   {col}
                 </th>
@@ -82,7 +100,7 @@ export default function Footer({ onBookNow }: { onBookNow: () => void }) {
           </thead>
           <tbody>
             {Array.from({ length: 4 }).map((_, rowIdx) => (
-              <tr key={rowIdx}>
+              <tr key={rowIdx} className="group/row">
                 {colKeys.map((col) => {
                   const colData = tableData[col]
                   const item = colData.rows[rowIdx]
@@ -90,25 +108,25 @@ export default function Footer({ onBookNow }: { onBookNow: () => void }) {
                   return (
                     <td
                       key={col}
-                      className={`px-6 py-[14px] border-b border-r last:border-r-0 ${
+                      className={`px-6 py-4 border-b border-r last:border-r-0 transition-colors duration-150 ${
                         isMenu
-                          ? 'bg-orange border-white/20'
-                          : 'bg-site-light border-white'
+                          ? 'bg-orange border-white/15 hover:bg-[#C53D08]'
+                          : 'bg-site-light border-white group-hover/row:bg-[#E6E6E6]'
                       }`}
                     >
                       {item.href ? (
                         <a
                           href={item.href}
-                          className={`font-body text-[13px] transition-colors ${
+                          className={`font-body text-[13px] transition-colors duration-150 ${
                             isMenu
-                              ? 'font-bold tracking-wider text-white uppercase underline-offset-4 hover:underline'
-                              : 'text-black/60 hover:text-site-black'
+                              ? 'font-bold tracking-wider text-white uppercase hover:text-white/80'
+                              : 'text-black/55 hover:text-site-black font-medium'
                           }`}
                         >
                           {item.label}
                         </a>
                       ) : (
-                        <span className="font-body text-[13px] text-black/60">
+                        <span className={`font-body text-[13px] ${isMenu ? 'text-white font-bold tracking-wider uppercase' : 'text-black/45'}`}>
                           {item.label}
                         </span>
                       )}
@@ -122,11 +140,11 @@ export default function Footer({ onBookNow }: { onBookNow: () => void }) {
       </div>
 
       {/* Copyright bar */}
-      <div className="max-w-[1400px] mx-auto px-6 py-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2">
-        <span className="font-body text-[11px] text-black/30">
+      <div className="max-w-[1400px] mx-auto px-6 py-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 border-t border-black/6 mt-0">
+        <span className="font-body text-[11px] text-black/25">
           © {currentYear} True To Detail. All rights reserved.
         </span>
-        <span className="font-body text-[11px] text-black/30">
+        <span className="font-body text-[11px] text-black/25">
           Professional Auto Detailing · Hemel Hempstead &amp; Surrounding Areas
         </span>
       </div>

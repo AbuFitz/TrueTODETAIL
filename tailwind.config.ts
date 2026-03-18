@@ -25,6 +25,18 @@ const config: Config = {
         widest2: '0.2em',
         widest3: '0.3em',
       },
+      animation: {
+        marquee: 'marquee 32s linear infinite',
+      },
+      keyframes: {
+        marquee: {
+          from: { transform: 'translateX(0)' },
+          to: { transform: 'translateX(-50%)' },
+        },
+      },
+      transitionDuration: {
+        '400': '400ms',
+      },
     },
   },
   plugins: [],

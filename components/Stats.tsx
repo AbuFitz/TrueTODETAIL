@@ -39,18 +39,18 @@ export default function Stats() {
 
         {/* Section label */}
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 0, y: 16 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: '-60px' }}
-          transition={{ duration: 0.55, ease }}
-          className="flex items-center gap-3 mb-12"
+          transition={{ duration: 0.5, ease }}
+          className="flex items-center gap-3 mb-14"
         >
           <span className="w-5 h-px bg-orange" />
-          <p className="font-mono text-[10px] tracking-[0.3em] uppercase text-black/40">Why True To Detail</p>
+          <p className="font-mono text-[10px] tracking-[0.3em] uppercase text-black/35">Why True To Detail</p>
         </motion.div>
 
-        {/* Split: headline left, pillars right */}
-        <div className="grid grid-cols-1 lg:grid-cols-[1fr_2fr] gap-16 lg:gap-24 items-start">
+        {/* Headline left, pillars right */}
+        <div className="grid grid-cols-1 lg:grid-cols-[1fr_2fr] gap-16 lg:gap-20 items-start">
 
           {/* Headline */}
           <motion.div
@@ -58,22 +58,26 @@ export default function Stats() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: '-60px' }}
             transition={{ duration: 0.65, ease }}
+            className="lg:sticky lg:top-32"
           >
-            <h2 className="font-display font-black text-5xl md:text-6xl xl:text-7xl uppercase leading-[0.88] text-site-black">
+            <h2
+              className="font-display font-black uppercase leading-[0.88] text-site-black"
+              style={{ fontSize: 'clamp(3.2rem, 5.5vw, 5.5rem)' }}
+            >
               BUILT ON
               <br />
               <span className="text-orange">DOING IT</span>
               <br />
               RIGHT.
             </h2>
-            <p className="font-body text-sm text-black/45 leading-relaxed mt-8 max-w-xs">
-              Every job is carried out to a standard we&apos;re proud to put our name on.
-              No shortcuts. No half-measures.
+            <div className="w-10 h-[2px] bg-orange mt-7 mb-5" />
+            <p className="font-body text-sm text-black/45 leading-relaxed max-w-[260px]">
+              Every job is carried out to a standard we&apos;re proud to put our name on. No shortcuts. No half-measures.
             </p>
           </motion.div>
 
-          {/* 2x2 pillars grid */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-px bg-black/8">
+          {/* 2×2 pillars grid */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-px bg-black/6">
             {pillars.map((p, i) => (
               <motion.div
                 key={p.number}
@@ -81,16 +85,27 @@ export default function Stats() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, margin: '-40px' }}
                 transition={{ duration: 0.55, ease, delay: i * 0.08 }}
-                className={`p-8 md:p-10 flex flex-col gap-5 ${p.light ? 'bg-site-light' : 'bg-site-black'}`}
+                className={`relative p-8 md:p-10 flex flex-col gap-5 overflow-hidden group ${p.light ? 'bg-site-light' : 'bg-site-black'}`}
               >
-                <span className={`font-display text-5xl leading-none ${p.light ? 'text-black/12' : 'text-white/10'}`}>
+                {/* Ghost number — large background */}
+                <span
+                  className={`absolute -top-4 -right-2 font-display font-black leading-none select-none pointer-events-none transition-transform duration-500 group-hover:scale-110 group-hover:-translate-y-1`}
+                  style={{
+                    fontSize: 'clamp(6rem, 10vw, 9rem)',
+                    color: p.light ? 'rgba(0,0,0,0.05)' : 'rgba(255,255,255,0.04)',
+                  }}
+                >
                   {p.number}
                 </span>
-                <div>
-                  <h3 className={`font-display font-extrabold text-2xl uppercase leading-tight whitespace-pre-line ${p.light ? 'text-site-black' : 'text-white'}`}>
+
+                {/* Orange top-left accent bar on hover */}
+                <span className={`absolute top-0 left-0 w-0 h-[2px] bg-orange transition-all duration-500 group-hover:w-full`} />
+
+                <div className="relative z-10">
+                  <h3 className={`font-display font-black text-2xl md:text-3xl uppercase leading-[0.9] whitespace-pre-line mb-3 ${p.light ? 'text-site-black' : 'text-white'}`}>
                     {p.heading}
                   </h3>
-                  <p className={`font-body text-sm leading-relaxed mt-3 ${p.light ? 'text-black/50' : 'text-white/45'}`}>
+                  <p className={`font-body text-sm leading-relaxed ${p.light ? 'text-black/50' : 'text-white/40'}`}>
                     {p.body}
                   </p>
                 </div>
@@ -101,13 +116,13 @@ export default function Stats() {
         </div>
       </div>
 
-      {/* Full-width photo strip — relevant detailing imagery */}
+      {/* Full-width photo strip */}
       <motion.div
         initial={{ opacity: 0 }}
         whileInView={{ opacity: 1 }}
         viewport={{ once: true, margin: '-60px' }}
         transition={{ duration: 0.9, ease }}
-        className="relative mt-16 md:mt-24 h-[300px] md:h-[420px] overflow-hidden"
+        className="relative mt-20 md:mt-28 h-[300px] md:h-[440px] overflow-hidden"
       >
         <Image
           src="https://images.unsplash.com/photo-1520340356584-f9917d1eea6f?w=1800&q=85&fit=crop&crop=center"
@@ -116,17 +131,30 @@ export default function Stats() {
           sizes="100vw"
           className="object-cover"
         />
-        <div className="absolute inset-0 bg-gradient-to-t from-site-black/30 to-transparent" />
-        {/* Bottom overlay strip */}
-        <div className="absolute bottom-0 left-0 right-0 px-8 md:px-12 py-6 flex items-center gap-4">
-          <span className="w-5 h-px bg-orange" />
-          <p className="font-mono text-[9px] tracking-[0.28em] uppercase text-white/45">
-            Every detail. Every time.
-          </p>
+        <div className="absolute inset-0 bg-gradient-to-r from-site-black/60 via-site-black/20 to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-t from-site-black/40 to-transparent" />
+
+        {/* Text overlay */}
+        <div className="absolute inset-0 flex items-end px-8 md:px-16 pb-10 md:pb-14">
+          <div>
+            <p
+              className="font-display font-black uppercase text-white leading-none mb-4"
+              style={{ fontSize: 'clamp(2rem, 4vw, 4rem)' }}
+            >
+              Every Detail.
+              <br />
+              <span className="text-orange">Every Time.</span>
+            </p>
+            <div className="flex items-center gap-3">
+              <span className="w-6 h-px bg-white/30" />
+              <p className="font-mono text-[9px] tracking-[0.28em] uppercase text-white/40">
+                Hemel Hempstead &amp; Hertfordshire
+              </p>
+            </div>
+          </div>
         </div>
       </motion.div>
 
     </section>
   )
 }
-
