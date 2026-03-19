@@ -41,21 +41,25 @@ const brand = {
   lightGrey: '#CCCCCC',
 }
 
-/* ── Logo — matches website: TRUE TO · teardrop · DETAIL ───────────────── */
+/*
+  Logo — TRUE TO [teardrop] DETAIL
+  Uses Bebas Neue loaded via Google Fonts (supported by Gmail & Apple Mail).
+  Fallback: Arial Black for Outlook desktop which blocks external fonts.
+  Teardrop uses border-radius shorthand; renders as a rectangle on Outlook —
+  still recognisable and on-brand.
+*/
 const logoHtml = `
-  <table cellpadding="0" cellspacing="0" style="border-collapse:collapse;">
+  <table cellpadding="0" cellspacing="0" style="border-collapse:collapse;line-height:1;">
     <tr>
-      <td style="padding:0;">
-        <span style="font-family:'Arial Black',Arial,sans-serif;font-size:20px;font-weight:900;letter-spacing:0.12em;color:#ffffff;text-transform:uppercase;line-height:1;">TRUE TO</span>
+      <td style="padding:0;vertical-align:bottom;">
+        <span style="font-family:'Bebas Neue','Arial Black',Arial,sans-serif;font-size:28px;font-weight:400;letter-spacing:0.08em;color:#ffffff;text-transform:uppercase;line-height:1;display:inline-block;">TRUE TO</span>
       </td>
-      <td style="padding:0 6px 0 5px;vertical-align:middle;">
-        <!-- Orange teardrop shape matching the website logo mark -->
-        <table cellpadding="0" cellspacing="0" style="display:inline-table;">
-          <tr><td style="width:9px;height:13px;background:#E84A0C;border-radius:50% 50% 45% 45% / 55% 55% 45% 45%;font-size:0;line-height:0;">&nbsp;</td></tr>
-        </table>
+      <td style="padding:0 7px 3px 6px;vertical-align:bottom;">
+        <!-- Orange teardrop — same shape as the website logo mark -->
+        <div style="width:9px;height:14px;background:#E84A0C;border-radius:50% 50% 45% 45% / 55% 55% 45% 45%;font-size:0;line-height:0;display:block;">&nbsp;</div>
       </td>
-      <td style="padding:0;">
-        <span style="font-family:'Arial Black',Arial,sans-serif;font-size:20px;font-weight:900;letter-spacing:0.12em;color:#ffffff;text-transform:uppercase;line-height:1;">DETAIL</span>
+      <td style="padding:0;vertical-align:bottom;">
+        <span style="font-family:'Bebas Neue','Arial Black',Arial,sans-serif;font-size:28px;font-weight:400;letter-spacing:0.08em;color:#ffffff;text-transform:uppercase;line-height:1;display:inline-block;">DETAIL</span>
       </td>
     </tr>
   </table>`
@@ -111,6 +115,10 @@ function wrap(title: string, body: string): string {
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>${title}</title>
+  <!--[if !mso]><!-->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap" rel="stylesheet" />
+  <!--<![endif]-->
 </head>
 <body style="margin:0;padding:0;background:${brand.light};font-family:Arial,Helvetica,sans-serif;-webkit-font-smoothing:antialiased;">
   <table width="100%" cellpadding="0" cellspacing="0" style="background:${brand.light};padding:32px 16px;">

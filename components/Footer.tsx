@@ -196,19 +196,30 @@ export default function Footer({ onBookNow }: { onBookNow: () => void }) {
         as a watermark across the bottom of their website.
         Very low opacity — present but not competing.
       */}
-      <div style={{ overflow: 'hidden', borderTop: '1px solid rgba(12,12,12,0.06)' }}>
+      <div style={{ overflow: 'hidden', borderTop: '1px solid rgba(12,12,12,0.06)', opacity: 0.45 }}>
         <div style={{
+          display: 'flex', alignItems: 'flex-end', gap: 'clamp(6px, 1vw, 18px)',
           fontFamily: 'var(--font-display)',
           fontSize: 'clamp(56px, 14vw, 220px)',
           letterSpacing: '0.04em',
-          color: 'rgba(12,12,12,0.045)',
+          color: 'rgba(12,12,12,0.1)',
           lineHeight: 0.85,
           whiteSpace: 'nowrap',
           padding: '0 clamp(16px, 3vw, 48px)',
           userSelect: 'none',
           paddingBottom: 'clamp(8px, 1.5vw, 20px)',
         }}>
-          TRUE TO DETAIL
+          <span>TRUE TO</span>
+          {/* Orange teardrop — same shape as the navbar/footer logo mark */}
+          <span aria-hidden style={{
+            display: 'inline-block', flexShrink: 0,
+            width: 'clamp(6px, 0.9vw, 14px)',
+            height: 'clamp(9px, 1.35vw, 21px)',
+            background: '#E84A0C',
+            borderRadius: '50% 50% 45% 45% / 55% 55% 45% 45%',
+            marginBottom: 'clamp(6px, 1vw, 16px)',
+          }} />
+          <span>DETAIL</span>
         </div>
       </div>
 
