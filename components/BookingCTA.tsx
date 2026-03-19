@@ -196,33 +196,31 @@ export default function BookingCTA({ onBookNow }: { onBookNow: () => void }) {
             marginTop: 'clamp(48px, 7vw, 96px)',
             paddingTop: 'clamp(24px, 3vw, 36px)',
             borderTop: '1px solid rgba(255,255,255,0.07)',
-            display: 'flex', flexWrap: 'wrap', gap: '12px 0',
-            alignItems: 'center',
+            display: 'flex', flexWrap: 'wrap', alignItems: 'center',
+            gap: '14px',
           }}
         >
-          {[
-            'Confirmed within 1 hour',
-            ' Payment on the day',
-            ' Mon–Sat, 8am–7pm',
-          ].map((fact, i) => (
-            <div key={fact} style={{ display: 'flex', alignItems: 'center', gap: '20px' }}>
-              {i > 0 && (
-                <span style={{
-                  display: 'inline-block', width: '4px', height: '6px',
-                  background: '#E84A0C', flexShrink: 0,
-                  borderRadius: '50% 50% 45% 45% / 55% 55% 45% 45%',
-                  opacity: 0.7,
-                }} />
-              )}
-              <span style={{
+          {['Confirmed within 1 hour', 'Payment on the day', 'Mon–Sat, 8am–7pm'].flatMap((fact, i) => {
+            const text = (
+              <span key={fact} style={{
                 fontFamily: 'var(--font-body)', fontWeight: 500, fontSize: '12px',
                 letterSpacing: '0.06em', textTransform: 'uppercase',
                 color: 'rgba(255,255,255,0.28)',
               }}>
                 {fact}
               </span>
-            </div>
-          ))}
+            )
+            if (i === 0) return [text]
+            return [
+              <span key={`dot-${i}`} style={{
+                display: 'inline-block', width: '4px', height: '6px',
+                background: '#E84A0C', flexShrink: 0,
+                borderRadius: '50% 50% 45% 45% / 55% 55% 45% 45%',
+                opacity: 0.7,
+              }} />,
+              text,
+            ]
+          })}
         </motion.div>
 
       </div>

@@ -123,9 +123,9 @@ export default function Hero({ onBookNow }: { onBookNow: () => void }) {
           }}
         >
           {[
-            { value: 'FREE', label: 'Call-Out\nFee' },
-            { value: '5★',   label: 'Rated\nService' },
-            { value: '1HR',  label: 'Booking\nConfirmed' },
+            { value: '100%', label: 'Mobile\nService' },
+            { value: '£0',   label: 'Hidden\nCharges' },
+            { value: '2YR',  label: 'Ceramic\nWarranty' },
           ].map(s => (
             <div key={s.value} style={{ textAlign: 'center', flexShrink: 0 }}>
               <span style={{
