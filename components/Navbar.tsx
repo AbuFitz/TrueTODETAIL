@@ -2,10 +2,9 @@
 
 import { useState, useEffect } from 'react'
 
-/* Only Services + Packages — About and Contact removed from nav */
 const NAV_LINKS = [
-  { label: 'Services', href: '#services'  },
-  { label: 'Packages', href: '#packages'  },
+  { label: 'About',    href: '#about'    },
+  { label: 'Packages', href: '#packages' },
 ]
 
 export default function Navbar({ onBookNow }: { onBookNow: () => void }) {
@@ -24,10 +23,10 @@ export default function Navbar({ onBookNow }: { onBookNow: () => void }) {
     return () => { document.body.style.overflow = '' }
   }, [open])
 
-  const logoSize = scrolled ? '22px' : '38px'
-  const dotW     = scrolled ? '5px'  : '8px'
-  const dotH     = scrolled ? '7px'  : '12px'
-  const logoGap  = scrolled ? '7px'  : '10px'
+  const logoSize = scrolled ? '28px' : '46px'
+  const dotW     = scrolled ? '6px'  : '10px'
+  const dotH     = scrolled ? '9px'  : '15px'
+  const logoGap  = scrolled ? '8px'  : '12px'
 
   return (
     <>

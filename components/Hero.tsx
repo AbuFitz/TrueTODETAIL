@@ -20,8 +20,8 @@ export default function Hero({ onBookNow }: { onBookNow: () => void }) {
     const current = WORDS[wordIndex]
 
     if (!isDeleting && displayText === current) {
-      /* Pause 600ms before deleting — short enough to feel fluid */
-      const t = setTimeout(() => setIsDeleting(true), 600)
+      /* Pause 2s before deleting — comfortable read time */
+      const t = setTimeout(() => setIsDeleting(true), 2000)
       return () => clearTimeout(t)
     }
     if (isDeleting && displayText === '') {
@@ -163,7 +163,22 @@ export default function Hero({ onBookNow }: { onBookNow: () => void }) {
             </span>
           </motion.div>
 
-          {/* CTA — just the button, no description or phone */}
+          {/* Sub-paragraph */}
+          <motion.p
+            initial={{ opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.7, delay: 0.18, ease }}
+            style={{
+              fontFamily: 'var(--font-body)', fontSize: 'clamp(13px, 1.4vw, 16px)',
+              lineHeight: 1.72, color: 'rgba(255,255,255,0.42)',
+              maxWidth: '320px',
+            }}
+          >
+            Mobile detailing delivered to your driveway.<br />
+            No drop-off. No waiting. Just flawless results.
+          </motion.p>
+
+          {/* CTA */}
           <motion.div
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}

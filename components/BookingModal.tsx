@@ -388,9 +388,12 @@ export default function BookingModal({
                 <input
                   required type="text" value={address}
                   onChange={e => setAddress(e.target.value)}
-                  placeholder="Your driveway, office or postcode"
+                  placeholder="e.g. 14 Brook Lane, Watford, WD17 1AB"
                   style={textInput}
                 />
+                <p style={{ fontFamily: 'var(--font-body)', fontSize: '11px', color: 'rgba(12,12,12,0.28)', marginTop: '8px' }}>
+                  Include your full postcode so we can confirm your location.
+                </p>
               </div>
 
               <div>
