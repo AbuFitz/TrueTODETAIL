@@ -4,6 +4,7 @@ import { useState } from 'react'
 import Navbar from '@/components/Navbar'
 import Hero from '@/components/Hero'
 import Stats from '@/components/Stats'
+import Process from '@/components/Process'
 import Packages from '@/components/Packages'
 import HowItWorks from '@/components/HowItWorks'
 import Testimonials from '@/components/Testimonials'
@@ -14,8 +15,8 @@ import Footer from '@/components/Footer'
 type VehicleType = 'hatchback' | 'suv' | 'prestige'
 
 export default function HomePage() {
-  const [modalOpen,      setModalOpen]      = useState(false)
-  const [selectedPack,   setSelectedPack]   = useState('')
+  const [modalOpen,       setModalOpen]       = useState(false)
+  const [selectedPack,    setSelectedPack]    = useState('')
   const [selectedVehicle, setSelectedVehicle] = useState<VehicleType | ''>('')
 
   const openModal = () => {
@@ -35,8 +36,9 @@ export default function HomePage() {
       <Navbar onBookNow={openModal} />
 
       <main>
-        <Hero onBookNow={openModal} />
+        <Hero     onBookNow={openModal} />
         <Stats />
+        <Process />
         <Packages onBookPack={handleBookPack} />
         <HowItWorks onBookNow={openModal} />
         <Testimonials />

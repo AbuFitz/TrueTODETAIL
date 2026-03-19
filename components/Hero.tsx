@@ -1,31 +1,49 @@
 'use client'
 
-import { motion, AnimatePresence } from 'framer-motion'
-import Image from 'next/image'
 import { useState, useEffect } from 'react'
+import Image from 'next/image'
+import { motion } from 'framer-motion'
 
 const ease = [0.22, 1, 0.36, 1] as [number, number, number, number]
 
-/*
-  Headline words cycle slowly — DETAIL is the anchor, then three alternatives.
-  Each word stays on screen for 3.5 seconds before crossfading.
-*/
-const HEADLINE_WORDS = ['DETAIL', 'CLEAN', 'PERFECT', 'FLAWLESS']
+const WORDS = ['Detail', 'Clean', 'Shine']
 
-/* Diagonal split constants — shared by dark panel + orange stripe */
+/* Diagonal split constants */
 const D_TOP = 58
 const D_BOT = 38
 
 export default function Hero({ onBookNow }: { onBookNow: () => void }) {
-  const [wordIdx, setWordIdx] = useState(0)
+  /* ── Typewriter state ── */
+  const [displayText, setDisplayText] = useState('Detail')
+  const [isDeleting,  setIsDeleting]  = useState(false)
+  const [wordIndex,   setWordIndex]   = useState(0)
 
   useEffect(() => {
-    const id = setInterval(
-      () => setWordIdx(i => (i + 1) % HEADLINE_WORDS.length),
-      3500,
-    )
-    return () => clearInterval(id)
-  }, [])
+    const current = WORDS[wordIndex]
+
+    /* Finished typing — pause 1.5 s then start deleting */
+    if (!isDeleting && displayText === current) {
+      const t = setTimeout(() => setIsDeleting(true), 1500)
+      return () => clearTimeout(t)
+    }
+
+    /* Finished deleting — move to next word */
+    if (isDeleting && displayText === '') {
+      setIsDeleting(false)
+      setWordIndex(i => (i + 1) % WORDS.length)
+      return
+    }
+
+    const speed = isDeleting ? 40 : 80
+    const t = setTimeout(() => {
+      setDisplayText(
+        isDeleting
+          ? current.slice(0, displayText.length - 1)
+          : current.slice(0, displayText.length + 1),
+      )
+    }, speed)
+    return () => clearTimeout(t)
+  }, [displayText, isDeleting, wordIndex])
 
   return (
     <div style={{ paddingTop: '80px' }}>
@@ -38,7 +56,7 @@ export default function Hero({ onBookNow }: { onBookNow: () => void }) {
         }}
       >
 
-        {/* ── Layer 0: Full-section car image ── */}
+        {/* ── Layer 0: Car image ── */}
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
@@ -54,7 +72,6 @@ export default function Hero({ onBookNow }: { onBookNow: () => void }) {
             style={{
               objectFit: 'cover',
               objectPosition: '72% 55%',
-              /* Zoomed out — no scale transform */
               transform: 'scale(1.0)',
               transformOrigin: 'center center',
             }}
@@ -111,7 +128,7 @@ export default function Hero({ onBookNow }: { onBookNow: () => void }) {
             True To Detail — Hertfordshire, UK
           </motion.p>
 
-          {/* Staircase headline */}
+          {/* Headline with typewriter on first word */}
           <motion.div
             initial={{ opacity: 0, y: 28 }}
             animate={{ opacity: 1, y: 0 }}
@@ -119,31 +136,38 @@ export default function Hero({ onBookNow }: { onBookNow: () => void }) {
             style={{ pointerEvents: 'none' }}
           >
             {/*
-              Cycling word — uses AnimatePresence so the exiting word slides up
-              while the entering word slides up from below.
-              overflow:hidden on the wrapper clips the slide movement cleanly.
+              First line: typed word + blinking cursor.
+              The cursor uses a CSS keyframe (cursor-blink class from globals.css)
+              so it can blink independently of React re-renders.
             */}
-            <div style={{ overflow: 'hidden' }}>
-              <AnimatePresence mode="wait">
-                <motion.span
-                  key={HEADLINE_WORDS[wordIdx]}
-                  initial={{ opacity: 0, y: '30%' }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: '-30%' }}
-                  transition={{ duration: 0.55, ease }}
-                  style={{
-                    fontFamily: 'var(--font-display)',
-                    fontSize: 'clamp(80px, 16.5vw, 260px)',
-                    letterSpacing: '0.01em', color: '#ffffff',
-                    display: 'block', lineHeight: 0.9,
-                    whiteSpace: 'nowrap',
-                  }}
-                >
-                  {HEADLINE_WORDS[wordIdx]}
-                </motion.span>
-              </AnimatePresence>
+            <div style={{
+              fontFamily: 'var(--font-display)',
+              fontSize: 'clamp(80px, 16.5vw, 260px)',
+              letterSpacing: '0.01em', color: '#ffffff',
+              lineHeight: 0.9, display: 'flex', alignItems: 'baseline',
+              /* Fixed height so layout doesn't shift as text types */
+              minHeight: 'calc(clamp(80px, 16.5vw, 260px) * 0.9)',
+            }}>
+              <span>{displayText}</span>
+              {/* Cursor — vertical bar, same colour as text */}
+              <span
+                className="typewriter-cursor"
+                aria-hidden
+                style={{
+                  display: 'inline-block',
+                  width: 'clamp(3px, 0.25vw, 5px)',
+                  height: '0.72em',
+                  background: '#ffffff',
+                  marginLeft: 'clamp(4px, 0.4vw, 8px)',
+                  verticalAlign: 'baseline',
+                  position: 'relative',
+                  top: '0.04em',
+                  flexShrink: 0,
+                }}
+              />
             </div>
 
+            {/* "DONE" — static */}
             <span style={{
               fontFamily: 'var(--font-display)',
               fontSize: 'clamp(70px, 14.5vw, 228px)',
@@ -154,6 +178,7 @@ export default function Hero({ onBookNow }: { onBookNow: () => void }) {
               DONE
             </span>
 
+            {/* "RIGHT." — static */}
             <span style={{
               fontFamily: 'var(--font-display)',
               fontSize: 'clamp(56px, 11.5vw, 182px)',
@@ -180,26 +205,26 @@ export default function Hero({ onBookNow }: { onBookNow: () => void }) {
             </p>
 
             {/*
-              Button stretched full-width across the dark panel.
-              Phone number sits below as a secondary action.
+              Button: auto-width (not full-width) so it stays compact.
+              Phone number sits below as a secondary link.
             */}
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '14px', alignItems: 'flex-start' }}>
               <button
                 onClick={onBookNow}
                 style={{
                   fontFamily: 'var(--font-body)', fontWeight: 700, fontSize: '11px',
                   letterSpacing: '0.12em', textTransform: 'uppercase',
                   background: '#E84A0C', color: '#fff', border: 'none', cursor: 'pointer',
-                  padding: '18px 28px',
-                  display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-                  width: '100%',
+                  padding: '16px 32px',
+                  display: 'flex', alignItems: 'center', gap: '12px',
                   transition: 'background 0.2s',
+                  whiteSpace: 'nowrap',
                 }}
                 onMouseEnter={e => (e.currentTarget.style.background = '#C53D08')}
                 onMouseLeave={e => (e.currentTarget.style.background = '#E84A0C')}
               >
                 Book Your Detail
-                <span style={{ width: 5, height: 5, borderRadius: '50%', background: 'rgba(255,255,255,0.6)', flexShrink: 0 }} />
+                <span style={{ width: 4, height: 4, borderRadius: '50%', background: 'rgba(255,255,255,0.6)', flexShrink: 0 }} />
               </button>
 
               <a

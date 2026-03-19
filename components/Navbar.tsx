@@ -153,9 +153,12 @@ export default function Navbar({ onBookNow }: { onBookNow: () => void }) {
             </button>
           </div>
 
-          {/* Mobile hamburger — only shows below md (768px) */}
+          {/*
+            Mobile hamburger — wrapper div carries md:hidden so Tailwind's
+            display:none is not overridden by the button's inline display:flex.
+          */}
+          <div className="md:hidden">
           <button
-            className="md:hidden"
             onClick={() => setOpen(!open)}
             aria-label={open ? 'Close menu' : 'Open menu'}
             style={{
@@ -183,6 +186,7 @@ export default function Navbar({ onBookNow }: { onBookNow: () => void }) {
               />
             ))}
           </button>
+          </div>
 
         </div>
       </nav>

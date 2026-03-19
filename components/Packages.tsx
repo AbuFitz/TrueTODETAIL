@@ -85,8 +85,16 @@ export default function Packages({
             marginBottom: 'clamp(40px, 5vw, 64px)',
           }}
         >
-          {/* Section headline — no label above */}
           <div>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '18px' }}>
+              <span style={{ width: 20, height: '1.5px', background: '#E84A0C', flexShrink: 0 }} />
+              <span style={{
+                fontFamily: 'var(--font-body)', fontWeight: 600, fontSize: '11px',
+                letterSpacing: '0.2em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.28)',
+              }}>
+                Packages
+              </span>
+            </div>
             <h2 style={{
               fontFamily: 'var(--font-display)',
               fontSize: 'clamp(52px, 7.5vw, 104px)',

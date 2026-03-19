@@ -25,6 +25,7 @@ const REVIEWS = [
 export default function Testimonials() {
   return (
     <section
+      id="reviews"
       style={{
         background: '#fff',
         paddingTop:    'clamp(64px, 10vw, 140px)',

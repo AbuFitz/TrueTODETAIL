@@ -27,10 +27,10 @@ const POINTS = [
 export default function HowItWorks({ onBookNow }: { onBookNow: () => void }) {
   return (
     <section
+      id="howitworks"
       style={{
         /*
-          Dark section — alternates from the warm-white Services.
-          Creates the premium dark/light rhythm across the page.
+          Dark section — alternates with light sections above and below.
         */
         background: '#0C0C0C',
         paddingTop:    'clamp(64px, 10vw, 140px)',

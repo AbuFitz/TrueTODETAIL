@@ -93,10 +93,10 @@ export default function Footer({ onBookNow }: { onBookNow: () => void }) {
           </p>
           <nav style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
             {[
-              ['Services', '#services'],
-              ['Packages', '#packages'],
-              ['About',    '#about'],
-              ['Contact',  '#contact'],
+              ['Packages',   '#packages'],
+              ['How It Works', '#howitworks'],
+              ['Reviews',    '#reviews'],
+              ['Book Now',   '#contact'],
             ].map(([label, href]) => (
               <a
                 key={label}
