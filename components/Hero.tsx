@@ -165,20 +165,23 @@ export default function Hero({ onBookNow }: { onBookNow: () => void }) {
             </span>
           </motion.div>
 
-          {/* Sub-paragraph */}
-          <motion.p
+          {/* Separator + sub-paragraph */}
+          <motion.div
             initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.7, delay: 0.18, ease }}
-            style={{
+            style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}
+          >
+            <div style={{ width: '48px', height: '1px', background: 'rgba(255,255,255,0.42)' }} />
+            <p style={{
               fontFamily: 'var(--font-body)', fontSize: 'clamp(13px, 1.4vw, 16px)',
               lineHeight: 1.72, color: 'rgba(255,255,255,0.42)',
-              maxWidth: '320px',
-            }}
-          >
-            Mobile detailing delivered to your driveway.<br />
-            No drop-off. No waiting. Just flawless results.
-          </motion.p>
+              maxWidth: '320px', margin: 0,
+            }}>
+              Mobile detailing delivered to your driveway.<br />
+              No drop-off. No waiting. Just flawless results.
+            </p>
+          </motion.div>
 
           {/* CTA */}
           <motion.div

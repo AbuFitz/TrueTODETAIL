@@ -93,8 +93,6 @@ export default function BookingModal({
     setSubmitting(true)
     setApiError('')
     try {
-      const addonDetails = ADDONS.filter(a => selectedAddons.includes(a.id))
-        .map(a => `${a.label} (+£${a.price})`)
       const res  = await fetch('/api/booking', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -102,7 +100,7 @@ export default function BookingModal({
           pack, vehicle, price: totalPrice,
           date, time, address, carReg,
           name, phone, email, notes,
-          addons: addonDetails,
+          addons: selectedAddons,   // send IDs — API maps to labels for email
         }),
       })
       const json = await res.json()
@@ -384,15 +382,16 @@ export default function BookingModal({
               </div>
 
               <div>
-                <label style={fieldLabel}>Service Address</label>
+                <label style={fieldLabel}>Service Postcode</label>
                 <input
                   required type="text" value={address}
-                  onChange={e => setAddress(e.target.value)}
-                  placeholder="e.g. 14 Brook Lane, Watford, WD17 1AB"
-                  style={textInput}
+                  onChange={e => setAddress(e.target.value.toUpperCase())}
+                  placeholder="e.g. HP2 6EL"
+                  maxLength={8}
+                  style={{ ...textInput, textTransform: 'uppercase', letterSpacing: '0.12em' }}
                 />
                 <p style={{ fontFamily: 'var(--font-body)', fontSize: '11px', color: 'rgba(12,12,12,0.28)', marginTop: '8px' }}>
-                  Include your full postcode so we can confirm your location.
+                  We use this to confirm we cover your area.
                 </p>
               </div>
 
@@ -449,7 +448,7 @@ export default function BookingModal({
                     ['Vehicle',    vehicle ? vehicleLabels[vehicle as VehicleType] : '—'],
                     ['Reg',        carReg || '—'],
                     ['Date & Time', date && time ? `${date} · ${time}` : '—'],
-                    ['Address',    address || '—'],
+                    ['Postcode',   address || '—'],
                   ] as [string, string][]).map(([k, v]) => (
                     <div key={k} style={{ display: 'flex', justifyContent: 'space-between', gap: '16px' }}>
                       <span style={{ fontFamily: 'var(--font-body)', fontSize: '13px', color: 'rgba(12,12,12,0.4)', flexShrink: 0 }}>{k}</span>
@@ -506,9 +505,9 @@ export default function BookingModal({
 
               <div style={{ background: '#F5F4F1', padding: '20px', textAlign: 'left', marginBottom: '24px' }}>
                 {[
-                  ['Pack',    pack],
-                  ['Reg',     carReg],
-                  ['Address', address],
+                  ['Pack',     pack],
+                  ['Reg',      carReg],
+                  ['Postcode', address],
                 ].map(([k, v]) => (
                   <div key={k} style={{ display: 'flex', justifyContent: 'space-between', fontFamily: 'var(--font-body)', fontSize: '13px', marginBottom: '8px' }}>
                     <span style={{ color: 'rgba(12,12,12,0.4)' }}>{k}</span>

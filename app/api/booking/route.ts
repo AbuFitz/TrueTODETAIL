@@ -26,6 +26,7 @@ export interface BookingRecord extends BookingPayload {
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 const PHONE_RE = /^[\d\s\+\-\(\)]{7,20}$/
 const CAR_REG_RE = /^[A-Z0-9]{2,8}$/
+const POSTCODE_RE = /^[A-Z]{1,2}[0-9][0-9A-Z]?\s?[0-9][A-Z]{2}$/
 
 const VALID_PACKS = ['Essential', 'Deep Clean', 'Premium', 'Elite Ceramic']
 const VALID_VEHICLES = ['hatchback', 'suv', 'prestige']
@@ -90,8 +91,9 @@ export async function POST(req: NextRequest) {
   if (data.name.trim().length < 2 || data.name.trim().length > 100) {
     return NextResponse.json({ error: 'Invalid name' }, { status: 400 })
   }
-  if (data.address.trim().length < 5 || data.address.trim().length > 300) {
-    return NextResponse.json({ error: 'Please provide a valid service address' }, { status: 400 })
+  const normalizedPostcode = data.address.trim().toUpperCase()
+  if (!POSTCODE_RE.test(normalizedPostcode)) {
+    return NextResponse.json({ error: 'Please enter a valid UK postcode (e.g. HP2 6EL)' }, { status: 400 })
   }
   const normalizedReg = data.carReg.trim().toUpperCase().replace(/\s+/g, '')
   if (!CAR_REG_RE.test(normalizedReg)) {
@@ -121,7 +123,7 @@ export async function POST(req: NextRequest) {
     name: data.name.trim(),
     phone: data.phone.trim(),
     email: data.email.toLowerCase().trim(),
-    address: data.address.trim(),
+    address: normalizedPostcode,
     carReg: normalizedReg,
     addons: data.addons,
     notes: data.notes?.trim() || '',
