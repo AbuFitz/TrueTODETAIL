@@ -103,6 +103,59 @@ export default function Hero({ onBookNow }: { onBookNow: () => void }) {
           }}
         />
 
+        {/* ── Stats overlay — bottom-right of the photo area (desktop only) ── */}
+        <div
+          className="hidden md:flex"
+          style={{
+            position: 'absolute',
+            bottom: 0,
+            right: 0,
+            zIndex: 4,
+            /* Sits in the photo zone — starts roughly where the diagonal ends at the bottom */
+            width: `${100 - D_BOT}%`,
+            background: 'linear-gradient(to top, rgba(12,12,12,0.82) 0%, transparent 100%)',
+            display: 'flex',
+            alignItems: 'flex-end',
+            justifyContent: 'flex-end',
+            padding: '0 clamp(24px, 4vw, 64px) clamp(24px, 3vw, 48px)',
+            gap: 'clamp(24px, 4vw, 64px)',
+            pointerEvents: 'none',
+          }}
+        >
+          {[
+            { value: '100%', label: 'Mobile\nService' },
+            { value: '£0',   label: 'Hidden\nCharges' },
+            { value: '2YR',  label: 'Ceramic\nWarranty' },
+          ].map(s => (
+            <div key={s.value} style={{ textAlign: 'center', flexShrink: 0 }}>
+              <span style={{
+                fontFamily: 'var(--font-display)',
+                fontSize: 'clamp(36px, 6vw, 96px)',
+                letterSpacing: '0.01em',
+                color: '#ffffff',
+                lineHeight: 0.88,
+                display: 'block',
+              }}>
+                {s.value}
+              </span>
+              <span style={{
+                fontFamily: 'var(--font-body)',
+                fontSize: 'clamp(8px, 0.75vw, 11px)',
+                fontWeight: 600,
+                letterSpacing: '0.2em',
+                textTransform: 'uppercase',
+                color: 'rgba(255,255,255,0.45)',
+                whiteSpace: 'pre-line',
+                display: 'block',
+                marginTop: '6px',
+                lineHeight: 1.5,
+              }}>
+                {s.label}
+              </span>
+            </div>
+          ))}
+        </div>
+
         {/* ── Content ── */}
         <div
           style={{
