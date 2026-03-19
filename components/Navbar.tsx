@@ -3,8 +3,8 @@
 import { useState, useEffect } from 'react'
 
 const NAV_LINKS = [
-  { label: 'About',    href: '#about'    },
-  { label: 'Packages', href: '#packages' },
+  { label: 'About',    href: '#howitworks' },
+  { label: 'Packages', href: '#packages'   },
 ]
 
 export default function Navbar({ onBookNow }: { onBookNow: () => void }) {

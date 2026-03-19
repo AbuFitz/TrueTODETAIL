@@ -90,12 +90,14 @@ export default function Hero({ onBookNow }: { onBookNow: () => void }) {
         }} />
 
         {/* ── Content ── */}
-        <div style={{
-          position: 'absolute', inset: 0, zIndex: 3,
-          width: '55%',
-          display: 'flex', flexDirection: 'column', justifyContent: 'space-between',
-          padding: 'clamp(28px, 3.5vw, 52px) clamp(24px, 4vw, 64px)',
-        }}>
+        <div
+          className="w-[92%] md:w-[55%]"
+          style={{
+            position: 'absolute', inset: 0, zIndex: 3,
+            display: 'flex', flexDirection: 'column', justifyContent: 'space-between',
+            padding: 'clamp(28px, 3.5vw, 52px) clamp(20px, 4vw, 64px)',
+          }}
+        >
 
           {/* Label — just location, no brand name repeat */}
           <motion.p
@@ -120,11 +122,11 @@ export default function Hero({ onBookNow }: { onBookNow: () => void }) {
           >
             <div style={{
               fontFamily: 'var(--font-display)',
-              fontSize: 'clamp(80px, 16.5vw, 260px)',
+              fontSize: 'clamp(54px, 16.5vw, 260px)',
               letterSpacing: '0.01em', color: '#ffffff',
               lineHeight: 0.9,
               display: 'flex', alignItems: 'baseline',
-              minHeight: 'calc(clamp(80px, 16.5vw, 260px) * 0.9)',
+              minHeight: 'calc(clamp(54px, 16.5vw, 260px) * 0.9)',
             }}>
               <span>{displayText}</span>
               <span
@@ -144,20 +146,20 @@ export default function Hero({ onBookNow }: { onBookNow: () => void }) {
 
             <span style={{
               fontFamily: 'var(--font-display)',
-              fontSize: 'clamp(70px, 14.5vw, 228px)',
+              fontSize: 'clamp(48px, 14.5vw, 228px)',
               letterSpacing: '0.01em', color: 'rgba(255,255,255,0.44)',
               display: 'block', lineHeight: 0.9,
-              paddingLeft: 'clamp(16px, 3vw, 48px)',
+              paddingLeft: 'clamp(14px, 3vw, 48px)',
             }}>
               DONE
             </span>
 
             <span style={{
               fontFamily: 'var(--font-display)',
-              fontSize: 'clamp(56px, 11.5vw, 182px)',
+              fontSize: 'clamp(38px, 11.5vw, 182px)',
               letterSpacing: '0.01em', color: 'rgba(255,255,255,0.30)',
               display: 'block', lineHeight: 0.9,
-              paddingLeft: 'clamp(36px, 8vw, 128px)',
+              paddingLeft: 'clamp(28px, 8vw, 128px)',
             }}>
               RIGHT<span style={{ color: '#E84A0C' }}>.</span>
             </span>

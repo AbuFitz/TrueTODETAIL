@@ -43,7 +43,6 @@ export default function BookingCTA({ onBookNow }: { onBookNow: () => void }) {
         <div
           style={{
             display: 'grid',
-            gridTemplateColumns: '1fr 1fr',
             gap: 'clamp(40px, 6vw, 96px)',
             alignItems: 'start',
           }}
@@ -59,7 +58,7 @@ export default function BookingCTA({ onBookNow }: { onBookNow: () => void }) {
           >
             <h2 style={{
               fontFamily: 'var(--font-display)',
-              fontSize: 'clamp(64px, 10vw, 160px)',
+              fontSize: 'clamp(48px, 10vw, 160px)',
               letterSpacing: '0.02em',
               lineHeight: 0.86,
               color: '#ffffff',

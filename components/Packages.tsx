@@ -80,9 +80,9 @@ export default function Packages({
           viewport={{ once: true }}
           transition={{ duration: 0.6, ease }}
           style={{
-            display: 'flex', flexWrap: 'wrap', alignItems: 'flex-end',
-            justifyContent: 'space-between', gap: '28px',
-            marginBottom: 'clamp(40px, 5vw, 64px)',
+            display: 'flex', flexWrap: 'wrap', alignItems: 'flex-start',
+            justifyContent: 'space-between', gap: '24px',
+            marginBottom: 'clamp(32px, 5vw, 64px)',
           }}
         >
           <div>
@@ -107,11 +107,17 @@ export default function Packages({
           </div>
 
           {/* Vehicle selector */}
-          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: '12px' }}>
-            <p style={{
-              fontFamily: 'var(--font-body)', fontSize: '13px',
-              color: 'rgba(255,255,255,0.3)', textAlign: 'right', maxWidth: '220px', lineHeight: 1.6,
-            }}>
+          <div
+            className="items-start md:items-end"
+            style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}
+          >
+            <p
+              className="text-left md:text-right"
+              style={{
+                fontFamily: 'var(--font-body)', fontSize: '13px',
+                color: 'rgba(255,255,255,0.3)', maxWidth: '220px', lineHeight: 1.6,
+              }}
+            >
               Select your vehicle type — prices update instantly.
             </p>
             <div style={{
@@ -163,7 +169,6 @@ export default function Packages({
         <div
           style={{
             display: 'grid',
-            gridTemplateColumns: 'repeat(4, 1fr)',
             border: '1px solid rgba(255,255,255,0.07)',
             borderRight: 'none',
             borderBottom: 'none',

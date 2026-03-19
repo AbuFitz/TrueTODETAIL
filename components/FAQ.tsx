@@ -48,7 +48,6 @@ export default function FAQ() {
         <div
           style={{
             display: 'grid',
-            gridTemplateColumns: '1fr 2fr',
             gap: 'clamp(32px, 6vw, 96px)',
             alignItems: 'start',
           }}

@@ -77,7 +77,6 @@ export default function Testimonials() {
         <div
           style={{
             display: 'grid',
-            gridTemplateColumns: 'repeat(3, 1fr)',
             gap: '1px',
             background: 'rgba(12,12,12,0.08)',
           }}

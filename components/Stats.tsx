@@ -47,7 +47,6 @@ export default function Stats() {
         <div
           style={{
             display: 'grid',
-            gridTemplateColumns: 'repeat(4, 1fr)',
             borderTop: '1px solid rgba(12,12,12,0.1)',
             borderBottom: '1px solid rgba(12,12,12,0.1)',
           }}
@@ -62,9 +61,15 @@ export default function Stats() {
               transition={{ duration: 0.55, ease, delay: i * 0.08 }}
               style={{
                 padding: 'clamp(24px, 3vw, 40px) clamp(20px, 2.5vw, 36px)',
-                borderRight: i < 3 ? '1px solid rgba(12,12,12,0.1)' : 'none',
               }}
-              className={i < 2 ? 'border-b border-ink/[0.1] lg:border-b-0' : ''}
+              className={[
+                /* In 2-col: left column items (0,2) get right border; right column (1,3) don't */
+                i % 2 === 0 ? 'border-r border-ink/[0.1]' : '',
+                /* In 4-col lg: last item (3) loses right border */
+                i === 3 ? 'lg:border-r-0' : '',
+                /* Bottom border on first row only (items 0,1) removed at lg */
+                i < 2 ? 'border-b border-ink/[0.1] lg:border-b-0' : '',
+              ].filter(Boolean).join(' ')}
             >
               <span style={{
                 display: 'block',

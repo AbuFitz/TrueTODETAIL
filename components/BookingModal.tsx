@@ -415,7 +415,7 @@ export default function BookingModal({
           {/* ── STEP 3: Contact + Summary ── */}
           {step === 3 && (
             <form id="step3-form" onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
                 <div>
                   <label style={fieldLabel}>Full Name</label>
                   <input required type="text" value={name} onChange={e => setName(e.target.value)} placeholder="John Smith" style={textInput} />

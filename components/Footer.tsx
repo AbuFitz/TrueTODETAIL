@@ -12,7 +12,6 @@ export default function Footer({ onBookNow }: { onBookNow: () => void }) {
           maxWidth: '1400px', margin: '0 auto',
           padding: 'clamp(48px, 7vw, 96px) clamp(24px, 5vw, 72px) clamp(40px, 5vw, 72px)',
           display: 'grid',
-          gridTemplateColumns: 'repeat(3, 1fr)',
           gap: 'clamp(32px, 5vw, 72px)',
         }}
         className="grid-cols-1 md:grid-cols-3"
@@ -93,10 +92,10 @@ export default function Footer({ onBookNow }: { onBookNow: () => void }) {
           </p>
           <nav style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
             {[
-              ['Packages',   '#packages'],
-              ['How It Works', '#howitworks'],
-              ['Reviews',    '#reviews'],
-              ['Book Now',   '#contact'],
+              ['About',    '#howitworks'],
+              ['Packages', '#packages'],
+              ['Reviews',  '#reviews'],
+              ['Book Now', '#contact'],
             ].map(([label, href]) => (
               <a
                 key={label}
