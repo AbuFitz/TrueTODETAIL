@@ -1,30 +1,14 @@
 'use client'
 
+import Image from 'next/image'
 import { motion } from 'framer-motion'
 
 const ease = [0.22, 1, 0.36, 1] as [number, number, number, number]
 
-const FACTS = [
-  {
-    n:    '01',
-    big:  'Fully\nMobile',
-    body: 'We come to your home, office or car park — fully self-sufficient with our own power and water supply.',
-  },
-  {
-    n:    '02',
-    big:  'Fixed\nPricing',
-    body: 'Your price is locked in before you book. Zero hidden charges, zero surprises on the day.',
-  },
-  {
-    n:    '03',
-    big:  'No\nDrop-Off',
-    body: 'Keep your day exactly as planned. Your car stays right where it is while we work.',
-  },
-  {
-    n:    '04',
-    big:  'Based In\nHerts',
-    body: 'Hemel Hempstead and the whole of Hertfordshire — wherever you are, we cover it.',
-  },
+const STATS = [
+  { value: '100%', label: 'Mobile\nService' },
+  { value: '£0',   label: 'Hidden\nCharges' },
+  { value: '2YR',  label: 'Ceramic\nWarranty' },
 ]
 
 export default function Stats() {
@@ -32,79 +16,78 @@ export default function Stats() {
     <section
       id="about"
       style={{
-        background: '#F5F4F1',
-        /* Reduced height — no big heading above the grid now */
-        paddingTop:    'clamp(36px, 5vw, 64px)',
-        paddingBottom: 'clamp(36px, 5vw, 64px)',
+        position: 'relative',
+        overflow: 'hidden',
+        height: 'clamp(340px, 50vw, 600px)',
+        background: '#0C0C0C',
       }}
     >
-      <div style={{ maxWidth: '1400px', margin: '0 auto', padding: '0 clamp(24px, 5vw, 72px)' }}>
+      {/* Background photo */}
+      <Image
+        src="https://images.unsplash.com/photo-1607860108855-64acf2078ed9?w=1800&q=80&fit=crop"
+        alt="Car detailing"
+        fill
+        sizes="100vw"
+        style={{ objectFit: 'cover', objectPosition: '50% 60%' }}
+      />
 
-        {/*
-          Specification-strip layout — 4 columns with vertical rules.
-          No heading label above; the facts speak for themselves.
-        */}
-        <div
-          style={{
-            display: 'grid',
-            borderTop: '1px solid rgba(12,12,12,0.1)',
-            borderBottom: '1px solid rgba(12,12,12,0.1)',
-          }}
-          className="grid-cols-2 lg:grid-cols-4"
-        >
-          {FACTS.map((f, i) => (
-            <motion.div
-              key={f.n}
-              initial={{ opacity: 0, y: 14 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: '-30px' }}
-              transition={{ duration: 0.55, ease, delay: i * 0.08 }}
-              style={{
-                padding: 'clamp(24px, 3vw, 40px) clamp(20px, 2.5vw, 36px)',
-              }}
-              className={[
-                /* In 2-col: left column items (0,2) get right border; right column (1,3) don't */
-                i % 2 === 0 ? 'border-r border-ink/[0.1]' : '',
-                /* In 4-col lg: last item (3) loses right border */
-                i === 3 ? 'lg:border-r-0' : '',
-                /* Bottom border on first row only (items 0,1) removed at lg */
-                i < 2 ? 'border-b border-ink/[0.1] lg:border-b-0' : '',
-              ].filter(Boolean).join(' ')}
-            >
-              <span style={{
-                display: 'block',
-                fontFamily: 'var(--font-body)', fontWeight: 600, fontSize: '10px',
-                letterSpacing: '0.22em', textTransform: 'uppercase',
-                color: 'rgba(12,12,12,0.25)',
-                marginBottom: '14px',
-              }}>
-                {f.n}
-              </span>
+      {/* Dark gradient — heavier at bottom so stats read clearly */}
+      <div
+        aria-hidden
+        style={{
+          position: 'absolute', inset: 0,
+          background: 'linear-gradient(to bottom, rgba(12,12,12,0.30) 0%, rgba(12,12,12,0.72) 55%, rgba(12,12,12,0.88) 100%)',
+        }}
+      />
 
-              <h3
-                style={{
-                  fontFamily: 'var(--font-display)',
-                  fontSize: 'clamp(32px, 4vw, 52px)',
-                  letterSpacing: '0.025em',
-                  color: '#0C0C0C',
-                  lineHeight: 0.88,
-                  marginBottom: '14px',
-                  whiteSpace: 'pre-line',
-                }}
-              >
-                {f.big}
-              </h3>
+      {/* Stats row — anchored to the bottom */}
+      <div
+        style={{
+          position: 'absolute', bottom: 0, left: 0, right: 0,
+          display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)',
+          borderTop: '1px solid rgba(255,255,255,0.10)',
+        }}
+      >
+        {STATS.map((s, i) => (
+          <motion.div
+            key={s.value}
+            initial={{ opacity: 0, y: 18 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: '-40px' }}
+            transition={{ duration: 0.6, ease, delay: i * 0.1 }}
+            style={{
+              display: 'flex', flexDirection: 'column', alignItems: 'center',
+              padding: 'clamp(20px, 3vw, 40px) clamp(12px, 2vw, 32px)',
+              borderRight: i < STATS.length - 1 ? '1px solid rgba(255,255,255,0.10)' : 'none',
+              textAlign: 'center',
+            }}
+          >
+            <span style={{
+              fontFamily: 'var(--font-display)',
+              fontSize: 'clamp(52px, 10vw, 140px)',
+              letterSpacing: '0.01em',
+              color: '#ffffff',
+              lineHeight: 0.88,
+              display: 'block',
+            }}>
+              {s.value}
+            </span>
 
-              <p style={{
-                fontFamily: 'var(--font-body)', fontSize: '13px', lineHeight: 1.72,
-                color: 'rgba(12,12,12,0.45)',
-              }}>
-                {f.body}
-              </p>
-            </motion.div>
-          ))}
-        </div>
-
+            <span style={{
+              fontFamily: 'var(--font-body)',
+              fontSize: 'clamp(9px, 1vw, 12px)',
+              fontWeight: 600,
+              letterSpacing: '0.22em',
+              textTransform: 'uppercase',
+              color: 'rgba(255,255,255,0.45)',
+              whiteSpace: 'pre-line',
+              marginTop: 'clamp(8px, 1.2vw, 16px)',
+              lineHeight: 1.5,
+            }}>
+              {s.label}
+            </span>
+          </motion.div>
+        ))}
       </div>
     </section>
   )
