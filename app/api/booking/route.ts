@@ -1,4 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
+import { Resend } from 'resend'
+import { notificationEmail, confirmationEmail, EmailData } from '@/lib/emails/templates'
 
 export interface BookingPayload {
   pack: string
@@ -10,6 +12,8 @@ export interface BookingPayload {
   phone: string
   email: string
   address: string
+  carReg: string
+  addons: string[]
   notes?: string
 }
 
@@ -21,10 +25,19 @@ export interface BookingRecord extends BookingPayload {
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 const PHONE_RE = /^[\d\s\+\-\(\)]{7,20}$/
+const CAR_REG_RE = /^[A-Z0-9]{2,8}$/
 
 const VALID_PACKS = ['Essential', 'Deep Clean', 'Premium', 'Elite Ceramic']
 const VALID_VEHICLES = ['hatchback', 'suv', 'prestige']
 const VALID_TIMES = ['8:00 AM', '10:00 AM', '12:00 PM', '2:00 PM', '4:00 PM', '6:00 PM']
+const VALID_ADDONS = ['engine-bay', 'headlights', 'odour', 'pet-hair']
+
+const ADDON_LABELS: Record<string, string> = {
+  'engine-bay':  'Engine Bay Detail',
+  'headlights':  'Headlight Restoration',
+  'odour':       'Odour Elimination',
+  'pet-hair':    'Pet Hair Removal',
+}
 
 export async function POST(req: NextRequest) {
   let body: Partial<BookingPayload>
@@ -37,7 +50,7 @@ export async function POST(req: NextRequest) {
 
   // ── Required field presence ──
   const required: (keyof BookingPayload)[] = [
-    'pack', 'vehicle', 'price', 'date', 'time', 'name', 'phone', 'email', 'address',
+    'pack', 'vehicle', 'price', 'date', 'time', 'name', 'phone', 'email', 'address', 'carReg',
   ]
   for (const field of required) {
     if (body[field] === undefined || body[field] === '') {
@@ -80,13 +93,26 @@ export async function POST(req: NextRequest) {
   if (data.address.trim().length < 5 || data.address.trim().length > 300) {
     return NextResponse.json({ error: 'Please provide a valid service address' }, { status: 400 })
   }
+  const normalizedReg = data.carReg.trim().toUpperCase().replace(/\s+/g, '')
+  if (!CAR_REG_RE.test(normalizedReg)) {
+    return NextResponse.json({ error: 'Invalid vehicle registration' }, { status: 400 })
+  }
+  if (!Array.isArray(data.addons)) {
+    return NextResponse.json({ error: 'Invalid addons format' }, { status: 400 })
+  }
+  if (data.addons.some(a => !VALID_ADDONS.includes(a))) {
+    return NextResponse.json({ error: 'Invalid add-on selection' }, { status: 400 })
+  }
   if (data.notes && data.notes.length > 1000) {
     return NextResponse.json({ error: 'Notes too long (max 1000 characters)' }, { status: 400 })
   }
 
   // ── Build booking record ──
+  const id = `TTD-${Date.now()}-${Math.random().toString(36).slice(2, 7).toUpperCase()}`
+  const createdAt = new Date().toISOString()
+
   const booking: BookingRecord = {
-    id: `TTD-${Date.now()}-${Math.random().toString(36).slice(2, 7).toUpperCase()}`,
+    id,
     pack: data.pack,
     vehicle: data.vehicle,
     price: data.price,
@@ -96,9 +122,55 @@ export async function POST(req: NextRequest) {
     phone: data.phone.trim(),
     email: data.email.toLowerCase().trim(),
     address: data.address.trim(),
+    carReg: normalizedReg,
+    addons: data.addons,
     notes: data.notes?.trim() || '',
     status: 'pending',
-    createdAt: new Date().toISOString(),
+    createdAt,
+  }
+
+  // ── Email via Resend ──
+  const resendKey = process.env.RESEND_API_KEY
+  const fromEmail = process.env.BOOKING_FROM_EMAIL ?? 'hello@truetodetail.co.uk'
+
+  if (resendKey) {
+    const resend = new Resend(resendKey)
+
+    const emailData: EmailData = {
+      id: booking.id,
+      pack: booking.pack,
+      vehicle: booking.vehicle,
+      price: booking.price,
+      date: booking.date,
+      time: booking.time,
+      name: booking.name,
+      phone: booking.phone,
+      email: booking.email,
+      address: booking.address,
+      carReg: booking.carReg,
+      addons: booking.addons.map(a => ADDON_LABELS[a] ?? a),
+      notes: booking.notes,
+      createdAt: booking.createdAt,
+    }
+
+    await Promise.allSettled([
+      // Staff notification
+      resend.emails.send({
+        from: fromEmail,
+        to: 'hello@truetodetail.co.uk',
+        subject: `New Booking — ${booking.pack} · ${booking.date} · Ref ${booking.id}`,
+        html: notificationEmail(emailData),
+      }),
+      // Customer confirmation
+      resend.emails.send({
+        from: fromEmail,
+        to: booking.email,
+        subject: `Your Detail is Confirmed — ${booking.date}`,
+        html: confirmationEmail(emailData),
+      }),
+    ])
+  } else {
+    console.warn('[booking] RESEND_API_KEY not set — emails skipped')
   }
 
   // ── Forward to webhook (e.g. Zapier / Make / n8n) ──
@@ -115,7 +187,7 @@ export async function POST(req: NextRequest) {
         console.error('[booking] Webhook responded with', res.status)
       }
     } catch (err) {
-      // Non-fatal — log and continue so the customer still gets confirmation
+      // Non-fatal — log and continue
       console.error('[booking] Webhook delivery failed:', err)
     }
   }

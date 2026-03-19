@@ -181,7 +181,7 @@ export default function Footer({ onBookNow }: { onBookNow: () => void }) {
         </div>
       </div>
 
-      {/* Bottom bar */}
+      {/* Bottom bar — copyright + legal links */}
       <div style={{ borderTop: '1px solid rgba(12,12,12,0.06)' }}>
         <div style={{
           maxWidth: '1400px', margin: '0 auto',
@@ -195,12 +195,27 @@ export default function Footer({ onBookNow }: { onBookNow: () => void }) {
           }}>
             © {YEAR} True To Detail · Hertfordshire, UK
           </span>
-          <span style={{
-            fontFamily: 'var(--font-body)', fontSize: '11px',
-            color: 'rgba(12,12,12,0.25)', letterSpacing: '0.04em',
-          }}>
-            hello@truetodetail.co.uk
-          </span>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '20px', flexWrap: 'wrap' }}>
+            {[
+              ['Terms',   '/terms'],
+              ['Privacy', '/privacy'],
+              ['Cookies', '/cookies'],
+            ].map(([label, href]) => (
+              <a
+                key={label}
+                href={href}
+                style={{
+                  fontFamily: 'var(--font-body)', fontSize: '11px',
+                  color: 'rgba(12,12,12,0.28)', textDecoration: 'none', letterSpacing: '0.04em',
+                  transition: 'color 0.2s',
+                }}
+                onMouseEnter={e => (e.currentTarget.style.color = '#0C0C0C')}
+                onMouseLeave={e => (e.currentTarget.style.color = 'rgba(12,12,12,0.28)')}
+              >
+                {label}
+              </a>
+            ))}
+          </div>
         </div>
       </div>
 

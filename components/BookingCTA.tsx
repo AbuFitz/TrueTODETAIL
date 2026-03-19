@@ -202,10 +202,9 @@ export default function BookingCTA({ onBookNow }: { onBookNow: () => void }) {
           }}
         >
           {[
-            '100% Mobile Service',
-            'Fixed Prices — No Surprises',
-            'Hertfordshire Coverage',
-            '5★ Rated Detailing',
+            'Confirmed within 1 hour',
+            'Payment on the day',
+            'Mon–Sat, 8am–7pm',
           ].map((fact, i) => (
             <div key={fact} style={{ display: 'flex', alignItems: 'center', gap: '20px' }}>
               <span style={{
@@ -215,7 +214,7 @@ export default function BookingCTA({ onBookNow }: { onBookNow: () => void }) {
               }}>
                 {fact}
               </span>
-              {i < 3 && (
+              {i < 2 && (
                 <span style={{
                   display: 'inline-block', width: '4px', height: '6px',
                   background: '#E84A0C', flexShrink: 0,
