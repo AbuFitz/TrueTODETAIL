@@ -2,11 +2,10 @@
 
 import { useState, useEffect } from 'react'
 
+/* Only Services + Packages — About and Contact removed from nav */
 const NAV_LINKS = [
   { label: 'Services', href: '#services'  },
   { label: 'Packages', href: '#packages'  },
-  { label: 'About',    href: '#about'     },
-  { label: 'Contact',  href: '#contact'   },
 ]
 
 export default function Navbar({ onBookNow }: { onBookNow: () => void }) {
@@ -25,10 +24,6 @@ export default function Navbar({ onBookNow }: { onBookNow: () => void }) {
     return () => { document.body.style.overflow = '' }
   }, [open])
 
-  /*
-    Logo shrinks on scroll: 38px → 22px.
-    Nav bar stays 80px — only the logo scales. No layout shift.
-  */
   const logoSize = scrolled ? '22px' : '38px'
   const dotW     = scrolled ? '5px'  : '8px'
   const dotH     = scrolled ? '7px'  : '12px'
@@ -36,7 +31,7 @@ export default function Navbar({ onBookNow }: { onBookNow: () => void }) {
 
   return (
     <>
-      {/* ─── Main nav bar — black ─── */}
+      {/* ─── Main nav bar ─── */}
       <nav
         style={{
           position: 'fixed', top: 0, left: 0, right: 0, zIndex: 50,
@@ -56,7 +51,7 @@ export default function Navbar({ onBookNow }: { onBookNow: () => void }) {
           }}
         >
 
-          {/* Logo — white on black, shrinks on scroll */}
+          {/* Logo */}
           <a
             href="#"
             style={{
@@ -97,7 +92,7 @@ export default function Navbar({ onBookNow }: { onBookNow: () => void }) {
 
           <div style={{ flex: 1 }} />
 
-          {/* Desktop nav links — white text on black */}
+          {/* Desktop nav — Services + Packages + Book Now */}
           <div className="hidden md:flex items-center" style={{ gap: 0 }}>
             {NAV_LINKS.map((l) => (
               <a
@@ -117,7 +112,6 @@ export default function Navbar({ onBookNow }: { onBookNow: () => void }) {
                 onMouseEnter={() => setHovered(l.label)}
                 onMouseLeave={() => setHovered(null)}
               >
-                {/* Wipe-in orange underline */}
                 <span
                   aria-hidden
                   style={{
@@ -159,7 +153,7 @@ export default function Navbar({ onBookNow }: { onBookNow: () => void }) {
             </button>
           </div>
 
-          {/* Mobile hamburger — white bars on black nav */}
+          {/* Mobile hamburger — only shows below md (768px) */}
           <button
             className="md:hidden"
             onClick={() => setOpen(!open)}

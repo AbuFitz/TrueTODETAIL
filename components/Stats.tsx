@@ -33,28 +33,16 @@ export default function Stats() {
       id="about"
       style={{
         background: '#F5F4F1',
-        paddingTop:    'clamp(64px, 10vw, 140px)',
-        paddingBottom: 'clamp(64px, 10vw, 140px)',
+        /* Reduced height — no big heading above the grid now */
+        paddingTop:    'clamp(36px, 5vw, 64px)',
+        paddingBottom: 'clamp(36px, 5vw, 64px)',
       }}
     >
       <div style={{ maxWidth: '1400px', margin: '0 auto', padding: '0 clamp(24px, 5vw, 72px)' }}>
 
-        {/* Section label */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: 'clamp(48px, 7vw, 96px)' }}>
-          <span style={{ width: 20, height: '1.5px', background: '#E84A0C', flexShrink: 0 }} />
-          <span style={{
-            fontFamily: 'var(--font-body)', fontWeight: 600, fontSize: '11px',
-            letterSpacing: '0.2em', textTransform: 'uppercase', color: 'rgba(12,12,12,0.35)',
-          }}>
-            Why True To Detail
-          </span>
-        </div>
-
         {/*
-          Specification-strip layout.
-          4 columns separated by 1px vertical rules — like a premium car brochure
-          specification table. No cards, no backgrounds, no shadows.
-          Just type, rules, and white space.
+          Specification-strip layout — 4 columns with vertical rules.
+          No heading label above; the facts speak for themselves.
         */}
         <div
           style={{
@@ -73,32 +61,29 @@ export default function Stats() {
               viewport={{ once: true, margin: '-30px' }}
               transition={{ duration: 0.55, ease, delay: i * 0.08 }}
               style={{
-                padding: 'clamp(32px, 4vw, 56px) clamp(24px, 3vw, 40px)',
+                padding: 'clamp(24px, 3vw, 40px) clamp(20px, 2.5vw, 36px)',
                 borderRight: i < 3 ? '1px solid rgba(12,12,12,0.1)' : 'none',
               }}
               className={i < 2 ? 'border-b border-ink/[0.1] lg:border-b-0' : ''}
             >
-
-              {/* Number — small, precise, top-left */}
               <span style={{
                 display: 'block',
                 fontFamily: 'var(--font-body)', fontWeight: 600, fontSize: '10px',
                 letterSpacing: '0.22em', textTransform: 'uppercase',
                 color: 'rgba(12,12,12,0.25)',
-                marginBottom: '20px',
+                marginBottom: '14px',
               }}>
                 {f.n}
               </span>
 
-              {/* Big title — the spec entry */}
               <h3
                 style={{
                   fontFamily: 'var(--font-display)',
-                  fontSize: 'clamp(38px, 4.5vw, 58px)',
+                  fontSize: 'clamp(32px, 4vw, 52px)',
                   letterSpacing: '0.025em',
                   color: '#0C0C0C',
                   lineHeight: 0.88,
-                  marginBottom: '20px',
+                  marginBottom: '14px',
                   whiteSpace: 'pre-line',
                 }}
               >
@@ -106,12 +91,11 @@ export default function Stats() {
               </h3>
 
               <p style={{
-                fontFamily: 'var(--font-body)', fontSize: '14px', lineHeight: 1.75,
-                color: 'rgba(12,12,12,0.48)',
+                fontFamily: 'var(--font-body)', fontSize: '13px', lineHeight: 1.72,
+                color: 'rgba(12,12,12,0.45)',
               }}>
                 {f.body}
               </p>
-
             </motion.div>
           ))}
         </div>

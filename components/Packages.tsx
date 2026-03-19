@@ -53,7 +53,7 @@ const ease = [0.22, 1, 0.36, 1] as [number, number, number, number]
 export default function Packages({
   onBookPack,
 }: {
-  onBookPack: (pkg: string, vehicle: VehicleType, price: number) => void
+  onBookPack: (pkg: string, vehicle: VehicleType) => void
 }) {
   const [vehicle, setVehicle] = useState<VehicleType>('hatchback')
 
@@ -85,17 +85,8 @@ export default function Packages({
             marginBottom: 'clamp(40px, 5vw, 64px)',
           }}
         >
-          {/* Section label + headline */}
+          {/* Section headline — no label above */}
           <div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '18px' }}>
-              <span style={{ width: 20, height: '1.5px', background: '#E84A0C', flexShrink: 0 }} />
-              <span style={{
-                fontFamily: 'var(--font-body)', fontWeight: 600, fontSize: '11px',
-                letterSpacing: '0.2em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.28)',
-              }}>
-                Packages
-              </span>
-            </div>
             <h2 style={{
               fontFamily: 'var(--font-display)',
               fontSize: 'clamp(52px, 7.5vw, 104px)',
@@ -293,7 +284,7 @@ export default function Packages({
 
                 {/* CTA */}
                 <button
-                  onClick={() => onBookPack(pkg.name, vehicle, pkg.price[vehicle])}
+                  onClick={() => onBookPack(pkg.name, vehicle)}
                   style={{
                     width: '100%',
                     fontFamily: 'var(--font-body)', fontWeight: 600, fontSize: '12px',

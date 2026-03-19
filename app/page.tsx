@@ -5,7 +5,6 @@ import Navbar from '@/components/Navbar'
 import Hero from '@/components/Hero'
 import Stats from '@/components/Stats'
 import Packages from '@/components/Packages'
-import Services from '@/components/Services'
 import HowItWorks from '@/components/HowItWorks'
 import Testimonials from '@/components/Testimonials'
 import BookingCTA from '@/components/BookingCTA'
@@ -15,22 +14,19 @@ import Footer from '@/components/Footer'
 type VehicleType = 'hatchback' | 'suv' | 'prestige'
 
 export default function HomePage() {
-  const [modalOpen, setModalOpen] = useState(false)
-  const [selectedPack, setSelectedPack] = useState('')
+  const [modalOpen,      setModalOpen]      = useState(false)
+  const [selectedPack,   setSelectedPack]   = useState('')
   const [selectedVehicle, setSelectedVehicle] = useState<VehicleType | ''>('')
-  const [selectedPrice, setSelectedPrice] = useState(0)
 
   const openModal = () => {
     setSelectedPack('')
     setSelectedVehicle('')
-    setSelectedPrice(0)
     setModalOpen(true)
   }
 
-  const handleBookPack = (pack: string, vehicle: VehicleType, price: number) => {
+  const handleBookPack = (pack: string, vehicle: VehicleType) => {
     setSelectedPack(pack)
     setSelectedVehicle(vehicle)
-    setSelectedPrice(price)
     setModalOpen(true)
   }
 
@@ -42,7 +38,6 @@ export default function HomePage() {
         <Hero onBookNow={openModal} />
         <Stats />
         <Packages onBookPack={handleBookPack} />
-        <Services />
         <HowItWorks onBookNow={openModal} />
         <Testimonials />
         <BookingCTA onBookNow={openModal} />
@@ -55,7 +50,6 @@ export default function HomePage() {
         onClose={() => setModalOpen(false)}
         initialPack={selectedPack}
         initialVehicle={selectedVehicle}
-        initialPrice={selectedPrice}
       />
     </>
   )

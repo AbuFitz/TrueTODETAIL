@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import { motion } from 'framer-motion'
 
 type VehicleType = 'hatchback' | 'suv' | 'prestige'
 type Step = 1 | 2 | 3 | 4
@@ -13,12 +14,19 @@ interface BookingModalProps {
   initialPrice?: number
 }
 
-const packOptions = ['Essential', 'Deep Clean', 'Premium', 'Elite Ceramic']
+const packOptions = [
+  { id: 'Essential',     tagline: 'The perfect fresh start',          duration: '2–3 hrs'  },
+  { id: 'Deep Clean',    tagline: 'A proper inside-out reset',        duration: '4–5 hrs'  },
+  { id: 'Premium',       tagline: 'The full transformation',          duration: '6–8 hrs'  },
+  { id: 'Elite Ceramic', tagline: 'Maximum protection. Lasting gloss.', duration: '1–2 days' },
+]
+
 const vehicleLabels: Record<VehicleType, string> = {
   hatchback: 'Hatchback / Saloon',
-  suv: 'SUV / 4×4',
-  prestige: 'Sports / Prestige',
+  suv:       'SUV / 4×4',
+  prestige:  'Sports / Prestige',
 }
+
 const timeSlots = ['8:00 AM', '10:00 AM', '12:00 PM', '2:00 PM', '4:00 PM', '6:00 PM']
 
 const priceMap: Record<string, Record<VehicleType, number>> = {
@@ -28,30 +36,43 @@ const priceMap: Record<string, Record<VehicleType, number>> = {
   'Elite Ceramic': { hatchback: 549, suv: 679, prestige: 849 },
 }
 
-const inputClass = `w-full border border-black/12 px-5 py-4 font-body text-[14px] text-site-black
-                    placeholder:text-black/25 focus:outline-none focus:border-site-black transition-colors bg-white`
+const STEP_LABELS = ['Select Pack', 'Schedule', 'Your Details']
 
-const labelClass = `block font-body font-semibold text-[10px] tracking-[0.2em] uppercase text-black/40 mb-2.5`
+/* Shared field label style */
+const fieldLabel: React.CSSProperties = {
+  display: 'block',
+  fontFamily: 'var(--font-body)', fontWeight: 600, fontSize: '10px',
+  letterSpacing: '0.2em', textTransform: 'uppercase' as const,
+  color: 'rgba(12,12,12,0.38)', marginBottom: '10px',
+}
+
+/* Shared text input style */
+const textInput: React.CSSProperties = {
+  width: '100%', padding: '14px 16px',
+  border: '1px solid rgba(12,12,12,0.12)',
+  fontFamily: 'var(--font-body)', fontSize: '14px', color: '#0C0C0C',
+  outline: 'none', background: 'white', boxSizing: 'border-box' as const,
+}
 
 export default function BookingModal({
   isOpen,
   onClose,
-  initialPack = '',
+  initialPack    = '',
   initialVehicle = '',
 }: BookingModalProps) {
-  const [step, setStep] = useState<Step>(1)
-  const [pack, setPack] = useState(initialPack)
-  const [vehicle, setVehicle] = useState<VehicleType | ''>(initialVehicle as VehicleType | '')
-  const [date, setDate] = useState('')
-  const [time, setTime] = useState('')
-  const [name, setName] = useState('')
-  const [phone, setPhone] = useState('')
-  const [email, setEmail] = useState('')
-  const [address, setAddress] = useState('')
-  const [notes, setNotes] = useState('')
+  const [step,       setStep]       = useState<Step>(1)
+  const [pack,       setPack]       = useState(initialPack)
+  const [vehicle,    setVehicle]    = useState<VehicleType | ''>(initialVehicle as VehicleType | '')
+  const [date,       setDate]       = useState('')
+  const [time,       setTime]       = useState('')
+  const [name,       setName]       = useState('')
+  const [phone,      setPhone]      = useState('')
+  const [email,      setEmail]      = useState('')
+  const [address,    setAddress]    = useState('')
+  const [notes,      setNotes]      = useState('')
   const [submitting, setSubmitting] = useState(false)
-  const [apiError, setApiError] = useState('')
-  const [bookingId, setBookingId] = useState('')
+  const [apiError,   setApiError]   = useState('')
+  const [bookingId,  setBookingId]  = useState('')
 
   const price = pack && vehicle ? (priceMap[pack]?.[vehicle as VehicleType] ?? 0) : null
 
@@ -60,7 +81,7 @@ export default function BookingModal({
     setSubmitting(true)
     setApiError('')
     try {
-      const res = await fetch('/api/booking', {
+      const res  = await fetch('/api/booking', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ pack, vehicle, price, date, time, name, phone, email, address, notes }),
@@ -86,94 +107,186 @@ export default function BookingModal({
       setStep(1); setPack(initialPack); setVehicle(initialVehicle as VehicleType | '')
       setName(''); setPhone(''); setEmail(''); setAddress(''); setNotes('')
       setDate(''); setTime(''); setApiError(''); setBookingId('')
-    }, 350)
+    }, 400)
   }
 
   if (!isOpen) return null
 
   return (
-    <div className="fixed inset-0 z-[100] flex items-end md:items-center justify-center p-0 md:p-6">
-      <div className="absolute inset-0 bg-site-black/80 backdrop-blur-sm" onClick={handleClose} />
+    /*
+      Right-side drawer panel.
+      Backdrop covers the page; clicking it closes the modal.
+      Panel slides in from the right edge (520px wide on desktop, full-width on mobile).
+    */
+    <div
+      style={{ position: 'fixed', inset: 0, zIndex: 100, display: 'flex', justifyContent: 'flex-end' }}
+    >
+      {/* Backdrop */}
+      <div
+        style={{
+          position: 'absolute', inset: 0,
+          background: 'rgba(12,12,12,0.82)',
+          backdropFilter: 'blur(3px)',
+        }}
+        onClick={handleClose}
+      />
 
-      <div className="relative z-10 bg-white w-full md:max-w-2xl max-h-[95vh] overflow-y-auto">
+      {/* ── Drawer panel ── */}
+      <motion.div
+        initial={{ x: '100%' }}
+        animate={{ x: 0 }}
+        transition={{ duration: 0.42, ease: [0.22, 1, 0.36, 1] }}
+        style={{
+          position: 'relative', zIndex: 1,
+          width: '100%', maxWidth: '520px',
+          height: '100dvh',
+          background: '#ffffff',
+          display: 'flex', flexDirection: 'column',
+          overflow: 'hidden',
+        }}
+      >
 
-        {/* Header */}
-        <div className="bg-site-black text-white px-8 py-6 flex items-center justify-between sticky top-0 z-10">
-          <div>
-            <p className="font-body text-[10px] tracking-[0.22em] uppercase text-white/30 mb-1.5">
-              Mobile Detailing — Booking Request
-            </p>
-            <h2 className="font-display font-black text-2xl uppercase leading-none">
-              {step === 4 ? 'BOOKING CONFIRMED' : 'BOOK YOUR DETAIL'}
-            </h2>
+        {/* ── Header (dark) ── */}
+        <div style={{ background: '#0C0C0C', padding: '24px 32px 20px', flexShrink: 0 }}>
+          <div style={{
+            display: 'flex', alignItems: 'flex-start',
+            justifyContent: 'space-between', marginBottom: '20px',
+          }}>
+            <div>
+              <p style={{
+                fontFamily: 'var(--font-body)', fontSize: '10px', fontWeight: 600,
+                letterSpacing: '0.22em', textTransform: 'uppercase',
+                color: 'rgba(255,255,255,0.28)', marginBottom: '6px',
+              }}>
+                {step === 4 ? 'Booking Confirmed' : 'Mobile Detailing · Hertfordshire'}
+              </p>
+              <h2 style={{
+                fontFamily: 'var(--font-display)', fontSize: '28px',
+                letterSpacing: '0.04em', color: '#ffffff', lineHeight: 1,
+              }}>
+                {step === 4 ? "YOU'RE BOOKED IN" : 'BOOK YOUR DETAIL'}
+              </h2>
+            </div>
+
+            <button
+              onClick={handleClose}
+              aria-label="Close"
+              style={{
+                width: 36, height: 36, background: 'rgba(255,255,255,0.07)',
+                border: 'none', cursor: 'pointer', flexShrink: 0,
+                display: 'flex', alignItems: 'center', justifyContent: 'center',
+                color: 'rgba(255,255,255,0.5)', fontSize: '16px',
+                transition: 'background 0.2s, color 0.2s',
+              }}
+              onMouseEnter={e => {
+                e.currentTarget.style.background = 'rgba(255,255,255,0.15)'
+                e.currentTarget.style.color = '#fff'
+              }}
+              onMouseLeave={e => {
+                e.currentTarget.style.background = 'rgba(255,255,255,0.07)'
+                e.currentTarget.style.color = 'rgba(255,255,255,0.5)'
+              }}
+            >
+              ✕
+            </button>
           </div>
-          <button
-            onClick={handleClose}
-            className="w-9 h-9 flex items-center justify-center text-white/40 hover:text-white
-                       hover:bg-white/10 transition-colors text-lg"
-            aria-label="Close"
-          >
-            ✕
-          </button>
+
+          {/* Step progress — 3 orange bars */}
+          {step < 4 && (
+            <div>
+              <div style={{ display: 'flex', gap: '4px', marginBottom: '8px' }}>
+                {[1, 2, 3].map(s => (
+                  <div
+                    key={s}
+                    style={{
+                      flex: 1, height: '2px',
+                      background: s <= step ? '#E84A0C' : 'rgba(255,255,255,0.1)',
+                      transition: 'background 0.3s',
+                    }}
+                  />
+                ))}
+              </div>
+              <p style={{
+                fontFamily: 'var(--font-body)', fontSize: '11px', fontWeight: 500,
+                color: 'rgba(255,255,255,0.3)', letterSpacing: '0.06em',
+              }}>
+                Step {step} of 3 — {STEP_LABELS[step - 1]}
+              </p>
+            </div>
+          )}
         </div>
 
-        {/* Progress steps */}
-        {step < 4 && (
-          <div className="flex border-b border-black/8">
-            {(['Pack', 'Schedule', 'Your Details'] as const).map((label, i) => {
-              const active = step === i + 1
-              const done = step > i + 1
-              return (
-                <div
-                  key={label}
-                  className={`flex-1 py-3 text-center font-body font-semibold text-[10px] tracking-[0.16em] uppercase transition-colors ${
-                    active ? 'bg-orange text-white' : done ? 'bg-site-light text-black/30' : 'bg-site-light text-black/25'
-                  }`}
-                >
-                  <span className={done ? 'line-through' : ''}>{i + 1}. {label}</span>
-                </div>
-              )
-            })}
-          </div>
-        )}
-
-        <div className="p-8">
+        {/* ── Scrollable body ── */}
+        <div style={{ flex: 1, overflowY: 'auto', padding: '32px' }}>
 
           {/* ── STEP 1: Pack & Vehicle ── */}
           {step === 1 && (
-            <div className="space-y-8">
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '28px' }}>
+
               <div>
-                <label className={labelClass}>Select Your Pack</label>
-                <div className="grid grid-cols-2 gap-2">
-                  {packOptions.map((p) => (
+                <p style={fieldLabel}>Select Your Pack</p>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
+                  {packOptions.map(p => (
                     <button
-                      key={p}
-                      onClick={() => setPack(p)}
-                      className={`p-4 border font-body font-semibold text-[14px] text-left flex items-center justify-between transition-colors duration-150 ${
-                        pack === p
-                          ? 'bg-site-black text-white border-site-black'
-                          : 'bg-white text-site-black border-black/12 hover:border-black/40'
-                      }`}
+                      key={p.id}
+                      onClick={() => setPack(p.id)}
+                      style={{
+                        width: '100%', padding: '16px 18px',
+                        background: pack === p.id ? '#0C0C0C' : 'transparent',
+                        border: `1px solid ${pack === p.id ? '#0C0C0C' : 'rgba(12,12,12,0.1)'}`,
+                        cursor: 'pointer',
+                        display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+                        textAlign: 'left', transition: 'all 0.15s',
+                      }}
+                      onMouseEnter={e => { if (pack !== p.id) e.currentTarget.style.borderColor = 'rgba(12,12,12,0.3)' }}
+                      onMouseLeave={e => { if (pack !== p.id) e.currentTarget.style.borderColor = 'rgba(12,12,12,0.1)' }}
                     >
-                      {p}
-                      {pack === p && <span className="w-2 h-2 rounded-full bg-orange flex-shrink-0" />}
+                      <div>
+                        <span style={{
+                          fontFamily: 'var(--font-body)', fontWeight: 600, fontSize: '15px',
+                          color: pack === p.id ? '#ffffff' : '#0C0C0C',
+                          display: 'block', marginBottom: '3px',
+                        }}>
+                          {p.id}
+                        </span>
+                        <span style={{
+                          fontFamily: 'var(--font-body)', fontSize: '12px',
+                          color: pack === p.id ? 'rgba(255,255,255,0.42)' : 'rgba(12,12,12,0.38)',
+                        }}>
+                          {p.tagline} · {p.duration}
+                        </span>
+                      </div>
+                      {/* Show price if vehicle is already selected */}
+                      {vehicle && (
+                        <span style={{
+                          fontFamily: 'var(--font-display)', fontSize: '22px',
+                          color: pack === p.id ? '#E84A0C' : 'rgba(12,12,12,0.2)',
+                          letterSpacing: '0.02em', flexShrink: 0, marginLeft: '12px',
+                        }}>
+                          £{priceMap[p.id]?.[vehicle as VehicleType] ?? '—'}
+                        </span>
+                      )}
                     </button>
                   ))}
                 </div>
               </div>
 
               <div>
-                <label className={labelClass}>Vehicle Type</label>
-                <div className="grid grid-cols-3 gap-2">
+                <p style={fieldLabel}>Vehicle Type</p>
+                <div style={{ display: 'flex', gap: '6px' }}>
                   {(Object.entries(vehicleLabels) as [VehicleType, string][]).map(([key, label]) => (
                     <button
                       key={key}
                       onClick={() => setVehicle(key)}
-                      className={`p-4 border font-body font-semibold text-[13px] text-center transition-colors duration-150 ${
-                        vehicle === key
-                          ? 'bg-site-black text-white border-site-black'
-                          : 'bg-white text-site-black border-black/12 hover:border-black/40'
-                      }`}
+                      style={{
+                        flex: 1, padding: '13px 8px',
+                        background: vehicle === key ? '#0C0C0C' : 'transparent',
+                        border: `1px solid ${vehicle === key ? '#0C0C0C' : 'rgba(12,12,12,0.12)'}`,
+                        cursor: 'pointer',
+                        fontFamily: 'var(--font-body)', fontWeight: 600, fontSize: '12px',
+                        color: vehicle === key ? '#ffffff' : 'rgba(12,12,12,0.55)',
+                        textAlign: 'center', letterSpacing: '0.02em', transition: 'all 0.15s',
+                      }}
                     >
                       {label}
                     </button>
@@ -181,235 +294,388 @@ export default function BookingModal({
                 </div>
               </div>
 
-              {/* Price preview */}
-              <div className="bg-site-light p-6 flex items-center justify-between">
-                <div>
-                  <p className="font-body text-[10px] tracking-[0.18em] uppercase text-black/35 mb-2">Estimated Price</p>
-                  {price !== null
-                    ? <p className="font-display font-black text-5xl leading-none">&pound;{price}</p>
-                    : <p className="font-display font-black text-4xl leading-none text-black/20">—</p>
-                  }
+              {/* Price preview — only shows when both pack + vehicle are selected */}
+              {price !== null && (
+                <div style={{
+                  background: '#0C0C0C', padding: '20px 24px',
+                  display: 'flex', justifyContent: 'space-between', alignItems: 'center',
+                }}>
+                  <div>
+                    <p style={{
+                      fontFamily: 'var(--font-body)', fontSize: '10px', fontWeight: 600,
+                      letterSpacing: '0.18em', textTransform: 'uppercase',
+                      color: 'rgba(255,255,255,0.3)', marginBottom: '4px',
+                    }}>
+                      Your Price
+                    </p>
+                    <span style={{
+                      fontFamily: 'var(--font-display)', fontSize: '44px',
+                      color: '#ffffff', letterSpacing: '0.02em', lineHeight: 1,
+                    }}>
+                      £{price}
+                    </span>
+                  </div>
+                  <div style={{ textAlign: 'right' }}>
+                    <p style={{
+                      fontFamily: 'var(--font-body)', fontSize: '13px',
+                      color: 'rgba(255,255,255,0.45)', marginBottom: '3px',
+                    }}>
+                      {pack}
+                    </p>
+                    <p style={{ fontFamily: 'var(--font-body)', fontSize: '12px', color: 'rgba(255,255,255,0.25)' }}>
+                      {vehicleLabels[vehicle as VehicleType]}
+                    </p>
+                  </div>
                 </div>
-                <div className="text-right">
-                  <p className="font-body font-semibold text-[13px] text-black/50">{pack || 'No pack selected'}</p>
-                  <p className="font-body text-[13px] text-black/35 mt-1">{vehicle ? vehicleLabels[vehicle as VehicleType] : 'No vehicle selected'}</p>
-                </div>
-              </div>
-
-              <button
-                onClick={() => setStep(2)}
-                disabled={!pack || !vehicle}
-                className="w-full flex items-center justify-between px-6 py-5 bg-orange text-white
-                           font-body font-semibold text-[11px] tracking-[0.14em] uppercase
-                           hover:bg-[#C53D08] transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
-              >
-                NEXT: SCHEDULE
-                <span className="w-2 h-2 rounded-full bg-white/50" />
-              </button>
+              )}
             </div>
           )}
 
           {/* ── STEP 2: Date, Time, Address ── */}
           {step === 2 && (
-            <form onSubmit={(e) => { e.preventDefault(); setStep(3) }} className="space-y-8">
+            <form
+              id="step2-form"
+              onSubmit={e => { e.preventDefault(); setStep(3) }}
+              style={{ display: 'flex', flexDirection: 'column', gap: '28px' }}
+            >
               <div>
-                <label className={labelClass}>Preferred Date</label>
+                <label style={fieldLabel}>Preferred Date</label>
                 <input
-                  type="date"
-                  required
+                  type="date" required
                   min={new Date().toISOString().split('T')[0]}
-                  value={date}
-                  onChange={(e) => setDate(e.target.value)}
-                  className={inputClass}
+                  value={date} onChange={e => setDate(e.target.value)}
+                  style={textInput}
                 />
               </div>
 
               <div>
-                <label className={labelClass}>Preferred Time Slot</label>
-                <div className="grid grid-cols-3 gap-2">
-                  {timeSlots.map((t) => (
+                <label style={fieldLabel}>Preferred Time Slot</label>
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '6px' }}>
+                  {timeSlots.map(t => (
                     <button
-                      key={t}
-                      type="button"
-                      onClick={() => setTime(t)}
-                      className={`py-3.5 border font-body font-semibold text-[12px] tracking-wider transition-colors ${
-                        time === t
-                          ? 'bg-site-black text-white border-site-black'
-                          : 'border-black/12 text-black/55 hover:border-black/40'
-                      }`}
+                      key={t} type="button" onClick={() => setTime(t)}
+                      style={{
+                        padding: '13px 8px',
+                        border: `1px solid ${time === t ? '#0C0C0C' : 'rgba(12,12,12,0.1)'}`,
+                        background: time === t ? '#0C0C0C' : 'transparent',
+                        cursor: 'pointer',
+                        fontFamily: 'var(--font-body)', fontWeight: 600, fontSize: '13px',
+                        color: time === t ? '#ffffff' : 'rgba(12,12,12,0.5)',
+                        transition: 'all 0.15s',
+                      }}
                     >
                       {t}
                     </button>
                   ))}
                 </div>
-                <p className="font-body text-[11px] text-black/30 mt-3">
-                  We&apos;ll confirm your exact arrival window within 1 hour of booking.
+                <p style={{
+                  fontFamily: 'var(--font-body)', fontSize: '11px',
+                  color: 'rgba(12,12,12,0.28)', marginTop: '10px',
+                }}>
+                  Exact arrival window confirmed within 1 hour of booking.
                 </p>
               </div>
 
               <div>
-                <label className={labelClass}>Service Address *</label>
+                <label style={fieldLabel}>Service Address</label>
                 <input
-                  required
-                  type="text"
-                  value={address}
-                  onChange={(e) => setAddress(e.target.value)}
+                  required type="text" value={address}
+                  onChange={e => setAddress(e.target.value)}
                   placeholder="Your driveway, office or postcode"
-                  className={inputClass}
+                  style={textInput}
                 />
-                <p className="font-body text-[11px] text-black/30 mt-2">
-                  We come to you — driveway, office, car park. Wherever works.
+                <p style={{
+                  fontFamily: 'var(--font-body)', fontSize: '11px',
+                  color: 'rgba(12,12,12,0.28)', marginTop: '8px',
+                }}>
+                  Driveway, office, or car park — wherever works for you.
                 </p>
-              </div>
-
-              <div className="flex gap-3">
-                <button type="button" onClick={() => setStep(1)}
-                  className="flex-1 border border-black/15 py-5 font-body font-semibold text-[11px] tracking-[0.14em] uppercase hover:bg-site-light transition-colors">
-                  &larr; BACK
-                </button>
-                <button
-                  type="submit"
-                  disabled={!date || !time || !address.trim()}
-                  className="flex-[2] flex items-center justify-between px-6 py-5 bg-orange text-white
-                             font-body font-semibold text-[11px] tracking-[0.14em] uppercase
-                             hover:bg-[#C53D08] transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
-                >
-                  NEXT: YOUR DETAILS
-                  <span className="w-2 h-2 rounded-full bg-white/50" />
-                </button>
               </div>
             </form>
           )}
 
-          {/* ── STEP 3: Contact Details ── */}
+          {/* ── STEP 3: Contact Details + Summary ── */}
           {step === 3 && (
-            <form onSubmit={handleSubmit} className="space-y-5">
-              <div className="grid grid-cols-2 gap-4">
+            <form
+              id="step3-form"
+              onSubmit={handleSubmit}
+              style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}
+            >
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
                 <div>
-                  <label className={labelClass}>Full Name *</label>
-                  <input required type="text" value={name} onChange={(e) => setName(e.target.value)}
-                    placeholder="John Smith" className={inputClass} />
+                  <label style={fieldLabel}>Full Name</label>
+                  <input required type="text" value={name} onChange={e => setName(e.target.value)}
+                    placeholder="John Smith" style={textInput} />
                 </div>
                 <div>
-                  <label className={labelClass}>Phone *</label>
-                  <input required type="tel" value={phone} onChange={(e) => setPhone(e.target.value)}
-                    placeholder="07700 900000" className={inputClass} />
+                  <label style={fieldLabel}>Phone</label>
+                  <input required type="tel" value={phone} onChange={e => setPhone(e.target.value)}
+                    placeholder="07700 900000" style={textInput} />
                 </div>
               </div>
 
               <div>
-                <label className={labelClass}>Email *</label>
-                <input required type="email" value={email} onChange={(e) => setEmail(e.target.value)}
-                  placeholder="john@example.com" className={inputClass} />
+                <label style={fieldLabel}>Email</label>
+                <input required type="email" value={email} onChange={e => setEmail(e.target.value)}
+                  placeholder="john@example.com" style={textInput} />
               </div>
 
               <div>
-                <label className={labelClass}>Notes (optional)</label>
-                <textarea value={notes} onChange={(e) => setNotes(e.target.value)}
-                  placeholder="Access instructions, add-ons, specific concerns..."
-                  rows={3} className={`${inputClass} resize-none`} />
+                <label style={fieldLabel}>Notes (optional)</label>
+                <textarea
+                  value={notes} onChange={e => setNotes(e.target.value)}
+                  placeholder="Access notes, add-ons, specific concerns..."
+                  rows={3}
+                  style={{ ...textInput, resize: 'none' }}
+                />
               </div>
 
-              {/* Summary */}
-              <div className="bg-site-light p-5 space-y-2.5">
-                {[
-                  ['Pack', pack],
-                  ['Vehicle', vehicle ? vehicleLabels[vehicle as VehicleType] : '—'],
-                  ['Date & Time', `${date} at ${time}`],
-                  ['Address', address],
-                ].map(([key, val]) => (
-                  <div key={key} className="flex justify-between gap-4 font-body text-[13px]">
-                    <span className="text-black/40">{key}</span>
-                    <span className="font-semibold text-site-black text-right truncate max-w-[180px]">{val}</span>
-                  </div>
-                ))}
-                <div className="border-t border-black/8 pt-3 flex justify-between items-baseline">
-                  <span className="font-body font-semibold text-[11px] tracking-[0.14em] uppercase text-site-black">Total</span>
-                  <span className="font-display font-black text-2xl leading-none text-site-black">
+              {/* Booking summary */}
+              <div style={{ background: '#F5F4F1', padding: '20px' }}>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                  {([
+                    ['Pack',        pack],
+                    ['Vehicle',     vehicle ? vehicleLabels[vehicle as VehicleType] : '—'],
+                    ['Date & Time', date && time ? `${date} · ${time}` : '—'],
+                    ['Address',     address || '—'],
+                  ] as [string, string][]).map(([k, v]) => (
+                    <div key={k} style={{ display: 'flex', justifyContent: 'space-between', gap: '16px' }}>
+                      <span style={{ fontFamily: 'var(--font-body)', fontSize: '13px', color: 'rgba(12,12,12,0.4)', flexShrink: 0 }}>
+                        {k}
+                      </span>
+                      <span style={{
+                        fontFamily: 'var(--font-body)', fontWeight: 600, fontSize: '13px', color: '#0C0C0C',
+                        textAlign: 'right', maxWidth: '220px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap',
+                      }}>
+                        {v}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+                <div style={{
+                  borderTop: '1px solid rgba(12,12,12,0.08)', marginTop: '14px', paddingTop: '14px',
+                  display: 'flex', justifyContent: 'space-between', alignItems: 'baseline',
+                }}>
+                  <span style={{
+                    fontFamily: 'var(--font-body)', fontWeight: 600, fontSize: '11px',
+                    letterSpacing: '0.12em', textTransform: 'uppercase', color: '#0C0C0C',
+                  }}>
+                    Total
+                  </span>
+                  <span style={{ fontFamily: 'var(--font-display)', fontSize: '28px', color: '#0C0C0C' }}>
                     {price !== null ? `£${price}` : '—'}
                   </span>
                 </div>
               </div>
 
               {apiError && (
-                <div className="border-l-2 border-red-500 bg-red-50 px-5 py-4 font-body text-[14px] text-red-700">
+                <div style={{
+                  borderLeft: '2px solid #ef4444', background: '#fef2f2',
+                  padding: '14px 16px', fontFamily: 'var(--font-body)', fontSize: '13px', color: '#dc2626',
+                }}>
                   {apiError}
                 </div>
               )}
-
-              <div className="flex gap-3">
-                <button type="button" onClick={() => { setStep(2); setApiError('') }}
-                  className="flex-1 border border-black/15 py-5 font-body font-semibold text-[11px] tracking-[0.14em] uppercase hover:bg-site-light transition-colors">
-                  &larr; BACK
-                </button>
-                <button
-                  type="submit"
-                  disabled={submitting}
-                  className="flex-[2] flex items-center justify-center gap-3 py-5 bg-orange text-white
-                             font-body font-semibold text-[11px] tracking-[0.14em] uppercase
-                             hover:bg-[#C53D08] transition-colors disabled:opacity-70"
-                >
-                  {submitting ? (
-                    <>
-                      <span className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                      SENDING...
-                    </>
-                  ) : 'CONFIRM BOOKING'}
-                </button>
-              </div>
             </form>
           )}
 
           {/* ── STEP 4: Confirmation ── */}
           {step === 4 && (
-            <div className="text-center py-8 space-y-6">
-              <div className="w-20 h-20 bg-orange flex items-center justify-center mx-auto">
-                <span className="text-white font-display font-black text-5xl leading-none">✓</span>
-              </div>
-              <div>
-                <h3 className="font-display font-black text-4xl uppercase leading-none mb-3">
-                  YOU&apos;RE BOOKED IN!
-                </h3>
-                {bookingId && (
-                  <p className="font-body text-[10px] tracking-[0.2em] uppercase text-black/25 mb-4">
-                    Ref: {bookingId}
-                  </p>
-                )}
-                <p className="font-body text-[15px] text-black/50 max-w-xs mx-auto leading-relaxed">
-                  We&apos;ll confirm via text and email within the hour. Your detailer comes to you on{' '}
-                  <strong className="text-site-black">{date}</strong> at{' '}
-                  <strong className="text-site-black">{time}</strong>.
-                </p>
+            <div style={{ textAlign: 'center', paddingTop: '8px' }}>
+              {/* Orange checkmark box */}
+              <div style={{
+                width: 72, height: 72, background: '#E84A0C',
+                display: 'flex', alignItems: 'center', justifyContent: 'center',
+                margin: '0 auto 24px',
+              }}>
+                <svg width="30" height="30" viewBox="0 0 24 24" fill="none"
+                  stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                  <polyline points="20 6 9 17 4 12" />
+                </svg>
               </div>
 
-              <div className="bg-site-light p-6 text-left space-y-2.5">
-                <div className="flex justify-between font-body text-[13px]">
-                  <span className="text-black/40">Pack</span>
-                  <span className="font-semibold text-site-black">{pack}</span>
+              <h3 style={{
+                fontFamily: 'var(--font-display)', fontSize: '36px',
+                letterSpacing: '0.03em', color: '#0C0C0C', lineHeight: 1, marginBottom: '12px',
+              }}>
+                CONFIRMED
+              </h3>
+
+              {bookingId && (
+                <p style={{
+                  fontFamily: 'var(--font-body)', fontSize: '10px', fontWeight: 600,
+                  letterSpacing: '0.2em', textTransform: 'uppercase',
+                  color: 'rgba(12,12,12,0.28)', marginBottom: '16px',
+                }}>
+                  Ref: {bookingId}
+                </p>
+              )}
+
+              <p style={{
+                fontFamily: 'var(--font-body)', fontSize: '15px', lineHeight: 1.72,
+                color: 'rgba(12,12,12,0.5)', maxWidth: '340px', margin: '0 auto 28px',
+              }}>
+                We&apos;ll confirm by text and email within the hour. Your detailer arrives on{' '}
+                <strong style={{ color: '#0C0C0C' }}>{date}</strong> at{' '}
+                <strong style={{ color: '#0C0C0C' }}>{time}</strong>.
+              </p>
+
+              <div style={{ background: '#F5F4F1', padding: '20px', textAlign: 'left', marginBottom: '24px' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', fontFamily: 'var(--font-body)', fontSize: '13px', marginBottom: '8px' }}>
+                  <span style={{ color: 'rgba(12,12,12,0.4)' }}>Pack</span>
+                  <span style={{ fontWeight: 600, color: '#0C0C0C' }}>{pack}</span>
                 </div>
-                <div className="flex justify-between font-body text-[13px]">
-                  <span className="text-black/40">Address</span>
-                  <span className="font-semibold text-site-black truncate ml-4 max-w-[200px]">{address}</span>
+                <div style={{ display: 'flex', justifyContent: 'space-between', fontFamily: 'var(--font-body)', fontSize: '13px' }}>
+                  <span style={{ color: 'rgba(12,12,12,0.4)' }}>Address</span>
+                  <span style={{ fontWeight: 600, color: '#0C0C0C', maxWidth: '220px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                    {address}
+                  </span>
                 </div>
-                <div className="border-t border-black/8 pt-3 flex justify-between items-baseline">
-                  <span className="font-body font-semibold text-[11px] tracking-[0.14em] uppercase text-site-black">Total</span>
-                  <span className="font-display font-black text-2xl leading-none">&pound;{price}</span>
+                <div style={{
+                  borderTop: '1px solid rgba(12,12,12,0.08)', marginTop: '14px', paddingTop: '14px',
+                  display: 'flex', justifyContent: 'space-between', alignItems: 'baseline',
+                }}>
+                  <span style={{
+                    fontFamily: 'var(--font-body)', fontWeight: 600, fontSize: '11px',
+                    letterSpacing: '0.12em', textTransform: 'uppercase',
+                  }}>
+                    Total
+                  </span>
+                  <span style={{ fontFamily: 'var(--font-display)', fontSize: '24px' }}>£{price}</span>
                 </div>
               </div>
 
               <button
                 onClick={handleClose}
-                className="w-full flex items-center justify-between px-6 py-5 bg-site-black text-white
-                           font-body font-semibold text-[11px] tracking-[0.14em] uppercase
-                           hover:bg-orange transition-colors"
+                style={{
+                  width: '100%', padding: '17px 24px',
+                  background: '#0C0C0C', color: 'white', border: 'none', cursor: 'pointer',
+                  fontFamily: 'var(--font-body)', fontWeight: 600, fontSize: '11px',
+                  letterSpacing: '0.14em', textTransform: 'uppercase',
+                  display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+                  transition: 'background 0.2s',
+                }}
+                onMouseEnter={e => (e.currentTarget.style.background = '#E84A0C')}
+                onMouseLeave={e => (e.currentTarget.style.background = '#0C0C0C')}
               >
-                CLOSE
-                <span className="w-2 h-2 rounded-full bg-white/40" />
+                Done
+                <span style={{ width: 5, height: 5, borderRadius: '50%', background: 'rgba(255,255,255,0.4)' }} />
               </button>
             </div>
           )}
         </div>
-      </div>
+
+        {/* ── Footer nav buttons (steps 1–3 only) ── */}
+        {step < 4 && (
+          <div style={{
+            borderTop: '1px solid rgba(12,12,12,0.06)',
+            padding: '16px 32px',
+            flexShrink: 0, background: 'white',
+            display: 'flex', gap: '10px',
+          }}>
+            {/* Back button — steps 2 + 3 */}
+            {step > 1 && (
+              <button
+                type="button"
+                onClick={() => { setStep(s => (s - 1) as Step); setApiError('') }}
+                style={{
+                  padding: '15px 20px',
+                  border: '1px solid rgba(12,12,12,0.12)',
+                  background: 'transparent', cursor: 'pointer',
+                  fontFamily: 'var(--font-body)', fontWeight: 600, fontSize: '11px',
+                  letterSpacing: '0.1em', textTransform: 'uppercase', color: 'rgba(12,12,12,0.45)',
+                  transition: 'border-color 0.2s',
+                  flexShrink: 0,
+                }}
+                onMouseEnter={e => e.currentTarget.style.borderColor = 'rgba(12,12,12,0.35)'}
+                onMouseLeave={e => e.currentTarget.style.borderColor = 'rgba(12,12,12,0.12)'}
+              >
+                ← Back
+              </button>
+            )}
+
+            {/* Step 1 → 2 */}
+            {step === 1 && (
+              <button
+                type="button"
+                onClick={() => setStep(2)}
+                disabled={!pack || !vehicle}
+                style={{
+                  flex: 1, padding: '15px 24px',
+                  background: '#E84A0C', color: '#ffffff', border: 'none', cursor: 'pointer',
+                  fontFamily: 'var(--font-body)', fontWeight: 600, fontSize: '11px',
+                  letterSpacing: '0.1em', textTransform: 'uppercase',
+                  display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+                  opacity: !pack || !vehicle ? 0.4 : 1,
+                  transition: 'background 0.2s',
+                }}
+                onMouseEnter={e => { if (pack && vehicle) e.currentTarget.style.background = '#C53D08' }}
+                onMouseLeave={e => { if (pack && vehicle) e.currentTarget.style.background = '#E84A0C' }}
+              >
+                Next: Schedule
+                <span style={{ width: 5, height: 5, borderRadius: '50%', background: 'rgba(255,255,255,0.5)' }} />
+              </button>
+            )}
+
+            {/* Step 2 → 3 */}
+            {step === 2 && (
+              <button
+                type="submit"
+                form="step2-form"
+                disabled={!date || !time || !address.trim()}
+                style={{
+                  flex: 1, padding: '15px 24px',
+                  background: '#E84A0C', color: '#ffffff', border: 'none', cursor: 'pointer',
+                  fontFamily: 'var(--font-body)', fontWeight: 600, fontSize: '11px',
+                  letterSpacing: '0.1em', textTransform: 'uppercase',
+                  display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+                  opacity: !date || !time || !address.trim() ? 0.4 : 1,
+                  transition: 'background 0.2s',
+                }}
+                onMouseEnter={e => { if (date && time && address.trim()) e.currentTarget.style.background = '#C53D08' }}
+                onMouseLeave={e => { if (date && time && address.trim()) e.currentTarget.style.background = '#E84A0C' }}
+              >
+                Next: Your Details
+                <span style={{ width: 5, height: 5, borderRadius: '50%', background: 'rgba(255,255,255,0.5)' }} />
+              </button>
+            )}
+
+            {/* Step 3 → submit */}
+            {step === 3 && (
+              <button
+                type="submit"
+                form="step3-form"
+                disabled={submitting}
+                className={submitting ? '' : ''}
+                style={{
+                  flex: 1, padding: '15px 24px',
+                  background: '#E84A0C', color: '#ffffff', border: 'none', cursor: 'pointer',
+                  fontFamily: 'var(--font-body)', fontWeight: 600, fontSize: '11px',
+                  letterSpacing: '0.1em', textTransform: 'uppercase',
+                  display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '10px',
+                  opacity: submitting ? 0.7 : 1,
+                  transition: 'background 0.2s',
+                }}
+                onMouseEnter={e => { if (!submitting) e.currentTarget.style.background = '#C53D08' }}
+                onMouseLeave={e => { if (!submitting) e.currentTarget.style.background = '#E84A0C' }}
+              >
+                {submitting ? (
+                  <>
+                    <span
+                      className="animate-spin"
+                      style={{
+                        width: 14, height: 14, border: '2px solid rgba(255,255,255,0.3)',
+                        borderTopColor: 'white', borderRadius: '50%', display: 'inline-block',
+                      }}
+                    />
+                    Sending...
+                  </>
+                ) : 'Confirm Booking'}
+              </button>
+            )}
+          </div>
+        )}
+      </motion.div>
     </div>
   )
 }

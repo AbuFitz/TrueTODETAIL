@@ -1,35 +1,34 @@
 'use client'
 
-import { motion } from 'framer-motion'
+import { motion, AnimatePresence } from 'framer-motion'
 import Image from 'next/image'
+import { useState, useEffect } from 'react'
 
 const ease = [0.22, 1, 0.36, 1] as [number, number, number, number]
 
-const TICKER = [
-  'Mobile Service', 'Fixed Pricing', 'Hertfordshire', 'No Drop-Off',
-  'Ceramic Coating', 'Book Online', 'We Come To You', 'Professional Grade',
-]
-
-const STATS = [
-  { val: '100%', label: 'Mobile\nService'    },
-  { val: '£0',   label: 'Hidden\nCharges'   },
-  { val: '2YR',  label: 'Ceramic\nWarranty' },
-]
-
 /*
-  DIAGONAL CONSTANTS — shared between the dark panel clip-path and orange stripe.
-  Top edge of diagonal: 58% from left.
-  Bottom edge of diagonal: 38% from left.
-  Both use the same two anchor points so they align perfectly.
+  Headline words cycle slowly — DETAIL is the anchor, then three alternatives.
+  Each word stays on screen for 3.5 seconds before crossfading.
 */
-const D_TOP = 58   // % from left at the top
-const D_BOT = 38   // % from left at the bottom
+const HEADLINE_WORDS = ['DETAIL', 'CLEAN', 'PERFECT', 'FLAWLESS']
+
+/* Diagonal split constants — shared by dark panel + orange stripe */
+const D_TOP = 58
+const D_BOT = 38
 
 export default function Hero({ onBookNow }: { onBookNow: () => void }) {
+  const [wordIdx, setWordIdx] = useState(0)
+
+  useEffect(() => {
+    const id = setInterval(
+      () => setWordIdx(i => (i + 1) % HEADLINE_WORDS.length),
+      3500,
+    )
+    return () => clearInterval(id)
+  }, [])
+
   return (
     <div style={{ paddingTop: '80px' }}>
-
-      {/* ── Main hero — diagonal split layout ── */}
       <section
         style={{
           position: 'relative',
@@ -39,12 +38,7 @@ export default function Hero({ onBookNow }: { onBookNow: () => void }) {
         }}
       >
 
-        {/*
-          ── Layer 0: Car image — full section background ──
-          Covers the entire hero. The dark panel (layer 1) overlays the left portion.
-          objectPosition: shifted right to focus on the car body and remove the person.
-          scale: slight zoom for more impact.
-        */}
+        {/* ── Layer 0: Full-section car image ── */}
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
@@ -59,23 +53,15 @@ export default function Hero({ onBookNow }: { onBookNow: () => void }) {
             sizes="100vw"
             style={{
               objectFit: 'cover',
-              /*
-                Shift right to cut out the person (who is center-left in the photo)
-                and focus on the car body and rear.
-              */
               objectPosition: '72% 55%',
-              transform: 'scale(1.12)',
+              /* Zoomed out — no scale transform */
+              transform: 'scale(1.0)',
               transformOrigin: 'center center',
             }}
           />
         </motion.div>
 
-        {/*
-          ── Layer 1: Dark panel with diagonal right edge ──
-          clip-path polygon cuts the right edge at an angle:
-          top-right corner at ${D_TOP}%, bottom-right corner at ${D_BOT}%.
-          This creates the diagonal line effect seen in the reference.
-        */}
+        {/* ── Layer 1: Dark panel with diagonal right edge ── */}
         <div
           aria-hidden
           style={{
@@ -85,12 +71,7 @@ export default function Hero({ onBookNow }: { onBookNow: () => void }) {
           }}
         />
 
-        {/*
-          ── Layer 2: Orange diagonal stripe ──
-          A thin parallelogram sharing the EXACT same edge points as the dark panel.
-          calc() lets us offset ±1.5px from the edge to create a 3px-wide stripe.
-          No SVG complexity — pure CSS clip-path.
-        */}
+        {/* ── Layer 2: Orange diagonal stripe ── */}
         <div
           aria-hidden
           style={{
@@ -105,12 +86,7 @@ export default function Hero({ onBookNow }: { onBookNow: () => void }) {
           }}
         />
 
-        {/*
-          ── Layer 3: Text content — absolutely positioned on dark panel ──
-          Width constrained to stay within the dark area (left of the diagonal at all heights).
-          Content div is 50% wide — safely within the D_BOT=38% wide bottom of the dark panel
-          since the actual text blocks (maxWidth 320px) are narrower than 38% of any viewport.
-        */}
+        {/* ── Layer 3: Text content ── */}
         <div
           style={{
             position: 'absolute', inset: 0, zIndex: 3,
@@ -121,7 +97,7 @@ export default function Hero({ onBookNow }: { onBookNow: () => void }) {
           }}
         >
 
-          {/* Top label */}
+          {/* Label */}
           <motion.p
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
@@ -135,26 +111,39 @@ export default function Hero({ onBookNow }: { onBookNow: () => void }) {
             True To Detail — Hertfordshire, UK
           </motion.p>
 
-          {/*
-            ── Staircase headline — matching the reference ──
-            DETAIL: flush left, pure white, dominant
-            DONE:   +3vw indent, gray (~44% white)
-            RIGHT.: +8vw indent, lighter gray (~30% white), orange period
-          */}
+          {/* Staircase headline */}
           <motion.div
             initial={{ opacity: 0, y: 28 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 1, delay: 0.08, ease }}
             style={{ pointerEvents: 'none' }}
           >
-            <span style={{
-              fontFamily: 'var(--font-display)',
-              fontSize: 'clamp(80px, 16.5vw, 260px)',
-              letterSpacing: '0.01em', color: '#ffffff',
-              display: 'block', lineHeight: 0.9,
-            }}>
-              DETAIL
-            </span>
+            {/*
+              Cycling word — uses AnimatePresence so the exiting word slides up
+              while the entering word slides up from below.
+              overflow:hidden on the wrapper clips the slide movement cleanly.
+            */}
+            <div style={{ overflow: 'hidden' }}>
+              <AnimatePresence mode="wait">
+                <motion.span
+                  key={HEADLINE_WORDS[wordIdx]}
+                  initial={{ opacity: 0, y: '30%' }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: '-30%' }}
+                  transition={{ duration: 0.55, ease }}
+                  style={{
+                    fontFamily: 'var(--font-display)',
+                    fontSize: 'clamp(80px, 16.5vw, 260px)',
+                    letterSpacing: '0.01em', color: '#ffffff',
+                    display: 'block', lineHeight: 0.9,
+                    whiteSpace: 'nowrap',
+                  }}
+                >
+                  {HEADLINE_WORDS[wordIdx]}
+                </motion.span>
+              </AnimatePresence>
+            </div>
+
             <span style={{
               fontFamily: 'var(--font-display)',
               fontSize: 'clamp(70px, 14.5vw, 228px)',
@@ -164,6 +153,7 @@ export default function Hero({ onBookNow }: { onBookNow: () => void }) {
             }}>
               DONE
             </span>
+
             <span style={{
               fontFamily: 'var(--font-display)',
               fontSize: 'clamp(56px, 11.5vw, 182px)',
@@ -175,7 +165,7 @@ export default function Hero({ onBookNow }: { onBookNow: () => void }) {
             </span>
           </motion.div>
 
-          {/* Bottom: description + CTAs */}
+          {/* Description + CTAs */}
           <motion.div
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
@@ -183,21 +173,26 @@ export default function Hero({ onBookNow }: { onBookNow: () => void }) {
           >
             <p style={{
               fontFamily: 'var(--font-body)', fontSize: 'clamp(13px, 1.3vw, 15px)', lineHeight: 1.78,
-              color: 'rgba(255,255,255,0.38)', maxWidth: '320px', marginBottom: '22px',
+              color: 'rgba(255,255,255,0.38)', maxWidth: '320px', marginBottom: '20px',
             }}>
               Professional mobile detailing straight to your driveway.
               Fixed prices, no drop-off needed, results that speak for themselves.
             </p>
 
-            <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: '16px' }}>
+            {/*
+              Button stretched full-width across the dark panel.
+              Phone number sits below as a secondary action.
+            */}
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
               <button
                 onClick={onBookNow}
                 style={{
                   fontFamily: 'var(--font-body)', fontWeight: 700, fontSize: '11px',
                   letterSpacing: '0.12em', textTransform: 'uppercase',
                   background: '#E84A0C', color: '#fff', border: 'none', cursor: 'pointer',
-                  padding: '15px 28px',
-                  display: 'flex', alignItems: 'center', gap: '10px',
+                  padding: '18px 28px',
+                  display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+                  width: '100%',
                   transition: 'background 0.2s',
                 }}
                 onMouseEnter={e => (e.currentTarget.style.background = '#C53D08')}
@@ -206,6 +201,7 @@ export default function Hero({ onBookNow }: { onBookNow: () => void }) {
                 Book Your Detail
                 <span style={{ width: 5, height: 5, borderRadius: '50%', background: 'rgba(255,255,255,0.6)', flexShrink: 0 }} />
               </button>
+
               <a
                 href="tel:+447984237149"
                 style={{
@@ -222,75 +218,7 @@ export default function Hero({ onBookNow }: { onBookNow: () => void }) {
           </motion.div>
 
         </div>
-
-        {/*
-          ── Layer 4: Stats overlay — bottom-right of image ──
-          Dark gradient scrim rises from the bottom.
-          Stats sit on top, right-aligned.
-        */}
-        <motion.div
-          initial={{ opacity: 0, y: 12 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.7, delay: 0.5, ease }}
-          style={{
-            position: 'absolute', bottom: 0, right: 0, left: 0, zIndex: 4,
-            background: 'linear-gradient(to top, rgba(12,12,12,0.88) 0%, rgba(12,12,12,0.45) 55%, transparent 100%)',
-            padding: 'clamp(40px, 6vw, 80px) clamp(24px, 3.5vw, 52px) clamp(18px, 2.2vw, 28px)',
-            display: 'flex', alignItems: 'flex-end', justifyContent: 'flex-end',
-            gap: 'clamp(28px, 5vw, 72px)',
-            pointerEvents: 'none',
-          }}
-        >
-          {STATS.map((s) => (
-            <div key={s.val} style={{ textAlign: 'right' }}>
-              <div style={{
-                fontFamily: 'var(--font-display)',
-                fontSize: 'clamp(32px, 4.5vw, 68px)',
-                letterSpacing: '0.03em', color: '#ffffff', lineHeight: 1,
-              }}>
-                {s.val}
-              </div>
-              <div style={{
-                fontFamily: 'var(--font-body)', fontWeight: 600,
-                fontSize: 'clamp(7px, 0.85vw, 10px)',
-                letterSpacing: '0.18em', textTransform: 'uppercase',
-                color: 'rgba(255,255,255,0.38)',
-                whiteSpace: 'pre-line', lineHeight: 1.4, marginTop: '5px',
-              }}>
-                {s.label}
-              </div>
-            </div>
-          ))}
-        </motion.div>
-
       </section>
-
-      {/* ── Ticker strip — warm band bridging hero to light sections ── */}
-      <div style={{
-        background: '#F5F4F1',
-        borderBottom: '1px solid rgba(12,12,12,0.07)',
-        padding: '11px 0',
-        overflow: 'hidden',
-      }}>
-        <div className="animate-marquee" style={{ display: 'flex', whiteSpace: 'nowrap', userSelect: 'none' }}>
-          {[...TICKER, ...TICKER].map((item, i) => (
-            <span key={i} style={{ display: 'inline-flex', alignItems: 'center', gap: '20px', margin: '0 24px' }}>
-              <span style={{
-                fontFamily: 'var(--font-body)', fontWeight: 500,
-                color: 'rgba(12,12,12,0.38)',
-                textTransform: 'uppercase', fontSize: '11px', letterSpacing: '0.18em',
-              }}>
-                {item}
-              </span>
-              <span style={{
-                width: 3, height: 3, borderRadius: '50%',
-                background: '#E84A0C', flexShrink: 0, opacity: 0.7,
-              }} />
-            </span>
-          ))}
-        </div>
-      </div>
-
     </div>
   )
 }
