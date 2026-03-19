@@ -26,31 +26,26 @@ export default function Navbar({ onBookNow }: { onBookNow: () => void }) {
   }, [open])
 
   /*
-    Navbar is 80px tall initially.
-    On scroll it stays 80px — only the LOGO shrinks.
-    This keeps layout stable while giving the scroll-shrink effect.
-    Logo: 38px unscrolled → 24px scrolled, smooth transition.
-    Droplet dot scales proportionally.
+    Logo shrinks on scroll: 38px → 22px.
+    Nav bar stays 80px — only the logo scales. No layout shift.
   */
-  const logoSize   = scrolled ? '22px' : '38px'
-  const dotW       = scrolled ? '5px'  : '8px'
-  const dotH       = scrolled ? '7px'  : '12px'
-  const logoGap    = scrolled ? '7px'  : '10px'
+  const logoSize = scrolled ? '22px' : '38px'
+  const dotW     = scrolled ? '5px'  : '8px'
+  const dotH     = scrolled ? '7px'  : '12px'
+  const logoGap  = scrolled ? '7px'  : '10px'
 
   return (
     <>
-      {/* ─── Main nav bar ─── */}
+      {/* ─── Main nav bar — black ─── */}
       <nav
         style={{
           position: 'fixed', top: 0, left: 0, right: 0, zIndex: 50,
           height: '80px',
-          background: '#fff',
-          borderBottom: scrolled
-            ? '1px solid rgba(12,12,12,0.1)'
-            : '1px solid rgba(12,12,12,0.06)',
+          background: '#0C0C0C',
+          borderBottom: '1px solid rgba(255,255,255,0.06)',
           display: 'flex', alignItems: 'center',
-          transition: 'box-shadow 0.35s, border-color 0.35s',
-          boxShadow: scrolled ? '0 2px 32px rgba(12,12,12,0.07)' : 'none',
+          transition: 'box-shadow 0.35s',
+          boxShadow: scrolled ? '0 4px 40px rgba(0,0,0,0.4)' : 'none',
         }}
       >
         <div
@@ -61,7 +56,7 @@ export default function Navbar({ onBookNow }: { onBookNow: () => void }) {
           }}
         >
 
-          {/* Logo — shrinks on scroll via CSS transition */}
+          {/* Logo — white on black, shrinks on scroll */}
           <a
             href="#"
             style={{
@@ -74,15 +69,11 @@ export default function Navbar({ onBookNow }: { onBookNow: () => void }) {
             <span style={{
               fontFamily: 'var(--font-display)',
               fontSize: logoSize,
-              letterSpacing: '0.06em', color: '#0C0C0C', lineHeight: 1,
+              letterSpacing: '0.06em', color: '#ffffff', lineHeight: 1,
               transition: 'font-size 0.45s cubic-bezier(0.22, 1, 0.36, 1)',
             }}>
               TRUE TO
             </span>
-            {/*
-              The orange water-bead droplet — brand mark.
-              Scales down with the logo on scroll.
-            */}
             <span
               aria-hidden
               style={{
@@ -90,15 +81,14 @@ export default function Navbar({ onBookNow }: { onBookNow: () => void }) {
                 width: dotW, height: dotH,
                 background: '#E84A0C',
                 borderRadius: '50% 50% 45% 45% / 55% 55% 45% 45%',
-                flexShrink: 0,
-                marginBottom: '-2px',
+                flexShrink: 0, marginBottom: '-2px',
                 transition: 'width 0.45s cubic-bezier(0.22, 1, 0.36, 1), height 0.45s cubic-bezier(0.22, 1, 0.36, 1)',
               }}
             />
             <span style={{
               fontFamily: 'var(--font-display)',
               fontSize: logoSize,
-              letterSpacing: '0.06em', color: '#0C0C0C', lineHeight: 1,
+              letterSpacing: '0.06em', color: '#ffffff', lineHeight: 1,
               transition: 'font-size 0.45s cubic-bezier(0.22, 1, 0.36, 1)',
             }}>
               DETAIL
@@ -107,10 +97,7 @@ export default function Navbar({ onBookNow }: { onBookNow: () => void }) {
 
           <div style={{ flex: 1 }} />
 
-          {/*
-            Desktop navigation — visible at md+ only.
-            Hamburger below is the mobile-only alternative.
-          */}
+          {/* Desktop nav links — white text on black */}
           <div className="hidden md:flex items-center" style={{ gap: 0 }}>
             {NAV_LINKS.map((l) => (
               <a
@@ -120,7 +107,7 @@ export default function Navbar({ onBookNow }: { onBookNow: () => void }) {
                   position: 'relative',
                   fontFamily: 'var(--font-body)', fontWeight: 500, fontSize: '13px',
                   letterSpacing: '0.04em',
-                  color: hovered === l.label ? '#0C0C0C' : 'rgba(12,12,12,0.42)',
+                  color: hovered === l.label ? '#ffffff' : 'rgba(255,255,255,0.52)',
                   textDecoration: 'none',
                   padding: '0 18px', height: '80px',
                   display: 'flex', alignItems: 'center',
@@ -130,13 +117,12 @@ export default function Navbar({ onBookNow }: { onBookNow: () => void }) {
                 onMouseEnter={() => setHovered(l.label)}
                 onMouseLeave={() => setHovered(null)}
               >
-                {/* Wipe-in underline — left → right on hover, retracts on leave */}
+                {/* Wipe-in orange underline */}
                 <span
                   aria-hidden
                   style={{
                     position: 'absolute',
-                    bottom: '20px',
-                    left: '18px', right: '18px',
+                    bottom: '20px', left: '18px', right: '18px',
                     height: '1.5px',
                     background: '#E84A0C',
                     transformOrigin: 'left center',
@@ -153,27 +139,27 @@ export default function Navbar({ onBookNow }: { onBookNow: () => void }) {
 
             <span style={{
               display: 'block', width: 1, height: 20,
-              background: 'rgba(12,12,12,0.1)',
+              background: 'rgba(255,255,255,0.1)',
               margin: '0 14px', flexShrink: 0,
             }} />
 
             <button
               onClick={onBookNow}
               style={{
-                fontFamily: 'var(--font-body)', fontWeight: 600, fontSize: '12px',
-                letterSpacing: '0.09em', textTransform: 'uppercase',
-                background: '#0C0C0C', color: '#fff', border: 'none',
+                fontFamily: 'var(--font-body)', fontWeight: 700, fontSize: '12px',
+                letterSpacing: '0.1em', textTransform: 'uppercase',
+                background: '#E84A0C', color: '#fff', border: 'none',
                 padding: '12px 26px', cursor: 'pointer', flexShrink: 0,
                 transition: 'background 0.2s',
               }}
-              onMouseEnter={e => (e.currentTarget.style.background = '#E84A0C')}
-              onMouseLeave={e => (e.currentTarget.style.background = '#0C0C0C')}
+              onMouseEnter={e => (e.currentTarget.style.background = '#C53D08')}
+              onMouseLeave={e => (e.currentTarget.style.background = '#E84A0C')}
             >
               Book Now
             </button>
           </div>
 
-          {/* Mobile hamburger — md:hidden keeps it off desktop */}
+          {/* Mobile hamburger — white bars on black nav */}
           <button
             className="md:hidden"
             onClick={() => setOpen(!open)}
@@ -188,7 +174,7 @@ export default function Navbar({ onBookNow }: { onBookNow: () => void }) {
               <span
                 key={j}
                 style={{
-                  height: '1.5px', background: '#0C0C0C', display: 'block',
+                  height: '1.5px', background: '#ffffff', display: 'block',
                   width: j === 1 ? '16px' : '24px',
                   transformOrigin: 'center',
                   transition: 'all 0.28s',
@@ -207,7 +193,7 @@ export default function Navbar({ onBookNow }: { onBookNow: () => void }) {
         </div>
       </nav>
 
-      {/* ─── Mobile full-screen menu ─── */}
+      {/* ─── Mobile overlay menu ─── */}
       <div
         style={{
           position: 'fixed', inset: 0, zIndex: 40,
@@ -266,7 +252,7 @@ export default function Navbar({ onBookNow }: { onBookNow: () => void }) {
             onClick={() => { setOpen(false); onBookNow() }}
             style={{
               width: '100%',
-              fontFamily: 'var(--font-body)', fontWeight: 600, fontSize: '12px',
+              fontFamily: 'var(--font-body)', fontWeight: 700, fontSize: '12px',
               letterSpacing: '0.1em', textTransform: 'uppercase',
               background: '#E84A0C', color: 'white', border: 'none', cursor: 'pointer',
               padding: '16px 24px',
