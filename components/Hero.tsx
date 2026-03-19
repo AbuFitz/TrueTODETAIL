@@ -11,36 +11,37 @@ const TICKER = [
 ]
 
 const QUICK_STATS = [
-  { val: '100%',  label: 'Fully Mobile' },
-  { val: '£0',    label: 'Hidden Charges' },
+  { val: '100%',  label: 'Fully Mobile'     },
+  { val: '£0',    label: 'Hidden Charges'   },
   { val: '2 YR',  label: 'Ceramic Warranty' },
-  { val: '5★',    label: 'Rated Service' },
+  { val: '5★',    label: 'Rated Service'    },
 ]
 
 export default function Hero({ onBookNow }: { onBookNow: () => void }) {
   return (
-    <div style={{ paddingTop: '68px' }}>
+    <div style={{ paddingTop: '72px' }}>
 
-      {/* ── Main hero ── */}
+      {/* ── Main hero — dark left panel + car image right ── */}
       <section
         style={{
           position: 'relative',
           display: 'flex',
-          minHeight: 'calc(100vh - 68px)',
-          background: '#fff',
+          minHeight: 'calc(100vh - 72px)',
+          background: '#0C0C0C',
           overflow: 'hidden',
         }}
       >
 
-        {/* ── Left: content ── */}
+        {/* ── Left: dark content panel ── */}
         <div
           style={{
-            flex: '0 0 54%',
+            flex: '0 0 52%',
             display: 'flex',
             flexDirection: 'column',
             justifyContent: 'space-between',
             padding: 'clamp(36px, 5vw, 72px)',
             paddingLeft: 'clamp(24px, 4.5vw, 72px)',
+            background: '#0C0C0C',
           }}
         >
 
@@ -52,13 +53,19 @@ export default function Hero({ onBookNow }: { onBookNow: () => void }) {
             style={{
               fontFamily: 'var(--font-body)', fontSize: '11px', fontWeight: 600,
               letterSpacing: '0.2em', textTransform: 'uppercase',
-              color: 'rgba(12,12,12,0.35)',
+              color: 'rgba(255,255,255,0.25)',
             }}
           >
             Mobile Detailing · Hertfordshire, UK
           </motion.p>
 
-          {/* Staircase headline — on white, this is iconic */}
+          {/*
+            Staircase headline on dark.
+            DETAIL — full white, dominant.
+            DONE — faded white, recedes.
+            RIGHT. — even more faded, with orange full-stop as the brand punctuation.
+            The staircase mirrors the precision layering of detailing work.
+          */}
           <motion.div
             initial={{ opacity: 0, y: 32 }}
             animate={{ opacity: 1, y: 0 }}
@@ -68,33 +75,33 @@ export default function Hero({ onBookNow }: { onBookNow: () => void }) {
             <div>
               <span style={{
                 fontFamily: 'var(--font-display)',
-                fontSize: 'clamp(80px, 18vw, 260px)',
+                fontSize: 'clamp(76px, 16vw, 240px)',
                 letterSpacing: '0.02em',
-                color: '#0C0C0C',
+                color: '#ffffff',
                 display: 'block',
                 lineHeight: 0.86,
               }}>
                 DETAIL
               </span>
             </div>
-            <div style={{ paddingLeft: 'clamp(20px, 6vw, 88px)' }}>
+            <div style={{ paddingLeft: 'clamp(16px, 5vw, 72px)' }}>
               <span style={{
                 fontFamily: 'var(--font-display)',
-                fontSize: 'clamp(58px, 13vw, 192px)',
+                fontSize: 'clamp(54px, 11.5vw, 178px)',
                 letterSpacing: '0.02em',
-                color: 'rgba(12,12,12,0.22)',
+                color: 'rgba(255,255,255,0.18)',
                 display: 'block',
                 lineHeight: 0.86,
               }}>
                 DONE
               </span>
             </div>
-            <div style={{ paddingLeft: 'clamp(40px, 12vw, 176px)' }}>
+            <div style={{ paddingLeft: 'clamp(32px, 10vw, 144px)' }}>
               <span style={{
                 fontFamily: 'var(--font-display)',
-                fontSize: 'clamp(40px, 9vw, 128px)',
+                fontSize: 'clamp(38px, 8.5vw, 118px)',
                 letterSpacing: '0.02em',
-                color: 'rgba(12,12,12,0.14)',
+                color: 'rgba(255,255,255,0.10)',
                 display: 'block',
                 lineHeight: 0.86,
               }}>
@@ -109,15 +116,15 @@ export default function Hero({ onBookNow }: { onBookNow: () => void }) {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.7, delay: 0.3, ease }}
           >
-            {/* Thin top rule */}
+            {/* Orange rule — like a pinstripe */}
             <div style={{
-              width: '40px', height: '1px',
+              width: '40px', height: '2px',
               background: '#E84A0C', marginBottom: '20px',
             }} />
 
             <p style={{
               fontFamily: 'var(--font-body)', fontSize: '15px', lineHeight: 1.78,
-              color: 'rgba(12,12,12,0.48)', maxWidth: '340px', marginBottom: '28px',
+              color: 'rgba(255,255,255,0.38)', maxWidth: '340px', marginBottom: '28px',
             }}>
               Professional mobile detailing straight to your driveway.
               Fixed prices, no drop-off, results you&apos;ll notice immediately.
@@ -129,13 +136,13 @@ export default function Hero({ onBookNow }: { onBookNow: () => void }) {
                 style={{
                   fontFamily: 'var(--font-body)', fontWeight: 600, fontSize: '12px',
                   letterSpacing: '0.09em', textTransform: 'uppercase',
-                  background: '#0C0C0C', color: '#fff', border: 'none', cursor: 'pointer',
+                  background: '#E84A0C', color: '#fff', border: 'none', cursor: 'pointer',
                   padding: '14px 28px',
                   display: 'flex', alignItems: 'center', gap: '12px',
                   transition: 'background 0.2s',
                 }}
-                onMouseEnter={e => (e.currentTarget.style.background = '#E84A0C')}
-                onMouseLeave={e => (e.currentTarget.style.background = '#0C0C0C')}
+                onMouseEnter={e => (e.currentTarget.style.background = '#C53D08')}
+                onMouseLeave={e => (e.currentTarget.style.background = '#E84A0C')}
               >
                 Book Your Detail
                 <span style={{ width: 5, height: 5, borderRadius: '50%', background: 'rgba(255,255,255,0.5)', flexShrink: 0 }} />
@@ -144,12 +151,12 @@ export default function Hero({ onBookNow }: { onBookNow: () => void }) {
                 href="tel:+447984237149"
                 style={{
                   fontFamily: 'var(--font-body)', fontWeight: 500, fontSize: '13px',
-                  color: 'rgba(12,12,12,0.35)', textDecoration: 'none',
+                  color: 'rgba(255,255,255,0.3)', textDecoration: 'none',
                   letterSpacing: '0.02em',
                   transition: 'color 0.2s',
                 }}
-                onMouseEnter={e => (e.currentTarget.style.color = '#0C0C0C')}
-                onMouseLeave={e => (e.currentTarget.style.color = 'rgba(12,12,12,0.35)')}
+                onMouseEnter={e => (e.currentTarget.style.color = 'rgba(255,255,255,0.75)')}
+                onMouseLeave={e => (e.currentTarget.style.color = 'rgba(255,255,255,0.3)')}
               >
                 07984 237149
               </a>
@@ -160,15 +167,14 @@ export default function Hero({ onBookNow }: { onBookNow: () => void }) {
 
         {/*
           ── Orange separator ──
-          A precise 3px vertical stripe between the content
-          and the image. Like a detailing pin stripe on a car.
+          3px vertical stripe. Automotive pinstripe — precise and intentional.
+          On the dark hero, this becomes even more striking.
         */}
         <div style={{ width: '3px', background: '#E84A0C', flexShrink: 0, alignSelf: 'stretch' }} />
 
         {/*
           ── Right: car image flush to viewport edge ──
-          No padding, no border, no overlay. The image is
-          a clean window into the work.
+          No overlay, no text. A clean window into the craft.
         */}
         <motion.div
           initial={{ opacity: 0 }}
@@ -181,7 +187,7 @@ export default function Hero({ onBookNow }: { onBookNow: () => void }) {
             alt="Premium car detailing"
             fill
             priority
-            sizes="46vw"
+            sizes="48vw"
             style={{ objectFit: 'cover', objectPosition: 'center' }}
           />
         </motion.div>
@@ -190,12 +196,11 @@ export default function Hero({ onBookNow }: { onBookNow: () => void }) {
 
       {/*
         ── Quick stats strip ──
-        4 key facts in a horizontal band immediately below the hero.
-        Clean, precise, like an automotive specification plate.
-        Dark background creates contrast with the white hero.
+        Specification plate. Dark, seamless from the hero.
+        3px orange top border anchors the colour.
       */}
       <div style={{
-        background: '#0C0C0C',
+        background: '#111111',
         borderTop: '3px solid #E84A0C',
       }}>
         <div style={{
@@ -206,8 +211,8 @@ export default function Hero({ onBookNow }: { onBookNow: () => void }) {
             <div
               key={s.val}
               style={{
-                padding: 'clamp(16px, 2vw, 24px) clamp(20px, 3vw, 40px)',
-                borderRight: i < 3 ? '1px solid rgba(255,255,255,0.07)' : 'none',
+                padding: 'clamp(18px, 2.2vw, 28px) clamp(20px, 3vw, 40px)',
+                borderRight: i < 3 ? '1px solid rgba(255,255,255,0.06)' : 'none',
                 display: 'flex', alignItems: 'center', gap: '14px',
               }}
             >
@@ -222,7 +227,7 @@ export default function Hero({ onBookNow }: { onBookNow: () => void }) {
               <span style={{
                 fontFamily: 'var(--font-body)', fontWeight: 500, fontSize: '11px',
                 letterSpacing: '0.12em', textTransform: 'uppercase',
-                color: 'rgba(255,255,255,0.3)', lineHeight: 1.3,
+                color: 'rgba(255,255,255,0.28)', lineHeight: 1.3,
               }}>
                 {s.label}
               </span>
@@ -232,13 +237,13 @@ export default function Hero({ onBookNow }: { onBookNow: () => void }) {
       </div>
 
       {/*
-        ── Ticker strip ──
-        Moving credential band. White on near-black, deliberate pace.
+        ── Ticker ──
+        Warm band — bridges dark hero into the white sections below.
       */}
       <div style={{
         background: '#F5F4F1',
         borderBottom: '1px solid rgba(12,12,12,0.07)',
-        padding: '12px 0',
+        padding: '11px 0',
         overflow: 'hidden',
       }}>
         <div className="animate-marquee" style={{ display: 'flex', whiteSpace: 'nowrap', userSelect: 'none' }}>

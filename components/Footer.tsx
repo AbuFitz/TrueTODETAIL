@@ -22,26 +22,26 @@ export default function Footer({ onBookNow }: { onBookNow: () => void }) {
         <div>
           <a
             href="#"
-            style={{ textDecoration: 'none', display: 'inline-flex', alignItems: 'center', gap: '7px', marginBottom: '18px' }}
+            style={{ textDecoration: 'none', display: 'inline-flex', alignItems: 'center', gap: '9px', marginBottom: '18px' }}
           >
             <span style={{
-              fontFamily: 'var(--font-display)', fontSize: '18px',
-              letterSpacing: '0.07em', color: '#0C0C0C',
+              fontFamily: 'var(--font-display)', fontSize: '32px',
+              letterSpacing: '0.06em', color: '#0C0C0C',
             }}>
               TRUE TO
             </span>
             <span
               aria-hidden
               style={{
-                display: 'inline-block', width: '5px', height: '7px',
+                display: 'inline-block', width: '7px', height: '10px',
                 background: '#E84A0C',
                 borderRadius: '50% 50% 45% 45% / 55% 55% 45% 45%',
-                flexShrink: 0, marginBottom: '-1px',
+                flexShrink: 0, marginBottom: '-2px',
               }}
             />
             <span style={{
-              fontFamily: 'var(--font-display)', fontSize: '18px',
-              letterSpacing: '0.07em', color: '#0C0C0C',
+              fontFamily: 'var(--font-display)', fontSize: '32px',
+              letterSpacing: '0.06em', color: '#0C0C0C',
             }}>
               DETAIL
             </span>

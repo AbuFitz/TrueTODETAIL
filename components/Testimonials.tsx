@@ -26,25 +26,53 @@ export default function Testimonials() {
   return (
     <section
       style={{
-        background: '#F5F4F1',
+        background: '#fff',
         paddingTop:    'clamp(64px, 10vw, 140px)',
         paddingBottom: 'clamp(64px, 10vw, 140px)',
       }}
     >
       <div style={{ maxWidth: '1400px', margin: '0 auto', padding: '0 clamp(24px, 5vw, 72px)' }}>
 
-        {/* Section label */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: 'clamp(40px, 5vw, 64px)' }}>
-          <span style={{ width: 20, height: '1.5px', background: '#E84A0C', flexShrink: 0 }} />
-          <span style={{
-            fontFamily: 'var(--font-body)', fontWeight: 600, fontSize: '11px',
-            letterSpacing: '0.2em', textTransform: 'uppercase', color: 'rgba(12,12,12,0.35)',
-          }}>
-            What Clients Say
-          </span>
-        </div>
+        {/* Header: label + big display headline */}
+        <motion.div
+          initial={{ opacity: 0, y: 16 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.7, ease }}
+          style={{ marginBottom: 'clamp(40px, 6vw, 80px)' }}
+        >
+          <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '20px' }}>
+            <span style={{ width: 20, height: '1.5px', background: '#E84A0C', flexShrink: 0 }} />
+            <span style={{
+              fontFamily: 'var(--font-body)', fontWeight: 600, fontSize: '11px',
+              letterSpacing: '0.2em', textTransform: 'uppercase', color: 'rgba(12,12,12,0.35)',
+            }}>
+              What Clients Say
+            </span>
+          </div>
 
-        {/* 3 review cards */}
+          <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'flex-end', justifyContent: 'space-between', gap: '20px' }}>
+            <h2 style={{
+              fontFamily: 'var(--font-display)',
+              fontSize: 'clamp(52px, 7.5vw, 104px)',
+              letterSpacing: '0.025em',
+              color: '#0C0C0C', lineHeight: 0.88,
+            }}>
+              TRUSTED<br />RESULTS<span style={{ color: '#E84A0C' }}>.</span>
+            </h2>
+            <p style={{
+              fontFamily: 'var(--font-body)', fontSize: '14px', lineHeight: 1.75,
+              color: 'rgba(12,12,12,0.42)', maxWidth: '260px',
+            }}>
+              100% mobile. Every review earned on a customer&apos;s driveway. No studio, no tricks.
+            </p>
+          </div>
+        </motion.div>
+
+        {/*
+          3 review cards using the 1px gap border trick.
+          Background bleeds through the gaps to create seamless hairline borders.
+        */}
         <div
           style={{
             display: 'grid',
@@ -64,13 +92,10 @@ export default function Testimonials() {
               style={{
                 background: '#fff',
                 padding: 'clamp(28px, 3vw, 44px)',
-                display: 'flex', flexDirection: 'column', gap: '0',
+                display: 'flex', flexDirection: 'column',
               }}
             >
-              {/*
-                5 water-bead shaped dots as rating.
-                The same design language as the rest of the site.
-              */}
+              {/* 5 water-bead rating dots */}
               <div style={{ display: 'flex', gap: '5px', marginBottom: '24px' }}>
                 {Array.from({ length: 5 }).map((_, d) => (
                   <span
@@ -89,7 +114,7 @@ export default function Testimonials() {
               {/* Quote */}
               <p style={{
                 fontFamily: 'var(--font-body)', fontSize: '15px', lineHeight: 1.78,
-                color: 'rgba(12,12,12,0.62)',
+                color: 'rgba(12,12,12,0.6)',
                 flex: 1,
                 marginBottom: '28px',
               }}>
@@ -100,14 +125,13 @@ export default function Testimonials() {
               <div style={{ borderTop: '1px solid rgba(12,12,12,0.07)', paddingTop: '18px' }}>
                 <p style={{
                   fontFamily: 'var(--font-body)', fontWeight: 600, fontSize: '14px',
-                  color: '#0C0C0C', letterSpacing: '0.01em',
+                  color: '#0C0C0C',
                 }}>
                   {r.name}
                 </p>
                 <p style={{
                   fontFamily: 'var(--font-body)', fontSize: '12px',
                   color: 'rgba(12,12,12,0.35)', marginTop: '3px',
-                  letterSpacing: '0.01em',
                 }}>
                   {r.vehicle}
                 </p>

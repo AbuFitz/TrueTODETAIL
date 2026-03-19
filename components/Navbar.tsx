@@ -31,12 +31,12 @@ export default function Navbar({ onBookNow }: { onBookNow: () => void }) {
       <nav
         style={{
           position: 'fixed', top: 0, left: 0, right: 0, zIndex: 50,
-          height: '68px',
+          height: '72px',
           background: '#fff',
           borderBottom: '1px solid rgba(12,12,12,0.08)',
           display: 'flex', alignItems: 'center',
           transition: 'box-shadow 0.35s',
-          boxShadow: scrolled ? '0 2px 24px rgba(12,12,12,0.06)' : 'none',
+          boxShadow: scrolled ? '0 2px 32px rgba(12,12,12,0.07)' : 'none',
         }}
       >
         <div
@@ -52,32 +52,28 @@ export default function Navbar({ onBookNow }: { onBookNow: () => void }) {
             href="#"
             style={{
               textDecoration: 'none', flexShrink: 0,
-              display: 'flex', alignItems: 'center', gap: '7px',
+              display: 'flex', alignItems: 'center', gap: '8px',
             }}
           >
             <span style={{
-              fontFamily: 'var(--font-display)', fontSize: '20px',
+              fontFamily: 'var(--font-display)', fontSize: '28px',
               letterSpacing: '0.06em', color: '#0C0C0C', lineHeight: 1,
             }}>
               TRUE TO
             </span>
-            {/*
-              The orange droplet — a water bead resting on the nav surface.
-              Connects the water / detailing theme without gimmickry.
-            */}
             <span
               aria-hidden
               style={{
                 display: 'inline-block',
-                width: '5px', height: '8px',
+                width: '6px', height: '9px',
                 background: '#E84A0C',
                 borderRadius: '50% 50% 45% 45% / 55% 55% 45% 45%',
                 flexShrink: 0,
-                marginBottom: '-1px',
+                marginBottom: '-2px',
               }}
             />
             <span style={{
-              fontFamily: 'var(--font-display)', fontSize: '20px',
+              fontFamily: 'var(--font-display)', fontSize: '28px',
               letterSpacing: '0.06em', color: '#0C0C0C', lineHeight: 1,
             }}>
               DETAIL
@@ -86,7 +82,10 @@ export default function Navbar({ onBookNow }: { onBookNow: () => void }) {
 
           <div style={{ flex: 1 }} />
 
-          {/* Desktop links */}
+          {/*
+            Desktop navigation links — only visible at md+ (≥768px).
+            The hamburger below is the inverse: only visible below md.
+          */}
           <div className="hidden md:flex items-center" style={{ gap: 0 }}>
             {NAV_LINKS.map((l) => (
               <a
@@ -98,7 +97,7 @@ export default function Navbar({ onBookNow }: { onBookNow: () => void }) {
                   letterSpacing: '0.04em',
                   color: hovered === l.label ? '#0C0C0C' : 'rgba(12,12,12,0.42)',
                   textDecoration: 'none',
-                  padding: '0 18px', height: '68px',
+                  padding: '0 18px', height: '72px',
                   display: 'flex', alignItems: 'center',
                   transition: 'color 0.2s',
                   flexShrink: 0,
@@ -106,16 +105,12 @@ export default function Navbar({ onBookNow }: { onBookNow: () => void }) {
                 onMouseEnter={() => setHovered(l.label)}
                 onMouseLeave={() => setHovered(null)}
               >
-                {/*
-                  The "wipe" underline — mirrors the detailing motion.
-                  Sweeps in from left to right on hover, then retracts left-to-right on leave.
-                  scaleX(0→1) with transform-origin: left. Precise, intentional.
-                */}
+                {/* Wipe-in underline — sweeps left → right on hover */}
                 <span
                   aria-hidden
                   style={{
                     position: 'absolute',
-                    bottom: '16px',
+                    bottom: '17px',
                     left: '18px', right: '18px',
                     height: '1.5px',
                     background: '#E84A0C',
@@ -144,7 +139,7 @@ export default function Navbar({ onBookNow }: { onBookNow: () => void }) {
                 fontFamily: 'var(--font-body)', fontWeight: 600, fontSize: '12px',
                 letterSpacing: '0.09em', textTransform: 'uppercase',
                 background: '#0C0C0C', color: '#fff', border: 'none',
-                padding: '11px 24px', cursor: 'pointer', flexShrink: 0,
+                padding: '12px 26px', cursor: 'pointer', flexShrink: 0,
                 transition: 'background 0.2s',
               }}
               onMouseEnter={e => (e.currentTarget.style.background = '#E84A0C')}
@@ -154,7 +149,10 @@ export default function Navbar({ onBookNow }: { onBookNow: () => void }) {
             </button>
           </div>
 
-          {/* Mobile hamburger */}
+          {/*
+            Mobile hamburger — ONLY visible below md (768px).
+            className="md:hidden" hides this on desktop.
+          */}
           <button
             className="md:hidden"
             onClick={() => setOpen(!open)}
@@ -189,15 +187,11 @@ export default function Navbar({ onBookNow }: { onBookNow: () => void }) {
       </nav>
 
       {/* ─── Mobile full-screen menu ─── */}
-      {/*
-        On mobile, the menu opens dark. The contrast from white → dark
-        gives the open animation more drama without any extra effort.
-      */}
       <div
         style={{
           position: 'fixed', inset: 0, zIndex: 40,
           background: '#0C0C0C',
-          paddingTop: '68px',
+          paddingTop: '72px',
           display: 'flex', flexDirection: 'column',
           opacity: open ? 1 : 0,
           pointerEvents: open ? 'auto' : 'none',

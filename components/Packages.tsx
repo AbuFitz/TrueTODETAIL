@@ -6,9 +6,9 @@ import { motion } from 'framer-motion'
 type VehicleType = 'hatchback' | 'suv' | 'prestige'
 
 const VEHICLES: { key: VehicleType; label: string; sub: string }[] = [
-  { key: 'hatchback', label: 'Hatchback', sub: '/ Saloon'  },
-  { key: 'suv',       label: 'SUV',       sub: '/ 4×4'     },
-  { key: 'prestige',  label: 'Sports',    sub: '/ Prestige' },
+  { key: 'hatchback', label: 'Hatchback', sub: '/ Saloon'   },
+  { key: 'suv',       label: 'SUV',       sub: '/ 4×4'      },
+  { key: 'prestige',  label: 'Sports',    sub: '/ Prestige'  },
 ]
 
 interface Pkg {
@@ -61,7 +61,12 @@ export default function Packages({
     <section
       id="packages"
       style={{
-        background: '#fff',
+        /*
+          Dark background — packages on near-black creates a premium editorial feel.
+          The featured (white) card contrasts sharply. The dark section also
+          separates cleanly from the white Stats section before it.
+        */
+        background: '#0C0C0C',
         paddingTop:    'clamp(64px, 10vw, 140px)',
         paddingBottom: 'clamp(64px, 10vw, 140px)',
       }}
@@ -86,7 +91,7 @@ export default function Packages({
               <span style={{ width: 20, height: '1.5px', background: '#E84A0C', flexShrink: 0 }} />
               <span style={{
                 fontFamily: 'var(--font-body)', fontWeight: 600, fontSize: '11px',
-                letterSpacing: '0.2em', textTransform: 'uppercase', color: 'rgba(12,12,12,0.35)',
+                letterSpacing: '0.2em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.28)',
               }}>
                 Packages
               </span>
@@ -95,7 +100,7 @@ export default function Packages({
               fontFamily: 'var(--font-display)',
               fontSize: 'clamp(52px, 7.5vw, 104px)',
               letterSpacing: '0.025em',
-              color: '#0C0C0C', lineHeight: 0.88,
+              color: '#ffffff', lineHeight: 0.88,
             }}>
               PICK YOUR<br />
               LEVEL OF <span style={{ color: '#E84A0C' }}>CLEAN.</span>
@@ -106,17 +111,13 @@ export default function Packages({
           <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: '12px' }}>
             <p style={{
               fontFamily: 'var(--font-body)', fontSize: '13px',
-              color: 'rgba(12,12,12,0.42)', textAlign: 'right', maxWidth: '220px', lineHeight: 1.6,
+              color: 'rgba(255,255,255,0.3)', textAlign: 'right', maxWidth: '220px', lineHeight: 1.6,
             }}>
               Select your vehicle type — prices update instantly.
             </p>
-            {/*
-              Vehicle tabs — sharp corners, no radius.
-              Clean, precise selector like a model configurator.
-            */}
             <div style={{
               display: 'inline-flex',
-              border: '1px solid rgba(12,12,12,0.12)',
+              border: '1px solid rgba(255,255,255,0.12)',
             }}>
               {VEHICLES.map(({ key, label, sub }) => (
                 <button
@@ -124,9 +125,9 @@ export default function Packages({
                   onClick={() => setVehicle(key)}
                   style={{
                     padding: '11px 18px',
-                    background: vehicle === key ? '#0C0C0C' : 'transparent',
+                    background: vehicle === key ? '#fff' : 'transparent',
                     cursor: 'pointer', border: 'none',
-                    borderRight: key !== 'prestige' ? '1px solid rgba(12,12,12,0.12)' : 'none',
+                    borderRight: key !== 'prestige' ? '1px solid rgba(255,255,255,0.12)' : 'none',
                     transition: 'background 0.15s',
                   }}
                 >
@@ -134,7 +135,7 @@ export default function Packages({
                     display: 'block',
                     fontFamily: 'var(--font-body)', fontWeight: 600, fontSize: '12px',
                     letterSpacing: '0.04em', textTransform: 'uppercase', lineHeight: 1,
-                    color: vehicle === key ? 'white' : 'rgba(12,12,12,0.5)',
+                    color: vehicle === key ? '#0C0C0C' : 'rgba(255,255,255,0.45)',
                     transition: 'color 0.15s',
                   }}>
                     {label}
@@ -142,7 +143,7 @@ export default function Packages({
                   <span style={{
                     display: 'block', marginTop: '3px',
                     fontFamily: 'var(--font-body)', fontSize: '10px', lineHeight: 1,
-                    color: vehicle === key ? 'rgba(255,255,255,0.4)' : 'rgba(12,12,12,0.28)',
+                    color: vehicle === key ? 'rgba(12,12,12,0.4)' : 'rgba(255,255,255,0.22)',
                     transition: 'color 0.15s',
                   }}>
                     {sub}
@@ -155,17 +156,16 @@ export default function Packages({
 
         {/*
           Package cards grid.
-          The PRICE is the visual hero element on each card — large, confident,
-          unapologetic. This is how premium services display pricing.
-          Sharp corners throughout. No shadows on standard cards.
-          Featured card (Premium) is black — the single high-contrast card in the row.
+          On the dark background:
+          — Standard cards: #191919 (slightly lifted dark)
+          — Featured card: pure WHITE — the inversion is striking and draws the eye instantly.
+          No gap; border trick for seamless seams.
         */}
         <div
           style={{
             display: 'grid',
             gridTemplateColumns: 'repeat(4, 1fr)',
-            border: '1px solid rgba(12,12,12,0.1)',
-            /* Gap via border trick — cleaner than gap with individual borders */
+            border: '1px solid rgba(255,255,255,0.07)',
             borderRight: 'none',
             borderBottom: 'none',
           }}
@@ -181,10 +181,9 @@ export default function Packages({
               style={{
                 position: 'relative',
                 display: 'flex', flexDirection: 'column',
-                borderRight: '1px solid rgba(12,12,12,0.1)',
-                borderBottom: '1px solid rgba(12,12,12,0.1)',
-                background: pkg.featured ? '#0C0C0C' : '#fff',
-                /* Featured lifts slightly */
+                borderRight: '1px solid rgba(255,255,255,0.07)',
+                borderBottom: '1px solid rgba(255,255,255,0.07)',
+                background: pkg.featured ? '#ffffff' : '#141414',
                 marginTop: pkg.featured ? '-1px' : 0,
                 zIndex: pkg.featured ? 2 : 1,
               }}
@@ -215,8 +214,8 @@ export default function Packages({
                   <span style={{
                     fontFamily: 'var(--font-body)', fontWeight: 600, fontSize: '10px',
                     letterSpacing: '0.1em', textTransform: 'uppercase',
-                    color: pkg.featured ? 'rgba(255,255,255,0.28)' : 'rgba(12,12,12,0.28)',
-                    border: `1px solid ${pkg.featured ? 'rgba(255,255,255,0.1)' : 'rgba(12,12,12,0.1)'}`,
+                    color: pkg.featured ? 'rgba(12,12,12,0.35)' : 'rgba(255,255,255,0.25)',
+                    border: `1px solid ${pkg.featured ? 'rgba(12,12,12,0.12)' : 'rgba(255,255,255,0.1)'}`,
                     padding: '3px 8px',
                   }}>
                     {pkg.duration}
@@ -228,30 +227,26 @@ export default function Packages({
                   fontFamily: 'var(--font-display)',
                   fontSize: 'clamp(24px, 2.5vw, 32px)',
                   letterSpacing: '0.03em',
-                  color: pkg.featured ? 'white' : '#0C0C0C',
+                  color: pkg.featured ? '#0C0C0C' : '#ffffff',
                   lineHeight: 0.92, marginBottom: '4px',
                 }}>
                   {pkg.name}
                 </h3>
                 <p style={{
                   fontFamily: 'var(--font-body)', fontSize: '13px',
-                  color: pkg.featured ? 'rgba(255,255,255,0.35)' : 'rgba(12,12,12,0.38)',
+                  color: pkg.featured ? 'rgba(12,12,12,0.42)' : 'rgba(255,255,255,0.32)',
                   marginBottom: '20px',
                 }}>
                   {pkg.tagline}
                 </p>
 
-                {/*
-                  THE PRICE — the most important element on the card.
-                  Large, confident, immediately readable.
-                  "from" sits small above the number.
-                */}
+                {/* THE PRICE — visual hero element */}
                 <div style={{ marginBottom: '24px' }}>
                   <span style={{
                     display: 'block',
                     fontFamily: 'var(--font-body)', fontSize: '11px', fontWeight: 500,
                     letterSpacing: '0.06em',
-                    color: pkg.featured ? 'rgba(255,255,255,0.3)' : 'rgba(12,12,12,0.3)',
+                    color: pkg.featured ? 'rgba(12,12,12,0.32)' : 'rgba(255,255,255,0.28)',
                     marginBottom: '2px',
                   }}>
                     from
@@ -261,17 +256,17 @@ export default function Packages({
                       fontFamily: 'var(--font-display)',
                       fontSize: 'clamp(52px, 5.5vw, 72px)',
                       letterSpacing: '0.01em', lineHeight: 1,
-                      color: pkg.featured ? 'white' : '#0C0C0C',
+                      color: pkg.featured ? '#0C0C0C' : '#ffffff',
                     }}>
                       £{pkg.price[vehicle]}
                     </span>
                   </div>
                 </div>
 
-                {/* Thin divider */}
+                {/* Divider */}
                 <div style={{
                   height: '1px',
-                  background: pkg.featured ? 'rgba(255,255,255,0.07)' : 'rgba(12,12,12,0.07)',
+                  background: pkg.featured ? 'rgba(12,12,12,0.08)' : 'rgba(255,255,255,0.07)',
                   marginBottom: '20px',
                 }} />
 
@@ -281,14 +276,14 @@ export default function Packages({
                     <li key={item} style={{ display: 'flex', alignItems: 'flex-start', gap: '10px' }}>
                       <span style={{
                         fontFamily: 'var(--font-body)', fontWeight: 600, fontSize: '11px',
-                        color: pkg.featured ? '#E84A0C' : 'rgba(12,12,12,0.25)',
-                        flexShrink: 0, marginTop: '2px', letterSpacing: '0.02em',
+                        color: pkg.featured ? '#E84A0C' : 'rgba(255,255,255,0.2)',
+                        flexShrink: 0, marginTop: '2px',
                       }}>
                         {pkg.featured ? '→' : '–'}
                       </span>
                       <span style={{
                         fontFamily: 'var(--font-body)', fontSize: '13px', lineHeight: 1.5,
-                        color: pkg.featured ? 'rgba(255,255,255,0.48)' : 'rgba(12,12,12,0.52)',
+                        color: pkg.featured ? 'rgba(12,12,12,0.55)' : 'rgba(255,255,255,0.4)',
                       }}>
                         {item}
                       </span>
@@ -296,7 +291,7 @@ export default function Packages({
                   ))}
                 </ul>
 
-                {/* CTA button — sharp corners, full width */}
+                {/* CTA */}
                 <button
                   onClick={() => onBookPack(pkg.name, vehicle, pkg.price[vehicle])}
                   style={{
@@ -305,19 +300,21 @@ export default function Packages({
                     letterSpacing: '0.08em', textTransform: 'uppercase',
                     display: 'flex', alignItems: 'center', justifyContent: 'space-between',
                     padding: '14px 18px', cursor: 'pointer', border: 'none',
-                    background: pkg.featured ? '#E84A0C' : '#0C0C0C',
-                    color: 'white',
-                    transition: 'background 0.2s',
+                    background: pkg.featured ? '#E84A0C' : 'rgba(255,255,255,0.08)',
+                    color: pkg.featured ? 'white' : 'rgba(255,255,255,0.7)',
+                    transition: 'background 0.2s, color 0.2s',
                   }}
                   onMouseEnter={e => {
                     e.currentTarget.style.background = pkg.featured ? '#C53D08' : '#E84A0C'
+                    e.currentTarget.style.color = 'white'
                   }}
                   onMouseLeave={e => {
-                    e.currentTarget.style.background = pkg.featured ? '#E84A0C' : '#0C0C0C'
+                    e.currentTarget.style.background = pkg.featured ? '#E84A0C' : 'rgba(255,255,255,0.08)'
+                    e.currentTarget.style.color = pkg.featured ? 'white' : 'rgba(255,255,255,0.7)'
                   }}
                 >
                   Book This Pack
-                  <span style={{ width: 5, height: 5, borderRadius: '50%', background: 'rgba(255,255,255,0.45)', flexShrink: 0 }} />
+                  <span style={{ width: 5, height: 5, borderRadius: '50%', background: 'rgba(255,255,255,0.4)', flexShrink: 0 }} />
                 </button>
 
               </div>
@@ -333,20 +330,20 @@ export default function Packages({
           transition={{ duration: 0.5, delay: 0.15 }}
           style={{
             marginTop: 'clamp(36px, 4vw, 56px)',
-            border: '1px solid rgba(12,12,12,0.08)',
+            border: '1px solid rgba(255,255,255,0.07)',
             padding: 'clamp(16px, 2vw, 24px) clamp(20px, 3vw, 36px)',
             display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: '12px 28px',
-            background: '#F5F4F1',
+            background: '#191919',
           }}
         >
           <span style={{
             fontFamily: 'var(--font-body)', fontWeight: 600, fontSize: '10px',
             letterSpacing: '0.2em', textTransform: 'uppercase',
-            color: 'rgba(12,12,12,0.3)', flexShrink: 0,
+            color: 'rgba(255,255,255,0.22)', flexShrink: 0,
           }}>
             Add-ons
           </span>
-          <span style={{ display: 'block', width: 1, height: 18, background: 'rgba(12,12,12,0.1)' }} className="hidden sm:block" />
+          <span style={{ display: 'block', width: 1, height: 18, background: 'rgba(255,255,255,0.08)' }} className="hidden sm:block" />
           {[
             ['Engine Bay Detail',     '£50'],
             ['Headlight Restoration', '£40'],
@@ -354,7 +351,7 @@ export default function Packages({
             ['Pet Hair Removal',      '£30'],
           ].map(([name, price]) => (
             <div key={name} style={{ display: 'flex', alignItems: 'baseline', gap: '6px' }}>
-              <span style={{ fontFamily: 'var(--font-body)', fontSize: '13px', color: 'rgba(12,12,12,0.42)' }}>
+              <span style={{ fontFamily: 'var(--font-body)', fontSize: '13px', color: 'rgba(255,255,255,0.35)' }}>
                 {name}
               </span>
               <span style={{

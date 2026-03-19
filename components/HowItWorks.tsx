@@ -28,7 +28,11 @@ export default function HowItWorks({ onBookNow }: { onBookNow: () => void }) {
   return (
     <section
       style={{
-        background: '#fff',
+        /*
+          Dark section — alternates from the warm-white Services.
+          Creates the premium dark/light rhythm across the page.
+        */
+        background: '#0C0C0C',
         paddingTop:    'clamp(64px, 10vw, 140px)',
         paddingBottom: 'clamp(64px, 10vw, 140px)',
       }}
@@ -37,7 +41,7 @@ export default function HowItWorks({ onBookNow }: { onBookNow: () => void }) {
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-start">
 
-          {/* ── Left: image + headline ── */}
+          {/* ── Left: headline + image grid ── */}
           <motion.div
             initial={{ opacity: 0, x: -20 }}
             whileInView={{ opacity: 1, x: 0 }}
@@ -48,7 +52,7 @@ export default function HowItWorks({ onBookNow }: { onBookNow: () => void }) {
               <span style={{ width: 20, height: '1.5px', background: '#E84A0C', flexShrink: 0 }} />
               <span style={{
                 fontFamily: 'var(--font-body)', fontWeight: 600, fontSize: '11px',
-                letterSpacing: '0.2em', textTransform: 'uppercase', color: 'rgba(12,12,12,0.35)',
+                letterSpacing: '0.2em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.28)',
               }}>
                 Why Choose Us
               </span>
@@ -58,28 +62,27 @@ export default function HowItWorks({ onBookNow }: { onBookNow: () => void }) {
               fontFamily: 'var(--font-display)',
               fontSize: 'clamp(52px, 7.5vw, 104px)',
               letterSpacing: '0.025em',
-              color: '#0C0C0C', lineHeight: 0.88, marginBottom: '28px',
+              color: '#ffffff', lineHeight: 0.88, marginBottom: '28px',
             }}>
               MEET<br />TRUE TO<br />DETAIL.
             </h2>
 
             <p style={{
               fontFamily: 'var(--font-body)', fontSize: '15px', lineHeight: 1.78,
-              color: 'rgba(12,12,12,0.45)', marginBottom: '36px', maxWidth: '360px',
+              color: 'rgba(255,255,255,0.35)', marginBottom: '36px', maxWidth: '360px',
             }}>
               We built this business on doing the job properly — not on cutting corners or chasing volume. Every car gets the same standard.
             </p>
 
             {/*
-              Two-image composition — clean grid, no rotation, no overlay.
-              Left: tall portrait shot (the process).
-              Right: slightly shorter (the result) with an orange accent block below.
-              The orange block is the brand mark — small but intentional.
+              Two-image composition on dark background.
+              Left: tall shot of the process.
+              Right: slightly shorter result shot + orange accent block.
+              The orange accent is the brand signature at the bottom right.
             */}
             <div style={{
               display: 'grid',
               gridTemplateColumns: '1fr 1fr',
-              gridTemplateRows: '1fr',
               gap: '4px',
               height: 'clamp(280px, 32vw, 460px)',
             }}>
@@ -104,7 +107,7 @@ export default function HowItWorks({ onBookNow }: { onBookNow: () => void }) {
                     style={{ objectFit: 'cover' }}
                   />
                 </div>
-                {/* Orange accent block — the brand mark anchoring the image grid */}
+                {/* Orange accent block — brand signature */}
                 <div style={{ background: '#E84A0C' }} />
               </div>
             </div>
@@ -125,31 +128,28 @@ export default function HowItWorks({ onBookNow }: { onBookNow: () => void }) {
                   gridTemplateColumns: '36px 1fr',
                   gap: '0 18px',
                   padding: 'clamp(20px, 2.5vw, 30px) 0',
-                  borderBottom: '1px solid rgba(12,12,12,0.07)',
+                  borderBottom: '1px solid rgba(255,255,255,0.06)',
                 }}
-                className="first:border-t first:border-t-[rgba(12,12,12,0.07)] group cursor-default"
+                className="first:border-t first:border-t-[rgba(255,255,255,0.06)] group cursor-default"
               >
                 <span style={{
                   fontFamily: 'var(--font-body)', fontWeight: 600, fontSize: '10px',
-                  letterSpacing: '0.2em', color: 'rgba(12,12,12,0.22)',
+                  letterSpacing: '0.2em', color: 'rgba(255,255,255,0.18)',
                   paddingTop: '4px',
                 }}>
                   {p.n}
                 </span>
                 <div>
-                  <h3
-                    style={{
-                      fontFamily: 'var(--font-body)', fontWeight: 600, fontSize: '16px',
-                      color: '#0C0C0C', marginBottom: '8px',
-                      transition: 'color 0.2s',
-                    }}
-                    className="group-hover:text-orange"
-                  >
+                  <h3 style={{
+                    fontFamily: 'var(--font-body)', fontWeight: 600, fontSize: '16px',
+                    color: '#ffffff', marginBottom: '8px',
+                    transition: 'color 0.2s',
+                  }}>
                     {p.title}
                   </h3>
                   <p style={{
                     fontFamily: 'var(--font-body)', fontSize: '14px', lineHeight: 1.72,
-                    color: 'rgba(12,12,12,0.45)',
+                    color: 'rgba(255,255,255,0.35)',
                   }}>
                     {p.body}
                   </p>
@@ -171,13 +171,13 @@ export default function HowItWorks({ onBookNow }: { onBookNow: () => void }) {
                   flex: '1 1 auto', minWidth: '160px',
                   fontFamily: 'var(--font-body)', fontWeight: 600, fontSize: '12px',
                   letterSpacing: '0.09em', textTransform: 'uppercase',
-                  background: '#0C0C0C', color: 'white', border: 'none', cursor: 'pointer',
+                  background: '#E84A0C', color: 'white', border: 'none', cursor: 'pointer',
                   padding: '15px 24px',
                   display: 'flex', alignItems: 'center', justifyContent: 'space-between',
                   transition: 'background 0.2s',
                 }}
-                onMouseEnter={e => (e.currentTarget.style.background = '#E84A0C')}
-                onMouseLeave={e => (e.currentTarget.style.background = '#0C0C0C')}
+                onMouseEnter={e => (e.currentTarget.style.background = '#C53D08')}
+                onMouseLeave={e => (e.currentTarget.style.background = '#E84A0C')}
               >
                 Book Your Detail
                 <span style={{ width: 5, height: 5, borderRadius: '50%', background: 'rgba(255,255,255,0.45)', flexShrink: 0 }} />
@@ -188,19 +188,19 @@ export default function HowItWorks({ onBookNow }: { onBookNow: () => void }) {
                   flex: '1 1 auto', minWidth: '140px',
                   fontFamily: 'var(--font-body)', fontWeight: 600, fontSize: '12px',
                   letterSpacing: '0.07em', textTransform: 'uppercase',
-                  border: '1px solid rgba(12,12,12,0.15)',
-                  color: 'rgba(12,12,12,0.42)', textDecoration: 'none',
+                  border: '1px solid rgba(255,255,255,0.12)',
+                  color: 'rgba(255,255,255,0.4)', textDecoration: 'none',
                   padding: '15px 24px',
                   display: 'flex', alignItems: 'center', justifyContent: 'center',
                   transition: 'all 0.2s',
                 }}
                 onMouseEnter={e => {
-                  e.currentTarget.style.borderColor = '#0C0C0C'
-                  e.currentTarget.style.color = '#0C0C0C'
+                  e.currentTarget.style.borderColor = 'rgba(255,255,255,0.35)'
+                  e.currentTarget.style.color = 'rgba(255,255,255,0.8)'
                 }}
                 onMouseLeave={e => {
-                  e.currentTarget.style.borderColor = 'rgba(12,12,12,0.15)'
-                  e.currentTarget.style.color = 'rgba(12,12,12,0.42)'
+                  e.currentTarget.style.borderColor = 'rgba(255,255,255,0.12)'
+                  e.currentTarget.style.color = 'rgba(255,255,255,0.4)'
                 }}
               >
                 07984 237149
