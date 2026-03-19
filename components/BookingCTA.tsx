@@ -202,8 +202,8 @@ export default function BookingCTA({ onBookNow }: { onBookNow: () => void }) {
         >
           {[
             'Confirmed within 1 hour',
-            'Payment on the day',
-            'Mon–Sat, 8am–7pm',
+            ' Payment on the day',
+            ' Mon–Sat, 8am–7pm',
           ].map((fact, i) => (
             <div key={fact} style={{ display: 'flex', alignItems: 'center', gap: '20px' }}>
               <span style={{
