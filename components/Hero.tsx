@@ -68,13 +68,13 @@ export default function Hero({ onBookNow }: { onBookNow: () => void }) {
           />
         </motion.div>
 
-        {/* ── Mobile-only: full dark gradient overlay ── */}
+        {/* ── Mobile-only: bottom-up gradient — photo visible top, dark at bottom ── */}
         <div
           aria-hidden
           className="block md:hidden"
           style={{
             position: 'absolute', inset: 0, zIndex: 1,
-            background: 'linear-gradient(160deg, rgba(12,12,12,0.96) 0%, rgba(12,12,12,0.90) 55%, rgba(12,12,12,0.60) 100%)',
+            background: 'linear-gradient(to top, rgba(12,12,12,0.97) 0%, rgba(12,12,12,0.88) 38%, rgba(12,12,12,0.50) 62%, rgba(12,12,12,0.18) 100%)',
           }}
         />
 
@@ -123,9 +123,9 @@ export default function Hero({ onBookNow }: { onBookNow: () => void }) {
           }}
         >
           {[
-            { value: '100%', label: 'Mobile\nService' },
-            { value: '£0',   label: 'Hidden\nCharges' },
-            { value: '2YR',  label: 'Ceramic\nWarranty' },
+            { value: 'FREE', label: 'Call-Out\nFee' },
+            { value: '5★',   label: 'Rated\nService' },
+            { value: '1HR',  label: 'Booking\nConfirmed' },
           ].map(s => (
             <div key={s.value} style={{ textAlign: 'center', flexShrink: 0 }}>
               <span style={{
@@ -284,38 +284,33 @@ export default function Hero({ onBookNow }: { onBookNow: () => void }) {
             className="flex md:hidden"
             style={{
               flexDirection: 'column',
-              justifyContent: 'space-between',
+              justifyContent: 'flex-end',  /* pin everything to bottom */
               height: '100%',
-              padding: '32px 24px 48px',
+              padding: '0 28px 52px',
             }}
           >
-            {/* Top label */}
-            <motion.p
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ duration: 0.8, ease }}
-              style={{
-                fontFamily: 'var(--font-body)', fontSize: '10px', fontWeight: 600,
-                letterSpacing: '0.22em', textTransform: 'uppercase',
-                color: 'rgba(255,255,255,0.35)',
-                margin: 0,
-              }}
-            >
-              Hertfordshire, UK
-            </motion.p>
-
-            {/* Bottom block: headline + text + CTA */}
             <motion.div
-              initial={{ opacity: 0, y: 20 }}
+              initial={{ opacity: 0, y: 24 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.9, delay: 0.1, ease }}
-              style={{ display: 'flex', flexDirection: 'column', gap: '0' }}
+              transition={{ duration: 0.9, delay: 0.08, ease }}
+              style={{ display: 'flex', flexDirection: 'column' }}
             >
-              {/* Staircase headline — tighter on mobile */}
-              <div style={{ pointerEvents: 'none', marginBottom: '28px' }}>
+
+              {/* Location label */}
+              <p style={{
+                fontFamily: 'var(--font-body)', fontSize: '10px', fontWeight: 600,
+                letterSpacing: '0.24em', textTransform: 'uppercase',
+                color: 'rgba(255,255,255,0.30)',
+                margin: '0 0 20px',
+              }}>
+                Hertfordshire, UK
+              </p>
+
+              {/* Staircase headline */}
+              <div style={{ pointerEvents: 'none', marginBottom: '22px' }}>
                 <div style={{
                   fontFamily: 'var(--font-display)',
-                  fontSize: 'clamp(52px, 18vw, 88px)',
+                  fontSize: 'clamp(58px, 17vw, 84px)',
                   letterSpacing: '0.01em', color: '#ffffff',
                   lineHeight: 0.88,
                   display: 'flex', alignItems: 'baseline',
@@ -334,52 +329,49 @@ export default function Hero({ onBookNow }: { onBookNow: () => void }) {
                     }}
                   />
                 </div>
-
                 <span style={{
                   fontFamily: 'var(--font-display)',
-                  fontSize: 'clamp(46px, 16vw, 78px)',
+                  fontSize: 'clamp(50px, 14.5vw, 72px)',
                   letterSpacing: '0.01em', color: 'rgba(255,255,255,0.44)',
                   display: 'block', lineHeight: 0.88,
-                  paddingLeft: '12px',
+                  paddingLeft: '10px',
                 }}>
                   DONE
                 </span>
-
                 <span style={{
                   fontFamily: 'var(--font-display)',
-                  fontSize: 'clamp(36px, 12.5vw, 62px)',
-                  letterSpacing: '0.01em', color: 'rgba(255,255,255,0.30)',
+                  fontSize: 'clamp(40px, 11.5vw, 58px)',
+                  letterSpacing: '0.01em', color: 'rgba(255,255,255,0.28)',
                   display: 'block', lineHeight: 0.88,
-                  paddingLeft: '28px',
+                  paddingLeft: '22px',
                 }}>
                   RIGHT<span style={{ color: '#E84A0C' }}>.</span>
                 </span>
               </div>
 
-              {/* Separator + sub-text */}
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', marginBottom: '32px' }}>
-                <div style={{ width: '40px', height: '1px', background: 'rgba(255,255,255,0.42)' }} />
-                <p style={{
-                  fontFamily: 'var(--font-body)', fontSize: '14px',
-                  lineHeight: 1.65, color: 'rgba(255,255,255,0.52)',
-                  margin: 0,
-                }}>
-                  Mobile detailing delivered to your driveway.<br />
-                  No drop-off. No waiting. Just flawless results.
-                </p>
-              </div>
+              {/* Separator rule */}
+              <div style={{ width: '40px', height: '1px', background: 'rgba(255,255,255,0.40)', marginBottom: '14px' }} />
 
-              {/* CTA */}
+              {/* Sub-text */}
+              <p style={{
+                fontFamily: 'var(--font-body)', fontSize: '13px',
+                lineHeight: 1.7, color: 'rgba(255,255,255,0.45)',
+                margin: '0 0 28px',
+              }}>
+                Mobile detailing to your door.<br />
+                No drop-off. Fixed prices. Hertfordshire.
+              </p>
+
+              {/* CTA — full width on mobile */}
               <button
                 onClick={onBookNow}
                 style={{
                   fontFamily: 'var(--font-body)', fontWeight: 700, fontSize: '11px',
                   letterSpacing: '0.12em', textTransform: 'uppercase',
                   background: '#E84A0C', color: '#fff', border: 'none', cursor: 'pointer',
-                  padding: '16px 32px',
-                  display: 'inline-flex', alignItems: 'center', gap: '14px',
-                  whiteSpace: 'nowrap', alignSelf: 'flex-start',
-                  width: '100%', justifyContent: 'center',
+                  padding: '17px 24px',
+                  display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+                  width: '100%',
                 }}
               >
                 Book Your Detail

@@ -196,7 +196,7 @@ export default function BookingCTA({ onBookNow }: { onBookNow: () => void }) {
             marginTop: 'clamp(48px, 7vw, 96px)',
             paddingTop: 'clamp(24px, 3vw, 36px)',
             borderTop: '1px solid rgba(255,255,255,0.07)',
-            display: 'flex', flexWrap: 'wrap', gap: '20px 0',
+            display: 'flex', flexWrap: 'wrap', gap: '12px 0',
             alignItems: 'center',
           }}
         >
@@ -206,14 +206,7 @@ export default function BookingCTA({ onBookNow }: { onBookNow: () => void }) {
             ' Mon–Sat, 8am–7pm',
           ].map((fact, i) => (
             <div key={fact} style={{ display: 'flex', alignItems: 'center', gap: '20px' }}>
-              <span style={{
-                fontFamily: 'var(--font-body)', fontWeight: 500, fontSize: '12px',
-                letterSpacing: '0.06em', textTransform: 'uppercase',
-                color: 'rgba(255,255,255,0.28)',
-              }}>
-                {fact}
-              </span>
-              {i < 2 && (
+              {i > 0 && (
                 <span style={{
                   display: 'inline-block', width: '4px', height: '6px',
                   background: '#E84A0C', flexShrink: 0,
@@ -221,6 +214,13 @@ export default function BookingCTA({ onBookNow }: { onBookNow: () => void }) {
                   opacity: 0.7,
                 }} />
               )}
+              <span style={{
+                fontFamily: 'var(--font-body)', fontWeight: 500, fontSize: '12px',
+                letterSpacing: '0.06em', textTransform: 'uppercase',
+                color: 'rgba(255,255,255,0.28)',
+              }}>
+                {fact}
+              </span>
             </div>
           ))}
         </motion.div>

@@ -60,20 +60,45 @@ const logoHtml = `
     </tr>
   </table>`
 
-/* ── Social media links ─────────────────────────────────────────────────── */
+/* ── Social icon buttons (email-safe: table cells, no SVG) ─────────────── */
 const socialLinks = `
-  <table cellpadding="0" cellspacing="0" style="margin-top:14px;">
+  <table cellpadding="0" cellspacing="0" style="margin-top:16px;">
     <tr>
-      <td style="padding-right:16px;">
-        <a href="https://www.instagram.com/truetodetail" style="font-family:Arial,sans-serif;font-size:11px;letter-spacing:1px;text-transform:uppercase;color:${brand.orange};text-decoration:none;">Instagram</a>
+      <!-- Instagram -->
+      <td style="padding-right:10px;">
+        <a href="https://www.instagram.com/truetodetail" target="_blank" style="text-decoration:none;display:inline-block;" title="Instagram">
+          <table cellpadding="0" cellspacing="0" style="border-collapse:collapse;">
+            <tr>
+              <td style="width:34px;height:34px;border:1.5px solid rgba(12,12,12,0.14);text-align:center;vertical-align:middle;font-family:Arial,sans-serif;font-size:13px;font-weight:bold;color:rgba(12,12,12,0.38);letter-spacing:0;">
+                IG
+              </td>
+            </tr>
+          </table>
+        </a>
       </td>
-      <td style="padding-right:16px;color:${brand.lightGrey};font-size:11px;">·</td>
-      <td style="padding-right:16px;">
-        <a href="https://www.tiktok.com/@truetodetail" style="font-family:Arial,sans-serif;font-size:11px;letter-spacing:1px;text-transform:uppercase;color:${brand.orange};text-decoration:none;">TikTok</a>
+      <!-- TikTok -->
+      <td style="padding-right:10px;">
+        <a href="https://www.tiktok.com/@truetodetail" target="_blank" style="text-decoration:none;display:inline-block;" title="TikTok">
+          <table cellpadding="0" cellspacing="0" style="border-collapse:collapse;">
+            <tr>
+              <td style="width:34px;height:34px;border:1.5px solid rgba(12,12,12,0.14);text-align:center;vertical-align:middle;font-family:Arial,sans-serif;font-size:13px;font-weight:bold;color:rgba(12,12,12,0.38);letter-spacing:0;">
+                TT
+              </td>
+            </tr>
+          </table>
+        </a>
       </td>
-      <td style="padding-right:16px;color:${brand.lightGrey};font-size:11px;">·</td>
+      <!-- Facebook -->
       <td>
-        <a href="https://www.facebook.com/truetodetail" style="font-family:Arial,sans-serif;font-size:11px;letter-spacing:1px;text-transform:uppercase;color:${brand.orange};text-decoration:none;">Facebook</a>
+        <a href="https://www.facebook.com/truetodetail" target="_blank" style="text-decoration:none;display:inline-block;" title="Facebook">
+          <table cellpadding="0" cellspacing="0" style="border-collapse:collapse;">
+            <tr>
+              <td style="width:34px;height:34px;border:1.5px solid rgba(12,12,12,0.14);text-align:center;vertical-align:middle;font-family:Arial,sans-serif;font-size:14px;font-weight:bold;color:rgba(12,12,12,0.38);letter-spacing:0;">
+                f
+              </td>
+            </tr>
+          </table>
+        </a>
       </td>
     </tr>
   </table>`
