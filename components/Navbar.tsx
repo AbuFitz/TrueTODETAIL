@@ -15,7 +15,7 @@ export default function Navbar({ onBookNow }: { onBookNow: () => void }) {
   const [hovered, setHovered]   = useState<string | null>(null)
 
   useEffect(() => {
-    const fn = () => setScrolled(window.scrollY > 10)
+    const fn = () => setScrolled(window.scrollY > 40)
     window.addEventListener('scroll', fn, { passive: true })
     return () => window.removeEventListener('scroll', fn)
   }, [])
@@ -25,17 +25,31 @@ export default function Navbar({ onBookNow }: { onBookNow: () => void }) {
     return () => { document.body.style.overflow = '' }
   }, [open])
 
+  /*
+    Navbar is 80px tall initially.
+    On scroll it stays 80px — only the LOGO shrinks.
+    This keeps layout stable while giving the scroll-shrink effect.
+    Logo: 38px unscrolled → 24px scrolled, smooth transition.
+    Droplet dot scales proportionally.
+  */
+  const logoSize   = scrolled ? '22px' : '38px'
+  const dotW       = scrolled ? '5px'  : '8px'
+  const dotH       = scrolled ? '7px'  : '12px'
+  const logoGap    = scrolled ? '7px'  : '10px'
+
   return (
     <>
       {/* ─── Main nav bar ─── */}
       <nav
         style={{
           position: 'fixed', top: 0, left: 0, right: 0, zIndex: 50,
-          height: '72px',
+          height: '80px',
           background: '#fff',
-          borderBottom: '1px solid rgba(12,12,12,0.08)',
+          borderBottom: scrolled
+            ? '1px solid rgba(12,12,12,0.1)'
+            : '1px solid rgba(12,12,12,0.06)',
           display: 'flex', alignItems: 'center',
-          transition: 'box-shadow 0.35s',
+          transition: 'box-shadow 0.35s, border-color 0.35s',
           boxShadow: scrolled ? '0 2px 32px rgba(12,12,12,0.07)' : 'none',
         }}
       >
@@ -47,34 +61,45 @@ export default function Navbar({ onBookNow }: { onBookNow: () => void }) {
           }}
         >
 
-          {/* Logo */}
+          {/* Logo — shrinks on scroll via CSS transition */}
           <a
             href="#"
             style={{
               textDecoration: 'none', flexShrink: 0,
-              display: 'flex', alignItems: 'center', gap: '8px',
+              display: 'flex', alignItems: 'center',
+              gap: logoGap,
+              transition: 'gap 0.45s cubic-bezier(0.22, 1, 0.36, 1)',
             }}
           >
             <span style={{
-              fontFamily: 'var(--font-display)', fontSize: '28px',
+              fontFamily: 'var(--font-display)',
+              fontSize: logoSize,
               letterSpacing: '0.06em', color: '#0C0C0C', lineHeight: 1,
+              transition: 'font-size 0.45s cubic-bezier(0.22, 1, 0.36, 1)',
             }}>
               TRUE TO
             </span>
+            {/*
+              The orange water-bead droplet — brand mark.
+              Scales down with the logo on scroll.
+            */}
             <span
               aria-hidden
               style={{
                 display: 'inline-block',
-                width: '6px', height: '9px',
+                width: dotW, height: dotH,
                 background: '#E84A0C',
                 borderRadius: '50% 50% 45% 45% / 55% 55% 45% 45%',
                 flexShrink: 0,
                 marginBottom: '-2px',
+                transition: 'width 0.45s cubic-bezier(0.22, 1, 0.36, 1), height 0.45s cubic-bezier(0.22, 1, 0.36, 1)',
               }}
             />
             <span style={{
-              fontFamily: 'var(--font-display)', fontSize: '28px',
+              fontFamily: 'var(--font-display)',
+              fontSize: logoSize,
               letterSpacing: '0.06em', color: '#0C0C0C', lineHeight: 1,
+              transition: 'font-size 0.45s cubic-bezier(0.22, 1, 0.36, 1)',
             }}>
               DETAIL
             </span>
@@ -83,8 +108,8 @@ export default function Navbar({ onBookNow }: { onBookNow: () => void }) {
           <div style={{ flex: 1 }} />
 
           {/*
-            Desktop navigation links — only visible at md+ (≥768px).
-            The hamburger below is the inverse: only visible below md.
+            Desktop navigation — visible at md+ only.
+            Hamburger below is the mobile-only alternative.
           */}
           <div className="hidden md:flex items-center" style={{ gap: 0 }}>
             {NAV_LINKS.map((l) => (
@@ -97,7 +122,7 @@ export default function Navbar({ onBookNow }: { onBookNow: () => void }) {
                   letterSpacing: '0.04em',
                   color: hovered === l.label ? '#0C0C0C' : 'rgba(12,12,12,0.42)',
                   textDecoration: 'none',
-                  padding: '0 18px', height: '72px',
+                  padding: '0 18px', height: '80px',
                   display: 'flex', alignItems: 'center',
                   transition: 'color 0.2s',
                   flexShrink: 0,
@@ -105,12 +130,12 @@ export default function Navbar({ onBookNow }: { onBookNow: () => void }) {
                 onMouseEnter={() => setHovered(l.label)}
                 onMouseLeave={() => setHovered(null)}
               >
-                {/* Wipe-in underline — sweeps left → right on hover */}
+                {/* Wipe-in underline — left → right on hover, retracts on leave */}
                 <span
                   aria-hidden
                   style={{
                     position: 'absolute',
-                    bottom: '17px',
+                    bottom: '20px',
                     left: '18px', right: '18px',
                     height: '1.5px',
                     background: '#E84A0C',
@@ -127,8 +152,7 @@ export default function Navbar({ onBookNow }: { onBookNow: () => void }) {
             ))}
 
             <span style={{
-              display: 'block',
-              width: 1, height: 20,
+              display: 'block', width: 1, height: 20,
               background: 'rgba(12,12,12,0.1)',
               margin: '0 14px', flexShrink: 0,
             }} />
@@ -149,10 +173,7 @@ export default function Navbar({ onBookNow }: { onBookNow: () => void }) {
             </button>
           </div>
 
-          {/*
-            Mobile hamburger — ONLY visible below md (768px).
-            className="md:hidden" hides this on desktop.
-          */}
+          {/* Mobile hamburger — md:hidden keeps it off desktop */}
           <button
             className="md:hidden"
             onClick={() => setOpen(!open)}
@@ -191,7 +212,7 @@ export default function Navbar({ onBookNow }: { onBookNow: () => void }) {
         style={{
           position: 'fixed', inset: 0, zIndex: 40,
           background: '#0C0C0C',
-          paddingTop: '72px',
+          paddingTop: '80px',
           display: 'flex', flexDirection: 'column',
           opacity: open ? 1 : 0,
           pointerEvents: open ? 'auto' : 'none',
