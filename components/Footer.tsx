@@ -198,7 +198,7 @@ export default function Footer({ onBookNow }: { onBookNow: () => void }) {
       */}
       <div style={{ overflow: 'hidden', borderTop: '1px solid rgba(12,12,12,0.06)', opacity: 0.45 }}>
         <div style={{
-          display: 'flex', alignItems: 'flex-end', gap: 'clamp(6px, 1vw, 18px)',
+          display: 'flex', alignItems: 'center', gap: 'clamp(6px, 1vw, 18px)',
           fontFamily: 'var(--font-display)',
           fontSize: 'clamp(56px, 14vw, 220px)',
           letterSpacing: '0.04em',
@@ -217,7 +217,6 @@ export default function Footer({ onBookNow }: { onBookNow: () => void }) {
             height: 'clamp(9px, 1.35vw, 21px)',
             background: '#E84A0C',
             borderRadius: '50% 50% 45% 45% / 55% 55% 45% 45%',
-            marginBottom: 'clamp(6px, 1vw, 16px)',
           }} />
           <span>DETAIL</span>
         </div>
