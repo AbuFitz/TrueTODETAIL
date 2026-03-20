@@ -512,20 +512,6 @@ export default function Packages({
           }}
         >
           <div style={{ display: 'flex', alignItems: 'center', gap: '20px' }}>
-            <div style={{
-              width: 40, height: 40, background: 'rgba(232,74,12,0.1)',
-              border: '1px solid rgba(232,74,12,0.2)',
-              display: 'flex', alignItems: 'center', justifyContent: 'center',
-              flexShrink: 0,
-            }}>
-              <svg width="18" height="14" viewBox="0 0 24 18" fill="none" stroke="#E84A0C" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-                <rect x="1" y="3" width="18" height="12" rx="2" />
-                <path d="M19 7h2l2 4v4h-4" />
-                <circle cx="6" cy="17" r="2" />
-                <circle cx="16" cy="17" r="2" />
-                <circle cx="21" cy="17" r="2" />
-              </svg>
-            </div>
             <div>
               <p style={{
                 fontFamily: 'var(--font-body)', fontWeight: 600, fontSize: '13px',
