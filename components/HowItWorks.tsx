@@ -64,7 +64,7 @@ export default function HowItWorks({ onBookNow }: { onBookNow: () => void }) {
               letterSpacing: '0.025em',
               color: '#ffffff', lineHeight: 0.88, marginBottom: '28px',
             }}>
-              MEET<br />TRUE TO<br />DETAIL.
+              MEET<br />TRUE TO<br /><span style={{ color: '#E84A0C' }}>DETAIL.</span>
             </h2>
 
             <p style={{

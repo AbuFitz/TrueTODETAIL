@@ -166,7 +166,7 @@ export default function BookingModal({
                 fontFamily: 'var(--font-display)', fontSize: '28px',
                 letterSpacing: '0.04em', color: '#ffffff', lineHeight: 1,
               }}>
-                {step === 4 ? "YOU'RE BOOKED IN" : 'BOOK YOUR DETAIL'}
+                {step === 4 ? "YOU'RE BOOKED IN" : <>BOOK YOUR <span style={{ color: '#E84A0C' }}>DETAIL</span></>}
               </h2>
             </div>
             <button
