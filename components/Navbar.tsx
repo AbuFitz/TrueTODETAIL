@@ -24,10 +24,10 @@ export default function Navbar({ onBookNow }: { onBookNow: () => void }) {
     return () => { document.body.style.overflow = '' }
   }, [open])
 
-  const logoSize = scrolled ? '28px' : '46px'
-  const dotW     = scrolled ? '6px'  : '10px'
-  const dotH     = scrolled ? '9px'  : '15px'
-  const logoGap  = scrolled ? '8px'  : '12px'
+  const logoSize = scrolled ? 'clamp(20px, 3vw, 28px)' : 'clamp(26px, 4vw, 46px)'
+  const dotW     = scrolled ? '5px'  : 'clamp(6px, 1vw, 10px)'
+  const dotH     = scrolled ? '8px'  : 'clamp(9px, 1.5vw, 15px)'
+  const logoGap  = scrolled ? '7px'  : 'clamp(8px, 1.2vw, 12px)'
 
   return (
     <>

@@ -106,14 +106,16 @@ export default function VanFleetPage() {
           padding: '0 clamp(20px, 4vw, 64px)',
           display: 'flex', alignItems: 'center', justifyContent: 'space-between',
         }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '24px' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
+            {/* Back link — hidden on small screens to prevent overflow */}
             <a
               href="/"
+              className="hidden sm:flex"
               style={{
                 fontFamily: 'var(--font-body)', fontSize: '12px', fontWeight: 600,
                 letterSpacing: '0.08em', textTransform: 'uppercase',
                 color: 'rgba(255,255,255,0.35)', textDecoration: 'none',
-                display: 'flex', alignItems: 'center', gap: '6px',
+                alignItems: 'center', gap: '6px',
                 transition: 'color 0.2s',
               }}
               onMouseEnter={e => (e.currentTarget.style.color = 'rgba(255,255,255,0.7)')}
@@ -121,22 +123,22 @@ export default function VanFleetPage() {
             >
               ← Back
             </a>
-            <span style={{ width: 1, height: 16, background: 'rgba(255,255,255,0.1)' }} />
-            <a href="/" style={{ textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '8px' }}>
+            <span className="hidden sm:block" style={{ width: 1, height: 16, background: 'rgba(255,255,255,0.1)' }} />
+            <a href="/" style={{ textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '7px' }}>
               <span style={{
-                fontFamily: 'var(--font-display)', fontSize: '22px',
+                fontFamily: 'var(--font-display)', fontSize: 'clamp(16px, 4vw, 22px)',
                 letterSpacing: '0.06em', color: '#ffffff', lineHeight: 1,
               }}>
                 TRUE TO
               </span>
               <span style={{
-                display: 'inline-block', width: '5px', height: '8px',
+                display: 'inline-block', width: 'clamp(4px, 1vw, 5px)', height: 'clamp(6px, 1.5vw, 8px)',
                 background: '#E84A0C',
                 borderRadius: '50% 50% 45% 45% / 55% 55% 45% 45%',
                 flexShrink: 0, marginBottom: '-1px',
               }} />
               <span style={{
-                fontFamily: 'var(--font-display)', fontSize: '22px',
+                fontFamily: 'var(--font-display)', fontSize: 'clamp(16px, 4vw, 22px)',
                 letterSpacing: '0.06em', color: '#ffffff', lineHeight: 1,
               }}>
                 DETAIL
@@ -147,11 +149,11 @@ export default function VanFleetPage() {
           <a
             href="#enquire"
             style={{
-              fontFamily: 'var(--font-body)', fontWeight: 700, fontSize: '11px',
+              fontFamily: 'var(--font-body)', fontWeight: 700, fontSize: 'clamp(10px, 2vw, 11px)',
               letterSpacing: '0.1em', textTransform: 'uppercase',
               background: '#E84A0C', color: '#fff', textDecoration: 'none',
-              padding: '11px 22px', display: 'inline-block',
-              transition: 'background 0.2s',
+              padding: 'clamp(9px, 2vw, 11px) clamp(14px, 3vw, 22px)', display: 'inline-block',
+              transition: 'background 0.2s', whiteSpace: 'nowrap',
             }}
             onMouseEnter={e => (e.currentTarget.style.background = '#C53D08')}
             onMouseLeave={e => (e.currentTarget.style.background = '#E84A0C')}
@@ -163,8 +165,8 @@ export default function VanFleetPage() {
 
       {/* ── Hero ── */}
       <section style={{
-        paddingTop: 'clamp(72px, 12vw, 160px)',
-        paddingBottom: 'clamp(64px, 10vw, 120px)',
+        paddingTop: 'clamp(40px, 8vw, 160px)',
+        paddingBottom: 'clamp(40px, 8vw, 120px)',
         borderBottom: '1px solid rgba(255,255,255,0.06)',
       }}>
         <div style={{ maxWidth: '1400px', margin: '0 auto', padding: '0 clamp(24px, 5vw, 72px)' }}>
@@ -195,38 +197,42 @@ export default function VanFleetPage() {
               <span style={{ color: '#E84A0C' }}>DONE RIGHT.</span>
             </h1>
 
-            <div style={{
-              display: 'flex', flexWrap: 'wrap', alignItems: 'flex-end',
-              justifyContent: 'space-between', gap: '32px',
+            <p style={{
+              fontFamily: 'var(--font-body)', fontSize: 'clamp(14px, 1.8vw, 17px)',
+              lineHeight: 1.72, color: 'rgba(255,255,255,0.38)',
+              maxWidth: '520px', marginBottom: 'clamp(28px, 4vw, 40px)',
             }}>
-              <p style={{
-                fontFamily: 'var(--font-body)', fontSize: 'clamp(15px, 1.8vw, 18px)',
-                lineHeight: 1.72, color: 'rgba(255,255,255,0.38)',
-                maxWidth: '520px',
-              }}>
-                Designed for working vehicles, fleets and business owners who need reliable,
-                consistent cleaning — without the hassle of booking one car at a time.
-              </p>
+              Designed for working vehicles, fleets and business owners who need reliable,
+              consistent cleaning — without the hassle of booking one car at a time.
+            </p>
 
-              <div style={{ display: 'flex', gap: '32px', flexShrink: 0 }}>
-                {[['3', 'Van Packages'], ['10%+', 'Fleet Discount'], ['Same Day', 'Priority Slots']].map(([val, lab]) => (
-                  <div key={lab}>
-                    <div style={{
-                      fontFamily: 'var(--font-display)', fontSize: 'clamp(32px, 4vw, 48px)',
-                      letterSpacing: '0.03em', color: '#ffffff', lineHeight: 1,
-                    }}>
-                      {val}
-                    </div>
-                    <div style={{
-                      fontFamily: 'var(--font-body)', fontSize: '11px', fontWeight: 600,
-                      letterSpacing: '0.12em', textTransform: 'uppercase',
-                      color: 'rgba(255,255,255,0.28)', marginTop: '4px',
-                    }}>
-                      {lab}
-                    </div>
+            {/* Stats — 3-col grid so they never wrap awkwardly on mobile */}
+            <div style={{
+              display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)',
+              gap: '1px', background: 'rgba(255,255,255,0.07)',
+              border: '1px solid rgba(255,255,255,0.07)',
+            }}>
+              {[['3', 'Van Packages'], ['10%+', 'Fleet Discount'], ['Same Day', 'Priority Slots']].map(([val, lab]) => (
+                <div key={lab} style={{
+                  background: '#141414',
+                  padding: 'clamp(14px, 2.5vw, 20px) clamp(12px, 2vw, 20px)',
+                  textAlign: 'center',
+                }}>
+                  <div style={{
+                    fontFamily: 'var(--font-display)', fontSize: 'clamp(24px, 5vw, 44px)',
+                    letterSpacing: '0.03em', color: '#ffffff', lineHeight: 1,
+                  }}>
+                    {val}
                   </div>
-                ))}
-              </div>
+                  <div style={{
+                    fontFamily: 'var(--font-body)', fontSize: 'clamp(8px, 1.5vw, 11px)', fontWeight: 600,
+                    letterSpacing: '0.1em', textTransform: 'uppercase',
+                    color: 'rgba(255,255,255,0.28)', marginTop: '5px', lineHeight: 1.3,
+                  }}>
+                    {lab}
+                  </div>
+                </div>
+              ))}
             </div>
           </motion.div>
 
@@ -235,8 +241,8 @@ export default function VanFleetPage() {
 
       {/* ── Van Packages ── */}
       <section style={{
-        paddingTop: 'clamp(64px, 10vw, 120px)',
-        paddingBottom: 'clamp(64px, 10vw, 120px)',
+        paddingTop: 'clamp(48px, 8vw, 120px)',
+        paddingBottom: 'clamp(48px, 8vw, 120px)',
         borderBottom: '1px solid rgba(255,255,255,0.06)',
       }}>
         <div style={{ maxWidth: '1400px', margin: '0 auto', padding: '0 clamp(24px, 5vw, 72px)' }}>
@@ -431,8 +437,8 @@ export default function VanFleetPage() {
 
       {/* ── Fleet Plans ── */}
       <section style={{
-        paddingTop: 'clamp(64px, 10vw, 120px)',
-        paddingBottom: 'clamp(64px, 10vw, 120px)',
+        paddingTop: 'clamp(48px, 8vw, 120px)',
+        paddingBottom: 'clamp(48px, 8vw, 120px)',
         background: '#0A0A0A',
         borderBottom: '1px solid rgba(255,255,255,0.06)',
       }}>
@@ -569,8 +575,8 @@ export default function VanFleetPage() {
       <section
         id="enquire"
         style={{
-          paddingTop: 'clamp(64px, 10vw, 120px)',
-          paddingBottom: 'clamp(64px, 10vw, 120px)',
+          paddingTop: 'clamp(48px, 8vw, 120px)',
+          paddingBottom: 'clamp(48px, 8vw, 120px)',
         }}
       >
         <div style={{ maxWidth: '1400px', margin: '0 auto', padding: '0 clamp(24px, 5vw, 72px)' }}>
