@@ -3,7 +3,7 @@
 import { useState } from 'react'
 import { motion } from 'framer-motion'
 
-type VehicleType = 'hatchback' | 'suv' | 'prestige'
+type VehicleType = 'small' | 'midsize' | 'largesuv' | 'van'
 type Step = 1 | 2 | 3 | 4
 
 interface BookingModalProps {
@@ -15,32 +15,32 @@ interface BookingModalProps {
 }
 
 const packOptions = [
-  { id: 'Essential',     tagline: 'The perfect fresh start',           duration: '2–3 hrs'  },
-  { id: 'Deep Clean',    tagline: 'A proper inside-out reset',         duration: '4–5 hrs'  },
-  { id: 'Premium',       tagline: 'The full transformation',           duration: '6–8 hrs'  },
-  { id: 'Elite Ceramic', tagline: 'Maximum protection. Lasting gloss.', duration: '1–2 days' },
+  { id: 'Essential',      tagline: 'Quick refresh',                    duration: '2–3 hrs' },
+  { id: 'Full Valet',     tagline: 'Our most popular service',         duration: '4–5 hrs' },
+  { id: 'Premium Detail', tagline: 'Best for resale / transformation', duration: '6–7 hrs' },
 ]
 
 const ADDONS = [
-  { id: 'engine-bay',  label: 'Engine Bay Detail',     price: 50 },
-  { id: 'headlights',  label: 'Headlight Restoration', price: 40 },
-  { id: 'odour',       label: 'Odour Elimination',     price: 60 },
-  { id: 'pet-hair',    label: 'Pet Hair Removal',       price: 30 },
+  { id: 'engine-bay',   label: 'Engine Bay Clean',            price: 40 },
+  { id: 'pet-hair',     label: 'Pet Hair Removal',            price: 25 },
+  { id: 'odour',        label: 'Odour Treatment',             price: 30 },
+  { id: 'seat-shampoo', label: 'Seat Shampoo (extra heavy)',  price: 30 },
+  { id: 'steam',        label: 'Interior Steam Sanitisation', price: 35 },
 ]
 
 const vehicleLabels: Record<VehicleType, string> = {
-  hatchback: 'Hatchback / Saloon',
-  suv:       'SUV / 4×4',
-  prestige:  'Sports / Prestige',
+  small:    'Small Car',
+  midsize:  'Mid-Size',
+  largesuv: 'Large SUV / 4×4',
+  van:      'Van',
 }
 
 const timeSlots = ['8:00 AM', '10:00 AM', '12:00 PM', '2:00 PM', '4:00 PM', '6:00 PM']
 
 const priceMap: Record<string, Record<VehicleType, number>> = {
-  'Essential':     { hatchback: 89,  suv: 109, prestige: 149 },
-  'Deep Clean':    { hatchback: 179, suv: 219, prestige: 279 },
-  'Premium':       { hatchback: 299, suv: 369, prestige: 479 },
-  'Elite Ceramic': { hatchback: 549, suv: 679, prestige: 849 },
+  'Essential':      { small: 80,  midsize: 90,  largesuv: 105, van: 110 },
+  'Full Valet':     { small: 140, midsize: 155, largesuv: 175, van: 185 },
+  'Premium Detail': { small: 220, midsize: 240, largesuv: 270, van: 290 },
 }
 
 const STEP_LABELS = ['Select Pack', 'Schedule', 'Your Details']

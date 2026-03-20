@@ -12,7 +12,7 @@ import BookingCTA from '@/components/BookingCTA'
 import BookingModal from '@/components/BookingModal'
 import Footer from '@/components/Footer'
 
-type VehicleType = 'hatchback' | 'suv' | 'prestige'
+type VehicleType = 'small' | 'midsize' | 'largesuv' | 'van'
 
 export default function HomePage() {
   const [modalOpen,       setModalOpen]       = useState(false)

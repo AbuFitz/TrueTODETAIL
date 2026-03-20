@@ -3,12 +3,13 @@
 import { useState } from 'react'
 import { motion } from 'framer-motion'
 
-type VehicleType = 'hatchback' | 'suv' | 'prestige'
+type VehicleType = 'small' | 'midsize' | 'largesuv' | 'van'
 
 const VEHICLES: { key: VehicleType; label: string; sub: string }[] = [
-  { key: 'hatchback', label: 'Hatchback', sub: '/ Saloon'   },
-  { key: 'suv',       label: 'SUV',       sub: '/ 4×4'      },
-  { key: 'prestige',  label: 'Sports',    sub: '/ Prestige'  },
+  { key: 'small',    label: 'Small Car',       sub: 'Hatch / Saloon'       },
+  { key: 'midsize',  label: 'Mid-Size',         sub: 'Saloon / Estate / SUV' },
+  { key: 'largesuv', label: 'Large SUV / 4×4',  sub: 'Big SUVs, 7 seaters'  },
+  { key: 'van',      label: 'Van',              sub: 'SWB (Transit etc)'    },
 ]
 
 interface Pkg {
@@ -23,28 +24,22 @@ interface Pkg {
 
 const PACKAGES: Pkg[] = [
   {
-    id: 'essential', name: 'Essential', tagline: 'The perfect fresh start', duration: '2–3 hrs',
+    id: 'essential', name: 'Essential', tagline: 'Quick refresh', duration: '2–3 hrs',
     featured: false,
-    price: { hatchback: 89, suv: 109, prestige: 149 },
-    includes: ['Hand wash & hand dry', 'Wheel & tyre clean', 'Glass inside & out', 'Full interior vacuum', 'Dashboard wipe-down'],
+    price: { small: 80, midsize: 90, largesuv: 105, van: 110 },
+    includes: ['Safe wash & dry', 'Wheels cleaned', 'Interior vacuum', 'Dashboard wipe', 'Glass cleaned', 'Tyre dressing'],
   },
   {
-    id: 'deep-clean', name: 'Deep Clean', tagline: 'A proper inside-out reset', duration: '4–5 hrs',
-    featured: false,
-    price: { hatchback: 179, suv: 219, prestige: 279 },
-    includes: ['Everything in Essential', 'Interior steam clean', 'Leather conditioning', 'Carpet shampoo & extract', 'Exterior wax & sealant', 'Engine bay wipe'],
-  },
-  {
-    id: 'premium', name: 'Premium', tagline: 'The full transformation', duration: '6–8 hrs',
+    id: 'full-valet', name: 'Full Valet', tagline: 'Our most popular service', duration: '4–5 hrs',
     featured: true,
-    price: { hatchback: 299, suv: 369, prestige: 479 },
-    includes: ['Everything in Deep Clean', 'Clay bar decontamination', 'Single-stage machine polish', 'Paint sealant application', 'Ozone odour treatment', 'Glass coating'],
+    price: { small: 140, midsize: 155, largesuv: 175, van: 185 },
+    includes: ['Everything in Essential', 'Deep interior clean', 'Seat shampoo', 'Carpet extraction', 'Door shuts cleaned', 'Spray wax protection'],
   },
   {
-    id: 'elite', name: 'Elite Ceramic', tagline: 'Maximum protection. Lasting gloss.', duration: '1–2 days',
+    id: 'premium', name: 'Premium Detail', tagline: 'Best for resale / transformation', duration: '6–7 hrs',
     featured: false,
-    price: { hatchback: 549, suv: 679, prestige: 849 },
-    includes: ['Everything in Premium', 'Two-stage paint correction', 'Ceramic coating — 2 year', 'Fabric & carpet protection', 'Headlight restoration', 'Completion certificate'],
+    price: { small: 220, midsize: 240, largesuv: 270, van: 290 },
+    includes: ['Everything in Full Valet', 'Clay bar decontamination', 'Light machine polish', 'Paint sealant', 'Trim restoration', 'Odour treatment'],
   },
 ]
 
@@ -55,7 +50,7 @@ export default function Packages({
 }: {
   onBookPack: (pkg: string, vehicle: VehicleType) => void
 }) {
-  const [vehicle, setVehicle] = useState<VehicleType>('hatchback')
+  const [vehicle, setVehicle] = useState<VehicleType>('small')
 
   return (
     <section
@@ -132,7 +127,7 @@ export default function Packages({
                     padding: '11px 18px',
                     background: vehicle === key ? '#fff' : 'transparent',
                     cursor: 'pointer', border: 'none',
-                    borderRight: key !== 'prestige' ? '1px solid rgba(255,255,255,0.12)' : 'none',
+                    borderRight: key !== 'van' ? '1px solid rgba(255,255,255,0.12)' : 'none',
                     transition: 'background 0.15s',
                   }}
                 >
@@ -349,10 +344,11 @@ export default function Packages({
           </span>
           <span style={{ display: 'block', width: 1, height: 18, background: 'rgba(255,255,255,0.08)' }} className="hidden sm:block" />
           {[
-            ['Engine Bay Detail',     '£50'],
-            ['Headlight Restoration', '£40'],
-            ['Odour Elimination',     '£60'],
-            ['Pet Hair Removal',      '£30'],
+            ['Engine Bay Clean',             '£40'],
+            ['Pet Hair Removal',             '£25'],
+            ['Odour Treatment',              '£30'],
+            ['Seat Shampoo (extra heavy)',   '£30'],
+            ['Interior Steam Sanitisation',  '£35'],
           ].map(([name, price]) => (
             <div key={name} style={{ display: 'flex', alignItems: 'baseline', gap: '6px' }}>
               <span style={{ fontFamily: 'var(--font-body)', fontSize: '13px', color: 'rgba(255,255,255,0.35)' }}>
@@ -366,6 +362,61 @@ export default function Packages({
               </span>
             </div>
           ))}
+        </motion.div>
+
+        {/* Van note */}
+        <motion.p
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.5, delay: 0.2 }}
+          style={{
+            marginTop: '16px',
+            fontFamily: 'var(--font-body)', fontSize: '12px', lineHeight: 1.7,
+            color: 'rgba(255,255,255,0.28)',
+          }}
+        >
+          <span style={{ color: 'rgba(255,255,255,0.5)', fontWeight: 600 }}>Van pricing note:</span>{' '}
+          Van pricing based on standard working vans. Heavily soiled or commercial-use interiors may require a custom quote.
+        </motion.p>
+
+        {/* Coming Soon */}
+        <motion.div
+          initial={{ opacity: 0, y: 16 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.5, delay: 0.25 }}
+          style={{
+            marginTop: 'clamp(36px, 4vw, 56px)',
+            border: '1px solid rgba(255,255,255,0.07)',
+            padding: 'clamp(20px, 2.5vw, 32px) clamp(20px, 3vw, 36px)',
+            background: '#191919',
+          }}
+        >
+          <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '20px' }}>
+            <span style={{ width: 16, height: '1.5px', background: '#E84A0C', flexShrink: 0 }} />
+            <span style={{
+              fontFamily: 'var(--font-body)', fontWeight: 600, fontSize: '10px',
+              letterSpacing: '0.22em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.28)',
+            }}>
+              Coming Soon
+            </span>
+          </div>
+          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '10px 28px' }}>
+            {[
+              'Ceramic Coating Packages',
+              'Paint Correction Services',
+              'Monthly Maintenance Plans',
+              'Fleet / Business Contracts',
+            ].map(item => (
+              <div key={item} style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                <span style={{ width: 4, height: 4, background: '#E84A0C', borderRadius: '50%', flexShrink: 0 }} />
+                <span style={{ fontFamily: 'var(--font-body)', fontSize: '13px', color: 'rgba(255,255,255,0.32)' }}>
+                  {item}
+                </span>
+              </div>
+            ))}
+          </div>
         </motion.div>
 
       </div>
