@@ -5,6 +5,7 @@ import { useState, useEffect } from 'react'
 const NAV_LINKS = [
   { label: 'About',    href: '#howitworks' },
   { label: 'Packages', href: '#packages'   },
+  { label: 'Fleet',    href: '/van-fleet'  },
 ]
 
 export default function Navbar({ onBookNow }: { onBookNow: () => void }) {

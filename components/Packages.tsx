@@ -3,13 +3,12 @@
 import { useState } from 'react'
 import { motion } from 'framer-motion'
 
-type VehicleType = 'small' | 'midsize' | 'largesuv' | 'van'
+type VehicleType = 'small' | 'midsize' | 'largesuv'
 
 const VEHICLES: { key: VehicleType; label: string; sub: string }[] = [
-  { key: 'small',    label: 'Small Car',       sub: 'Hatch / Saloon'       },
-  { key: 'midsize',  label: 'Mid-Size',         sub: 'Saloon / Estate / SUV' },
-  { key: 'largesuv', label: 'Large SUV / 4×4',  sub: 'Big SUVs, 7 seaters'  },
-  { key: 'van',      label: 'Van',              sub: 'SWB (Transit etc)'    },
+  { key: 'small',    label: 'Small Car',      sub: 'Hatch / Saloon'        },
+  { key: 'midsize',  label: 'Mid-Size',        sub: 'Saloon / Estate / SUV' },
+  { key: 'largesuv', label: 'Large SUV / 4×4', sub: 'Big SUVs, 7 seaters'  },
 ]
 
 interface Pkg {
@@ -26,19 +25,19 @@ const PACKAGES: Pkg[] = [
   {
     id: 'essential', name: 'Essential', tagline: 'Quick refresh', duration: '2–3 hrs',
     featured: false,
-    price: { small: 80, midsize: 90, largesuv: 105, van: 110 },
+    price: { small: 80, midsize: 90, largesuv: 105 },
     includes: ['Safe wash & dry', 'Wheels cleaned', 'Interior vacuum', 'Dashboard wipe', 'Glass cleaned', 'Tyre dressing'],
   },
   {
     id: 'full-valet', name: 'Full Valet', tagline: 'Our most popular service', duration: '4–5 hrs',
     featured: true,
-    price: { small: 140, midsize: 155, largesuv: 175, van: 185 },
+    price: { small: 140, midsize: 155, largesuv: 175 },
     includes: ['Everything in Essential', 'Deep interior clean', 'Seat shampoo', 'Carpet extraction', 'Door shuts cleaned', 'Spray wax protection'],
   },
   {
     id: 'premium', name: 'Premium Detail', tagline: 'Best for resale / transformation', duration: '6–7 hrs',
     featured: false,
-    price: { small: 220, midsize: 240, largesuv: 270, van: 290 },
+    price: { small: 220, midsize: 240, largesuv: 270 },
     includes: ['Everything in Full Valet', 'Clay bar decontamination', 'Light machine polish', 'Paint sealant', 'Trim restoration', 'Odour treatment'],
   },
 ]
@@ -56,11 +55,6 @@ export default function Packages({
     <section
       id="packages"
       style={{
-        /*
-          Dark background — packages on near-black creates a premium editorial feel.
-          The featured (white) card contrasts sharply. The dark section also
-          separates cleanly from the white Stats section before it.
-        */
         background: '#0C0C0C',
         paddingTop:    'clamp(64px, 10vw, 140px)',
         paddingBottom: 'clamp(64px, 10vw, 140px)',
@@ -127,7 +121,7 @@ export default function Packages({
                     padding: '11px 18px',
                     background: vehicle === key ? '#fff' : 'transparent',
                     cursor: 'pointer', border: 'none',
-                    borderRight: key !== 'van' ? '1px solid rgba(255,255,255,0.12)' : 'none',
+                    borderRight: key !== 'largesuv' ? '1px solid rgba(255,255,255,0.12)' : 'none',
                     transition: 'background 0.15s',
                   }}
                 >
@@ -154,13 +148,7 @@ export default function Packages({
           </div>
         </motion.div>
 
-        {/*
-          Package cards grid.
-          On the dark background:
-          — Standard cards: #191919 (slightly lifted dark)
-          — Featured card: pure WHITE — the inversion is striking and draws the eye instantly.
-          No gap; border trick for seamless seams.
-        */}
+        {/* Package cards grid — 4 cols: 3 active + 1 membership teaser */}
         <div
           style={{
             display: 'grid',
@@ -187,7 +175,6 @@ export default function Packages({
                 zIndex: pkg.featured ? 2 : 1,
               }}
             >
-              {/* Featured: 3px orange top accent */}
               {pkg.featured && (
                 <div style={{ height: '3px', background: '#E84A0C', flexShrink: 0 }} />
               )}
@@ -197,7 +184,6 @@ export default function Packages({
                 padding: 'clamp(24px, 2.5vw, 36px)',
               }}>
 
-                {/* Top row: label + duration */}
                 <div style={{
                   display: 'flex', justifyContent: 'space-between',
                   alignItems: 'center', marginBottom: '20px',
@@ -221,7 +207,6 @@ export default function Packages({
                   </span>
                 </div>
 
-                {/* Package name */}
                 <h3 style={{
                   fontFamily: 'var(--font-display)',
                   fontSize: 'clamp(24px, 2.5vw, 32px)',
@@ -239,7 +224,6 @@ export default function Packages({
                   {pkg.tagline}
                 </p>
 
-                {/* THE PRICE — visual hero element */}
                 <div style={{ marginBottom: '24px' }}>
                   <span style={{
                     display: 'block',
@@ -262,14 +246,12 @@ export default function Packages({
                   </div>
                 </div>
 
-                {/* Divider */}
                 <div style={{
                   height: '1px',
                   background: pkg.featured ? 'rgba(12,12,12,0.08)' : 'rgba(255,255,255,0.07)',
                   marginBottom: '20px',
                 }} />
 
-                {/* Feature list */}
                 <ul style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: '9px', marginBottom: '24px' }}>
                   {pkg.includes.map((item) => (
                     <li key={item} style={{ display: 'flex', alignItems: 'flex-start', gap: '10px' }}>
@@ -290,7 +272,6 @@ export default function Packages({
                   ))}
                 </ul>
 
-                {/* CTA */}
                 <button
                   onClick={() => onBookPack(pkg.name, vehicle)}
                   style={{
@@ -319,6 +300,157 @@ export default function Packages({
               </div>
             </motion.div>
           ))}
+
+          {/* 4th card — Membership / Maintenance (Coming Soon) */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: '-20px' }}
+            transition={{ duration: 0.5, ease, delay: 0.21 }}
+            style={{
+              position: 'relative',
+              display: 'flex', flexDirection: 'column',
+              borderRight: '1px solid rgba(255,255,255,0.07)',
+              borderBottom: '1px solid rgba(255,255,255,0.07)',
+              background: '#0E0E0E',
+            }}
+          >
+            {/* Dashed top accent — signals "coming" */}
+            <div style={{
+              height: '2px', flexShrink: 0,
+              background: 'repeating-linear-gradient(90deg, #E84A0C 0px, #E84A0C 8px, transparent 8px, transparent 16px)',
+              opacity: 0.5,
+            }} />
+
+            <div style={{
+              flex: 1, display: 'flex', flexDirection: 'column',
+              padding: 'clamp(24px, 2.5vw, 36px)',
+            }}>
+
+              <div style={{
+                display: 'flex', justifyContent: 'space-between',
+                alignItems: 'center', marginBottom: '20px',
+              }}>
+                <span style={{
+                  fontFamily: 'var(--font-body)', fontWeight: 600, fontSize: '10px',
+                  letterSpacing: '0.18em', textTransform: 'uppercase',
+                  color: '#E84A0C', opacity: 0.7,
+                }}>
+                  Coming Soon
+                </span>
+                <span style={{
+                  fontFamily: 'var(--font-body)', fontWeight: 600, fontSize: '10px',
+                  letterSpacing: '0.1em', textTransform: 'uppercase',
+                  color: 'rgba(255,255,255,0.18)',
+                  border: '1px solid rgba(255,255,255,0.08)',
+                  padding: '3px 8px',
+                }}>
+                  Monthly
+                </span>
+              </div>
+
+              <h3 style={{
+                fontFamily: 'var(--font-display)',
+                fontSize: 'clamp(24px, 2.5vw, 32px)',
+                letterSpacing: '0.03em',
+                color: 'rgba(255,255,255,0.55)',
+                lineHeight: 0.92, marginBottom: '4px',
+              }}>
+                Membership
+              </h3>
+              <p style={{
+                fontFamily: 'var(--font-body)', fontSize: '13px',
+                color: 'rgba(255,255,255,0.22)',
+                marginBottom: '20px',
+              }}>
+                Keep your car clean, all year round
+              </p>
+
+              <div style={{ marginBottom: '24px' }}>
+                <span style={{
+                  display: 'block',
+                  fontFamily: 'var(--font-body)', fontSize: '11px', fontWeight: 500,
+                  letterSpacing: '0.06em',
+                  color: 'rgba(255,255,255,0.18)',
+                  marginBottom: '2px',
+                }}>
+                  from
+                </span>
+                <div style={{ display: 'flex', alignItems: 'baseline', gap: '6px' }}>
+                  <span style={{
+                    fontFamily: 'var(--font-display)',
+                    fontSize: 'clamp(52px, 5.5vw, 72px)',
+                    letterSpacing: '0.01em', lineHeight: 1,
+                    color: 'rgba(255,255,255,0.3)',
+                  }}>
+                    £50
+                  </span>
+                  <span style={{
+                    fontFamily: 'var(--font-body)', fontSize: '13px',
+                    color: 'rgba(255,255,255,0.2)',
+                  }}>
+                    /mo
+                  </span>
+                </div>
+              </div>
+
+              <div style={{
+                height: '1px',
+                background: 'rgba(255,255,255,0.05)',
+                marginBottom: '20px',
+              }} />
+
+              <ul style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: '9px', marginBottom: '24px' }}>
+                {[
+                  'Monthly maintenance visit',
+                  'Exterior safe wash',
+                  'Interior vacuum & wipe',
+                  'Glass clean & tyre dress',
+                  'Priority booking slots',
+                  'Discounted rates',
+                ].map((item) => (
+                  <li key={item} style={{ display: 'flex', alignItems: 'flex-start', gap: '10px' }}>
+                    <span style={{
+                      fontFamily: 'var(--font-body)', fontWeight: 600, fontSize: '11px',
+                      color: 'rgba(255,255,255,0.15)',
+                      flexShrink: 0, marginTop: '2px',
+                    }}>
+                      –
+                    </span>
+                    <span style={{
+                      fontFamily: 'var(--font-body)', fontSize: '13px', lineHeight: 1.5,
+                      color: 'rgba(255,255,255,0.25)',
+                    }}>
+                      {item}
+                    </span>
+                  </li>
+                ))}
+              </ul>
+
+              <div style={{
+                width: '100%',
+                fontFamily: 'var(--font-body)', fontWeight: 600, fontSize: '12px',
+                letterSpacing: '0.08em', textTransform: 'uppercase',
+                display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+                padding: '14px 18px',
+                background: 'rgba(255,255,255,0.04)',
+                border: '1px dashed rgba(255,255,255,0.1)',
+                color: 'rgba(255,255,255,0.3)',
+              }}>
+                Launching Soon
+                <span style={{
+                  width: 16, height: 16, flexShrink: 0,
+                  border: '1px solid rgba(255,255,255,0.15)',
+                  borderRadius: '50%',
+                  display: 'flex', alignItems: 'center', justifyContent: 'center',
+                  fontSize: '9px', color: 'rgba(255,255,255,0.3)',
+                }}>
+                  ◎
+                </span>
+              </div>
+
+            </div>
+          </motion.div>
         </div>
 
         {/* Add-ons strip */}
@@ -344,11 +476,11 @@ export default function Packages({
           </span>
           <span style={{ display: 'block', width: 1, height: 18, background: 'rgba(255,255,255,0.08)' }} className="hidden sm:block" />
           {[
-            ['Engine Bay Clean',             '£40'],
-            ['Pet Hair Removal',             '£25'],
-            ['Odour Treatment',              '£30'],
-            ['Seat Shampoo (extra heavy)',   '£30'],
-            ['Interior Steam Sanitisation',  '£35'],
+            ['Engine Bay Clean',            '£40'],
+            ['Pet Hair Removal',            '£25'],
+            ['Odour Treatment',             '£30'],
+            ['Seat Shampoo (extra heavy)',  '£30'],
+            ['Interior Steam Sanitisation', '£35'],
           ].map(([name, price]) => (
             <div key={name} style={{ display: 'flex', alignItems: 'baseline', gap: '6px' }}>
               <span style={{ fontFamily: 'var(--font-body)', fontSize: '13px', color: 'rgba(255,255,255,0.35)' }}>
@@ -364,59 +496,67 @@ export default function Packages({
           ))}
         </motion.div>
 
-        {/* Van note */}
-        <motion.p
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
+        {/* Van & Fleet callout */}
+        <motion.div
+          initial={{ opacity: 0, y: 12 }}
+          whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.5, delay: 0.2 }}
           style={{
-            marginTop: '16px',
-            fontFamily: 'var(--font-body)', fontSize: '12px', lineHeight: 1.7,
-            color: 'rgba(255,255,255,0.28)',
-          }}
-        >
-          <span style={{ color: 'rgba(255,255,255,0.5)', fontWeight: 600 }}>Van pricing note:</span>{' '}
-          Van pricing based on standard working vans. Heavily soiled or commercial-use interiors may require a custom quote.
-        </motion.p>
-
-        {/* Coming Soon */}
-        <motion.div
-          initial={{ opacity: 0, y: 16 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.5, delay: 0.25 }}
-          style={{
-            marginTop: 'clamp(36px, 4vw, 56px)',
+            marginTop: 'clamp(24px, 3vw, 36px)',
             border: '1px solid rgba(255,255,255,0.07)',
-            padding: 'clamp(20px, 2.5vw, 32px) clamp(20px, 3vw, 36px)',
-            background: '#191919',
+            padding: 'clamp(20px, 2.5vw, 28px) clamp(20px, 3vw, 36px)',
+            background: '#111111',
+            display: 'flex', flexWrap: 'wrap', alignItems: 'center',
+            justifyContent: 'space-between', gap: '16px',
           }}
         >
-          <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '20px' }}>
-            <span style={{ width: 16, height: '1.5px', background: '#E84A0C', flexShrink: 0 }} />
-            <span style={{
-              fontFamily: 'var(--font-body)', fontWeight: 600, fontSize: '10px',
-              letterSpacing: '0.22em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.28)',
+          <div style={{ display: 'flex', alignItems: 'center', gap: '20px' }}>
+            <div style={{
+              width: 40, height: 40, background: 'rgba(232,74,12,0.1)',
+              border: '1px solid rgba(232,74,12,0.2)',
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+              flexShrink: 0,
             }}>
-              Coming Soon
-            </span>
+              <svg width="18" height="14" viewBox="0 0 24 18" fill="none" stroke="#E84A0C" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                <rect x="1" y="3" width="18" height="12" rx="2" />
+                <path d="M19 7h2l2 4v4h-4" />
+                <circle cx="6" cy="17" r="2" />
+                <circle cx="16" cy="17" r="2" />
+                <circle cx="21" cy="17" r="2" />
+              </svg>
+            </div>
+            <div>
+              <p style={{
+                fontFamily: 'var(--font-body)', fontWeight: 600, fontSize: '13px',
+                color: 'rgba(255,255,255,0.7)', marginBottom: '3px',
+              }}>
+                Running a van or fleet?
+              </p>
+              <p style={{
+                fontFamily: 'var(--font-body)', fontSize: '12px',
+                color: 'rgba(255,255,255,0.3)',
+              }}>
+                We have dedicated commercial services, fleet pricing and business packages.
+              </p>
+            </div>
           </div>
-          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '10px 28px' }}>
-            {[
-              'Ceramic Coating Packages',
-              'Paint Correction Services',
-              'Monthly Maintenance Plans',
-              'Fleet / Business Contracts',
-            ].map(item => (
-              <div key={item} style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                <span style={{ width: 4, height: 4, background: '#E84A0C', borderRadius: '50%', flexShrink: 0 }} />
-                <span style={{ fontFamily: 'var(--font-body)', fontSize: '13px', color: 'rgba(255,255,255,0.32)' }}>
-                  {item}
-                </span>
-              </div>
-            ))}
-          </div>
+          <a
+            href="/van-fleet"
+            style={{
+              fontFamily: 'var(--font-body)', fontWeight: 600, fontSize: '11px',
+              letterSpacing: '0.1em', textTransform: 'uppercase',
+              color: '#E84A0C', textDecoration: 'none',
+              display: 'flex', alignItems: 'center', gap: '8px',
+              flexShrink: 0,
+              transition: 'opacity 0.2s',
+            }}
+            onMouseEnter={e => (e.currentTarget.style.opacity = '0.7')}
+            onMouseLeave={e => (e.currentTarget.style.opacity = '1')}
+          >
+            View Van & Fleet
+            <span style={{ fontSize: '14px' }}>→</span>
+          </a>
         </motion.div>
 
       </div>

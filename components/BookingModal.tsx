@@ -3,7 +3,7 @@
 import { useState } from 'react'
 import { motion } from 'framer-motion'
 
-type VehicleType = 'small' | 'midsize' | 'largesuv' | 'van'
+type VehicleType = 'small' | 'midsize' | 'largesuv'
 type Step = 1 | 2 | 3 | 4
 
 interface BookingModalProps {
@@ -32,15 +32,14 @@ const vehicleLabels: Record<VehicleType, string> = {
   small:    'Small Car',
   midsize:  'Mid-Size',
   largesuv: 'Large SUV / 4×4',
-  van:      'Van',
 }
 
 const timeSlots = ['8:00 AM', '10:00 AM', '12:00 PM', '2:00 PM', '4:00 PM', '6:00 PM']
 
 const priceMap: Record<string, Record<VehicleType, number>> = {
-  'Essential':      { small: 80,  midsize: 90,  largesuv: 105, van: 110 },
-  'Full Valet':     { small: 140, midsize: 155, largesuv: 175, van: 185 },
-  'Premium Detail': { small: 220, midsize: 240, largesuv: 270, van: 290 },
+  'Essential':      { small: 80,  midsize: 90,  largesuv: 105 },
+  'Full Valet':     { small: 140, midsize: 155, largesuv: 175 },
+  'Premium Detail': { small: 220, midsize: 240, largesuv: 270 },
 }
 
 const STEP_LABELS = ['Select Pack', 'Schedule', 'Your Details']
