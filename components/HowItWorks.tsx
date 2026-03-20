@@ -89,7 +89,7 @@ export default function HowItWorks({ onBookNow }: { onBookNow: () => void }) {
               <div style={{ position: 'relative', overflow: 'hidden' }}>
                 <Image
                   src="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=800&q=85&fit=crop&crop=center"
-                  alt="Detailing process"
+                  alt="Mobile car detailing process — professional car cleaning service near Hemel Hempstead"
                   fill
                   style={{ objectFit: 'cover' }}
                 />
@@ -102,7 +102,7 @@ export default function HowItWorks({ onBookNow }: { onBookNow: () => void }) {
                 <div style={{ position: 'relative', overflow: 'hidden' }}>
                   <Image
                     src="https://images.unsplash.com/photo-1563720223185-11003d516935?w=800&q=88&fit=crop&crop=center"
-                    alt="Professional detailer at work"
+                    alt="Professional car detailer at work — True To Detail mobile valeting service Hertfordshire"
                     fill
                     style={{ objectFit: 'cover' }}
                   />

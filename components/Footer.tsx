@@ -144,6 +144,38 @@ export default function Footer({ onBookNow }: { onBookNow: () => void }) {
               </a>
             ))}
           </nav>
+
+          {/* SEO service links */}
+          <p style={{
+            fontFamily: 'var(--font-body)', fontWeight: 600, fontSize: '10px',
+            letterSpacing: '0.2em', textTransform: 'uppercase',
+            color: 'rgba(12,12,12,0.25)', marginBottom: '14px', marginTop: '28px',
+          }}>
+            Our Services
+          </p>
+          <nav aria-label="Detailing services" style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+            {[
+              ['Mobile Car Detailing',       '/mobile-car-detailing'],
+              ['Interior Car Detailing',     '/interior-car-detailing'],
+              ['Exterior Car Detailing',     '/exterior-car-detailing'],
+              ['Full Car Detail Packages',   '/full-car-detail'],
+              ['Professional Car Valeting',  '/professional-car-valeting'],
+            ].map(([label, href]) => (
+              <a
+                key={label}
+                href={href}
+                style={{
+                  fontFamily: 'var(--font-body)', fontSize: '13px',
+                  color: 'rgba(12,12,12,0.38)', textDecoration: 'none',
+                  transition: 'color 0.2s',
+                }}
+                onMouseEnter={e => (e.currentTarget.style.color = '#E84A0C')}
+                onMouseLeave={e => (e.currentTarget.style.color = 'rgba(12,12,12,0.38)')}
+              >
+                {label}
+              </a>
+            ))}
+          </nav>
         </div>
 
         {/* Col 3 — Book */}

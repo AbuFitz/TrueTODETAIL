@@ -100,7 +100,7 @@ export default function Services() {
         >
           <Image
             src="https://images.unsplash.com/photo-1553440569-bcc63803a83d?w=1600&q=90&fit=crop&crop=center"
-            alt="Professional detailing work"
+            alt="Professional exterior car detailing and paint correction service near Hemel Hempstead, Hertfordshire"
             fill
             sizes="(max-width: 1400px) 100vw"
             style={{ objectFit: 'cover', objectPosition: 'center 40%' }}

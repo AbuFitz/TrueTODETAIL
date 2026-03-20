@@ -59,7 +59,7 @@ export default function Hero({ onBookNow }: { onBookNow: () => void }) {
         >
           <Image
             src="https://images.unsplash.com/photo-1607860108855-64acf2078ed9?w=1800&q=90&fit=crop"
-            alt="Premium car detailing"
+            alt="Professional mobile car detailing service — True To Detail covering Hemel Hempstead, Watford, St Albans and Hertfordshire"
             fill priority sizes="100vw"
             style={{
               objectFit: 'cover',
@@ -123,7 +123,6 @@ export default function Hero({ onBookNow }: { onBookNow: () => void }) {
             /* Sits in the photo zone — starts roughly where the diagonal ends at the bottom */
             width: `${100 - D_BOT}%`,
             background: 'linear-gradient(to top, rgba(12,12,12,0.82) 0%, transparent 100%)',
-            display: 'flex',
             alignItems: 'flex-end',
             justifyContent: 'flex-end',
             padding: '0 clamp(24px, 4vw, 64px) clamp(24px, 3vw, 48px)',
@@ -295,7 +294,7 @@ export default function Hero({ onBookNow }: { onBookNow: () => void }) {
               flexDirection: 'column',
               justifyContent: 'flex-end',
               height: '100%',
-              padding: '0 24px 44px',
+              padding: '0 20px 36px',
             }}
           >
             <motion.div
@@ -308,18 +307,19 @@ export default function Hero({ onBookNow }: { onBookNow: () => void }) {
               <p style={{
                 fontFamily: 'var(--font-body)', fontSize: '10px', fontWeight: 600,
                 letterSpacing: '0.26em', textTransform: 'uppercase',
-                color: 'rgba(255,255,255,0.28)', margin: '0 0 18px',
+                color: 'rgba(255,255,255,0.28)', margin: '0 0 12px',
               }}>
                 Hertfordshire, UK
               </p>
 
               {/* Headline — clean stacked, no indentation on mobile */}
-              <div style={{ pointerEvents: 'none', marginBottom: '20px', lineHeight: 0.88 }}>
+              <div style={{ pointerEvents: 'none', marginBottom: '16px' }}>
                 {/* Typewriter word */}
                 <div style={{
                   fontFamily: 'var(--font-display)',
-                  fontSize: 'clamp(64px, 19vw, 92px)',
+                  fontSize: 'clamp(52px, 15vw, 80px)',
                   letterSpacing: '0.01em', color: '#ffffff',
+                  lineHeight: 0.92,
                   display: 'flex', alignItems: 'baseline',
                 }}>
                   <span>{displayText}</span>
@@ -328,7 +328,7 @@ export default function Hero({ onBookNow }: { onBookNow: () => void }) {
                     aria-hidden
                     style={{
                       display: 'inline-block', width: '3px', height: '0.72em',
-                      background: '#ffffff', marginLeft: '5px',
+                      background: '#ffffff', marginLeft: '4px',
                       verticalAlign: 'baseline', flexShrink: 0,
                       position: 'relative', top: '0.04em',
                     }}
@@ -337,41 +337,43 @@ export default function Hero({ onBookNow }: { onBookNow: () => void }) {
                 {/* DONE */}
                 <div style={{
                   fontFamily: 'var(--font-display)',
-                  fontSize: 'clamp(64px, 19vw, 92px)',
+                  fontSize: 'clamp(52px, 15vw, 80px)',
                   letterSpacing: '0.01em', color: 'rgba(255,255,255,0.42)',
+                  lineHeight: 0.92,
                 }}>
                   DONE
                 </div>
                 {/* RIGHT. */}
                 <div style={{
                   fontFamily: 'var(--font-display)',
-                  fontSize: 'clamp(64px, 19vw, 92px)',
+                  fontSize: 'clamp(52px, 15vw, 80px)',
                   letterSpacing: '0.01em', color: 'rgba(255,255,255,0.26)',
+                  lineHeight: 0.92,
                 }}>
                   RIGHT<span style={{ color: '#E84A0C' }}>.</span>
                 </div>
               </div>
 
               {/* Separator */}
-              <div style={{ width: '36px', height: '1px', background: 'rgba(255,255,255,0.38)', marginBottom: '14px' }} />
+              <div style={{ width: '32px', height: '1px', background: 'rgba(255,255,255,0.38)', marginBottom: '12px' }} />
 
               {/* Sub-text */}
               <p style={{
-                fontFamily: 'var(--font-body)', fontSize: '13px', lineHeight: 1.68,
-                color: 'rgba(255,255,255,0.42)', margin: '0 0 28px',
+                fontFamily: 'var(--font-body)', fontSize: '13px', lineHeight: 1.62,
+                color: 'rgba(255,255,255,0.42)', margin: '0 0 24px',
               }}>
                 Mobile detailing to your door — no drop-off,<br />
                 fixed prices, Hertfordshire &amp; surrounds.
               </p>
 
-              {/* CTA — full width */}
+              {/* CTA + mobile stats row */}
               <button
                 onClick={onBookNow}
                 style={{
                   fontFamily: 'var(--font-body)', fontWeight: 700, fontSize: '11px',
                   letterSpacing: '0.12em', textTransform: 'uppercase',
                   background: '#E84A0C', color: '#fff', border: 'none', cursor: 'pointer',
-                  padding: '17px 24px', width: '100%',
+                  padding: '16px 20px', width: '100%',
                   display: 'flex', alignItems: 'center', justifyContent: 'space-between',
                 }}
               >
@@ -382,6 +384,44 @@ export default function Hero({ onBookNow }: { onBookNow: () => void }) {
                   borderRadius: '50% 50% 45% 45% / 55% 55% 45% 45%',
                 }} />
               </button>
+
+              {/* Mobile stats strip — below CTA */}
+              <div style={{
+                display: 'flex', gap: 0,
+                marginTop: '1px',
+              }}>
+                {[
+                  { value: '100%', label: 'Mobile Service' },
+                  { value: '£0',   label: 'Hidden Charges' },
+                  { value: '2YR',  label: 'Ceramic Warranty' },
+                ].map((s, idx) => (
+                  <div key={s.value} style={{
+                    flex: 1, textAlign: 'center',
+                    padding: '10px 4px',
+                    background: 'rgba(12,12,12,0.72)',
+                    borderLeft: idx > 0 ? '1px solid rgba(255,255,255,0.07)' : 'none',
+                  }}>
+                    <span style={{
+                      fontFamily: 'var(--font-display)',
+                      fontSize: 'clamp(20px, 5.5vw, 28px)',
+                      letterSpacing: '0.01em',
+                      color: '#ffffff', lineHeight: 1,
+                      display: 'block',
+                    }}>
+                      {s.value}
+                    </span>
+                    <span style={{
+                      fontFamily: 'var(--font-body)',
+                      fontSize: '8px', fontWeight: 600,
+                      letterSpacing: '0.14em', textTransform: 'uppercase',
+                      color: 'rgba(255,255,255,0.38)',
+                      display: 'block', marginTop: '3px',
+                    }}>
+                      {s.label}
+                    </span>
+                  </div>
+                ))}
+              </div>
             </motion.div>
           </div>
         </div>
