@@ -54,7 +54,13 @@ export default function Navbar({ onBookNow }: { onBookNow: () => void }) {
 
           {/* Logo */}
           <a
-            href="#"
+            href="/"
+            onClick={(e) => {
+              if (window.location.pathname === '/') {
+                e.preventDefault()
+                window.scrollTo({ top: 0, behavior: 'smooth' })
+              }
+            }}
             style={{
               textDecoration: 'none', flexShrink: 0,
               display: 'flex', alignItems: 'center',

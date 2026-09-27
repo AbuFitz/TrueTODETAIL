@@ -54,7 +54,7 @@ export default function Footer({ onBookNow }: { onBookNow: () => void }) {
         {/* Col 1 — Brand */}
         <div>
           <a
-            href="#"
+            href="/"
             style={{ textDecoration: 'none', display: 'inline-flex', alignItems: 'center', gap: '10px', marginBottom: '20px' }}
           >
             <span style={{

@@ -25,9 +25,10 @@ const GREETING: Message = {
 
 function goToBooking() {
   if (typeof window === 'undefined') return
-  window.dispatchEvent(new Event('ttd:book-now'))
   if (window.location.pathname !== '/') {
-    window.location.href = '/'
+    window.location.href = '/?book=1'
+  } else {
+    window.dispatchEvent(new Event('ttd:book-now'))
   }
 }
 

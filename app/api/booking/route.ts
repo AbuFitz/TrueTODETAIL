@@ -113,7 +113,7 @@ export async function POST(req: NextRequest) {
   }
   const normalizedPostcode = data.address.trim().toUpperCase()
   if (!POSTCODE_RE.test(normalizedPostcode)) {
-    return NextResponse.json({ error: 'Please enter a valid UK postcode (e.g. HP2 6EL)' }, { status: 400 })
+    return NextResponse.json({ error: 'Please enter a valid UK postcode' }, { status: 400 })
   }
   const normalizedReg = data.carReg.trim().toUpperCase().replace(/\s+/g, '')
   if (!CAR_REG_RE.test(normalizedReg)) {
@@ -135,7 +135,10 @@ export async function POST(req: NextRequest) {
   const price = basePrice + addonTotal
 
   // ── Build booking record ──
-  const id = `TTD-${Date.now()}-${Math.random().toString(36).slice(2, 7).toUpperCase()}`
+  // Short, human-readable reference: TTD-YYMMDD-XXXX
+  const datePart = new Date().toISOString().slice(2, 10).replace(/-/g, '')
+  const refPart = Math.random().toString(36).slice(2, 6).toUpperCase()
+  const id = `TTD-${datePart}-${refPart}`
   const createdAt = new Date().toISOString()
 
   const booking: BookingRecord = {
@@ -157,8 +160,10 @@ export async function POST(req: NextRequest) {
   }
 
   // ── Email via Resend ──
+  // Sent from a no-reply address; replies are routed to the monitored inbox instead.
   const resendKey = process.env.RESEND_API_KEY
-  const fromEmail = process.env.BOOKING_FROM_EMAIL ?? 'bookings@truetodetail.co.uk'
+  const fromEmail = process.env.BOOKING_FROM_EMAIL ?? 'noreply@truetodetail.co.uk'
+  const replyToEmail = 'bookings@truetodetail.co.uk'
 
   if (resendKey) {
     const resend = new Resend(resendKey)
@@ -185,6 +190,7 @@ export async function POST(req: NextRequest) {
       resend.emails.send({
         from: fromEmail,
         to: 'bookings@truetodetail.co.uk',
+        replyTo: replyToEmail,
         subject: `New Booking: ${booking.pack} · ${booking.date} · Ref ${booking.id}`,
         html: notificationEmail(emailData),
       }),
@@ -192,6 +198,7 @@ export async function POST(req: NextRequest) {
       resend.emails.send({
         from: fromEmail,
         to: booking.email,
+        replyTo: replyToEmail,
         subject: `Your Detail is Confirmed: ${booking.date}`,
         html: confirmationEmail(emailData),
       }),

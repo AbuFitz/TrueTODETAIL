@@ -384,7 +384,7 @@ export default function BookingModal({
                 <input
                   required type="text" value={address}
                   onChange={e => setAddress(e.target.value.toUpperCase())}
-                  placeholder="e.g. HP2 6EL"
+                  placeholder="Enter your postcode"
                   maxLength={8}
                   style={{ ...textInput, textTransform: 'uppercase', letterSpacing: '0.12em' }}
                 />
