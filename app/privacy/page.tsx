@@ -38,7 +38,7 @@ export default function PrivacyPage() {
           PRIVACY<br />POLICY
         </h1>
         <p style={{ fontFamily: 'var(--font-body)', fontSize: '13px', color: 'rgba(12,12,12,0.38)', marginBottom: '48px' }}>
-          Last updated: March 2025
+          Last updated: September 2026
         </p>
 
         <div style={{ borderTop: '1px solid rgba(12,12,12,0.1)' }}>
@@ -61,7 +61,7 @@ export default function PrivacyPage() {
             },
             {
               heading: '5. Data Sharing',
-              body: 'We do not sell or share your personal data with third parties for marketing purposes. We may share your data with service providers who help us operate our business (such as email delivery services), who are contractually required to protect it. We will disclose data if required by law.',
+              body: 'We do not sell your personal data. We share data with service providers who help us operate our business, such as email delivery services and, where you have consented to analytics/advertising cookies, Google Analytics and Google Ads, who are contractually required to protect it. We will disclose data if required by law.',
             },
             {
               heading: '6. Data Retention',

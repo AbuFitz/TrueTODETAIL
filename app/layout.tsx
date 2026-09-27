@@ -1,7 +1,12 @@
 import type { Metadata } from 'next'
 import { Bebas_Neue, DM_Sans } from 'next/font/google'
 import SupportWidget from '@/components/SupportWidget'
+import CookieConsentBanner from '@/components/CookieConsentBanner'
 import './globals.css'
+
+// Google tag (Analytics/Ads) measurement ID. Not a secret: it's public in every
+// page's rendered HTML and network requests, so it's fine hardcoded here.
+const GA_MEASUREMENT_ID = 'G-YSW7TYVCE9'
 
 // Bebas Neue — single-weight display font for all major headlines
 const bebasNeue = Bebas_Neue({
@@ -315,6 +320,37 @@ export default function RootLayout({
   return (
     <html lang="en-GB" className={`${bebasNeue.variable} ${dmSans.variable}`}>
       <head>
+        {/*
+          Google tag (gtag.js) with Consent Mode v2. All signals default to
+          "denied" until the visitor accepts via CookieConsentBanner (or has
+          already accepted in a previous visit, per localStorage) — required
+          for UK/EEA visitors before any analytics or ad cookies are set.
+        */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              window.dataLayer = window.dataLayer || [];
+              function gtag(){dataLayer.push(arguments);}
+              window.gtag = gtag;
+              var storedConsent = null;
+              try { storedConsent = localStorage.getItem('ttd_cookie_consent'); } catch (e) {}
+              var granted = storedConsent === 'granted';
+              gtag('consent', 'default', {
+                ad_storage: granted ? 'granted' : 'denied',
+                ad_user_data: granted ? 'granted' : 'denied',
+                ad_personalization: granted ? 'granted' : 'denied',
+                analytics_storage: granted ? 'granted' : 'denied',
+                wait_for_update: 500
+              });
+            `,
+          }}
+        />
+        <script async src={`https://www.googletagmanager.com/gtag/js?id=${GA_MEASUREMENT_ID}`} />
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `gtag('js', new Date());\ngtag('config', '${GA_MEASUREMENT_ID}');`,
+          }}
+        />
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
@@ -324,6 +360,7 @@ export default function RootLayout({
       <body className="bg-white text-site-black font-body antialiased">
         {children}
         <SupportWidget />
+        <CookieConsentBanner />
       </body>
     </html>
   )
