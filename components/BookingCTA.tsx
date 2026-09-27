@@ -76,7 +76,7 @@ export default function BookingCTA({ onBookNow }: { onBookNow: () => void }) {
               color: 'rgba(255,255,255,0.38)', maxWidth: '340px',
               marginBottom: 'clamp(28px, 4vw, 44px)',
             }}>
-              Mobile. Professional. Fixed prices. We come to your door — no drop-off, no waiting around, just results.
+              Mobile. Professional. Fixed prices. We come to your door, no drop-off, no waiting around, just results.
             </p>
 
             <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', maxWidth: '340px' }}>
@@ -143,7 +143,7 @@ export default function BookingCTA({ onBookNow }: { onBookNow: () => void }) {
               {
                 label: 'Get In Touch',
                 value: 'info@truetodetail.co.uk',
-                detail: '07359 591800 — calls and WhatsApp welcome.',
+                detail: '07359 591800. Calls and WhatsApp welcome.',
               },
             ].map((tile, i) => (
               <motion.div

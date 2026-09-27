@@ -10,7 +10,7 @@ export const metadata: Metadata = {
   },
   openGraph: {
     title: 'Professional Car Valeting | True To Detail',
-    description: 'Mobile professional car valeting in Hertfordshire. We come to you — no drop-off needed. Fixed prices, exceptional results.',
+    description: 'Mobile professional car valeting in Hertfordshire. We come to you, no drop-off needed. Fixed prices, exceptional results.',
     url: 'https://www.truetodetail.co.uk/professional-car-valeting',
   },
 }
@@ -48,24 +48,24 @@ export default function ProfessionalCarValetingPage() {
           </h1>
 
           <p style={{ fontSize: '18px', lineHeight: 1.7, color: 'rgba(12,12,12,0.65)', marginBottom: '40px', fontWeight: 500 }}>
-            True To Detail offers a professional mobile car valet service across Hemel Hempstead and surrounding Hertfordshire areas — combining the convenience of mobile service with the quality of a dedicated detailing studio.
+            True To Detail offers a professional mobile car valet service across Hemel Hempstead and surrounding Hertfordshire areas, combining the convenience of mobile service with the quality of a dedicated detailing studio.
           </p>
 
           <section style={{ marginBottom: '48px' }}>
             <h2 style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(28px, 4vw, 44px)', letterSpacing: '0.02em', color: '#0C0C0C', marginBottom: '16px' }}>
-              VALETING VS DETAILING — WHAT&apos;S THE DIFFERENCE?
+              VALETING VS DETAILING: WHAT&apos;S THE DIFFERENCE?
             </h2>
             <p style={{ fontSize: '15px', lineHeight: 1.78, color: 'rgba(12,12,12,0.62)', marginBottom: '16px' }}>
               Car valeting and car detailing are terms often used interchangeably, but there are meaningful differences in what each involves.
             </p>
             <p style={{ fontSize: '15px', lineHeight: 1.78, color: 'rgba(12,12,12,0.62)', marginBottom: '16px' }}>
-              <strong>Car valeting</strong> typically refers to a thorough clean of the vehicle — both interior and exterior. A professional valet covers vacuuming, interior wipe-down, exterior hand wash, wheel clean and window cleaning. It leaves the car clean and presentable.
+              <strong>Car valeting</strong> typically refers to a thorough clean of the vehicle, both interior and exterior. A professional valet covers vacuuming, interior wipe-down, exterior hand wash, wheel clean and window cleaning. It leaves the car clean and presentable.
             </p>
             <p style={{ fontSize: '15px', lineHeight: 1.78, color: 'rgba(12,12,12,0.62)', marginBottom: '16px' }}>
-              <strong>Car detailing</strong> goes further — it involves paint correction, decontamination, machine polishing, paint protection and restoration work that improves the vehicle&apos;s condition beyond its cleaned state. Detailing addresses defects in the paintwork and materials that valeting doesn&apos;t touch.
+              <strong>Car detailing</strong> goes further. It involves paint correction, decontamination, machine polishing, paint protection and restoration work that improves the vehicle&apos;s condition beyond its cleaned state. Detailing addresses defects in the paintwork and materials that valeting doesn&apos;t touch.
             </p>
             <p style={{ fontSize: '15px', lineHeight: 1.78, color: 'rgba(12,12,12,0.62)' }}>
-              At True To Detail, we offer services across the full spectrum — from a thorough valet (our Essential package) through to a comprehensive multi-stage clean with paint decontamination and sealant protection (our Premium Detail package). All delivered as a mobile service to your location.
+              At True To Detail, we offer services across the full spectrum, from a thorough valet (our Essential package) through to a comprehensive multi-stage clean with paint decontamination and sealant protection (our Premium Detail package). All delivered as a mobile service to your location.
             </p>
           </section>
 
@@ -77,11 +77,11 @@ export default function ProfessionalCarValetingPage() {
               Professional car detailing and valeting offers several advantages over DIY cleaning or a drive-through car wash:
             </p>
             <ul style={{ fontSize: '15px', lineHeight: 2.1, color: 'rgba(12,12,12,0.62)', paddingLeft: '20px', marginBottom: '16px' }}>
-              <li><strong>Better results</strong> — Professional products, equipment and techniques deliver a finish that simply cannot be replicated at home.</li>
-              <li><strong>Paint protection</strong> — Correct washing and decontamination techniques protect your paintwork. Automatic car washes cause swirl damage.</li>
-              <li><strong>Vehicle value</strong> — A well-maintained vehicle in excellent condition retains significantly more resale value.</li>
-              <li><strong>Hygiene</strong> — Deep interior cleaning removes bacteria, allergens and contaminants that a standard clean misses.</li>
-              <li><strong>Convenience</strong> — Mobile detailing means zero inconvenience — we come to you and work around your schedule.</li>
+              <li><strong>Better results</strong>: Professional products, equipment and techniques deliver a finish that simply cannot be replicated at home.</li>
+              <li><strong>Paint protection</strong>: Correct washing and decontamination techniques protect your paintwork. Automatic car washes cause swirl damage.</li>
+              <li><strong>Vehicle value</strong>: A well-maintained vehicle in excellent condition retains significantly more resale value.</li>
+              <li><strong>Hygiene</strong>: Deep interior cleaning removes bacteria, allergens and contaminants that a standard clean misses.</li>
+              <li><strong>Convenience</strong>: Mobile detailing means zero inconvenience. We come to you and work around your schedule.</li>
             </ul>
           </section>
 
@@ -93,7 +93,7 @@ export default function ProfessionalCarValetingPage() {
               True To Detail provides professional mobile car valeting and detailing services across Hemel Hempstead and surrounding areas including Watford, St Albans, Berkhamsted, Kings Langley and nearby towns. Our coverage spans the wider Hertfordshire region, including Harpenden, Tring, Abbots Langley, Chesham, Rickmansworth, Apsley, Leverstock Green, Redbourn, Boxmoor, Bovingdon and Markyate.
             </p>
             <p style={{ fontSize: '15px', lineHeight: 1.78, color: 'rgba(12,12,12,0.62)' }}>
-              Our mobile setup is entirely self-contained — we bring our own power supply, water and professional-grade equipment. Whether you need a professional car valet at your home in Berkhamsted, your workplace in Watford or anywhere else across Hertfordshire, we can accommodate your booking.
+              Our mobile setup is entirely self-contained: we bring our own power supply, water and professional-grade equipment. Whether you need a professional car valet at your home in Berkhamsted, your workplace in Watford or anywhere else across Hertfordshire, we can accommodate your booking.
             </p>
           </section>
 
@@ -105,9 +105,9 @@ export default function ProfessionalCarValetingPage() {
               We offer three packages to suit different requirements:
             </p>
             <ul style={{ fontSize: '15px', lineHeight: 2.1, color: 'rgba(12,12,12,0.62)', paddingLeft: '20px', marginBottom: '16px' }}>
-              <li><strong>Essential</strong> — Safe wash & dry, wheels cleaned, interior vacuum, dashboard wipe, glass cleaned, tyre dressing. From £80 (small car).</li>
-              <li><strong>Full Valet</strong> — Everything in Essential, plus deep interior clean, seat shampoo, carpet extraction, door shuts cleaned and spray wax protection. From £140.</li>
-              <li><strong>Premium Detail</strong> — Everything in Full Valet, plus clay bar decontamination, light machine polish, paint sealant, trim restoration and odour treatment. From £220.</li>
+              <li><strong>Essential</strong>: Safe wash & dry, wheels cleaned, interior vacuum, dashboard wipe, glass cleaned, tyre dressing. From £80 (small car).</li>
+              <li><strong>Full Valet</strong>: Everything in Essential, plus deep interior clean, seat shampoo, carpet extraction, door shuts cleaned and spray wax protection. From £140.</li>
+              <li><strong>Premium Detail</strong>: Everything in Full Valet, plus clay bar decontamination, light machine polish, paint sealant, trim restoration and odour treatment. From £220.</li>
             </ul>
           </section>
 

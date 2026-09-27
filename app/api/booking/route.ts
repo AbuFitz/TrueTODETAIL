@@ -185,14 +185,14 @@ export async function POST(req: NextRequest) {
       resend.emails.send({
         from: fromEmail,
         to: 'bookings@truetodetail.co.uk',
-        subject: `New Booking — ${booking.pack} · ${booking.date} · Ref ${booking.id}`,
+        subject: `New Booking: ${booking.pack} · ${booking.date} · Ref ${booking.id}`,
         html: notificationEmail(emailData),
       }),
       // Customer confirmation
       resend.emails.send({
         from: fromEmail,
         to: booking.email,
-        subject: `Your Detail is Confirmed — ${booking.date}`,
+        subject: `Your Detail is Confirmed: ${booking.date}`,
         html: confirmationEmail(emailData),
       }),
     ])

@@ -61,7 +61,7 @@ export async function POST(req: NextRequest) {
     const result = await resend.emails.send({
       from: fromEmail,
       to: 'info@truetodetail.co.uk',
-      subject: `New Van & Fleet Enquiry — ${enquiry.business || enquiry.name}`,
+      subject: `New Van & Fleet Enquiry: ${enquiry.business || enquiry.name}`,
       html: fleetEnquiryEmail(enquiry),
     })
     if (result.error) {

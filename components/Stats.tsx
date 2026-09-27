@@ -8,7 +8,7 @@ const FACTS = [
   {
     n:    '01',
     big:  'Fully\nMobile',
-    body: 'We come to your home, office or car park — fully self-sufficient with our own power and water supply.',
+    body: 'We come to your home, office or car park, fully self-sufficient with our own power and water supply.',
   },
   {
     n:    '02',
@@ -23,7 +23,7 @@ const FACTS = [
   {
     n:    '04',
     big:  'Based In\nHerts',
-    body: 'Hemel Hempstead and the whole of Hertfordshire — wherever you are, we cover it.',
+    body: 'Hemel Hempstead and the whole of Hertfordshire: wherever you are, we cover it.',
   },
 ]
 

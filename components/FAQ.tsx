@@ -8,19 +8,19 @@ const ease = [0.22, 1, 0.36, 1] as [number, number, number, number]
 const FAQS = [
   {
     q: 'How long does a detail take?',
-    a: 'It depends on the package — Essential runs 2–3 hours, Full Valet 4–5 hours, and Premium Detail 6–7 hours. We confirm an exact arrival window the morning of your booking.',
+    a: 'It depends on the package: Essential runs 2–3 hours, Full Valet 4–5 hours, and Premium Detail 6–7 hours. We confirm an exact arrival window the morning of your booking.',
   },
   {
     q: 'Do you offer mobile car detailing near me?',
-    a: 'Yes — we are a fully mobile service. We come directly to your home, workplace or any convenient location. We cover Hemel Hempstead and all surrounding areas including Watford, St Albans, Berkhamsted, Kings Langley, Harpenden, Tring, Abbots Langley, Chesham, Rickmansworth and nearby Hertfordshire towns.',
+    a: 'Yes. We are a fully mobile service. We come directly to your home, workplace or any convenient location. We cover Hemel Hempstead and all surrounding areas including Watford, St Albans, Berkhamsted, Kings Langley, Harpenden, Tring, Abbots Langley, Chesham, Rickmansworth and nearby Hertfordshire towns.',
   },
   {
     q: 'What areas do you cover?',
-    a: "We cover all of Hertfordshire — Hemel Hempstead, Watford, St Albans, Berkhamsted, Harpenden, Kings Langley, Tring, Abbots Langley, Chesham, Rickmansworth, Apsley, Leverstock Green, Redbourn, Boxmoor, Bovingdon, Markyate and surrounding areas. Not sure if you're covered? Drop us a message.",
+    a: "We cover all of Hertfordshire: Hemel Hempstead, Watford, St Albans, Berkhamsted, Harpenden, Kings Langley, Tring, Abbots Langley, Chesham, Rickmansworth, Apsley, Leverstock Green, Redbourn, Boxmoor, Bovingdon, Markyate and surrounding areas. Not sure if you're covered? Drop us a message.",
   },
   {
     q: 'What is included in a full car detail?',
-    a: 'Our Premium Detail covers everything in the Full Valet package — deep interior clean, seat shampoo, carpet extraction and spray wax — plus clay bar decontamination, light machine polish, paint sealant, trim restoration and odour treatment. Every stage is completed with professional-grade products and equipment.',
+    a: 'Our Premium Detail covers everything in the Full Valet package (deep interior clean, seat shampoo, carpet extraction and spray wax) plus clay bar decontamination, light machine polish, paint sealant, trim restoration and odour treatment. Every stage is completed with professional-grade products and equipment.',
   },
   {
     q: 'How often should I detail my car?',
@@ -36,11 +36,11 @@ const FAQS = [
   },
   {
     q: 'What if I\'m not happy with the result?',
-    a: "We'll come back and fix it — simple as that. We don't leave a job we're not proud of, but if something isn't right, there are no awkward conversations. That's our word.",
+    a: "We'll come back and fix it, simple as that. We don't leave a job we're not proud of, but if something isn't right, there are no awkward conversations. That's our word.",
   },
   {
     q: 'How do I pay?',
-    a: 'Payment is due on the day of service. We accept card, bank transfer, and cash. Your price is fixed at booking — no changes on the day.',
+    a: 'Payment is due on the day of service. We accept card, bank transfer, and cash. Your price is fixed at booking, with no changes on the day.',
   },
 ]
 

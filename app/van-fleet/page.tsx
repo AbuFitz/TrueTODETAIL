@@ -56,10 +56,10 @@ const VAN_PACKAGES = [
 ]
 
 const FLEET_BENEFITS = [
-  { label: 'Priority scheduling', desc: 'Your vehicles jump the queue — every time.' },
+  { label: 'Priority scheduling', desc: 'Your vehicles jump the queue, every time.' },
   { label: 'Consistent results', desc: 'Same standard across every vehicle in your fleet.' },
   { label: 'Custom pricing', desc: 'Tailored rates based on frequency and fleet size.' },
-  { label: 'Flexible plans', desc: 'Weekly, bi-weekly or monthly — you decide.' },
+  { label: 'Flexible plans', desc: 'Weekly, bi-weekly or monthly: you decide.' },
 ]
 
 export default function VanFleetPage() {
@@ -85,7 +85,7 @@ export default function VanFleetPage() {
       }
       setSubmitted(true)
     } catch {
-      setSubmitError('Network error — please check your connection and try again.')
+      setSubmitError('Network error. Please check your connection and try again.')
     } finally {
       setSubmitting(false)
     }
@@ -218,7 +218,7 @@ export default function VanFleetPage() {
               maxWidth: '520px', marginBottom: 'clamp(28px, 4vw, 40px)',
             }}>
               Designed for working vehicles, fleets and business owners who need reliable,
-              consistent cleaning — without the hassle of booking one car at a time.
+              consistent cleaning, without the hassle of booking one car at a time.
             </p>
 
             {/* Stats — 3-col grid so they never wrap awkwardly on mobile */}
@@ -444,7 +444,7 @@ export default function VanFleetPage() {
             }}
           >
             <span style={{ color: 'rgba(255,255,255,0.45)', fontWeight: 600 }}>Note:</span>{' '}
-            Van pricing is based on standard working vans. Heavily soiled or commercial-use interiors may require a custom quote — we&apos;ll always confirm before we start.
+            Van pricing is based on standard working vans. Heavily soiled or commercial-use interiors may require a custom quote, which we&apos;ll always confirm before we start.
           </motion.p>
 
         </div>
@@ -495,7 +495,7 @@ export default function VanFleetPage() {
                 fontFamily: 'var(--font-body)', fontSize: '15px', lineHeight: 1.75,
                 color: 'rgba(255,255,255,0.38)', marginBottom: '36px', maxWidth: '440px',
               }}>
-                Running 3 or more vehicles? We&apos;ll build a plan around your schedule and fleet size —
+                Running 3 or more vehicles? We&apos;ll build a plan around your schedule and fleet size,
                 with discounted rates, priority slots and one point of contact.
               </p>
 
@@ -630,7 +630,7 @@ export default function VanFleetPage() {
                 color: 'rgba(255,255,255,0.38)', maxWidth: '400px', marginBottom: '36px',
               }}>
                 Whether it&apos;s a single van or a full fleet, drop us a message and we&apos;ll
-                come back to you with a tailored quote — usually within a few hours.
+                come back to you with a tailored quote, usually within a few hours.
               </p>
 
               <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>

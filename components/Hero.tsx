@@ -62,7 +62,7 @@ export default function Hero({ onBookNow }: { onBookNow: () => void }) {
         >
           <Image
             src="https://images.unsplash.com/photo-1607860108855-64acf2078ed9?w=1800&q=90&fit=crop"
-            alt="Professional mobile car detailing service — True To Detail covering Hemel Hempstead, Watford, St Albans and Hertfordshire"
+            alt="Professional mobile car detailing service: True To Detail covering Hemel Hempstead, Watford, St Albans and Hertfordshire"
             fill priority sizes="100vw"
             style={{ objectFit: 'cover', objectPosition: '82% 55%' }}
           />
@@ -258,14 +258,12 @@ export default function Hero({ onBookNow }: { onBookNow: () => void }) {
           MOBILE HERO  (below md) — full-bleed, gradient half-cut
       ───────────────────────────────────────────────────────────── */}
       <section
-        className="md:hidden"
+        className="flex flex-col md:hidden"
         style={{
           position: 'relative',
           minHeight: 'calc(100svh - 80px)',
           background: '#0C0C0C',
           overflow: 'hidden',
-          display: 'flex',
-          flexDirection: 'column',
         }}
       >
         {/* Full-bleed photo — car visible on the right half */}
@@ -350,6 +348,7 @@ export default function Hero({ onBookNow }: { onBookNow: () => void }) {
               fontSize: 'clamp(68px, 18.5vw, 86px)',
               letterSpacing: '0.01em', color: '#ffffff',
               lineHeight: 0.88,
+              minHeight: 'calc(clamp(68px, 18.5vw, 86px) * 0.88)',
               display: 'flex', alignItems: 'baseline',
             }}>
               <span>{displayText}</span>
@@ -399,7 +398,7 @@ export default function Hero({ onBookNow }: { onBookNow: () => void }) {
               color: 'rgba(255,255,255,0.36)', margin: '0 0 14px',
             }}
           >
-            Mobile detailing to your door — no drop-off, fixed prices.
+            Mobile detailing to your door, no drop-off, fixed prices.
           </motion.p>
 
           {/* CTA */}

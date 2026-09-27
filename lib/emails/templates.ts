@@ -204,7 +204,7 @@ export function notificationEmail(d: EmailData): string {
         ${d.pack}
       </h1>
       <p style="margin:6px 0 0;font-family:Arial,sans-serif;font-size:15px;color:rgba(255,255,255,0.85);">
-        Preferred: ${d.date} at ${d.time} — ${d.address}
+        Preferred: ${d.date} at ${d.time}, ${d.address}
       </p>
     </td>
   </tr>
@@ -255,7 +255,7 @@ export function notificationEmail(d: EmailData): string {
     </td>
   </tr>`
 
-  return wrap(`New Booking Request — ${d.pack} · ${d.date}`, body)
+  return wrap(`New Booking Request: ${d.pack} · ${d.date}`, body)
 }
 
 /* ══════════════════════════════════════════════════════════════════════════
@@ -273,7 +273,7 @@ export function confirmationEmail(d: EmailData): string {
       <h1 style="margin:10px 0 6px;font-family:'Arial Black',Arial,sans-serif;font-size:32px;font-weight:bold;color:#ffffff;letter-spacing:2px;text-transform:uppercase;line-height:1.05;">
         REQUEST RECEIVED.
       </h1>
-      <p style="margin:0;font-family:Arial,sans-serif;font-size:15px;color:rgba(255,255,255,0.5);">Hi ${d.name.split(' ')[0]}, we've got your preferred slot — we'll be in touch shortly to confirm.</p>
+      <p style="margin:0;font-family:Arial,sans-serif;font-size:15px;color:rgba(255,255,255,0.5);">Hi ${d.name.split(' ')[0]}, we've got your preferred slot. We'll be in touch shortly to confirm.</p>
     </td>
   </tr>
   <tr>
@@ -283,11 +283,11 @@ export function confirmationEmail(d: EmailData): string {
       <table width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:28px;">
         <tr>
           <td style="background:#FFF7F4;padding:20px 24px;border-left:4px solid ${brand.orange};">
-            <p style="margin:0;font-family:Arial,sans-serif;font-size:12px;font-weight:bold;color:${brand.orange};letter-spacing:1px;text-transform:uppercase;margin-bottom:6px;">Please Note — Pending Confirmation</p>
+            <p style="margin:0;font-family:Arial,sans-serif;font-size:12px;font-weight:bold;color:${brand.orange};letter-spacing:1px;text-transform:uppercase;margin-bottom:6px;">Please Note: Pending Confirmation</p>
             <p style="margin:0;font-family:Arial,sans-serif;font-size:14px;color:${brand.dark};line-height:1.6;">
               This is your <strong>preferred date request</strong>, not a confirmed booking yet.
               We'll review your slot and contact you within <strong>1 hour</strong> to confirm.
-              Occasionally we may need to suggest an alternative time — we'll always give you plenty of notice.
+              Occasionally we may need to suggest an alternative time, but we'll always give you plenty of notice.
             </p>
           </td>
         </tr>
@@ -323,20 +323,20 @@ export function confirmationEmail(d: EmailData): string {
       <table width="100%" cellpadding="0" cellspacing="0">
         <tr>
           <td style="padding:10px 0;border-bottom:1px solid #eeeeee;vertical-align:top;">
-            <p style="margin:0;font-family:Arial,sans-serif;font-size:12px;font-weight:bold;color:${brand.orange};">1 — We confirm your slot</p>
+            <p style="margin:0;font-family:Arial,sans-serif;font-size:12px;font-weight:bold;color:${brand.orange};">1. We confirm your slot</p>
             <p style="margin:4px 0 0;font-family:Arial,sans-serif;font-size:13px;color:${brand.midGrey};line-height:1.6;">We'll text or call you within 1 hour to lock in your date. If we need to adjust the time slightly, we'll give you options and plenty of notice.</p>
           </td>
         </tr>
         <tr>
           <td style="padding:10px 0;border-bottom:1px solid #eeeeee;vertical-align:top;">
-            <p style="margin:0;font-family:Arial,sans-serif;font-size:12px;font-weight:bold;color:${brand.orange};">2 — No prep needed</p>
-            <p style="margin:4px 0 0;font-family:Arial,sans-serif;font-size:13px;color:${brand.midGrey};line-height:1.6;">We bring everything — power, water, all equipment. Just make sure we can access the vehicle.</p>
+            <p style="margin:0;font-family:Arial,sans-serif;font-size:12px;font-weight:bold;color:${brand.orange};">2. No prep needed</p>
+            <p style="margin:4px 0 0;font-family:Arial,sans-serif;font-size:13px;color:${brand.midGrey};line-height:1.6;">We bring everything: power, water, all equipment. Just make sure we can access the vehicle.</p>
           </td>
         </tr>
         <tr>
           <td style="padding:10px 0;vertical-align:top;">
-            <p style="margin:0;font-family:Arial,sans-serif;font-size:12px;font-weight:bold;color:${brand.orange};">3 — Payment on the day</p>
-            <p style="margin:4px 0 0;font-family:Arial,sans-serif;font-size:13px;color:${brand.midGrey};line-height:1.6;">Card, bank transfer or cash. Your price is fixed — £${d.price} — no changes on the day.</p>
+            <p style="margin:0;font-family:Arial,sans-serif;font-size:12px;font-weight:bold;color:${brand.orange};">3. Payment on the day</p>
+            <p style="margin:4px 0 0;font-family:Arial,sans-serif;font-size:13px;color:${brand.midGrey};line-height:1.6;">Card, bank transfer or cash. Your price is fixed at £${d.price}, with no changes on the day.</p>
           </td>
         </tr>
       </table>
@@ -353,7 +353,7 @@ export function confirmationEmail(d: EmailData): string {
     </td>
   </tr>`
 
-  return wrap(`Booking Request Received — ${d.date}`, body)
+  return wrap(`Booking Request Received: ${d.date}`, body)
 }
 
 /* ══════════════════════════════════════════════════════════════════════════
@@ -399,5 +399,5 @@ export function fleetEnquiryEmail(d: FleetEnquiryData): string {
     </td>
   </tr>`
 
-  return wrap(`New Van & Fleet Enquiry — ${d.name}`, body)
+  return wrap(`New Van & Fleet Enquiry: ${d.name}`, body)
 }

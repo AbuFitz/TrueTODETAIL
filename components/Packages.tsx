@@ -107,7 +107,7 @@ export default function Packages({
                 color: 'rgba(255,255,255,0.3)', maxWidth: '220px', lineHeight: 1.6,
               }}
             >
-              Select your vehicle type — prices update instantly.
+              Select your vehicle type. Prices update instantly.
             </p>
             <div style={{
               display: 'inline-flex',
@@ -474,7 +474,7 @@ export default function Packages({
           }}>
             Add-ons
           </span>
-          <span style={{ display: 'block', width: 1, height: 18, background: 'rgba(255,255,255,0.08)' }} className="hidden sm:block" />
+          <span style={{ width: 1, height: 18, background: 'rgba(255,255,255,0.08)' }} className="hidden sm:block" />
           {[
             ['Engine Bay Clean',            '£40'],
             ['Pet Hair Removal',            '£25'],

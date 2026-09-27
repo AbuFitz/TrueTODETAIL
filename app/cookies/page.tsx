@@ -1,6 +1,6 @@
 import Link from 'next/link'
 
-export const metadata = { title: 'Cookie Policy — True To Detail' }
+export const metadata = { title: 'Cookie Policy | True To Detail' }
 
 export default function CookiesPage() {
   return (

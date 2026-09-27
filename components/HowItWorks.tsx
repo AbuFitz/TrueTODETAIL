@@ -12,7 +12,7 @@ const POINTS = [
   },
   {
     n: '02', title: 'We Come To You',
-    body: 'Fully mobile and completely self-sufficient. You keep your day — we show up wherever suits you.',
+    body: 'Fully mobile and completely self-sufficient. You keep your day, we show up wherever suits you.',
   },
   {
     n: '03', title: 'Transparent Pricing',
@@ -20,7 +20,7 @@ const POINTS = [
   },
   {
     n: '04', title: 'We Stand Behind Our Work',
-    body: "If you're not happy, we'll make it right. No awkward conversations — that's how this business runs.",
+    body: "If you're not happy, we'll make it right. No awkward conversations: that's how this business runs.",
   },
 ]
 
@@ -71,7 +71,7 @@ export default function HowItWorks({ onBookNow }: { onBookNow: () => void }) {
               fontFamily: 'var(--font-body)', fontSize: '15px', lineHeight: 1.78,
               color: 'rgba(255,255,255,0.35)', marginBottom: '36px', maxWidth: '360px',
             }}>
-              We built this business on doing the job properly — not on cutting corners or chasing volume. Every car gets the same standard.
+              We built this business on doing the job properly, not on cutting corners or chasing volume. Every car gets the same standard.
             </p>
 
             {/*
@@ -89,7 +89,7 @@ export default function HowItWorks({ onBookNow }: { onBookNow: () => void }) {
               <div style={{ position: 'relative', overflow: 'hidden' }}>
                 <Image
                   src="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=800&q=85&fit=crop&crop=center"
-                  alt="Mobile car detailing process — professional car cleaning service near Hemel Hempstead"
+                  alt="Mobile car detailing process: professional car cleaning service near Hemel Hempstead"
                   fill
                   style={{ objectFit: 'cover' }}
                 />
@@ -102,7 +102,7 @@ export default function HowItWorks({ onBookNow }: { onBookNow: () => void }) {
                 <div style={{ position: 'relative', overflow: 'hidden' }}>
                   <Image
                     src="https://images.unsplash.com/photo-1563720223185-11003d516935?w=800&q=88&fit=crop&crop=center"
-                    alt="Professional car detailer at work — True To Detail mobile valeting service Hertfordshire"
+                    alt="Professional car detailer at work: True To Detail mobile valeting service Hertfordshire"
                     fill
                     style={{ objectFit: 'cover' }}
                   />

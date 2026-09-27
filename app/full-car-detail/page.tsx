@@ -48,7 +48,7 @@ export default function FullCarDetailPage() {
           </h1>
 
           <p style={{ fontSize: '18px', lineHeight: 1.7, color: 'rgba(12,12,12,0.65)', marginBottom: '40px', fontWeight: 500 }}>
-            Our full car detail packages combine a comprehensive interior deep clean with a professional exterior treatment — delivering a complete vehicle transformation from the inside out.
+            Our full car detail packages combine a comprehensive interior deep clean with a professional exterior treatment, delivering a complete vehicle transformation from the inside out.
           </p>
 
           <section style={{ marginBottom: '48px' }}>
@@ -56,13 +56,13 @@ export default function FullCarDetailPage() {
               WHAT IS INCLUDED IN A FULL CAR DETAIL?
             </h2>
             <p style={{ fontSize: '15px', lineHeight: 1.78, color: 'rgba(12,12,12,0.62)', marginBottom: '16px' }}>
-              A full car detail addresses every aspect of your vehicle — interior and exterior — in a single comprehensive service. Here&apos;s what&apos;s included in our Premium full detail package:
+              A full car detail addresses every aspect of your vehicle, interior and exterior, in a single comprehensive service. Here&apos;s what&apos;s included in our Premium full detail package:
             </p>
             <div style={{ display: 'grid', gap: '24px', marginBottom: '16px' }} className="grid-cols-1 md:grid-cols-2">
               <div>
                 <p style={{ fontFamily: 'var(--font-body)', fontWeight: 700, fontSize: '13px', letterSpacing: '0.1em', textTransform: 'uppercase', color: '#0C0C0C', marginBottom: '12px' }}>Interior</p>
                 <ul style={{ fontSize: '14px', lineHeight: 2, color: 'rgba(12,12,12,0.62)', paddingLeft: '18px', margin: 0 }}>
-                  <li>Full vacuum — seats, carpets, boot, crevices</li>
+                  <li>Full vacuum: seats, carpets, boot, crevices</li>
                   <li>Steam cleaning of all hard surfaces</li>
                   <li>Hot water extraction on fabric seats and carpets</li>
                   <li>Leather clean and condition</li>
@@ -97,7 +97,7 @@ export default function FullCarDetailPage() {
               In between full details, a maintenance wash every 4–8 weeks helps preserve the finish and prevent premature deterioration of any paint protection applied. If your vehicle has a ceramic coating, regular maintenance washing is especially important to maintain the coating&apos;s hydrophobic properties.
             </p>
             <p style={{ fontSize: '15px', lineHeight: 1.78, color: 'rgba(12,12,12,0.62)' }}>
-              Vehicles that see heavy use — family cars, dog-owner vehicles, daily commuters — typically benefit from more frequent interior details, even if the exterior is maintained on a longer schedule.
+              Vehicles that see heavy use, such as family cars, dog-owner vehicles and daily commuters, typically benefit from more frequent interior details, even if the exterior is maintained on a longer schedule.
             </p>
           </section>
 
@@ -106,10 +106,10 @@ export default function FullCarDetailPage() {
               FULL DETAIL PRICING
             </h2>
             <p style={{ fontSize: '15px', lineHeight: 1.78, color: 'rgba(12,12,12,0.62)', marginBottom: '16px' }}>
-              Our Premium Detail starts from <strong>£220</strong> for a small car, <strong>£240</strong> for a mid-size car, and <strong>£270</strong> for a large SUV or 4×4. All prices are fixed at the time of booking — no surprises on the day.
+              Our Premium Detail starts from <strong>£220</strong> for a small car, <strong>£240</strong> for a mid-size car, and <strong>£270</strong> for a large SUV or 4×4. All prices are fixed at the time of booking, with no surprises on the day.
             </p>
             <p style={{ fontSize: '15px', lineHeight: 1.78, color: 'rgba(12,12,12,0.62)' }}>
-              Looking for the ultimate in paint protection? Ceramic coating is available as a bespoke, quoted service on top of any full detail — get in touch and we&apos;ll assess your vehicle.
+              Looking for the ultimate in paint protection? Ceramic coating is available as a bespoke, quoted service on top of any full detail. Get in touch and we&apos;ll assess your vehicle.
             </p>
           </section>
 
@@ -118,7 +118,7 @@ export default function FullCarDetailPage() {
               MOBILE FULL DETAIL SERVICE
             </h2>
             <p style={{ fontSize: '15px', lineHeight: 1.78, color: 'rgba(12,12,12,0.62)' }}>
-              True To Detail provides full car detail services across Hemel Hempstead and surrounding areas including Watford, St Albans, Berkhamsted, Kings Langley and nearby Hertfordshire towns. We are fully self-contained — our mobile unit includes its own power, water and professional equipment. No drop-off, no waiting, no hassle.
+              True To Detail provides full car detail services across Hemel Hempstead and surrounding areas including Watford, St Albans, Berkhamsted, Kings Langley and nearby Hertfordshire towns. We are fully self-contained: our mobile unit includes its own power, water and professional equipment. No drop-off, no waiting, no hassle.
             </p>
           </section>
 

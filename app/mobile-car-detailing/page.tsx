@@ -4,7 +4,7 @@ import Link from 'next/link'
 export const metadata: Metadata = {
   title: 'Mobile Car Detailing Near Hemel Hempstead & Hertfordshire',
   description:
-    'True To Detail provides professional mobile car detailing across Hemel Hempstead, Watford, St Albans, Berkhamsted and all surrounding Hertfordshire areas. We come to you — no drop-off needed. Book online today.',
+    'True To Detail provides professional mobile car detailing across Hemel Hempstead, Watford, St Albans, Berkhamsted and all surrounding Hertfordshire areas. We come to you, no drop-off needed. Book online today.',
   alternates: {
     canonical: 'https://www.truetodetail.co.uk/mobile-car-detailing',
   },
@@ -61,7 +61,7 @@ export default function MobileCarDetailingPage() {
           </h1>
 
           <p style={{ fontSize: '18px', lineHeight: 1.7, color: 'rgba(12,12,12,0.65)', marginBottom: '40px', fontWeight: 500 }}>
-            True To Detail provides professional mobile car detailing services across Hemel Hempstead and surrounding areas — we come directly to your home, workplace or any convenient location.
+            True To Detail provides professional mobile car detailing services across Hemel Hempstead and surrounding areas. We come directly to your home, workplace or any convenient location.
           </p>
 
           <section style={{ marginBottom: '48px' }}>
@@ -69,10 +69,10 @@ export default function MobileCarDetailingPage() {
               WHAT IS MOBILE CAR DETAILING?
             </h2>
             <p style={{ fontSize: '15px', lineHeight: 1.78, color: 'rgba(12,12,12,0.62)', marginBottom: '16px' }}>
-              Mobile car detailing is a professional cleaning and restoration service that comes directly to you. Unlike a traditional car wash, detailing involves a thorough, multi-stage process that cleans, protects and restores your vehicle to a near-showroom condition — inside and out.
+              Mobile car detailing is a professional cleaning and restoration service that comes directly to you. Unlike a traditional car wash, detailing involves a thorough, multi-stage process that cleans, protects and restores your vehicle to a near-showroom condition, inside and out.
             </p>
             <p style={{ fontSize: '15px', lineHeight: 1.78, color: 'rgba(12,12,12,0.62)', marginBottom: '16px' }}>
-              At True To Detail, our mobile detailing service covers every element of your vehicle: from deep interior cleaning and steam treatment to exterior decontamination, machine polishing and professional paint protection. Every job is carried out with professional-grade equipment — including our own power and water supply — so there&apos;s nothing you need to arrange.
+              At True To Detail, our mobile detailing service covers every element of your vehicle: from deep interior cleaning and steam treatment to exterior decontamination, machine polishing and professional paint protection. Every job is carried out with professional-grade equipment, including our own power and water supply, so there&apos;s nothing you need to arrange.
             </p>
             <p style={{ fontSize: '15px', lineHeight: 1.78, color: 'rgba(12,12,12,0.62)' }}>
               Whether you&apos;re looking for a one-off clean before a special occasion, regular maintenance to keep your car looking its best, or a full paint correction and ceramic coating, we have a package to suit your needs and budget.
@@ -96,7 +96,7 @@ export default function MobileCarDetailingPage() {
               <li>Chesham, Bovingdon and Markyate</li>
             </ul>
             <p style={{ fontSize: '15px', lineHeight: 1.78, color: 'rgba(12,12,12,0.62)' }}>
-              Not sure if we cover your area? Get in touch — if you&apos;re in or around Hertfordshire, the chances are we can reach you.
+              Not sure if we cover your area? Get in touch. If you&apos;re in or around Hertfordshire, the chances are we can reach you.
             </p>
           </section>
 
@@ -105,13 +105,13 @@ export default function MobileCarDetailingPage() {
               WHY CHOOSE MOBILE DETAILING?
             </h2>
             <p style={{ fontSize: '15px', lineHeight: 1.78, color: 'rgba(12,12,12,0.62)', marginBottom: '16px' }}>
-              The convenience of mobile car detailing is unmatched. There&apos;s no need to drive to a detailing studio, wait around, or arrange collection. Instead, our fully equipped van arrives at your chosen location — whether that&apos;s your driveway in Hemel Hempstead, your office car park in Watford, or a residential street in St Albans.
+              The convenience of mobile car detailing is unmatched. There&apos;s no need to drive to a detailing studio, wait around, or arrange collection. Instead, our fully equipped van arrives at your chosen location, whether that&apos;s your driveway in Hemel Hempstead, your office car park in Watford, or a residential street in St Albans.
             </p>
             <p style={{ fontSize: '15px', lineHeight: 1.78, color: 'rgba(12,12,12,0.62)', marginBottom: '16px' }}>
               For busy professionals, parents or anyone whose schedule doesn&apos;t allow for a half-day trip to a valeting centre, mobile detailing reclaims your time without compromising on the quality of results. You carry on with your day whilst we restore your vehicle.
             </p>
             <p style={{ fontSize: '15px', lineHeight: 1.78, color: 'rgba(12,12,12,0.62)' }}>
-              Our pricing is fixed and transparent — the quote you receive when booking is exactly what you pay on the day. No hidden charges, no surprises.
+              Our pricing is fixed and transparent: the quote you receive when booking is exactly what you pay on the day. No hidden charges, no surprises.
             </p>
           </section>
 
@@ -120,12 +120,12 @@ export default function MobileCarDetailingPage() {
               OUR DETAILING PACKAGES
             </h2>
             <p style={{ fontSize: '15px', lineHeight: 1.78, color: 'rgba(12,12,12,0.62)', marginBottom: '16px' }}>
-              We offer three main packages to suit different needs and budgets. All packages include our full mobile service — we come to you with everything needed to complete the job.
+              We offer three main packages to suit different needs and budgets. All packages include our full mobile service: we come to you with everything needed to complete the job.
             </p>
             <ul style={{ fontSize: '15px', lineHeight: 2, color: 'rgba(12,12,12,0.62)', paddingLeft: '20px', marginBottom: '16px' }}>
-              <li><strong>Essential</strong> — Safe wash & dry, wheels cleaned, interior vacuum, dashboard wipe, glass cleaned, tyre dressing. From £80.</li>
-              <li><strong>Full Valet</strong> — Everything in Essential, plus deep interior clean, seat shampoo, carpet extraction, door shuts cleaned, spray wax protection. From £140.</li>
-              <li><strong>Premium Detail</strong> — Everything in Full Valet, plus clay bar decontamination, light machine polish, paint sealant, trim restoration, odour treatment. From £220.</li>
+              <li><strong>Essential</strong>: Safe wash & dry, wheels cleaned, interior vacuum, dashboard wipe, glass cleaned, tyre dressing. From £80.</li>
+              <li><strong>Full Valet</strong>: Everything in Essential, plus deep interior clean, seat shampoo, carpet extraction, door shuts cleaned, spray wax protection. From £140.</li>
+              <li><strong>Premium Detail</strong>: Everything in Full Valet, plus clay bar decontamination, light machine polish, paint sealant, trim restoration, odour treatment. From £220.</li>
             </ul>
             <p style={{ fontSize: '15px', lineHeight: 1.78, color: 'rgba(12,12,12,0.62)' }}>
               Optional add-ons include engine bay cleaning, pet hair removal, odour treatment, extra-heavy seat shampoo and interior steam sanitisation.

@@ -1,6 +1,6 @@
 import Link from 'next/link'
 
-export const metadata = { title: 'Privacy Policy — True To Detail' }
+export const metadata = { title: 'Privacy Policy | True To Detail' }
 
 export default function PrivacyPage() {
   return (
@@ -46,7 +46,7 @@ export default function PrivacyPage() {
             },
             {
               heading: '2. What Data We Collect',
-              body: 'When you submit a booking enquiry, we collect: your name, email address, phone number, service address, vehicle registration, and any notes you provide. We do not collect payment card details — payments are taken in person on the day.',
+              body: 'When you submit a booking enquiry, we collect: your name, email address, phone number, service address, vehicle registration, and any notes you provide. We do not collect payment card details, as payments are taken in person on the day.',
             },
             {
               heading: '3. How We Use Your Data',

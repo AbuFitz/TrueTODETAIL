@@ -68,7 +68,7 @@ export const metadata: Metadata = {
         url: '/og-image.jpg',
         width: 1200,
         height: 630,
-        alt: 'True To Detail — Professional Mobile Car Detailing in Hertfordshire',
+        alt: 'True To Detail: Professional Mobile Car Detailing in Hertfordshire',
       },
     ],
   },
@@ -76,7 +76,7 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     title: 'Mobile Car Detailing Near Hemel Hempstead | True To Detail',
     description:
-      'Professional mobile car detailing and valeting in Hertfordshire. We come to you — no drop-off needed.',
+      'Professional mobile car detailing and valeting in Hertfordshire. We come to you, no drop-off needed.',
     images: ['/og-image.jpg'],
   },
   robots: {
@@ -243,7 +243,7 @@ const jsonLd = {
           name: 'Do you offer mobile car detailing near me?',
           acceptedAnswer: {
             '@type': 'Answer',
-            text: 'Yes — True To Detail is a fully mobile service. We come directly to your home, workplace, or any convenient location. We cover Hemel Hempstead and surrounding areas including Watford, St Albans, Berkhamsted, Kings Langley, Harpenden, Tring, Abbots Langley, Chesham, Rickmansworth and nearby towns.',
+            text: 'Yes. True To Detail is a fully mobile service. We come directly to your home, workplace, or any convenient location. We cover Hemel Hempstead and surrounding areas including Watford, St Albans, Berkhamsted, Kings Langley, Harpenden, Tring, Abbots Langley, Chesham, Rickmansworth and nearby towns.',
           },
         },
         {
@@ -283,7 +283,7 @@ const jsonLd = {
           name: 'What do I need to prepare before my car detail?',
           acceptedAnswer: {
             '@type': 'Answer',
-            text: 'Nothing — we bring our own power, water and all professional-grade equipment. Simply ensure the vehicle is accessible and we handle everything else.',
+            text: 'Nothing. We bring our own power, water and all professional-grade equipment. Simply ensure the vehicle is accessible and we handle everything else.',
           },
         },
         {
@@ -291,7 +291,7 @@ const jsonLd = {
           name: 'How do I pay for my car detailing service?',
           acceptedAnswer: {
             '@type': 'Answer',
-            text: 'Payment is due on the day of service. We accept card, bank transfer and cash. Your price is fixed at booking — no hidden charges or last-minute changes.',
+            text: 'Payment is due on the day of service. We accept card, bank transfer and cash. Your price is fixed at booking, with no hidden charges or last-minute changes.',
           },
         },
       ],

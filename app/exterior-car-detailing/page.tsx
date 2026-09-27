@@ -48,7 +48,7 @@ export default function ExteriorCarDetailingPage() {
           </h1>
 
           <p style={{ fontSize: '18px', lineHeight: 1.7, color: 'rgba(12,12,12,0.65)', marginBottom: '40px', fontWeight: 500 }}>
-            Protect your paintwork and restore your vehicle&apos;s exterior to a flawless finish with our professional exterior car detailing service — available across Hemel Hempstead and all surrounding Hertfordshire areas.
+            Protect your paintwork and restore your vehicle&apos;s exterior to a flawless finish with our professional exterior car detailing service, available across Hemel Hempstead and all surrounding Hertfordshire areas.
           </p>
 
           <section style={{ marginBottom: '48px' }}>
@@ -56,7 +56,7 @@ export default function ExteriorCarDetailingPage() {
               WHAT DOES EXTERIOR DETAILING INCLUDE?
             </h2>
             <p style={{ fontSize: '15px', lineHeight: 1.78, color: 'rgba(12,12,12,0.62)', marginBottom: '16px' }}>
-              Exterior car detailing is a systematic, multi-stage process that goes well beyond a standard car wash. It removes contamination at every level — from surface road grime right down to bonded iron particles, tar and tree sap embedded in your paintwork.
+              Exterior car detailing is a systematic, multi-stage process that goes well beyond a standard car wash. It removes contamination at every level, from surface road grime right down to bonded iron particles, tar and tree sap embedded in your paintwork.
             </p>
             <ul style={{ fontSize: '15px', lineHeight: 2.1, color: 'rgba(12,12,12,0.62)', paddingLeft: '20px', marginBottom: '16px' }}>
               <li>Pre-rinse and snow foam application to loosen surface contamination</li>
@@ -77,10 +77,10 @@ export default function ExteriorCarDetailingPage() {
               PAINT CORRECTION & MACHINE POLISHING
             </h2>
             <p style={{ fontSize: '15px', lineHeight: 1.78, color: 'rgba(12,12,12,0.62)', marginBottom: '16px' }}>
-              Over time, every vehicle develops swirl marks, light scratches and surface marring — often caused by improper washing techniques or automatic car washes. These defects scatter light and dull your paint&apos;s natural clarity and depth.
+              Over time, every vehicle develops swirl marks, light scratches and surface marring, often caused by improper washing techniques or automatic car washes. These defects scatter light and dull your paint&apos;s natural clarity and depth.
             </p>
             <p style={{ fontSize: '15px', lineHeight: 1.78, color: 'rgba(12,12,12,0.62)', marginBottom: '16px' }}>
-              Machine polishing corrects these defects by removing a microscopic layer of clear coat, eliminating the scratches and restoring a mirror-like finish. Our light machine polish (included in the Premium Detail package) dramatically improves paint clarity and gloss. For more severe defects, multi-stage paint correction is available as a bespoke, quoted service — get in touch and we'll assess your vehicle.
+              Machine polishing corrects these defects by removing a microscopic layer of clear coat, eliminating the scratches and restoring a mirror-like finish. Our light machine polish (included in the Premium Detail package) dramatically improves paint clarity and gloss. For more severe defects, multi-stage paint correction is available as a bespoke, quoted service: get in touch and we'll assess your vehicle.
             </p>
           </section>
 
@@ -92,9 +92,9 @@ export default function ExteriorCarDetailingPage() {
               After machine polishing, paint protection is applied to preserve the corrected finish and protect against future contamination. We offer three levels of protection:
             </p>
             <ul style={{ fontSize: '15px', lineHeight: 2.1, color: 'rgba(12,12,12,0.62)', paddingLeft: '20px', marginBottom: '16px' }}>
-              <li><strong>Spray Wax</strong> — Warm gloss and short-term protection. Included in Full Valet.</li>
-              <li><strong>Paint Sealant</strong> — Harder, longer-lasting synthetic protection. Included in Premium Detail.</li>
-              <li><strong>Ceramic Coating</strong> — Semi-permanent protection with hydrophobic properties and exceptional gloss. Available as a bespoke, quoted service.</li>
+              <li><strong>Spray Wax</strong>: Warm gloss and short-term protection. Included in Full Valet.</li>
+              <li><strong>Paint Sealant</strong>: Harder, longer-lasting synthetic protection. Included in Premium Detail.</li>
+              <li><strong>Ceramic Coating</strong>: Semi-permanent protection with hydrophobic properties and exceptional gloss. Available as a bespoke, quoted service.</li>
             </ul>
           </section>
 
@@ -103,7 +103,7 @@ export default function ExteriorCarDetailingPage() {
               MOBILE EXTERIOR DETAILING NEAR YOU
             </h2>
             <p style={{ fontSize: '15px', lineHeight: 1.78, color: 'rgba(12,12,12,0.62)', marginBottom: '16px' }}>
-              True To Detail provides mobile exterior car detailing services across Hemel Hempstead and surrounding areas including Watford, St Albans, Berkhamsted, Kings Langley, Harpenden, Tring, Chesham and nearby Hertfordshire towns. We bring our professional setup directly to your home or workplace — no drop-off or collection needed.
+              True To Detail provides mobile exterior car detailing services across Hemel Hempstead and surrounding areas including Watford, St Albans, Berkhamsted, Kings Langley, Harpenden, Tring, Chesham and nearby Hertfordshire towns. We bring our professional setup directly to your home or workplace, so no drop-off or collection is needed.
             </p>
           </section>
 

@@ -110,7 +110,7 @@ export default function BookingModal({
       setBookingId(json.booking?.id ?? '')
       setStep(4)
     } catch {
-      setApiError('Network error — please check your connection and try again.')
+      setApiError('Network error. Please check your connection and try again.')
     } finally {
       setSubmitting(false)
     }
@@ -195,7 +195,7 @@ export default function BookingModal({
                 ))}
               </div>
               <p style={{ fontFamily: 'var(--font-body)', fontSize: '11px', fontWeight: 500, color: 'rgba(255,255,255,0.3)', letterSpacing: '0.06em' }}>
-                Step {step} of 3 — {STEP_LABELS[step - 1]}
+                Step {step} of 3: {STEP_LABELS[step - 1]}
               </p>
             </div>
           )}

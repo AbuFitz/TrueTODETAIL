@@ -4,13 +4,13 @@ import Link from 'next/link'
 export const metadata: Metadata = {
   title: 'Interior Car Detailing Service | Hemel Hempstead & Hertfordshire',
   description:
-    'Professional interior car detailing service covering Hemel Hempstead, Watford, St Albans and surrounding Hertfordshire areas. Deep clean, steam treatment, leather conditioning and odour elimination. Mobile service — we come to you.',
+    'Professional interior car detailing service covering Hemel Hempstead, Watford, St Albans and surrounding Hertfordshire areas. Deep clean, steam treatment, leather conditioning and odour elimination. Mobile service: we come to you.',
   alternates: {
     canonical: 'https://www.truetodetail.co.uk/interior-car-detailing',
   },
   openGraph: {
     title: 'Interior Car Detailing | True To Detail',
-    description: 'Professional interior car detailing in Hertfordshire. Steam cleaning, leather care, odour elimination and more. Fully mobile — we come to you.',
+    description: 'Professional interior car detailing in Hertfordshire. Steam cleaning, leather care, odour elimination and more. Fully mobile: we come to you.',
     url: 'https://www.truetodetail.co.uk/interior-car-detailing',
   },
 }
@@ -48,7 +48,7 @@ export default function InteriorCarDetailingPage() {
           </h1>
 
           <p style={{ fontSize: '18px', lineHeight: 1.7, color: 'rgba(12,12,12,0.65)', marginBottom: '40px', fontWeight: 500 }}>
-            A professional interior car detail transforms your vehicle cabin — removing ingrained dirt, bacteria, odours and staining to restore a clean, fresh environment you&apos;ll notice immediately.
+            A professional interior car detail transforms your vehicle cabin, removing ingrained dirt, bacteria, odours and staining to restore a clean, fresh environment you&apos;ll notice immediately.
           </p>
 
           <section style={{ marginBottom: '48px' }}>
@@ -56,7 +56,7 @@ export default function InteriorCarDetailingPage() {
               WHAT DOES INTERIOR DETAILING INCLUDE?
             </h2>
             <p style={{ fontSize: '15px', lineHeight: 1.78, color: 'rgba(12,12,12,0.62)', marginBottom: '16px' }}>
-              Interior car detailing goes far beyond a standard vacuum and wipe-down. At True To Detail, our interior service is a systematic, multi-stage deep clean covering every surface inside your vehicle — from the headlining and dashboard to the carpets, seats and door pockets.
+              Interior car detailing goes far beyond a standard vacuum and wipe-down. At True To Detail, our interior service is a systematic, multi-stage deep clean covering every surface inside your vehicle, from the headlining and dashboard to the carpets, seats and door pockets.
             </p>
             <ul style={{ fontSize: '15px', lineHeight: 2.1, color: 'rgba(12,12,12,0.62)', paddingLeft: '20px', marginBottom: '16px' }}>
               <li>Full interior vacuum including seats, carpets, boot, footwells and crevices</li>
@@ -75,10 +75,10 @@ export default function InteriorCarDetailingPage() {
               HOW INTERIOR DETAILING RESTORES YOUR VEHICLE
             </h2>
             <p style={{ fontSize: '15px', lineHeight: 1.78, color: 'rgba(12,12,12,0.62)', marginBottom: '16px' }}>
-              Over time, even well-kept vehicle interiors accumulate bacteria, allergens, ingrained dirt and unpleasant odours — particularly in families with children, pet owners, or vehicles with high mileage. A professional interior detail tackles all of this systematically.
+              Over time, even well-kept vehicle interiors accumulate bacteria, allergens, ingrained dirt and unpleasant odours, particularly in families with children, pet owners, or vehicles with high mileage. A professional interior detail tackles all of this systematically.
             </p>
             <p style={{ fontSize: '15px', lineHeight: 1.78, color: 'rgba(12,12,12,0.62)', marginBottom: '16px' }}>
-              Our steam cleaning process reaches temperatures that kill bacteria and sanitise surfaces without harsh chemicals. Combined with hot water extraction on fabric seats and carpets, the result is a genuinely deep clean — not just a surface refresh.
+              Our steam cleaning process reaches temperatures that kill bacteria and sanitise surfaces without harsh chemicals. Combined with hot water extraction on fabric seats and carpets, the result is a genuinely deep clean, not just a surface refresh.
             </p>
             <p style={{ fontSize: '15px', lineHeight: 1.78, color: 'rgba(12,12,12,0.62)' }}>
               For leather interiors, regular conditioning is essential to prevent the material drying out and cracking. Our conditioning treatments restore suppleness and provide UV protection to extend the life of your leather significantly.
@@ -90,7 +90,7 @@ export default function InteriorCarDetailingPage() {
               MOBILE INTERIOR DETAILING ACROSS HERTFORDSHIRE
             </h2>
             <p style={{ fontSize: '15px', lineHeight: 1.78, color: 'rgba(12,12,12,0.62)', marginBottom: '16px' }}>
-              True To Detail provides mobile interior car detailing services across Hemel Hempstead and surrounding areas including Watford, St Albans, Berkhamsted, Kings Langley and nearby towns. We bring our full professional setup directly to your location — no detailing studio visit required.
+              True To Detail provides mobile interior car detailing services across Hemel Hempstead and surrounding areas including Watford, St Albans, Berkhamsted, Kings Langley and nearby towns. We bring our full professional setup directly to your location, so no detailing studio visit is required.
             </p>
             <p style={{ fontSize: '15px', lineHeight: 1.78, color: 'rgba(12,12,12,0.62)' }}>
               Whether you&apos;re based in Harpenden, Tring, Rickmansworth, Chesham or anywhere across the wider Hertfordshire area, we can reach you. Our fully self-contained mobile unit includes its own power, water and professional-grade equipment.
@@ -105,7 +105,7 @@ export default function InteriorCarDetailingPage() {
               A deep interior clean is included in our Full Valet and Premium Detail packages. Pricing starts from £140 for a small car, with exact pricing depending on vehicle size and condition.
             </p>
             <p style={{ fontSize: '15px', lineHeight: 1.78, color: 'rgba(12,12,12,0.62)' }}>
-              Our pet hair removal and odour elimination add-ons are available for vehicles that need extra attention. All pricing is fixed at booking — no hidden charges, no changes on the day.
+              Our pet hair removal and odour elimination add-ons are available for vehicles that need extra attention. All pricing is fixed at booking, with no hidden charges and no changes on the day.
             </p>
           </section>
 

@@ -8,17 +8,17 @@ const REVIEWS = [
   {
     text: "The Premium package completely transformed my 3-year-old Audi. Paint correction brought back a gloss I genuinely thought was gone. They showed up on time, did the job on my driveway, and left it looking showroom fresh. Worth every penny.",
     name: 'James H.',
-    vehicle: 'Audi A4 — Premium Package',
+    vehicle: 'Audi A4 · Premium Package',
   },
   {
-    text: "Booked online Tuesday, they were there Wednesday morning. No faff, no hidden costs, no surprise charges. My Golf hasn't looked this good since I bought it. First-class from start to finish — I'll be booking every few months.",
+    text: "Booked online Tuesday, they were there Wednesday morning. No faff, no hidden costs, no surprise charges. My Golf hasn't looked this good since I bought it. First-class from start to finish, I'll be booking every few months.",
     name: 'Sarah M.',
-    vehicle: 'VW Golf — Full Valet',
+    vehicle: 'VW Golf · Full Valet',
   },
   {
     text: "Had the Premium Detail done on my 3 Series and the paint correction results were seriously impressive. Two months on and the sealant is still beading water perfectly. The finish is something else. Genuinely great service.",
     name: 'Michael T.',
-    vehicle: 'BMW 3 Series — Premium Detail',
+    vehicle: 'BMW 3 Series · Premium Detail',
   },
 ]
 
