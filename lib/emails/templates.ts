@@ -9,7 +9,7 @@
   3. Create an API key: resend.com → API Keys → Create API Key
   4. Add to your environment variables:
        RESEND_API_KEY=re_xxxxxxxxxxxxxxxxxxxxxxxxxxxx
-       BOOKING_FROM_EMAIL=bookings@truetodetail.co.uk
+       BOOKING_FROM_EMAIL=noreply@truetodetail.co.uk
      For local dev, add to .env.local (never commit this file).
      For production (e.g. Vercel): add via Settings → Environment Variables.
   5. Deploy and test with a real booking — you'll see it in Resend's dashboard.
@@ -42,75 +42,47 @@ export interface FleetEnquiryData {
   createdAt: string
 }
 
+// Matches the live site's actual palette exactly (components use rgba(12,12,12,a)
+// over white for muted text — these are the solid-hex equivalents, since email
+// clients are inconsistent about rgba() text colour).
 const brand = {
-  orange:    '#E84A0C',
-  dark:      '#0C0C0C',
-  light:     '#F5F4F1',
-  midGrey:   '#888888',
-  lightGrey: '#CCCCCC',
+  orange: '#E84A0C',
+  dark:   '#0C0C0C',
+  light:  '#F5F4F1',
+  muted:  '#8A8A8A', // ≈ rgba(12,12,12,0.42) on white
+  faint:  '#BFBFBF', // ≈ rgba(12,12,12,0.25) on white
 }
 
 /*
-  Logo — TRUE TO [teardrop] DETAIL
-  Uses Bebas Neue loaded via Google Fonts (supported by Gmail & Apple Mail).
-  Fallback: Arial Black for Outlook desktop which blocks external fonts.
-  Teardrop uses border-radius shorthand; renders as a rectangle on Outlook —
-  still recognisable and on-brand.
+  Logo — real brand mark, hosted at /brand/logo-email.png (trimmed, @2x for
+  retina, flattened onto the exact header background colour so there's no
+  seam). Email clients require absolute URLs for images.
 */
+const SITE_URL = 'https://www.truetodetail.co.uk'
 const logoHtml = `
-  <table cellpadding="0" cellspacing="0" style="border-collapse:collapse;line-height:1;">
-    <tr>
-      <td style="padding:0;vertical-align:bottom;">
-        <span style="font-family:'Bebas Neue','Arial Black',Arial,sans-serif;font-size:28px;font-weight:400;letter-spacing:0.08em;color:#ffffff;text-transform:uppercase;line-height:1;display:inline-block;">TRUE TO</span>
-      </td>
-      <td style="padding:0 7px 3px 6px;vertical-align:bottom;">
-        <!-- Orange teardrop — same shape as the website logo mark -->
-        <div style="width:9px;height:14px;background:#E84A0C;border-radius:50% 50% 45% 45% / 55% 55% 45% 45%;font-size:0;line-height:0;display:block;">&nbsp;</div>
-      </td>
-      <td style="padding:0;vertical-align:bottom;">
-        <span style="font-family:'Bebas Neue','Arial Black',Arial,sans-serif;font-size:28px;font-weight:400;letter-spacing:0.08em;color:#ffffff;text-transform:uppercase;line-height:1;display:inline-block;">DETAIL</span>
-      </td>
-    </tr>
-  </table>`
+  <img
+    src="${SITE_URL}/brand/logo-email.png"
+    width="108" height="34" alt="True To Detail"
+    style="display:block;border:0;outline:none;text-decoration:none;height:34px;width:108px;"
+  />`
 
-/* ── Social icon buttons (email-safe: table cells, no SVG) ─────────────── */
+/* ── Social icon buttons — real hosted icon images, /public/brand/icon-*.png ── */
 const socialLinks = `
-  <table cellpadding="0" cellspacing="0" style="margin-top:16px;">
+  <table cellpadding="0" cellspacing="0" style="margin-top:18px;">
     <tr>
-      <!-- Instagram -->
-      <td style="padding-right:10px;">
-        <a href="https://www.instagram.com/truetodetail" target="_blank" style="text-decoration:none;display:inline-block;" title="Instagram">
-          <table cellpadding="0" cellspacing="0" style="border-collapse:collapse;">
-            <tr>
-              <td style="width:34px;height:34px;border:1.5px solid rgba(12,12,12,0.14);text-align:center;vertical-align:middle;font-family:Arial,sans-serif;font-size:13px;font-weight:bold;color:rgba(12,12,12,0.38);letter-spacing:0;">
-                IG
-              </td>
-            </tr>
-          </table>
+      <td style="padding-right:8px;">
+        <a href="https://www.instagram.com/truetodetail" target="_blank" style="display:inline-block;">
+          <img src="${SITE_URL}/brand/icon-instagram.png" width="30" height="30" alt="Instagram" style="display:block;border:0;width:30px;height:30px;" />
         </a>
       </td>
-      <!-- TikTok -->
-      <td style="padding-right:10px;">
-        <a href="https://www.tiktok.com/@truetodetail" target="_blank" style="text-decoration:none;display:inline-block;" title="TikTok">
-          <table cellpadding="0" cellspacing="0" style="border-collapse:collapse;">
-            <tr>
-              <td style="width:34px;height:34px;border:1.5px solid rgba(12,12,12,0.14);text-align:center;vertical-align:middle;font-family:Arial,sans-serif;font-size:13px;font-weight:bold;color:rgba(12,12,12,0.38);letter-spacing:0;">
-                TT
-              </td>
-            </tr>
-          </table>
+      <td style="padding-right:8px;">
+        <a href="https://www.tiktok.com/@truetodetail" target="_blank" style="display:inline-block;">
+          <img src="${SITE_URL}/brand/icon-tiktok.png" width="30" height="30" alt="TikTok" style="display:block;border:0;width:30px;height:30px;" />
         </a>
       </td>
-      <!-- Facebook -->
       <td>
-        <a href="https://www.facebook.com/truetodetail" target="_blank" style="text-decoration:none;display:inline-block;" title="Facebook">
-          <table cellpadding="0" cellspacing="0" style="border-collapse:collapse;">
-            <tr>
-              <td style="width:34px;height:34px;border:1.5px solid rgba(12,12,12,0.14);text-align:center;vertical-align:middle;font-family:Arial,sans-serif;font-size:14px;font-weight:bold;color:rgba(12,12,12,0.38);letter-spacing:0;">
-                f
-              </td>
-            </tr>
-          </table>
+        <a href="https://www.facebook.com/truetodetail" target="_blank" style="display:inline-block;">
+          <img src="${SITE_URL}/brand/icon-facebook.png" width="30" height="30" alt="Facebook" style="display:block;border:0;width:30px;height:30px;" />
         </a>
       </td>
     </tr>
@@ -124,10 +96,6 @@ function wrap(title: string, body: string): string {
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>${title}</title>
-  <!--[if !mso]><!-->
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap" rel="stylesheet" />
-  <!--<![endif]-->
 </head>
 <body style="margin:0;padding:0;background:${brand.light};font-family:Arial,Helvetica,sans-serif;-webkit-font-smoothing:antialiased;">
   <table width="100%" cellpadding="0" cellspacing="0" style="background:${brand.light};padding:32px 16px;">
@@ -136,10 +104,10 @@ function wrap(title: string, body: string): string {
 
         <!-- Logo / header -->
         <tr>
-          <td style="background:${brand.dark};padding:28px 32px 24px;">
+          <td style="background:${brand.dark};padding:26px 32px;">
             <table width="100%" cellpadding="0" cellspacing="0">
               <tr>
-                <td>
+                <td style="vertical-align:middle;line-height:0;">
                   ${logoHtml}
                 </td>
                 <td align="right" style="vertical-align:middle;">
@@ -157,11 +125,11 @@ function wrap(title: string, body: string): string {
 
         <!-- Footer -->
         <tr>
-          <td style="background:#ffffff;padding:20px 32px;border-top:1px solid #e8e8e8;">
-            <p style="margin:0;font-family:Arial,sans-serif;font-size:11px;color:${brand.midGrey};letter-spacing:1px;text-transform:uppercase;">
+          <td style="background:#ffffff;padding:24px 32px;border-top:1px solid #ececec;">
+            <p style="margin:0;font-family:Arial,sans-serif;font-size:11px;color:${brand.muted};letter-spacing:1px;text-transform:uppercase;">
               True To Detail · Hertfordshire, UK
             </p>
-            <p style="margin:6px 0 0;font-family:Arial,sans-serif;font-size:11px;color:${brand.lightGrey};">
+            <p style="margin:6px 0 0;font-family:Arial,sans-serif;font-size:11px;color:${brand.faint};">
               07359 591800 · info@truetodetail.co.uk
             </p>
             ${socialLinks}
@@ -179,7 +147,7 @@ function wrap(title: string, body: string): string {
 function row(label: string, value: string, highlight = false): string {
   return `
   <tr>
-    <td style="padding:10px 0;border-bottom:1px solid #eeeeee;font-family:Arial,sans-serif;font-size:12px;color:${brand.midGrey};letter-spacing:1px;text-transform:uppercase;width:38%;vertical-align:top;">
+    <td style="padding:10px 0;border-bottom:1px solid #eeeeee;font-family:Arial,sans-serif;font-size:12px;color:${brand.muted};letter-spacing:1px;text-transform:uppercase;width:38%;vertical-align:top;">
       ${label}
     </td>
     <td style="padding:10px 0;border-bottom:1px solid #eeeeee;font-family:Arial,sans-serif;font-size:14px;font-weight:600;color:${highlight ? brand.orange : brand.dark};text-align:right;vertical-align:top;">
@@ -239,7 +207,7 @@ export function notificationEmail(d: EmailData): string {
 
       ${d.notes ? `
       <div style="margin-top:20px;background:${brand.light};padding:16px;border-left:3px solid ${brand.orange};">
-        <p style="margin:0;font-family:Arial,sans-serif;font-size:11px;letter-spacing:1px;text-transform:uppercase;color:${brand.midGrey};margin-bottom:6px;">Customer Notes</p>
+        <p style="margin:0;font-family:Arial,sans-serif;font-size:11px;letter-spacing:1px;text-transform:uppercase;color:${brand.muted};margin-bottom:6px;">Customer Notes</p>
         <p style="margin:0;font-family:Arial,sans-serif;font-size:14px;color:${brand.dark};line-height:1.6;">${d.notes}</p>
       </div>` : ''}
 
@@ -282,7 +250,7 @@ export function confirmationEmail(d: EmailData): string {
       <!-- Important notice -->
       <table width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:28px;">
         <tr>
-          <td style="background:#FFF7F4;padding:20px 24px;border-left:4px solid ${brand.orange};">
+          <td style="background:${brand.light};padding:20px 24px;border-left:4px solid ${brand.orange};">
             <p style="margin:0;font-family:Arial,sans-serif;font-size:12px;font-weight:bold;color:${brand.orange};letter-spacing:1px;text-transform:uppercase;margin-bottom:6px;">Please Note: Pending Confirmation</p>
             <p style="margin:0;font-family:Arial,sans-serif;font-size:14px;color:${brand.dark};line-height:1.6;">
               This is your <strong>preferred date request</strong>, not a confirmed booking yet.
@@ -296,10 +264,10 @@ export function confirmationEmail(d: EmailData): string {
       <!-- Key date/time highlight -->
       <table width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:28px;">
         <tr>
-          <td style="background:${brand.light};padding:20px 24px;border-left:4px solid #cccccc;">
-            <p style="margin:0;font-family:Arial,sans-serif;font-size:11px;letter-spacing:2px;text-transform:uppercase;color:${brand.midGrey};margin-bottom:6px;">Your Preferred Slot</p>
+          <td style="background:${brand.light};padding:20px 24px;border-left:4px solid ${brand.faint};">
+            <p style="margin:0;font-family:Arial,sans-serif;font-size:11px;letter-spacing:2px;text-transform:uppercase;color:${brand.muted};margin-bottom:6px;">Your Preferred Slot</p>
             <p style="margin:0;font-family:Arial,sans-serif;font-size:20px;font-weight:bold;color:${brand.dark};">${d.date} at ${d.time}</p>
-            <p style="margin:4px 0 0;font-family:Arial,sans-serif;font-size:14px;color:${brand.midGrey};">${d.address}</p>
+            <p style="margin:4px 0 0;font-family:Arial,sans-serif;font-size:14px;color:${brand.muted};">${d.address}</p>
           </td>
         </tr>
       </table>
@@ -324,19 +292,19 @@ export function confirmationEmail(d: EmailData): string {
         <tr>
           <td style="padding:10px 0;border-bottom:1px solid #eeeeee;vertical-align:top;">
             <p style="margin:0;font-family:Arial,sans-serif;font-size:12px;font-weight:bold;color:${brand.orange};">1. We confirm your slot</p>
-            <p style="margin:4px 0 0;font-family:Arial,sans-serif;font-size:13px;color:${brand.midGrey};line-height:1.6;">We'll text or call you within 1 hour to lock in your date. If we need to adjust the time slightly, we'll give you options and plenty of notice.</p>
+            <p style="margin:4px 0 0;font-family:Arial,sans-serif;font-size:13px;color:${brand.muted};line-height:1.6;">We'll text or call you within 1 hour to lock in your date. If we need to adjust the time slightly, we'll give you options and plenty of notice.</p>
           </td>
         </tr>
         <tr>
           <td style="padding:10px 0;border-bottom:1px solid #eeeeee;vertical-align:top;">
             <p style="margin:0;font-family:Arial,sans-serif;font-size:12px;font-weight:bold;color:${brand.orange};">2. No prep needed</p>
-            <p style="margin:4px 0 0;font-family:Arial,sans-serif;font-size:13px;color:${brand.midGrey};line-height:1.6;">We bring everything: power, water, all equipment. Just make sure we can access the vehicle.</p>
+            <p style="margin:4px 0 0;font-family:Arial,sans-serif;font-size:13px;color:${brand.muted};line-height:1.6;">We bring everything: power, water, all equipment. Just make sure we can access the vehicle.</p>
           </td>
         </tr>
         <tr>
           <td style="padding:10px 0;vertical-align:top;">
             <p style="margin:0;font-family:Arial,sans-serif;font-size:12px;font-weight:bold;color:${brand.orange};">3. Payment on the day</p>
-            <p style="margin:4px 0 0;font-family:Arial,sans-serif;font-size:13px;color:${brand.midGrey};line-height:1.6;">Card, bank transfer or cash. Your price is fixed at £${d.price}, with no changes on the day.</p>
+            <p style="margin:4px 0 0;font-family:Arial,sans-serif;font-size:13px;color:${brand.muted};line-height:1.6;">Card, bank transfer or cash. Your price is fixed at £${d.price}, with no changes on the day.</p>
           </td>
         </tr>
       </table>
@@ -344,7 +312,7 @@ export function confirmationEmail(d: EmailData): string {
       <!-- Questions / contact -->
       <div style="margin-top:28px;background:${brand.light};padding:20px 24px;">
         <p style="margin:0 0 8px;font-family:Arial,sans-serif;font-size:12px;font-weight:bold;color:${brand.dark};">Any questions?</p>
-        <p style="margin:0;font-family:Arial,sans-serif;font-size:13px;color:${brand.midGrey};line-height:1.6;">
+        <p style="margin:0;font-family:Arial,sans-serif;font-size:13px;color:${brand.muted};line-height:1.6;">
           Reply to this email, call <a href="tel:+447359591800" style="color:${brand.orange};text-decoration:none;">07359 591800</a>,
           or WhatsApp us. We typically respond within minutes during working hours.
         </p>
@@ -385,7 +353,7 @@ export function fleetEnquiryEmail(d: FleetEnquiryData): string {
 
       ${d.message ? `
       <div style="margin-top:20px;background:${brand.light};padding:16px;border-left:3px solid ${brand.orange};">
-        <p style="margin:0;font-family:Arial,sans-serif;font-size:11px;letter-spacing:1px;text-transform:uppercase;color:${brand.midGrey};margin-bottom:6px;">Message</p>
+        <p style="margin:0;font-family:Arial,sans-serif;font-size:11px;letter-spacing:1px;text-transform:uppercase;color:${brand.muted};margin-bottom:6px;">Message</p>
         <p style="margin:0;font-family:Arial,sans-serif;font-size:14px;color:${brand.dark};line-height:1.6;">${d.message}</p>
       </div>` : ''}
 

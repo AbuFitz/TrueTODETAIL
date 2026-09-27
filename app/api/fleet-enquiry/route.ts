@@ -54,13 +54,14 @@ export async function POST(req: NextRequest) {
   }
 
   const resendKey = process.env.RESEND_API_KEY
-  const fromEmail = process.env.BOOKING_FROM_EMAIL ?? 'info@truetodetail.co.uk'
+  const fromEmail = process.env.BOOKING_FROM_EMAIL ?? 'noreply@truetodetail.co.uk'
 
   if (resendKey) {
     const resend = new Resend(resendKey)
     const result = await resend.emails.send({
       from: fromEmail,
       to: 'info@truetodetail.co.uk',
+      replyTo: 'info@truetodetail.co.uk',
       subject: `New Van & Fleet Enquiry: ${enquiry.business || enquiry.name}`,
       html: fleetEnquiryEmail(enquiry),
     })
