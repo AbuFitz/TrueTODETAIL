@@ -124,10 +124,11 @@ export default function Footer({ onBookNow }: { onBookNow: () => void }) {
           </p>
           <nav style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
             {[
-              ['About',    '#howitworks'],
-              ['Packages', '#packages'],
-              ['Reviews',  '#reviews'],
-              ['Book Now', '#contact'],
+              ['About',           '#howitworks'],
+              ['Packages',        '#packages'],
+              ['Areas We Cover',  '/areas'],
+              ['Reviews',         '#reviews'],
+              ['Book Now',        '#contact'],
             ].map(([label, href]) => (
               <a
                 key={label}

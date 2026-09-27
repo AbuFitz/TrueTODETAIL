@@ -1,4 +1,5 @@
 import type { MetadataRoute } from 'next'
+import { AREAS } from '@/lib/areas'
 
 const SITE_URL = 'https://www.truetodetail.co.uk'
 
@@ -46,6 +47,18 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: 'monthly',
       priority: 0.8,
     },
+    {
+      url: `${SITE_URL}/areas`,
+      lastModified: new Date(),
+      changeFrequency: 'monthly',
+      priority: 0.9,
+    },
+    ...AREAS.map((area) => ({
+      url: `${SITE_URL}/areas/${area.slug}`,
+      lastModified: new Date(),
+      changeFrequency: 'monthly' as const,
+      priority: 0.85,
+    })),
     {
       url: `${SITE_URL}/privacy`,
       lastModified: new Date(),

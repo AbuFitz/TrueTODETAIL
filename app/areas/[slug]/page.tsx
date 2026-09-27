@@ -1,0 +1,235 @@
+import type { Metadata } from 'next'
+import Link from 'next/link'
+import { notFound } from 'next/navigation'
+import { AREAS, getAreaBySlug, mapEmbedUrl } from '@/lib/areas'
+
+const SITE_URL = 'https://www.truetodetail.co.uk'
+
+export function generateStaticParams() {
+  return AREAS.map((area) => ({ slug: area.slug }))
+}
+
+export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
+  const { slug } = await params
+  const area = getAreaBySlug(slug)
+  if (!area) return {}
+
+  const title = `Mobile Car Detailing in ${area.name} | True To Detail`
+  const description = `Fully mobile car detailing in ${area.name} (${area.postcodes.join(', ')}). Fixed prices, no drop-off. True To Detail comes to you across ${area.name} and surrounding areas.`
+
+  return {
+    title,
+    description,
+    alternates: { canonical: `${SITE_URL}/areas/${area.slug}` },
+    openGraph: { title, description, url: `${SITE_URL}/areas/${area.slug}` },
+  }
+}
+
+export default async function AreaPage({ params }: { params: Promise<{ slug: string }> }) {
+  const { slug } = await params
+  const area = getAreaBySlug(slug)
+  if (!area) notFound()
+
+  const otherAreas = AREAS.filter((a) => a.slug !== area.slug).slice(0, 4)
+
+  const jsonLd = {
+    '@context': 'https://schema.org',
+    '@graph': [
+      {
+        '@type': 'BreadcrumbList',
+        itemListElement: [
+          { '@type': 'ListItem', position: 1, name: 'Home', item: SITE_URL },
+          { '@type': 'ListItem', position: 2, name: 'Areas We Cover', item: `${SITE_URL}/areas` },
+          { '@type': 'ListItem', position: 3, name: area.name, item: `${SITE_URL}/areas/${area.slug}` },
+        ],
+      },
+      {
+        '@type': 'Service',
+        name: `Mobile Car Detailing in ${area.name}`,
+        provider: {
+          '@type': 'LocalBusiness',
+          name: 'True To Detail',
+          url: SITE_URL,
+          telephone: '+447359591800',
+        },
+        areaServed: {
+          '@type': 'City',
+          name: area.name,
+          containedInPlace: { '@type': 'AdministrativeArea', name: area.county },
+        },
+        description: area.intro,
+        url: `${SITE_URL}/areas/${area.slug}`,
+      },
+      {
+        '@type': 'FAQPage',
+        mainEntity: area.faqs.map((f) => ({
+          '@type': 'Question',
+          name: f.q,
+          acceptedAnswer: { '@type': 'Answer', text: f.a },
+        })),
+      },
+    ],
+  }
+
+  return (
+    <>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
+      <main style={{ background: '#fff', minHeight: '100vh' }}>
+        <div style={{ maxWidth: '900px', margin: '0 auto', padding: 'clamp(48px, 8vw, 96px) clamp(24px, 5vw, 48px)' }}>
+
+          <nav aria-label="Breadcrumb" style={{ marginBottom: '32px' }}>
+            <ol style={{ display: 'flex', flexWrap: 'wrap', gap: '8px', listStyle: 'none', padding: 0, margin: 0, fontSize: '13px', color: 'rgba(12,12,12,0.45)' }}>
+              <li><Link href="/" style={{ color: '#E84A0C', textDecoration: 'none' }}>Home</Link></li>
+              <li aria-hidden>›</li>
+              <li><Link href="/areas" style={{ color: '#E84A0C', textDecoration: 'none' }}>Areas We Cover</Link></li>
+              <li aria-hidden>›</li>
+              <li aria-current="page">{area.name}</li>
+            </ol>
+          </nav>
+
+          <p style={{
+            fontFamily: 'var(--font-body)', fontWeight: 600, fontSize: '11px',
+            letterSpacing: '0.2em', textTransform: 'uppercase',
+            color: '#E84A0C', marginBottom: '16px',
+          }}>
+            {area.county} · {area.distanceMiles === 0 ? 'Home base' : `~${area.distanceMiles} miles from base`}
+          </p>
+          <h1 style={{
+            fontFamily: 'var(--font-display)', fontSize: 'clamp(40px, 6vw, 72px)',
+            letterSpacing: '0.02em', color: '#0C0C0C', lineHeight: 0.92, marginBottom: '24px',
+          }}>
+            MOBILE CAR DETAILING<br />
+            <span style={{ color: '#E84A0C' }}>IN {area.name.toUpperCase()}</span>
+          </h1>
+
+          <p style={{ fontSize: '18px', lineHeight: 1.7, color: 'rgba(12,12,12,0.65)', marginBottom: '40px', fontWeight: 500 }}>
+            {area.intro}
+          </p>
+
+          {/* Postcodes + neighbourhoods + map */}
+          <section style={{ marginBottom: '48px' }}>
+            <h2 style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(28px, 4vw, 44px)', letterSpacing: '0.02em', color: '#0C0C0C', marginBottom: '16px' }}>
+              POSTCODES & AREAS COVERED
+            </h2>
+            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px', marginBottom: '20px' }}>
+              {area.postcodes.map((pc) => (
+                <span
+                  key={pc}
+                  style={{
+                    fontFamily: 'var(--font-body)', fontWeight: 700, fontSize: '13px',
+                    padding: '7px 14px', border: '1px solid rgba(12,12,12,0.15)',
+                    color: '#0C0C0C', borderRadius: '999px',
+                  }}
+                >
+                  {pc}
+                </span>
+              ))}
+            </div>
+            <p style={{ fontSize: '15px', lineHeight: 1.78, color: 'rgba(12,12,12,0.62)', marginBottom: '8px' }}>
+              We also regularly cover: {area.neighbourhoods.join(', ')}.
+            </p>
+            <p style={{ fontSize: '14px', lineHeight: 1.7, color: 'rgba(12,12,12,0.45)' }}>
+              {area.driveTime} Not sure your exact postcode is included? Message us on WhatsApp or call{' '}
+              <a href="tel:+447359591800" style={{ color: '#E84A0C', textDecoration: 'none' }}>07359 591800</a> and we'll confirm straight away.
+            </p>
+          </section>
+
+          {/* Map */}
+          <section style={{ marginBottom: '48px' }}>
+            <div style={{
+              position: 'relative', height: 'clamp(280px, 40vw, 420px)',
+              overflow: 'hidden', border: '1px solid rgba(12,12,12,0.1)',
+            }}>
+              <iframe
+                src={mapEmbedUrl(area)}
+                width="100%" height="100%"
+                style={{ border: 0, display: 'block' }}
+                loading="lazy"
+                referrerPolicy="no-referrer-when-downgrade"
+                title={`Map of our ${area.name} mobile detailing coverage area`}
+              />
+            </div>
+          </section>
+
+          {/* Local paragraph */}
+          <section style={{ marginBottom: '48px' }}>
+            <h2 style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(28px, 4vw, 44px)', letterSpacing: '0.02em', color: '#0C0C0C', marginBottom: '16px' }}>
+              WORKING IN {area.name.toUpperCase()}
+            </h2>
+            <p style={{ fontSize: '15px', lineHeight: 1.78, color: 'rgba(12,12,12,0.62)' }}>
+              {area.localParagraph}
+            </p>
+          </section>
+
+          {/* Packages */}
+          <section style={{ marginBottom: '48px' }}>
+            <h2 style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(28px, 4vw, 44px)', letterSpacing: '0.02em', color: '#0C0C0C', marginBottom: '16px' }}>
+              PACKAGES AVAILABLE IN {area.name.toUpperCase()}
+            </h2>
+            <ul style={{ fontSize: '15px', lineHeight: 2, color: 'rgba(12,12,12,0.62)', paddingLeft: '20px', marginBottom: '16px' }}>
+              <li><strong>Essential</strong>: Safe wash & dry, wheels cleaned, interior vacuum, dashboard wipe, glass cleaned, tyre dressing. From £80.</li>
+              <li><strong>Full Valet</strong>: Everything in Essential, plus deep interior clean, seat shampoo, carpet extraction, spray wax protection. From £140.</li>
+              <li><strong>Premium Detail</strong>: Everything in Full Valet, plus clay bar decontamination, light machine polish, paint sealant, trim restoration. From £220.</li>
+            </ul>
+            <p style={{ fontSize: '15px', lineHeight: 1.78, color: 'rgba(12,12,12,0.62)' }}>
+              All prices are fixed at the time of booking, with no hidden charges and no changes on the day.
+            </p>
+          </section>
+
+          {/* Local FAQs */}
+          <section style={{ marginBottom: '48px' }}>
+            <h2 style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(28px, 4vw, 44px)', letterSpacing: '0.02em', color: '#0C0C0C', marginBottom: '16px' }}>
+              {area.name.toUpperCase()} FAQS
+            </h2>
+            <div style={{ borderTop: '1px solid rgba(12,12,12,0.1)' }}>
+              {area.faqs.map((faq) => (
+                <div key={faq.q} style={{ padding: '20px 0', borderBottom: '1px solid rgba(12,12,12,0.08)' }}>
+                  <p style={{ fontFamily: 'var(--font-body)', fontWeight: 700, fontSize: '15px', color: '#0C0C0C', marginBottom: '8px' }}>
+                    {faq.q}
+                  </p>
+                  <p style={{ fontFamily: 'var(--font-body)', fontSize: '14px', lineHeight: 1.72, color: 'rgba(12,12,12,0.58)' }}>
+                    {faq.a}
+                  </p>
+                </div>
+              ))}
+            </div>
+          </section>
+
+          <div style={{ display: 'flex', gap: '16px', flexWrap: 'wrap', marginBottom: '64px' }}>
+            <Link
+              href="/"
+              style={{
+                display: 'inline-block', background: '#E84A0C', color: '#fff',
+                padding: '15px 36px', textDecoration: 'none',
+                fontFamily: 'var(--font-body)', fontWeight: 700, fontSize: '12px',
+                letterSpacing: '0.12em', textTransform: 'uppercase',
+              }}
+            >
+              Book Your Detail in {area.name}
+            </Link>
+            <a href="tel:+447359591800" style={{ display: 'inline-block', background: 'transparent', color: '#0C0C0C', padding: '15px 36px', textDecoration: 'none', fontFamily: 'var(--font-body)', fontWeight: 600, fontSize: '12px', letterSpacing: '0.12em', textTransform: 'uppercase', border: '1px solid rgba(12,12,12,0.2)' }}>
+              Call 07359 591800
+            </a>
+          </div>
+
+          <nav aria-label="Nearby areas" style={{ borderTop: '1px solid rgba(12,12,12,0.08)', paddingTop: '32px' }}>
+            <p style={{ fontFamily: 'var(--font-body)', fontSize: '11px', fontWeight: 600, letterSpacing: '0.2em', textTransform: 'uppercase', color: 'rgba(12,12,12,0.35)', marginBottom: '16px' }}>
+              Other Areas We Cover
+            </p>
+            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '12px' }}>
+              {otherAreas.map((a) => (
+                <Link key={a.slug} href={`/areas/${a.slug}`} style={{ fontSize: '14px', color: '#E84A0C', textDecoration: 'none' }}>
+                  {a.name}
+                </Link>
+              ))}
+              <Link href="/areas" style={{ fontSize: '14px', color: 'rgba(12,12,12,0.5)', textDecoration: 'none' }}>
+                View all areas →
+              </Link>
+            </div>
+          </nav>
+
+        </div>
+      </main>
+    </>
+  )
+}
