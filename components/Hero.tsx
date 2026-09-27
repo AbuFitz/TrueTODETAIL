@@ -19,7 +19,7 @@ export default function Hero({ onBookNow }: { onBookNow: () => void }) {
   useEffect(() => {
     const current = WORDS[wordIndex]
     if (!isDeleting && displayText === current) {
-      const t = setTimeout(() => setIsDeleting(true), 2000)
+      const t = setTimeout(() => setIsDeleting(true), 3200)
       return () => clearTimeout(t)
     }
     if (isDeleting && displayText === '') {
@@ -27,7 +27,7 @@ export default function Hero({ onBookNow }: { onBookNow: () => void }) {
       setWordIndex(i => (i + 1) % WORDS.length)
       return
     }
-    const speed = isDeleting ? 40 : 80
+    const speed = isDeleting ? 65 : 130
     const t = setTimeout(() => {
       setDisplayText(
         isDeleting
@@ -345,10 +345,10 @@ export default function Hero({ onBookNow }: { onBookNow: () => void }) {
           >
             <div style={{
               fontFamily: 'var(--font-display)',
-              fontSize: 'clamp(72px, 19.5vw, 92px)',
+              fontSize: 'clamp(74px, 21vw, 98px)',
               letterSpacing: '0.01em', color: '#ffffff',
               lineHeight: 0.88,
-              minHeight: 'calc(clamp(72px, 19.5vw, 92px) * 0.88)',
+              minHeight: 'calc(clamp(74px, 21vw, 98px) * 0.88)',
               display: 'flex', alignItems: 'baseline',
             }}>
               <span>{displayText}</span>
@@ -366,7 +366,7 @@ export default function Hero({ onBookNow }: { onBookNow: () => void }) {
 
             <div style={{
               fontFamily: 'var(--font-display)',
-              fontSize: 'clamp(58px, 15.6vw, 74px)',
+              fontSize: 'clamp(59px, 16.8vw, 78px)',
               letterSpacing: '0.01em', color: 'rgba(255,255,255,0.30)',
               lineHeight: 0.88,
               paddingLeft: 'clamp(12px, 3vw, 20px)',
@@ -376,7 +376,7 @@ export default function Hero({ onBookNow }: { onBookNow: () => void }) {
 
             <div style={{
               fontFamily: 'var(--font-display)',
-              fontSize: 'clamp(45px, 12.3vw, 60px)',
+              fontSize: 'clamp(48px, 13.5vw, 64px)',
               letterSpacing: '0.01em', color: 'rgba(255,255,255,0.16)',
               lineHeight: 0.88,
               paddingLeft: 'clamp(26px, 6.5vw, 42px)',
