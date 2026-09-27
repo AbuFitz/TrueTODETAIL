@@ -1,5 +1,6 @@
 import type { Metadata } from 'next'
 import { Bebas_Neue, DM_Sans } from 'next/font/google'
+import SupportWidget from '@/components/SupportWidget'
 import './globals.css'
 
 // Bebas Neue — single-weight display font for all major headlines
@@ -313,7 +314,10 @@ export default function RootLayout({
         />
         <link rel="canonical" href={SITE_URL} />
       </head>
-      <body className="bg-white text-site-black font-body antialiased">{children}</body>
+      <body className="bg-white text-site-black font-body antialiased">
+        {children}
+        <SupportWidget />
+      </body>
     </html>
   )
 }

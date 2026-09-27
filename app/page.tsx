@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import Navbar from '@/components/Navbar'
 import Hero from '@/components/Hero'
 import Stats from '@/components/Stats'
@@ -30,6 +30,13 @@ export default function HomePage() {
     setSelectedVehicle(vehicle)
     setModalOpen(true)
   }
+
+  // Lets the site-wide SupportWidget open this modal from anywhere on the homepage.
+  useEffect(() => {
+    const handler = () => openModal()
+    window.addEventListener('ttd:book-now', handler)
+    return () => window.removeEventListener('ttd:book-now', handler)
+  }, [])
 
   return (
     <>
