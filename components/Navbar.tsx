@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
+import { appAccountLoginUrl } from '@/lib/appUrl'
 
 const NAV_LINKS = [
   { label: 'About',    href: '#howitworks' },
@@ -132,6 +133,40 @@ export default function Navbar({ onBookNow }: { onBookNow: () => void }) {
               </a>
             ))}
 
+            <a
+              href={appAccountLoginUrl()}
+              style={{
+                position: 'relative',
+                fontFamily: 'var(--font-body)', fontWeight: 500, fontSize: '13px',
+                letterSpacing: '0.04em',
+                color: hovered === 'My Account' ? '#ffffff' : 'rgba(255,255,255,0.52)',
+                textDecoration: 'none',
+                padding: '0 18px', height: '80px',
+                display: 'flex', alignItems: 'center',
+                transition: 'color 0.2s',
+                flexShrink: 0,
+              }}
+              onMouseEnter={() => setHovered('My Account')}
+              onMouseLeave={() => setHovered(null)}
+            >
+              <span
+                aria-hidden
+                style={{
+                  position: 'absolute',
+                  bottom: '20px', left: '18px', right: '18px',
+                  height: '1.5px',
+                  background: '#E84A0C',
+                  transformOrigin: 'left center',
+                  transform: `scaleX(${hovered === 'My Account' ? 1 : 0})`,
+                  transition: hovered === 'My Account'
+                    ? 'transform 0.28s cubic-bezier(0.22, 1, 0.36, 1)'
+                    : 'transform 0.18s cubic-bezier(0.55, 0, 1, 0.45)',
+                  pointerEvents: 'none',
+                }}
+              />
+              My Account
+            </a>
+
             <span style={{
               display: 'block', width: 1, height: 20,
               background: 'rgba(255,255,255,0.1)',
@@ -241,6 +276,34 @@ export default function Navbar({ onBookNow }: { onBookNow: () => void }) {
               <span style={{ color: 'rgba(255,255,255,0.18)', fontSize: '14px' }}>→</span>
             </a>
           ))}
+
+          <a
+            href={appAccountLoginUrl()}
+            onClick={() => setOpen(false)}
+            style={{
+              display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+              padding: '20px 0',
+              borderBottom: '1px solid rgba(255,255,255,0.06)',
+              textDecoration: 'none',
+            }}
+          >
+            <div style={{ display: 'flex', alignItems: 'baseline', gap: '16px' }}>
+              <span style={{
+                fontFamily: 'var(--font-body)', fontSize: '10px', fontWeight: 600,
+                color: 'rgba(255,255,255,0.2)', width: '20px',
+              }}>
+                0{NAV_LINKS.length + 1}
+              </span>
+              <span style={{
+                fontFamily: 'var(--font-display)',
+                fontSize: 'clamp(40px, 11vw, 64px)',
+                letterSpacing: '0.04em', color: 'white', lineHeight: 1,
+              }}>
+                My Account
+              </span>
+            </div>
+            <span style={{ color: 'rgba(255,255,255,0.18)', fontSize: '14px' }}>→</span>
+          </a>
         </div>
 
         <div style={{
