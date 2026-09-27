@@ -264,7 +264,7 @@ export default function Navbar({ onBookNow }: { onBookNow: () => void }) {
             fontFamily: 'var(--font-body)', fontSize: '11px',
             color: 'rgba(255,255,255,0.2)', marginTop: '12px', letterSpacing: '0.06em',
           }}>
-            07984 237149 · Mon–Sat 8am–7pm
+            07359 591800 · Mon–Sat 8am–7pm
           </p>
         </div>
       </div>

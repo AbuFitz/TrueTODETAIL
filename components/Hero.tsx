@@ -108,7 +108,7 @@ export default function Hero({ onBookNow }: { onBookNow: () => void }) {
           {[
             { value: '100%', label: 'Mobile\nService' },
             { value: '£0',   label: 'Hidden\nCharges' },
-            { value: '2YR',  label: 'Ceramic\nWarranty' },
+            { value: '5★',   label: 'Rated\nService' },
           ].map(s => (
             <div key={s.value} style={{ textAlign: 'center', flexShrink: 0 }}>
               <span style={{

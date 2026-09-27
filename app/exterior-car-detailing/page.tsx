@@ -19,7 +19,7 @@ const jsonLd = {
   '@context': 'https://schema.org',
   '@type': 'Service',
   name: 'Exterior Car Detailing',
-  provider: { '@type': 'LocalBusiness', name: 'True To Detail', url: 'https://www.truetodetail.co.uk', telephone: '+447984237149' },
+  provider: { '@type': 'LocalBusiness', name: 'True To Detail', url: 'https://www.truetodetail.co.uk', telephone: '+447359591800' },
   areaServed: ['Hemel Hempstead', 'Watford', 'St Albans', 'Berkhamsted', 'Harpenden', 'Kings Langley', 'Tring', 'Abbots Langley', 'Chesham', 'Rickmansworth'],
   serviceType: 'Exterior Car Detailing',
   url: 'https://www.truetodetail.co.uk/exterior-car-detailing',
@@ -80,7 +80,7 @@ export default function ExteriorCarDetailingPage() {
               Over time, every vehicle develops swirl marks, light scratches and surface marring — often caused by improper washing techniques or automatic car washes. These defects scatter light and dull your paint&apos;s natural clarity and depth.
             </p>
             <p style={{ fontSize: '15px', lineHeight: 1.78, color: 'rgba(12,12,12,0.62)', marginBottom: '16px' }}>
-              Machine polishing corrects these defects by removing a microscopic layer of clear coat, eliminating the scratches and restoring a mirror-like finish. Our single-stage machine polish (included in the Premium package) dramatically improves paint clarity and gloss. For more severe defects, our Elite Ceramic package includes full multi-stage paint correction prior to ceramic coating application.
+              Machine polishing corrects these defects by removing a microscopic layer of clear coat, eliminating the scratches and restoring a mirror-like finish. Our light machine polish (included in the Premium Detail package) dramatically improves paint clarity and gloss. For more severe defects, multi-stage paint correction is available as a bespoke, quoted service — get in touch and we'll assess your vehicle.
             </p>
           </section>
 
@@ -92,9 +92,9 @@ export default function ExteriorCarDetailingPage() {
               After machine polishing, paint protection is applied to preserve the corrected finish and protect against future contamination. We offer three levels of protection:
             </p>
             <ul style={{ fontSize: '15px', lineHeight: 2.1, color: 'rgba(12,12,12,0.62)', paddingLeft: '20px', marginBottom: '16px' }}>
-              <li><strong>Carnauba Wax</strong> — Natural warm gloss and 2–3 months of protection. Included in Deep Clean.</li>
-              <li><strong>Synthetic Sealant</strong> — Harder, longer-lasting protection (4–6 months). Included in Premium.</li>
-              <li><strong>Ceramic Coating</strong> — Semi-permanent protection with 2-year warranty, hydrophobic properties and exceptional gloss. Included in Elite Ceramic.</li>
+              <li><strong>Spray Wax</strong> — Warm gloss and short-term protection. Included in Full Valet.</li>
+              <li><strong>Paint Sealant</strong> — Harder, longer-lasting synthetic protection. Included in Premium Detail.</li>
+              <li><strong>Ceramic Coating</strong> — Semi-permanent protection with hydrophobic properties and exceptional gloss. Available as a bespoke, quoted service.</li>
             </ul>
           </section>
 

@@ -2,9 +2,9 @@
 
 import { useState } from 'react'
 import { motion } from 'framer-motion'
-import type { Metadata } from 'next'
 
 const ease = [0.22, 1, 0.36, 1] as [number, number, number, number]
+const YEAR = new Date().getFullYear()
 
 const VAN_PACKAGES = [
   {
@@ -66,14 +66,29 @@ export default function VanFleetPage() {
   const [submitted, setSubmitted] = useState(false)
   const [form, setForm] = useState({ name: '', business: '', phone: '', fleet: '', message: '' })
   const [submitting, setSubmitting] = useState(false)
+  const [submitError, setSubmitError] = useState('')
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setSubmitting(true)
-    // Simulate submission — wire up to /api/booking or contact endpoint
-    await new Promise(r => setTimeout(r, 800))
-    setSubmitted(true)
-    setSubmitting(false)
+    setSubmitError('')
+    try {
+      const res = await fetch('/api/fleet-enquiry', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(form),
+      })
+      const json = await res.json()
+      if (!res.ok) {
+        setSubmitError(json.error ?? 'Something went wrong. Please try again.')
+        return
+      }
+      setSubmitted(true)
+    } catch {
+      setSubmitError('Network error — please check your connection and try again.')
+    } finally {
+      setSubmitting(false)
+    }
   }
 
   const fieldLabel: React.CSSProperties = {
@@ -620,8 +635,8 @@ export default function VanFleetPage() {
 
               <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
                 {[
-                  ['Phone', '07984 237149'],
-                  ['Email', 'hello@truetodetail.co.uk'],
+                  ['Phone', '07359 591800'],
+                  ['Email', 'info@truetodetail.co.uk'],
                   ['Hours', 'Mon–Sat · 8am–7pm'],
                 ].map(([label, val]) => (
                   <div key={label} style={{ display: 'flex', gap: '16px', alignItems: 'baseline' }}>
@@ -763,6 +778,12 @@ export default function VanFleetPage() {
                     />
                   </div>
 
+                  {submitError && (
+                    <div style={{ borderLeft: '2px solid #ef4444', background: 'rgba(239,68,68,0.08)', padding: '14px 16px', fontFamily: 'var(--font-body)', fontSize: '13px', color: '#f87171' }}>
+                      {submitError}
+                    </div>
+                  )}
+
                   <button
                     type="submit"
                     disabled={submitting}
@@ -798,7 +819,7 @@ export default function VanFleetPage() {
         maxWidth: '1400px', margin: '0 auto',
       }}>
         <span style={{ fontFamily: 'var(--font-body)', fontSize: '12px', color: 'rgba(255,255,255,0.2)' }}>
-          © 2025 True To Detail · Hertfordshire
+          © {YEAR} True To Detail · Hertfordshire
         </span>
         <a
           href="/"

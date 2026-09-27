@@ -19,7 +19,7 @@ const jsonLd = {
   '@context': 'https://schema.org',
   '@type': 'Service',
   name: 'Professional Car Valeting',
-  provider: { '@type': 'LocalBusiness', name: 'True To Detail', url: 'https://www.truetodetail.co.uk', telephone: '+447984237149' },
+  provider: { '@type': 'LocalBusiness', name: 'True To Detail', url: 'https://www.truetodetail.co.uk', telephone: '+447359591800' },
   areaServed: ['Hemel Hempstead', 'Watford', 'St Albans', 'Berkhamsted', 'Harpenden', 'Kings Langley', 'Tring', 'Abbots Langley', 'Chesham', 'Rickmansworth'],
   serviceType: 'Professional Car Valeting',
   url: 'https://www.truetodetail.co.uk/professional-car-valeting',
@@ -65,7 +65,7 @@ export default function ProfessionalCarValetingPage() {
               <strong>Car detailing</strong> goes further — it involves paint correction, decontamination, machine polishing, paint protection and restoration work that improves the vehicle&apos;s condition beyond its cleaned state. Detailing addresses defects in the paintwork and materials that valeting doesn&apos;t touch.
             </p>
             <p style={{ fontSize: '15px', lineHeight: 1.78, color: 'rgba(12,12,12,0.62)' }}>
-              At True To Detail, we offer services across the full spectrum — from a thorough valet (our Essential package) through to full paint correction and ceramic coating (our Elite Ceramic package). All delivered as a mobile service to your location.
+              At True To Detail, we offer services across the full spectrum — from a thorough valet (our Essential package) through to a comprehensive multi-stage clean with paint decontamination and sealant protection (our Premium Detail package). All delivered as a mobile service to your location.
             </p>
           </section>
 
@@ -102,13 +102,12 @@ export default function ProfessionalCarValetingPage() {
               CAR VALETING PACKAGES & PRICING
             </h2>
             <p style={{ fontSize: '15px', lineHeight: 1.78, color: 'rgba(12,12,12,0.62)', marginBottom: '16px' }}>
-              We offer four packages to suit different requirements:
+              We offer three packages to suit different requirements:
             </p>
             <ul style={{ fontSize: '15px', lineHeight: 2.1, color: 'rgba(12,12,12,0.62)', paddingLeft: '20px', marginBottom: '16px' }}>
-              <li><strong>Essential Valet</strong> — Interior vacuum and wipe-down, exterior wash, wheels and windows. From £89 (hatchback).</li>
-              <li><strong>Deep Clean Valet</strong> — Full interior deep clean including steam treatment, exterior decontamination, clay bar, machine polish and wax. From £179.</li>
-              <li><strong>Premium Detail</strong> — Comprehensive interior restoration, paint decontamination, machine polish and synthetic sealant protection. From £299.</li>
-              <li><strong>Elite Ceramic</strong> — Full paint correction and professional ceramic coating with 2-year warranty. From £549.</li>
+              <li><strong>Essential</strong> — Safe wash & dry, wheels cleaned, interior vacuum, dashboard wipe, glass cleaned, tyre dressing. From £80 (small car).</li>
+              <li><strong>Full Valet</strong> — Everything in Essential, plus deep interior clean, seat shampoo, carpet extraction, door shuts cleaned and spray wax protection. From £140.</li>
+              <li><strong>Premium Detail</strong> — Everything in Full Valet, plus clay bar decontamination, light machine polish, paint sealant, trim restoration and odour treatment. From £220.</li>
             </ul>
           </section>
 

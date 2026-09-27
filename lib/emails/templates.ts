@@ -9,7 +9,7 @@
   3. Create an API key: resend.com → API Keys → Create API Key
   4. Add to your environment variables:
        RESEND_API_KEY=re_xxxxxxxxxxxxxxxxxxxxxxxxxxxx
-       BOOKING_FROM_EMAIL=hello@truetodetail.co.uk
+       BOOKING_FROM_EMAIL=bookings@truetodetail.co.uk
      For local dev, add to .env.local (never commit this file).
      For production (e.g. Vercel): add via Settings → Environment Variables.
   5. Deploy and test with a real booking — you'll see it in Resend's dashboard.
@@ -30,6 +30,15 @@ export interface EmailData {
   carReg:    string
   addons:    string[]
   notes?:    string
+  createdAt: string
+}
+
+export interface FleetEnquiryData {
+  name:      string
+  business:  string
+  phone:     string
+  fleetSize: string
+  message:   string
   createdAt: string
 }
 
@@ -153,7 +162,7 @@ function wrap(title: string, body: string): string {
               True To Detail · Hertfordshire, UK
             </p>
             <p style="margin:6px 0 0;font-family:Arial,sans-serif;font-size:11px;color:${brand.lightGrey};">
-              07984 237149 · hello@truetodetail.co.uk
+              07359 591800 · info@truetodetail.co.uk
             </p>
             ${socialLinks}
           </td>
@@ -180,7 +189,7 @@ function row(label: string, value: string, highlight = false): string {
 }
 
 /* ══════════════════════════════════════════════════════════════════════════
-   TEMPLATE 1 — Staff notification (to hello@truetodetail.co.uk)
+   TEMPLATE 1 — Staff notification (to bookings@truetodetail.co.uk)
    ══════════════════════════════════════════════════════════════════════════ */
 export function notificationEmail(d: EmailData): string {
   const addonsLine = d.addons.length > 0 ? d.addons.join(', ') : 'None'
@@ -336,7 +345,7 @@ export function confirmationEmail(d: EmailData): string {
       <div style="margin-top:28px;background:${brand.light};padding:20px 24px;">
         <p style="margin:0 0 8px;font-family:Arial,sans-serif;font-size:12px;font-weight:bold;color:${brand.dark};">Any questions?</p>
         <p style="margin:0;font-family:Arial,sans-serif;font-size:13px;color:${brand.midGrey};line-height:1.6;">
-          Reply to this email, call <a href="tel:+447984237149" style="color:${brand.orange};text-decoration:none;">07984 237149</a>,
+          Reply to this email, call <a href="tel:+447359591800" style="color:${brand.orange};text-decoration:none;">07359 591800</a>,
           or WhatsApp us. We typically respond within minutes during working hours.
         </p>
       </div>
@@ -345,4 +354,50 @@ export function confirmationEmail(d: EmailData): string {
   </tr>`
 
   return wrap(`Booking Request Received — ${d.date}`, body)
+}
+
+/* ══════════════════════════════════════════════════════════════════════════
+   TEMPLATE 3 — Van & Fleet enquiry notification (to info@truetodetail.co.uk)
+   ══════════════════════════════════════════════════════════════════════════ */
+export function fleetEnquiryEmail(d: FleetEnquiryData): string {
+  const body = `
+  <tr>
+    <td style="background:${brand.orange};padding:24px 32px;">
+      <p style="margin:0;font-family:Arial,sans-serif;font-size:11px;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,0.7);">
+        New Van & Fleet Enquiry
+      </p>
+      <h1 style="margin:8px 0 0;font-family:'Arial Black',Arial,sans-serif;font-size:28px;font-weight:bold;color:#ffffff;letter-spacing:2px;text-transform:uppercase;line-height:1.1;">
+        ${d.business || d.name}
+      </h1>
+    </td>
+  </tr>
+  <tr>
+    <td style="background:#ffffff;padding:32px;">
+      <h2 style="margin:0 0 20px;font-family:Arial,sans-serif;font-size:13px;letter-spacing:2px;text-transform:uppercase;color:${brand.dark};border-bottom:2px solid ${brand.orange};padding-bottom:10px;">
+        Contact Details
+      </h2>
+      <table width="100%" cellpadding="0" cellspacing="0">
+        ${row('Name',        d.name)}
+        ${row('Business',    d.business || '—')}
+        ${row('Phone',       `<a href="tel:${d.phone}" style="color:${brand.dark};text-decoration:none;">${d.phone}</a>`)}
+        ${row('Fleet Size',  d.fleetSize || '—')}
+      </table>
+
+      ${d.message ? `
+      <div style="margin-top:20px;background:${brand.light};padding:16px;border-left:3px solid ${brand.orange};">
+        <p style="margin:0;font-family:Arial,sans-serif;font-size:11px;letter-spacing:1px;text-transform:uppercase;color:${brand.midGrey};margin-bottom:6px;">Message</p>
+        <p style="margin:0;font-family:Arial,sans-serif;font-size:14px;color:${brand.dark};line-height:1.6;">${d.message}</p>
+      </div>` : ''}
+
+      <div style="margin-top:28px;background:${brand.dark};padding:20px 24px;">
+        <p style="margin:0;font-family:Arial,sans-serif;font-size:13px;color:rgba(255,255,255,0.6);line-height:1.6;">
+          Reply within a few hours via text to
+          <strong style="color:#ffffff;"> ${d.phone}</strong>.
+        </p>
+      </div>
+
+    </td>
+  </tr>`
+
+  return wrap(`New Van & Fleet Enquiry — ${d.name}`, body)
 }

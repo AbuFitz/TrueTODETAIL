@@ -103,8 +103,8 @@ const jsonLd = {
       description:
         'Professional mobile car detailing and valeting service covering Hemel Hempstead and surrounding Hertfordshire areas including Watford, St Albans, Berkhamsted, Kings Langley, Harpenden, Tring, Abbots Langley, Chesham, Rickmansworth, Apsley, Leverstock Green, Redbourn, Boxmoor, Bovingdon and Markyate.',
       url: SITE_URL,
-      telephone: '+447984237149',
-      email: 'hello@truetodetail.co.uk',
+      telephone: '+447359591800',
+      email: 'info@truetodetail.co.uk',
       logo: {
         '@type': 'ImageObject',
         url: `${SITE_URL}/logo.png`,
@@ -148,48 +148,36 @@ const jsonLd = {
             itemOffered: {
               '@type': 'Service',
               name: 'Essential Car Detail',
-              description: 'Interior vacuum, wipe-down, exterior hand wash, wheel clean, tyre dressing and window clean.',
+              description: 'Safe wash & dry, wheels cleaned, interior vacuum, dashboard wipe, glass cleaned and tyre dressing.',
               url: `${SITE_URL}/mobile-car-detailing`,
             },
-            price: '89.00',
+            price: '80.00',
             priceCurrency: 'GBP',
-            priceSpecification: { '@type': 'PriceSpecification', minPrice: 89, maxPrice: 149, priceCurrency: 'GBP' },
+            priceSpecification: { '@type': 'PriceSpecification', minPrice: 80, maxPrice: 105, priceCurrency: 'GBP' },
           },
           {
             '@type': 'Offer',
             itemOffered: {
               '@type': 'Service',
-              name: 'Deep Clean Car Detail',
-              description: 'Full interior deep clean, steam treatment, exterior decontamination, clay bar, machine polish and wax protection.',
+              name: 'Full Valet Car Detail',
+              description: 'Everything in Essential, plus deep interior clean, seat shampoo, carpet extraction, door shuts cleaned and spray wax protection.',
               url: `${SITE_URL}/interior-car-detailing`,
             },
-            price: '179.00',
+            price: '140.00',
             priceCurrency: 'GBP',
-            priceSpecification: { '@type': 'PriceSpecification', minPrice: 179, maxPrice: 279, priceCurrency: 'GBP' },
+            priceSpecification: { '@type': 'PriceSpecification', minPrice: 140, maxPrice: 175, priceCurrency: 'GBP' },
           },
           {
             '@type': 'Offer',
             itemOffered: {
               '@type': 'Service',
               name: 'Premium Full Car Detail',
-              description: 'Comprehensive interior restoration, paint decontamination, single-stage machine polish, and premium sealant protection.',
+              description: 'Everything in Full Valet, plus clay bar decontamination, light machine polish, paint sealant, trim restoration and odour treatment.',
               url: `${SITE_URL}/full-car-detail`,
             },
-            price: '299.00',
+            price: '220.00',
             priceCurrency: 'GBP',
-            priceSpecification: { '@type': 'PriceSpecification', minPrice: 299, maxPrice: 479, priceCurrency: 'GBP' },
-          },
-          {
-            '@type': 'Offer',
-            itemOffered: {
-              '@type': 'Service',
-              name: 'Elite Ceramic Coating',
-              description: 'Full paint correction, professional ceramic coating application with 2-year warranty and premium interior treatment.',
-              url: `${SITE_URL}/professional-car-valeting`,
-            },
-            price: '549.00',
-            priceCurrency: 'GBP',
-            priceSpecification: { '@type': 'PriceSpecification', minPrice: 549, maxPrice: 849, priceCurrency: 'GBP' },
+            priceSpecification: { '@type': 'PriceSpecification', minPrice: 220, maxPrice: 270, priceCurrency: 'GBP' },
           },
         ],
       },
@@ -247,7 +235,7 @@ const jsonLd = {
           name: 'How long does car detailing take?',
           acceptedAnswer: {
             '@type': 'Answer',
-            text: 'It depends on the package. Our Essential detail runs 2–3 hours, Deep Clean 4–5 hours, Premium 6–8 hours, and Elite Ceramic takes 1–2 days. We confirm your exact arrival window on the morning of your booking.',
+            text: 'It depends on the package. Our Essential detail runs 2–3 hours, Full Valet 4–5 hours, and Premium Detail 6–7 hours. We confirm your exact arrival window on the morning of your booking.',
           },
         },
         {
@@ -271,7 +259,7 @@ const jsonLd = {
           name: 'What is included in a full car detail?',
           acceptedAnswer: {
             '@type': 'Answer',
-            text: 'Our Premium full car detail includes a comprehensive interior deep clean, steam treatment, full exterior decontamination, clay bar treatment, machine polish to remove swirls and scratches, and premium paint sealant for long-lasting protection.',
+            text: 'Our Premium Detail includes everything in the Full Valet package, plus clay bar decontamination, light machine polish to reduce swirls and scratches, paint sealant and trim restoration.',
           },
         },
         {

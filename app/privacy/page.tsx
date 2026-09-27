@@ -42,7 +42,7 @@ export default function PrivacyPage() {
           {[
             {
               heading: '1. Who We Are',
-              body: 'True To Detail is a mobile car detailing business operating in Hertfordshire, UK. We are the data controller for the personal information collected through this website and our booking system. Contact: hello@truetodetail.co.uk · 07984 237149.',
+              body: 'True To Detail is a mobile car detailing business operating in Hertfordshire, UK. We are the data controller for the personal information collected through this website and our booking system. Contact: info@truetodetail.co.uk · 07359 591800.',
             },
             {
               heading: '2. What Data We Collect',
@@ -66,7 +66,7 @@ export default function PrivacyPage() {
             },
             {
               heading: '7. Your Rights',
-              body: 'Under UK GDPR, you have the right to access, correct, or delete your personal data; object to processing; and request data portability. To exercise any of these rights, contact us at hello@truetodetail.co.uk. You also have the right to lodge a complaint with the Information Commissioner\'s Office (ico.org.uk).',
+              body: 'Under UK GDPR, you have the right to access, correct, or delete your personal data; object to processing; and request data portability. To exercise any of these rights, contact us at info@truetodetail.co.uk. You also have the right to lodge a complaint with the Information Commissioner\'s Office (ico.org.uk).',
             },
             {
               heading: '8. Security',

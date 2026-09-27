@@ -13,12 +13,12 @@ const REVIEWS = [
   {
     text: "Booked online Tuesday, they were there Wednesday morning. No faff, no hidden costs, no surprise charges. My Golf hasn't looked this good since I bought it. First-class from start to finish — I'll be booking every few months.",
     name: 'Sarah M.',
-    vehicle: 'VW Golf — Deep Clean',
+    vehicle: 'VW Golf — Full Valet',
   },
   {
-    text: "Had the Elite Ceramic coating done on my 3 Series and the hydrophobic effect is seriously impressive. Two months on and it still beads water perfectly. The finish is something else. Genuinely great service.",
+    text: "Had the Premium Detail done on my 3 Series and the paint correction results were seriously impressive. Two months on and the sealant is still beading water perfectly. The finish is something else. Genuinely great service.",
     name: 'Michael T.',
-    vehicle: 'BMW 3 Series — Elite Ceramic',
+    vehicle: 'BMW 3 Series — Premium Detail',
   },
 ]
 

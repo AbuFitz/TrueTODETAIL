@@ -5,7 +5,6 @@ import { notificationEmail, confirmationEmail, EmailData } from '@/lib/emails/te
 export interface BookingPayload {
   pack: string
   vehicle: string
-  price: number
   date: string
   time: string
   name: string
@@ -19,6 +18,7 @@ export interface BookingPayload {
 
 export interface BookingRecord extends BookingPayload {
   id: string
+  price: number
   status: 'pending' | 'confirmed' | 'completed' | 'cancelled'
   createdAt: string
 }
@@ -28,16 +28,39 @@ const PHONE_RE = /^[\d\s\+\-\(\)]{7,20}$/
 const CAR_REG_RE = /^[A-Z0-9]{2,8}$/
 const POSTCODE_RE = /^[A-Z]{1,2}[0-9][0-9A-Z]?\s?[0-9][A-Z]{2}$/
 
-const VALID_PACKS = ['Essential', 'Deep Clean', 'Premium', 'Elite Ceramic']
-const VALID_VEHICLES = ['hatchback', 'suv', 'prestige']
+const VALID_PACKS = ['Essential', 'Full Valet', 'Premium Detail']
+const VALID_VEHICLES = ['small', 'midsize', 'largesuv']
 const VALID_TIMES = ['8:00 AM', '10:00 AM', '12:00 PM', '2:00 PM', '4:00 PM', '6:00 PM']
-const VALID_ADDONS = ['engine-bay', 'headlights', 'odour', 'pet-hair']
+const VALID_ADDONS = ['engine-bay', 'pet-hair', 'odour', 'seat-shampoo', 'steam']
 
 const ADDON_LABELS: Record<string, string> = {
-  'engine-bay':  'Engine Bay Detail',
-  'headlights':  'Headlight Restoration',
-  'odour':       'Odour Elimination',
-  'pet-hair':    'Pet Hair Removal',
+  'engine-bay':   'Engine Bay Clean',
+  'pet-hair':     'Pet Hair Removal',
+  'odour':        'Odour Treatment',
+  'seat-shampoo': 'Seat Shampoo (Extra Heavy)',
+  'steam':        'Interior Steam Sanitisation',
+}
+
+const VEHICLE_LABELS: Record<string, string> = {
+  small:    'Small Car',
+  midsize:  'Mid-Size',
+  largesuv: 'Large SUV / 4×4',
+}
+
+// Source of truth for pricing — kept in sync with components/Packages.tsx and BookingModal.tsx.
+// The API computes price itself rather than trusting whatever the client submits.
+const PRICE_MAP: Record<string, Record<string, number>> = {
+  'Essential':      { small: 80,  midsize: 90,  largesuv: 105 },
+  'Full Valet':     { small: 140, midsize: 155, largesuv: 175 },
+  'Premium Detail': { small: 220, midsize: 240, largesuv: 270 },
+}
+
+const ADDON_PRICES: Record<string, number> = {
+  'engine-bay':   40,
+  'pet-hair':     25,
+  'odour':        30,
+  'seat-shampoo': 30,
+  'steam':        35,
 }
 
 export async function POST(req: NextRequest) {
@@ -51,7 +74,7 @@ export async function POST(req: NextRequest) {
 
   // ── Required field presence ──
   const required: (keyof BookingPayload)[] = [
-    'pack', 'vehicle', 'price', 'date', 'time', 'name', 'phone', 'email', 'address', 'carReg',
+    'pack', 'vehicle', 'date', 'time', 'name', 'phone', 'email', 'address', 'carReg',
   ]
   for (const field of required) {
     if (body[field] === undefined || body[field] === '') {
@@ -68,9 +91,6 @@ export async function POST(req: NextRequest) {
   }
   if (!VALID_VEHICLES.includes(data.vehicle)) {
     return NextResponse.json({ error: 'Invalid vehicle type' }, { status: 400 })
-  }
-  if (typeof data.price !== 'number' || data.price <= 0 || data.price > 10000) {
-    return NextResponse.json({ error: 'Invalid price' }, { status: 400 })
   }
   if (!EMAIL_RE.test(data.email)) {
     return NextResponse.json({ error: 'Invalid email address' }, { status: 400 })
@@ -109,6 +129,11 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: 'Notes too long (max 1000 characters)' }, { status: 400 })
   }
 
+  // ── Price is always computed server-side — never trust a client-supplied price ──
+  const basePrice = PRICE_MAP[data.pack][data.vehicle]
+  const addonTotal = data.addons.reduce((sum, a) => sum + (ADDON_PRICES[a] ?? 0), 0)
+  const price = basePrice + addonTotal
+
   // ── Build booking record ──
   const id = `TTD-${Date.now()}-${Math.random().toString(36).slice(2, 7).toUpperCase()}`
   const createdAt = new Date().toISOString()
@@ -117,7 +142,7 @@ export async function POST(req: NextRequest) {
     id,
     pack: data.pack,
     vehicle: data.vehicle,
-    price: data.price,
+    price,
     date: data.date,
     time: data.time,
     name: data.name.trim(),
@@ -133,7 +158,7 @@ export async function POST(req: NextRequest) {
 
   // ── Email via Resend ──
   const resendKey = process.env.RESEND_API_KEY
-  const fromEmail = process.env.BOOKING_FROM_EMAIL ?? 'hello@truetodetail.co.uk'
+  const fromEmail = process.env.BOOKING_FROM_EMAIL ?? 'bookings@truetodetail.co.uk'
 
   if (resendKey) {
     const resend = new Resend(resendKey)
@@ -141,7 +166,7 @@ export async function POST(req: NextRequest) {
     const emailData: EmailData = {
       id: booking.id,
       pack: booking.pack,
-      vehicle: booking.vehicle,
+      vehicle: VEHICLE_LABELS[booking.vehicle] ?? booking.vehicle,
       price: booking.price,
       date: booking.date,
       time: booking.time,
@@ -159,7 +184,7 @@ export async function POST(req: NextRequest) {
       // Staff notification
       resend.emails.send({
         from: fromEmail,
-        to: 'hello@truetodetail.co.uk',
+        to: 'bookings@truetodetail.co.uk',
         subject: `New Booking — ${booking.pack} · ${booking.date} · Ref ${booking.id}`,
         html: notificationEmail(emailData),
       }),

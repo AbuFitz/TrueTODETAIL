@@ -19,7 +19,7 @@ const jsonLd = {
   '@context': 'https://schema.org',
   '@type': 'Service',
   name: 'Interior Car Detailing',
-  provider: { '@type': 'LocalBusiness', name: 'True To Detail', url: 'https://www.truetodetail.co.uk', telephone: '+447984237149' },
+  provider: { '@type': 'LocalBusiness', name: 'True To Detail', url: 'https://www.truetodetail.co.uk', telephone: '+447359591800' },
   areaServed: ['Hemel Hempstead', 'Watford', 'St Albans', 'Berkhamsted', 'Harpenden', 'Kings Langley', 'Tring', 'Abbots Langley', 'Chesham', 'Rickmansworth'],
   serviceType: 'Interior Car Detailing',
   url: 'https://www.truetodetail.co.uk/interior-car-detailing',
@@ -102,7 +102,7 @@ export default function InteriorCarDetailingPage() {
               INTERIOR DETAILING PRICING
             </h2>
             <p style={{ fontSize: '15px', lineHeight: 1.78, color: 'rgba(12,12,12,0.62)', marginBottom: '16px' }}>
-              Interior detailing is included in our Deep Clean, Premium and Elite Ceramic packages. Pricing starts from £179 for a standard hatchback interior deep clean, with exact pricing depending on vehicle size and condition.
+              A deep interior clean is included in our Full Valet and Premium Detail packages. Pricing starts from £140 for a small car, with exact pricing depending on vehicle size and condition.
             </p>
             <p style={{ fontSize: '15px', lineHeight: 1.78, color: 'rgba(12,12,12,0.62)' }}>
               Our pet hair removal and odour elimination add-ons are available for vehicles that need extra attention. All pricing is fixed at booking — no hidden charges, no changes on the day.

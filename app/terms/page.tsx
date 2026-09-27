@@ -78,7 +78,7 @@ export default function TermsPage() {
             },
             {
               heading: '10. Contact',
-              body: 'For any questions regarding these terms, contact us at hello@truetodetail.co.uk or 07984 237149.',
+              body: 'For any questions regarding these terms, contact us at info@truetodetail.co.uk or 07359 591800.',
             },
           ].map(section => (
             <div

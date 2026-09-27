@@ -66,7 +66,7 @@ export default function CookiesPage() {
             },
             {
               heading: '7. Contact',
-              body: 'If you have any questions about our use of cookies, please contact us at hello@truetodetail.co.uk.',
+              body: 'If you have any questions about our use of cookies, please contact us at info@truetodetail.co.uk.',
             },
           ].map(section => (
             <div

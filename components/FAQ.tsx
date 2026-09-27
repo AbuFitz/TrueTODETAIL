@@ -8,7 +8,7 @@ const ease = [0.22, 1, 0.36, 1] as [number, number, number, number]
 const FAQS = [
   {
     q: 'How long does a detail take?',
-    a: 'It depends on the package — Essential runs 2–3 hours, Deep Clean 4–5, Premium 6–8, and Elite Ceramic 1–2 days. We confirm an exact arrival window the morning of your booking.',
+    a: 'It depends on the package — Essential runs 2–3 hours, Full Valet 4–5 hours, and Premium Detail 6–7 hours. We confirm an exact arrival window the morning of your booking.',
   },
   {
     q: 'Do you offer mobile car detailing near me?',
@@ -20,7 +20,7 @@ const FAQS = [
   },
   {
     q: 'What is included in a full car detail?',
-    a: 'Our Premium full car detail covers a comprehensive interior deep clean (vacuum, steam treatment, hot water extraction, leather conditioning, interior glass), plus exterior decontamination, clay bar treatment, single-stage machine polish and premium synthetic paint sealant. Every stage is completed with professional-grade products and equipment.',
+    a: 'Our Premium Detail covers everything in the Full Valet package — deep interior clean, seat shampoo, carpet extraction and spray wax — plus clay bar decontamination, light machine polish, paint sealant, trim restoration and odour treatment. Every stage is completed with professional-grade products and equipment.',
   },
   {
     q: 'How often should I detail my car?',

@@ -19,7 +19,7 @@ const jsonLd = {
   '@context': 'https://schema.org',
   '@type': 'Service',
   name: 'Full Car Detail',
-  provider: { '@type': 'LocalBusiness', name: 'True To Detail', url: 'https://www.truetodetail.co.uk', telephone: '+447984237149' },
+  provider: { '@type': 'LocalBusiness', name: 'True To Detail', url: 'https://www.truetodetail.co.uk', telephone: '+447359591800' },
   areaServed: ['Hemel Hempstead', 'Watford', 'St Albans', 'Berkhamsted', 'Harpenden', 'Kings Langley', 'Tring'],
   serviceType: 'Full Car Detail',
   url: 'https://www.truetodetail.co.uk/full-car-detail',
@@ -106,10 +106,10 @@ export default function FullCarDetailPage() {
               FULL DETAIL PRICING
             </h2>
             <p style={{ fontSize: '15px', lineHeight: 1.78, color: 'rgba(12,12,12,0.62)', marginBottom: '16px' }}>
-              Our Premium full car detail starts from <strong>£299</strong> for a standard hatchback or saloon, <strong>£369</strong> for an SUV or 4x4, and <strong>£479</strong> for sports or prestige vehicles. All prices are fixed at the time of booking — no surprises on the day.
+              Our Premium Detail starts from <strong>£220</strong> for a small car, <strong>£240</strong> for a mid-size car, and <strong>£270</strong> for a large SUV or 4×4. All prices are fixed at the time of booking — no surprises on the day.
             </p>
             <p style={{ fontSize: '15px', lineHeight: 1.78, color: 'rgba(12,12,12,0.62)' }}>
-              For the ultimate in vehicle protection, our Elite Ceramic package combines a full detail with professional ceramic coating from <strong>£549</strong>, including a 2-year ceramic warranty.
+              Looking for the ultimate in paint protection? Ceramic coating is available as a bespoke, quoted service on top of any full detail — get in touch and we&apos;ll assess your vehicle.
             </p>
           </section>
 

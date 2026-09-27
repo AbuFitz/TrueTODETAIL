@@ -97,7 +97,7 @@ export default function BookingCTA({ onBookNow }: { onBookNow: () => void }) {
                 <span style={{ width: 5, height: 5, borderRadius: '50%', background: 'rgba(255,255,255,0.5)', flexShrink: 0 }} />
               </button>
               <a
-                href="tel:+447984237149"
+                href="tel:+447359591800"
                 style={{
                   fontFamily: 'var(--font-body)', fontWeight: 600, fontSize: '12px',
                   letterSpacing: '0.08em', textTransform: 'uppercase',
@@ -116,7 +116,7 @@ export default function BookingCTA({ onBookNow }: { onBookNow: () => void }) {
                   e.currentTarget.style.color = 'rgba(255,255,255,0.45)'
                 }}
               >
-                Call 07984 237149
+                Call 07359 591800
               </a>
             </div>
           </motion.div>
@@ -142,8 +142,8 @@ export default function BookingCTA({ onBookNow }: { onBookNow: () => void }) {
               },
               {
                 label: 'Get In Touch',
-                value: 'hello@truetodetail.co.uk',
-                detail: '07984 237149 — calls and WhatsApp welcome.',
+                value: 'info@truetodetail.co.uk',
+                detail: '07359 591800 — calls and WhatsApp welcome.',
               },
             ].map((tile, i) => (
               <motion.div

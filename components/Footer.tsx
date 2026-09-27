@@ -87,7 +87,7 @@ export default function Footer({ onBookNow }: { onBookNow: () => void }) {
 
           <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
             <a
-              href="tel:+447984237149"
+              href="tel:+447359591800"
               style={{
                 fontFamily: 'var(--font-body)', fontSize: '13px',
                 color: 'rgba(12,12,12,0.38)', textDecoration: 'none',
@@ -96,10 +96,10 @@ export default function Footer({ onBookNow }: { onBookNow: () => void }) {
               onMouseEnter={e => (e.currentTarget.style.color = '#0C0C0C')}
               onMouseLeave={e => (e.currentTarget.style.color = 'rgba(12,12,12,0.38)')}
             >
-              07984 237149
+              07359 591800
             </a>
             <a
-              href="mailto:hello@truetodetail.co.uk"
+              href="mailto:info@truetodetail.co.uk"
               style={{
                 fontFamily: 'var(--font-body)', fontSize: '13px',
                 color: 'rgba(12,12,12,0.38)', textDecoration: 'none',
@@ -108,7 +108,7 @@ export default function Footer({ onBookNow }: { onBookNow: () => void }) {
               onMouseEnter={e => (e.currentTarget.style.color = '#0C0C0C')}
               onMouseLeave={e => (e.currentTarget.style.color = 'rgba(12,12,12,0.38)')}
             >
-              hello@truetodetail.co.uk
+              info@truetodetail.co.uk
             </a>
           </div>
         </div>

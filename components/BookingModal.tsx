@@ -11,7 +11,6 @@ interface BookingModalProps {
   onClose: () => void
   initialPack?: string
   initialVehicle?: VehicleType | ''
-  initialPrice?: number
 }
 
 const packOptions = [
@@ -96,7 +95,7 @@ export default function BookingModal({
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          pack, vehicle, price: totalPrice,
+          pack, vehicle,
           date, time, address, carReg,
           name, phone, email, notes,
           addons: selectedAddons,   // send IDs — API maps to labels for email

@@ -24,7 +24,7 @@ const jsonLd = {
     '@type': 'LocalBusiness',
     name: 'True To Detail',
     url: 'https://www.truetodetail.co.uk',
-    telephone: '+447984237149',
+    telephone: '+447359591800',
   },
   areaServed: [
     'Hemel Hempstead', 'Watford', 'St Albans', 'Berkhamsted', 'Harpenden',
@@ -120,16 +120,15 @@ export default function MobileCarDetailingPage() {
               OUR DETAILING PACKAGES
             </h2>
             <p style={{ fontSize: '15px', lineHeight: 1.78, color: 'rgba(12,12,12,0.62)', marginBottom: '16px' }}>
-              We offer four main packages to suit different needs and budgets. All packages include our full mobile service — we come to you with everything needed to complete the job.
+              We offer three main packages to suit different needs and budgets. All packages include our full mobile service — we come to you with everything needed to complete the job.
             </p>
             <ul style={{ fontSize: '15px', lineHeight: 2, color: 'rgba(12,12,12,0.62)', paddingLeft: '20px', marginBottom: '16px' }}>
-              <li><strong>Essential Detail</strong> — Interior vacuum, wipe-down, exterior hand wash, wheel clean, tyre dressing, windows. From £89.</li>
-              <li><strong>Deep Clean Detail</strong> — Full interior deep clean, steam treatment, decontamination, clay bar, machine polish, wax protection. From £179.</li>
-              <li><strong>Premium Detail</strong> — Comprehensive interior restoration, paint decontamination, single-stage machine polish, premium sealant. From £299.</li>
-              <li><strong>Elite Ceramic</strong> — Full paint correction, professional-grade ceramic coating with 2-year warranty. From £549.</li>
+              <li><strong>Essential</strong> — Safe wash & dry, wheels cleaned, interior vacuum, dashboard wipe, glass cleaned, tyre dressing. From £80.</li>
+              <li><strong>Full Valet</strong> — Everything in Essential, plus deep interior clean, seat shampoo, carpet extraction, door shuts cleaned, spray wax protection. From £140.</li>
+              <li><strong>Premium Detail</strong> — Everything in Full Valet, plus clay bar decontamination, light machine polish, paint sealant, trim restoration, odour treatment. From £220.</li>
             </ul>
             <p style={{ fontSize: '15px', lineHeight: 1.78, color: 'rgba(12,12,12,0.62)' }}>
-              Optional add-ons include engine bay detailing, headlight restoration, odour elimination and pet hair removal.
+              Optional add-ons include engine bay cleaning, pet hair removal, odour treatment, extra-heavy seat shampoo and interior steam sanitisation.
             </p>
           </section>
 

@@ -183,7 +183,7 @@ export default function HowItWorks({ onBookNow }: { onBookNow: () => void }) {
                 <span style={{ width: 5, height: 5, borderRadius: '50%', background: 'rgba(255,255,255,0.45)', flexShrink: 0 }} />
               </button>
               <a
-                href="tel:+447984237149"
+                href="tel:+447359591800"
                 style={{
                   flex: '1 1 auto', minWidth: '140px',
                   fontFamily: 'var(--font-body)', fontWeight: 600, fontSize: '12px',
@@ -203,7 +203,7 @@ export default function HowItWorks({ onBookNow }: { onBookNow: () => void }) {
                   e.currentTarget.style.color = 'rgba(255,255,255,0.4)'
                 }}
               >
-                07984 237149
+                07359 591800
               </a>
             </motion.div>
           </div>
