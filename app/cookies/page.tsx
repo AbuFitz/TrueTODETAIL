@@ -1,11 +1,14 @@
 import Link from 'next/link'
+import { SiteNavbar, SiteFooter } from '@/components/SiteChrome'
 
 export const metadata = { title: 'Cookie Policy | True To Detail' }
 
 export default function CookiesPage() {
   return (
+    <>
+    <SiteNavbar />
     <div style={{ background: '#F5F4F1', minHeight: '100vh' }}>
-      <div style={{ maxWidth: '740px', margin: '0 auto', padding: 'clamp(64px, 8vw, 120px) clamp(24px, 5vw, 48px)' }}>
+      <div style={{ maxWidth: '740px', margin: '0 auto', padding: 'calc(80px + clamp(64px, 8vw, 120px)) clamp(24px, 5vw, 48px) clamp(64px, 8vw, 120px)' }}>
 
         <Link
           href="/"
@@ -91,5 +94,7 @@ export default function CookiesPage() {
 
       </div>
     </div>
+    <SiteFooter />
+    </>
   )
 }

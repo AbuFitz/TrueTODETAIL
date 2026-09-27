@@ -1,5 +1,6 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
+import { SiteNavbar, SiteFooter } from '@/components/SiteChrome'
 
 export const metadata: Metadata = {
   title: 'Exterior Car Detailing Service | Hemel Hempstead & Hertfordshire',
@@ -29,8 +30,9 @@ export default function ExteriorCarDetailingPage() {
   return (
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
+      <SiteNavbar />
       <main style={{ background: '#fff', minHeight: '100vh' }}>
-        <div style={{ maxWidth: '860px', margin: '0 auto', padding: 'clamp(48px, 8vw, 96px) clamp(24px, 5vw, 48px)' }}>
+        <div style={{ maxWidth: '860px', margin: '0 auto', padding: 'calc(80px + clamp(48px, 8vw, 96px)) clamp(24px, 5vw, 48px) clamp(48px, 8vw, 96px)' }}>
 
           <nav aria-label="Breadcrumb" style={{ marginBottom: '32px' }}>
             <ol style={{ display: 'flex', gap: '8px', listStyle: 'none', padding: 0, margin: 0, fontSize: '13px', color: 'rgba(12,12,12,0.45)' }}>
@@ -127,6 +129,7 @@ export default function ExteriorCarDetailingPage() {
 
         </div>
       </main>
+      <SiteFooter />
     </>
   )
 }

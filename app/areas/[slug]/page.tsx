@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { AREAS, getAreaBySlug, mapEmbedUrl } from '@/lib/areas'
+import { SiteNavbar, SiteFooter } from '@/components/SiteChrome'
 
 const SITE_URL = 'https://www.truetodetail.co.uk'
 
@@ -74,40 +75,47 @@ export default async function AreaPage({ params }: { params: Promise<{ slug: str
   return (
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
-      <main style={{ background: '#fff', minHeight: '100vh' }}>
-        <div style={{ maxWidth: '900px', margin: '0 auto', padding: 'clamp(48px, 8vw, 96px) clamp(24px, 5vw, 48px)' }}>
+      <SiteNavbar />
+      <main style={{ background: '#0C0C0C' }}>
 
-          <nav aria-label="Breadcrumb" style={{ marginBottom: '32px' }}>
-            <ol style={{ display: 'flex', flexWrap: 'wrap', gap: '8px', listStyle: 'none', padding: 0, margin: 0, fontSize: '13px', color: 'rgba(12,12,12,0.45)' }}>
-              <li><Link href="/" style={{ color: '#E84A0C', textDecoration: 'none' }}>Home</Link></li>
-              <li aria-hidden>›</li>
-              <li><Link href="/areas" style={{ color: '#E84A0C', textDecoration: 'none' }}>Areas We Cover</Link></li>
-              <li aria-hidden>›</li>
-              <li aria-current="page">{area.name}</li>
-            </ol>
-          </nav>
+        {/* ── Dark hero section ── */}
+        <section style={{ paddingTop: 'calc(80px + clamp(40px, 6vw, 72px))', paddingBottom: 'clamp(48px, 7vw, 72px)' }}>
+          <div style={{ maxWidth: '900px', margin: '0 auto', padding: '0 clamp(24px, 5vw, 48px)' }}>
 
-          <p style={{
-            fontFamily: 'var(--font-body)', fontWeight: 600, fontSize: '11px',
-            letterSpacing: '0.2em', textTransform: 'uppercase',
-            color: '#E84A0C', marginBottom: '16px',
-          }}>
-            {area.county} · {area.distanceMiles === 0 ? 'Home base' : `~${area.distanceMiles} miles from base`}
-          </p>
-          <h1 style={{
-            fontFamily: 'var(--font-display)', fontSize: 'clamp(40px, 6vw, 72px)',
-            letterSpacing: '0.02em', color: '#0C0C0C', lineHeight: 0.92, marginBottom: '24px',
-          }}>
-            MOBILE CAR DETAILING<br />
-            <span style={{ color: '#E84A0C' }}>IN {area.name.toUpperCase()}</span>
-          </h1>
+            <nav aria-label="Breadcrumb" style={{ marginBottom: '32px' }}>
+              <ol style={{ display: 'flex', flexWrap: 'wrap', gap: '8px', listStyle: 'none', padding: 0, margin: 0, fontSize: '13px', color: 'rgba(255,255,255,0.35)' }}>
+                <li><Link href="/" style={{ color: '#E84A0C', textDecoration: 'none' }}>Home</Link></li>
+                <li aria-hidden>›</li>
+                <li><Link href="/areas" style={{ color: '#E84A0C', textDecoration: 'none' }}>Areas We Cover</Link></li>
+                <li aria-hidden>›</li>
+                <li aria-current="page">{area.name}</li>
+              </ol>
+            </nav>
 
-          <p style={{ fontSize: '18px', lineHeight: 1.7, color: 'rgba(12,12,12,0.65)', marginBottom: '40px', fontWeight: 500 }}>
-            {area.intro}
-          </p>
+            <p style={{
+              fontFamily: 'var(--font-body)', fontWeight: 600, fontSize: '11px',
+              letterSpacing: '0.2em', textTransform: 'uppercase',
+              color: '#E84A0C', marginBottom: '16px',
+            }}>
+              {area.county} · {area.distanceMiles === 0 ? 'Home base' : `~${area.distanceMiles} miles from base`}
+            </p>
+            <h1 style={{
+              fontFamily: 'var(--font-display)', fontSize: 'clamp(40px, 6vw, 72px)',
+              letterSpacing: '0.02em', color: '#ffffff', lineHeight: 0.92, marginBottom: '24px',
+            }}>
+              MOBILE CAR DETAILING<br />
+              <span style={{ color: '#E84A0C' }}>IN {area.name.toUpperCase()}</span>
+            </h1>
 
-          {/* Postcodes + neighbourhoods + map */}
-          <section style={{ marginBottom: '48px' }}>
+            <p style={{ fontSize: '18px', lineHeight: 1.7, color: 'rgba(255,255,255,0.55)', fontWeight: 500 }}>
+              {area.intro}
+            </p>
+          </div>
+        </section>
+
+        {/* ── Light section: postcodes ── */}
+        <section style={{ background: '#F5F4F1' }}>
+          <div style={{ maxWidth: '900px', margin: '0 auto', padding: 'clamp(48px, 7vw, 72px) clamp(24px, 5vw, 48px)' }}>
             <h2 style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(28px, 4vw, 44px)', letterSpacing: '0.02em', color: '#0C0C0C', marginBottom: '16px' }}>
               POSTCODES & AREAS COVERED
             </h2>
@@ -117,7 +125,7 @@ export default async function AreaPage({ params }: { params: Promise<{ slug: str
                   key={pc}
                   style={{
                     fontFamily: 'var(--font-body)', fontWeight: 700, fontSize: '13px',
-                    padding: '7px 14px', border: '1px solid rgba(12,12,12,0.15)',
+                    padding: '7px 14px', border: '1px solid rgba(12,12,12,0.15)', background: '#ffffff',
                     color: '#0C0C0C', borderRadius: '999px',
                   }}
                 >
@@ -132,10 +140,12 @@ export default async function AreaPage({ params }: { params: Promise<{ slug: str
               {area.driveTime} Not sure your exact postcode is included? Message us on WhatsApp or call{' '}
               <a href="tel:+447359591800" style={{ color: '#E84A0C', textDecoration: 'none' }}>07359 591800</a> and we'll confirm straight away.
             </p>
-          </section>
+          </div>
+        </section>
 
-          {/* Map */}
-          <section style={{ marginBottom: '48px' }}>
+        {/* ── White section: map ── */}
+        <section style={{ background: '#ffffff' }}>
+          <div style={{ maxWidth: '900px', margin: '0 auto', padding: 'clamp(40px, 6vw, 64px) clamp(24px, 5vw, 48px)' }}>
             <div style={{
               position: 'relative', height: 'clamp(280px, 40vw, 420px)',
               overflow: 'hidden', border: '1px solid rgba(12,12,12,0.1)',
@@ -149,20 +159,24 @@ export default async function AreaPage({ params }: { params: Promise<{ slug: str
                 title={`Map of our ${area.name} mobile detailing coverage area`}
               />
             </div>
-          </section>
+          </div>
+        </section>
 
-          {/* Local paragraph */}
-          <section style={{ marginBottom: '48px' }}>
-            <h2 style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(28px, 4vw, 44px)', letterSpacing: '0.02em', color: '#0C0C0C', marginBottom: '16px' }}>
+        {/* ── Dark section: local paragraph ── */}
+        <section style={{ background: '#0C0C0C' }}>
+          <div style={{ maxWidth: '900px', margin: '0 auto', padding: 'clamp(48px, 7vw, 72px) clamp(24px, 5vw, 48px)' }}>
+            <h2 style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(28px, 4vw, 44px)', letterSpacing: '0.02em', color: '#ffffff', marginBottom: '16px' }}>
               WORKING IN {area.name.toUpperCase()}
             </h2>
-            <p style={{ fontSize: '15px', lineHeight: 1.78, color: 'rgba(12,12,12,0.62)' }}>
+            <p style={{ fontSize: '15px', lineHeight: 1.78, color: 'rgba(255,255,255,0.5)' }}>
               {area.localParagraph}
             </p>
-          </section>
+          </div>
+        </section>
 
-          {/* Packages */}
-          <section style={{ marginBottom: '48px' }}>
+        {/* ── Light section: packages ── */}
+        <section style={{ background: '#F5F4F1' }}>
+          <div style={{ maxWidth: '900px', margin: '0 auto', padding: 'clamp(48px, 7vw, 72px) clamp(24px, 5vw, 48px)' }}>
             <h2 style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(28px, 4vw, 44px)', letterSpacing: '0.02em', color: '#0C0C0C', marginBottom: '16px' }}>
               PACKAGES AVAILABLE IN {area.name.toUpperCase()}
             </h2>
@@ -174,10 +188,12 @@ export default async function AreaPage({ params }: { params: Promise<{ slug: str
             <p style={{ fontSize: '15px', lineHeight: 1.78, color: 'rgba(12,12,12,0.62)' }}>
               All prices are fixed at the time of booking, with no hidden charges and no changes on the day.
             </p>
-          </section>
+          </div>
+        </section>
 
-          {/* Local FAQs */}
-          <section style={{ marginBottom: '48px' }}>
+        {/* ── White section: FAQs ── */}
+        <section style={{ background: '#ffffff' }}>
+          <div style={{ maxWidth: '900px', margin: '0 auto', padding: 'clamp(48px, 7vw, 72px) clamp(24px, 5vw, 48px)' }}>
             <h2 style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(28px, 4vw, 44px)', letterSpacing: '0.02em', color: '#0C0C0C', marginBottom: '16px' }}>
               {area.name.toUpperCase()} FAQS
             </h2>
@@ -193,43 +209,49 @@ export default async function AreaPage({ params }: { params: Promise<{ slug: str
                 </div>
               ))}
             </div>
-          </section>
-
-          <div style={{ display: 'flex', gap: '16px', flexWrap: 'wrap', marginBottom: '64px' }}>
-            <Link
-              href="/"
-              style={{
-                display: 'inline-block', background: '#E84A0C', color: '#fff',
-                padding: '15px 36px', textDecoration: 'none',
-                fontFamily: 'var(--font-body)', fontWeight: 700, fontSize: '12px',
-                letterSpacing: '0.12em', textTransform: 'uppercase',
-              }}
-            >
-              Book Your Detail in {area.name}
-            </Link>
-            <a href="tel:+447359591800" style={{ display: 'inline-block', background: 'transparent', color: '#0C0C0C', padding: '15px 36px', textDecoration: 'none', fontFamily: 'var(--font-body)', fontWeight: 600, fontSize: '12px', letterSpacing: '0.12em', textTransform: 'uppercase', border: '1px solid rgba(12,12,12,0.2)' }}>
-              Call 07359 591800
-            </a>
           </div>
+        </section>
 
-          <nav aria-label="Nearby areas" style={{ borderTop: '1px solid rgba(12,12,12,0.08)', paddingTop: '32px' }}>
-            <p style={{ fontFamily: 'var(--font-body)', fontSize: '11px', fontWeight: 600, letterSpacing: '0.2em', textTransform: 'uppercase', color: 'rgba(12,12,12,0.35)', marginBottom: '16px' }}>
-              Other Areas We Cover
-            </p>
-            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '12px' }}>
-              {otherAreas.map((a) => (
-                <Link key={a.slug} href={`/areas/${a.slug}`} style={{ fontSize: '14px', color: '#E84A0C', textDecoration: 'none' }}>
-                  {a.name}
-                </Link>
-              ))}
-              <Link href="/areas" style={{ fontSize: '14px', color: 'rgba(12,12,12,0.5)', textDecoration: 'none' }}>
-                View all areas →
+        {/* ── Dark CTA + nearby areas ── */}
+        <section style={{ background: '#0C0C0C', borderTop: '3px solid #E84A0C' }}>
+          <div style={{ maxWidth: '900px', margin: '0 auto', padding: 'clamp(48px, 7vw, 72px) clamp(24px, 5vw, 48px)' }}>
+            <div style={{ display: 'flex', gap: '16px', flexWrap: 'wrap', marginBottom: '48px' }}>
+              <Link
+                href="/"
+                style={{
+                  display: 'inline-block', background: '#E84A0C', color: '#fff',
+                  padding: '15px 36px', textDecoration: 'none',
+                  fontFamily: 'var(--font-body)', fontWeight: 700, fontSize: '12px',
+                  letterSpacing: '0.12em', textTransform: 'uppercase',
+                }}
+              >
+                Book Your Detail in {area.name}
               </Link>
+              <a href="tel:+447359591800" style={{ display: 'inline-block', background: 'transparent', color: '#fff', padding: '15px 36px', textDecoration: 'none', fontFamily: 'var(--font-body)', fontWeight: 600, fontSize: '12px', letterSpacing: '0.12em', textTransform: 'uppercase', border: '1px solid rgba(255,255,255,0.2)' }}>
+                Call 07359 591800
+              </a>
             </div>
-          </nav>
 
-        </div>
+            <nav aria-label="Nearby areas" style={{ borderTop: '1px solid rgba(255,255,255,0.1)', paddingTop: '32px' }}>
+              <p style={{ fontFamily: 'var(--font-body)', fontSize: '11px', fontWeight: 600, letterSpacing: '0.2em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.3)', marginBottom: '16px' }}>
+                Other Areas We Cover
+              </p>
+              <div style={{ display: 'flex', flexWrap: 'wrap', gap: '12px' }}>
+                {otherAreas.map((a) => (
+                  <Link key={a.slug} href={`/areas/${a.slug}`} style={{ fontSize: '14px', color: '#E84A0C', textDecoration: 'none' }}>
+                    {a.name}
+                  </Link>
+                ))}
+                <Link href="/areas" style={{ fontSize: '14px', color: 'rgba(255,255,255,0.4)', textDecoration: 'none' }}>
+                  View all areas →
+                </Link>
+              </div>
+            </nav>
+          </div>
+        </section>
+
       </main>
+      <SiteFooter />
     </>
   )
 }

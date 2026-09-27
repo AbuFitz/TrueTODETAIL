@@ -12,11 +12,11 @@ const FAQS = [
   },
   {
     q: 'Do you offer mobile car detailing near me?',
-    a: 'Yes. We are a fully mobile service. We come directly to your home, workplace or any convenient location. We cover Hemel Hempstead and all surrounding areas including Watford, St Albans, Berkhamsted, Kings Langley, Harpenden, Tring, Abbots Langley, Chesham, Rickmansworth and nearby Hertfordshire towns.',
+    a: 'Yes. We are a fully mobile service based in Hemel Hempstead. We come directly to your home, workplace or any convenient location, covering roughly a 25-mile radius across Hertfordshire and selected areas of Buckinghamshire, Bedfordshire and North West London.',
   },
   {
     q: 'What areas do you cover?',
-    a: "We cover all of Hertfordshire: Hemel Hempstead, Watford, St Albans, Berkhamsted, Harpenden, Kings Langley, Tring, Abbots Langley, Chesham, Rickmansworth, Apsley, Leverstock Green, Redbourn, Boxmoor, Bovingdon, Markyate and surrounding areas. Not sure if you're covered? Drop us a message.",
+    a: "Hertfordshire in full, including Watford, St Albans, Berkhamsted, Harpenden, Kings Langley, Tring, Rickmansworth and Radlett, plus parts of Buckinghamshire (Chesham, Amersham, High Wycombe), Bedfordshire (Luton, Dunstable) and North West London (Borehamwood, Bushey). See our full Areas We Cover page for postcodes and local details, or drop us a message if you're not sure.",
   },
   {
     q: 'What is included in a full car detail?',
