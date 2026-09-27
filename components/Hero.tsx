@@ -345,10 +345,10 @@ export default function Hero({ onBookNow }: { onBookNow: () => void }) {
           >
             <div style={{
               fontFamily: 'var(--font-display)',
-              fontSize: 'clamp(68px, 18.5vw, 86px)',
+              fontSize: 'clamp(72px, 19.5vw, 92px)',
               letterSpacing: '0.01em', color: '#ffffff',
               lineHeight: 0.88,
-              minHeight: 'calc(clamp(68px, 18.5vw, 86px) * 0.88)',
+              minHeight: 'calc(clamp(72px, 19.5vw, 92px) * 0.88)',
               display: 'flex', alignItems: 'baseline',
             }}>
               <span>{displayText}</span>
@@ -366,7 +366,7 @@ export default function Hero({ onBookNow }: { onBookNow: () => void }) {
 
             <div style={{
               fontFamily: 'var(--font-display)',
-              fontSize: 'clamp(54px, 14.8vw, 70px)',
+              fontSize: 'clamp(58px, 15.6vw, 74px)',
               letterSpacing: '0.01em', color: 'rgba(255,255,255,0.30)',
               lineHeight: 0.88,
               paddingLeft: 'clamp(12px, 3vw, 20px)',
@@ -376,7 +376,7 @@ export default function Hero({ onBookNow }: { onBookNow: () => void }) {
 
             <div style={{
               fontFamily: 'var(--font-display)',
-              fontSize: 'clamp(42px, 11.5vw, 56px)',
+              fontSize: 'clamp(45px, 12.3vw, 60px)',
               letterSpacing: '0.01em', color: 'rgba(255,255,255,0.16)',
               lineHeight: 0.88,
               paddingLeft: 'clamp(26px, 6.5vw, 42px)',
