@@ -35,6 +35,14 @@ const vehicleLabels: Record<VehicleType, string> = {
 
 const timeSlots = ['8:00 AM', '10:00 AM', '12:00 PM', '2:00 PM', '4:00 PM', '6:00 PM']
 
+// Mirror the server-side checks in app/api/booking/route.ts exactly, so every
+// field that can fail server validation is caught immediately in the UI
+// instead of surfacing only after the customer finishes the whole form.
+const POSTCODE_RE = /^[A-Z]{1,2}[0-9][0-9A-Z]?\s?[0-9][A-Z]{2}$/
+const EMAIL_RE    = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+const PHONE_RE    = /^[\d\s\+\-\(\)]{7,20}$/
+const CAR_REG_RE  = /^[A-Z0-9]{2,8}$/
+
 const priceMap: Record<string, Record<VehicleType, number>> = {
   'Essential':      { small: 80,  midsize: 90,  largesuv: 105 },
   'Full Valet':     { small: 140, midsize: 155, largesuv: 175 },
@@ -70,14 +78,27 @@ export default function BookingModal({
   const [date,           setDate]           = useState('')
   const [time,           setTime]           = useState('')
   const [address,        setAddress]        = useState('')
+  const [postcodeTouched, setPostcodeTouched] = useState(false)
   const [carReg,         setCarReg]         = useState('')
+  const [carRegTouched,  setCarRegTouched]  = useState(false)
   const [name,           setName]           = useState('')
+  const [nameTouched,    setNameTouched]    = useState(false)
   const [phone,          setPhone]          = useState('')
+  const [phoneTouched,   setPhoneTouched]   = useState(false)
   const [email,          setEmail]          = useState('')
+  const [emailTouched,   setEmailTouched]   = useState(false)
   const [notes,          setNotes]          = useState('')
   const [submitting,     setSubmitting]     = useState(false)
   const [apiError,       setApiError]       = useState('')
   const [bookingId,      setBookingId]      = useState('')
+
+  const postcodeValid = POSTCODE_RE.test(address.trim())
+  // Server strips whitespace before checking format (registrations are often
+  // typed with a gap, e.g. "AB12 CDE") — mirror that here before validating.
+  const carRegValid   = CAR_REG_RE.test(carReg.trim().replace(/\s+/g, ''))
+  const nameValid     = name.trim().length >= 2 && name.trim().length <= 100
+  const phoneValid    = PHONE_RE.test(phone.trim())
+  const emailValid    = EMAIL_RE.test(email.trim())
 
   const basePrice   = pack && vehicle ? (priceMap[pack]?.[vehicle as VehicleType] ?? 0) : null
   const addonTotal  = ADDONS.filter(a => selectedAddons.includes(a.id)).reduce((s, a) => s + a.price, 0)
@@ -88,6 +109,8 @@ export default function BookingModal({
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
+    setNameTouched(true); setPhoneTouched(true); setEmailTouched(true)
+    if (!nameValid || !phoneValid || !emailValid) return
     setSubmitting(true)
     setApiError('')
     try {
@@ -123,13 +146,14 @@ export default function BookingModal({
       setSelectedAddons([]); setCarReg('')
       setName(''); setPhone(''); setEmail(''); setAddress(''); setNotes('')
       setDate(''); setTime(''); setApiError(''); setBookingId('')
+      setPostcodeTouched(false); setCarRegTouched(false); setNameTouched(false); setPhoneTouched(false); setEmailTouched(false)
     }, 400)
   }
 
   if (!isOpen) return null
 
   return (
-    <div style={{ position: 'fixed', inset: 0, zIndex: 100, display: 'flex', justifyContent: 'flex-end' }}>
+    <div data-testid="booking-modal" style={{ position: 'fixed', inset: 0, zIndex: 100, display: 'flex', justifyContent: 'flex-end' }}>
       <div
         style={{ position: 'absolute', inset: 0, background: 'rgba(12,12,12,0.82)', backdropFilter: 'blur(3px)' }}
         onClick={handleClose}
@@ -384,13 +408,23 @@ export default function BookingModal({
                 <input
                   required type="text" value={address}
                   onChange={e => setAddress(e.target.value.toUpperCase())}
+                  onBlur={() => setPostcodeTouched(true)}
                   placeholder="Enter your postcode"
                   maxLength={8}
-                  style={{ ...textInput, textTransform: 'uppercase', letterSpacing: '0.12em' }}
+                  style={{
+                    ...textInput, textTransform: 'uppercase', letterSpacing: '0.12em',
+                    border: `1px solid ${postcodeTouched && address.trim() && !postcodeValid ? '#dc2626' : 'rgba(12,12,12,0.12)'}`,
+                  }}
                 />
-                <p style={{ fontFamily: 'var(--font-body)', fontSize: '11px', color: 'rgba(12,12,12,0.28)', marginTop: '8px' }}>
-                  We use this to confirm we cover your area.
-                </p>
+                {postcodeTouched && address.trim() && !postcodeValid ? (
+                  <p style={{ fontFamily: 'var(--font-body)', fontSize: '11px', fontWeight: 600, color: '#dc2626', marginTop: '8px' }}>
+                    That doesn&apos;t look like a valid UK postcode — double-check it.
+                  </p>
+                ) : (
+                  <p style={{ fontFamily: 'var(--font-body)', fontSize: '11px', color: 'rgba(12,12,12,0.28)', marginTop: '8px' }}>
+                    We use this to confirm we cover your area.
+                  </p>
+                )}
               </div>
 
               <div>
@@ -398,34 +432,77 @@ export default function BookingModal({
                 <input
                   required type="text" value={carReg}
                   onChange={e => setCarReg(e.target.value.toUpperCase())}
+                  onBlur={() => setCarRegTouched(true)}
                   placeholder="e.g. AB12 CDE"
                   maxLength={8}
-                  style={{ ...textInput, textTransform: 'uppercase', letterSpacing: '0.1em' }}
+                  style={{
+                    ...textInput, textTransform: 'uppercase', letterSpacing: '0.1em',
+                    border: `1px solid ${carRegTouched && carReg.trim() && !carRegValid ? '#dc2626' : 'rgba(12,12,12,0.12)'}`,
+                  }}
                 />
-                <p style={{ fontFamily: 'var(--font-body)', fontSize: '11px', color: 'rgba(12,12,12,0.28)', marginTop: '8px' }}>
-                  Helps us confirm vehicle details before we arrive.
-                </p>
+                {carRegTouched && carReg.trim() && !carRegValid ? (
+                  <p style={{ fontFamily: 'var(--font-body)', fontSize: '11px', fontWeight: 600, color: '#dc2626', marginTop: '8px' }}>
+                    That doesn&apos;t look like a valid registration — letters and numbers only.
+                  </p>
+                ) : (
+                  <p style={{ fontFamily: 'var(--font-body)', fontSize: '11px', color: 'rgba(12,12,12,0.28)', marginTop: '8px' }}>
+                    Helps us confirm vehicle details before we arrive.
+                  </p>
+                )}
               </div>
             </form>
           )}
 
           {/* ── STEP 3: Contact + Summary ── */}
           {step === 3 && (
-            <form id="step3-form" onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+            <form id="step3-form" noValidate onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
               <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
                 <div>
                   <label style={fieldLabel}>Full Name</label>
-                  <input required type="text" value={name} onChange={e => setName(e.target.value)} placeholder="John Smith" style={textInput} />
+                  <input
+                    required type="text" value={name}
+                    onChange={e => setName(e.target.value)}
+                    onBlur={() => setNameTouched(true)}
+                    placeholder="John Smith"
+                    style={{ ...textInput, border: `1px solid ${nameTouched && !nameValid ? '#dc2626' : 'rgba(12,12,12,0.12)'}` }}
+                  />
+                  {nameTouched && !nameValid && (
+                    <p style={{ fontFamily: 'var(--font-body)', fontSize: '11px', fontWeight: 600, color: '#dc2626', marginTop: '6px' }}>
+                      Please enter your full name.
+                    </p>
+                  )}
                 </div>
                 <div>
                   <label style={fieldLabel}>Phone</label>
-                  <input required type="tel" value={phone} onChange={e => setPhone(e.target.value)} placeholder="07700 900000" style={textInput} />
+                  <input
+                    required type="tel" value={phone}
+                    onChange={e => setPhone(e.target.value)}
+                    onBlur={() => setPhoneTouched(true)}
+                    placeholder="07700 900000"
+                    style={{ ...textInput, border: `1px solid ${phoneTouched && !phoneValid ? '#dc2626' : 'rgba(12,12,12,0.12)'}` }}
+                  />
+                  {phoneTouched && !phoneValid && (
+                    <p style={{ fontFamily: 'var(--font-body)', fontSize: '11px', fontWeight: 600, color: '#dc2626', marginTop: '6px' }}>
+                      Please enter a valid phone number.
+                    </p>
+                  )}
                 </div>
               </div>
 
               <div>
                 <label style={fieldLabel}>Email</label>
-                <input required type="email" value={email} onChange={e => setEmail(e.target.value)} placeholder="john@example.com" style={textInput} />
+                <input
+                  required type="email" value={email}
+                  onChange={e => setEmail(e.target.value)}
+                  onBlur={() => setEmailTouched(true)}
+                  placeholder="john@example.com"
+                  style={{ ...textInput, border: `1px solid ${emailTouched && !emailValid ? '#dc2626' : 'rgba(12,12,12,0.12)'}` }}
+                />
+                {emailTouched && !emailValid && (
+                  <p style={{ fontFamily: 'var(--font-body)', fontSize: '11px', fontWeight: 600, color: '#dc2626', marginTop: '6px' }}>
+                    Please enter a valid email address.
+                  </p>
+                )}
               </div>
 
               <div>
@@ -434,8 +511,14 @@ export default function BookingModal({
                   value={notes} onChange={e => setNotes(e.target.value)}
                   placeholder="Access notes, specific concerns..."
                   rows={3}
+                  maxLength={1000}
                   style={{ ...textInput, resize: 'none' }}
                 />
+                {notes.length > 800 && (
+                  <p style={{ fontFamily: 'var(--font-body)', fontSize: '11px', color: notes.length >= 1000 ? '#dc2626' : 'rgba(12,12,12,0.28)', marginTop: '6px' }}>
+                    {notes.length}/1000
+                  </p>
+                )}
               </div>
 
               {/* Summary */}
@@ -581,10 +664,11 @@ export default function BookingModal({
 
             {step === 2 && (
               <button
-                type="submit" form="step2-form" disabled={!date || !time || !address.trim() || !carReg.trim()}
-                style={{ flex: 1, padding: '15px 24px', background: '#E84A0C', color: '#ffffff', border: 'none', cursor: 'pointer', fontFamily: 'var(--font-body)', fontWeight: 600, fontSize: '11px', letterSpacing: '0.1em', textTransform: 'uppercase', display: 'flex', alignItems: 'center', justifyContent: 'space-between', opacity: !date || !time || !address.trim() || !carReg.trim() ? 0.4 : 1, transition: 'background 0.2s' }}
-                onMouseEnter={e => { if (date && time && address.trim() && carReg.trim()) e.currentTarget.style.background = '#C53D08' }}
-                onMouseLeave={e => { if (date && time && address.trim() && carReg.trim()) e.currentTarget.style.background = '#E84A0C' }}
+                type="submit" form="step2-form" disabled={!date || !time || !postcodeValid || !carRegValid}
+                onClick={() => { setPostcodeTouched(true); setCarRegTouched(true) }}
+                style={{ flex: 1, padding: '15px 24px', background: '#E84A0C', color: '#ffffff', border: 'none', cursor: 'pointer', fontFamily: 'var(--font-body)', fontWeight: 600, fontSize: '11px', letterSpacing: '0.1em', textTransform: 'uppercase', display: 'flex', alignItems: 'center', justifyContent: 'space-between', opacity: !date || !time || !postcodeValid || !carRegValid ? 0.4 : 1, transition: 'background 0.2s' }}
+                onMouseEnter={e => { if (date && time && postcodeValid && carRegValid) e.currentTarget.style.background = '#C53D08' }}
+                onMouseLeave={e => { if (date && time && postcodeValid && carRegValid) e.currentTarget.style.background = '#E84A0C' }}
               >
                 Next: Your Details
                 <span style={{ width: 5, height: 5, borderRadius: '50%', background: 'rgba(255,255,255,0.5)' }} />
