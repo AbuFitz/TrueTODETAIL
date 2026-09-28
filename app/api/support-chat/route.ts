@@ -1,6 +1,4 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { Resend } from 'resend'
-import { chatEscalationEmail } from '@/lib/emails/templates'
 import { extractEntitiesGemini, generateResponseGemini, updateSummaryGemini, GeminiUnavailableError } from '@/lib/chat/gemini'
 import { extractEntitiesGroq, generateResponseGroq, updateSummaryGroq, GroqUnavailableError } from '@/lib/chat/groq'
 import { runRuleBasedTurn } from '@/lib/chat/rule-based'
@@ -19,35 +17,6 @@ function isValidHistory(history: unknown): history is ChatTurn[] {
       typeof turn.content === 'string' &&
       turn.content.length <= MAX_MESSAGE_LENGTH,
   )
-}
-
-async function sendEscalationEmail(state: ConversationState, reason: string) {
-  const resendKey = process.env.RESEND_API_KEY
-  if (!resendKey) {
-    console.warn('[support-chat] RESEND_API_KEY not set — escalation email skipped')
-    return
-  }
-  try {
-    const resend = new Resend(resendKey)
-    const fromEmail = process.env.BOOKING_FROM_EMAIL ?? 'noreply@truetodetail.co.uk'
-    await resend.emails.send({
-      from: fromEmail,
-      to: 'info@truetodetail.co.uk',
-      replyTo: state.email || 'info@truetodetail.co.uk',
-      subject: `Chat Escalation: ${reason}`,
-      html: chatEscalationEmail({
-        reason,
-        conversationSummary: state.conversationSummary,
-        customerName: state.customerName,
-        phone: state.phone,
-        email: state.email,
-        postcode: state.postcode,
-        createdAt: new Date().toISOString(),
-      }),
-    })
-  } catch (err) {
-    console.error('[support-chat] escalation email failed:', err)
-  }
 }
 
 interface TurnResult {
@@ -81,7 +50,6 @@ async function runLlmTurn(provider: LlmProvider, incomingState: ConversationStat
 
   const result = await provider.respond(state, recentTurns, message)
 
-  if (result.action?.type === 'human_escalated') state.escalated = true
   if (result.action?.type === 'open_booking' && result.bookingSummary) {
     state.booking = { ready: true, summary: result.bookingSummary }
   }
@@ -151,12 +119,7 @@ export async function POST(req: NextRequest) {
 
   if (!result) {
     const ruleResult = runRuleBasedTurn(incomingState, trimmedMessage, history.length === 0)
-    if (ruleResult.action?.type === 'human_escalated') ruleResult.state.escalated = true
     result = { reply: ruleResult.text, state: ruleResult.state, action: ruleResult.action, escalationReason: ruleResult.escalationReason }
-  }
-
-  if (result.action?.type === 'human_escalated') {
-    await sendEscalationEmail(result.state, result.escalationReason ?? 'Customer needs assistance.')
   }
 
   return NextResponse.json({ reply: result.reply, conversationState: result.state, action: result.action })

@@ -292,11 +292,6 @@ export default function SupportWidget() {
                         Continue to Booking →
                       </button>
                     )}
-                    {m.action?.type === 'human_escalated' && (
-                      <span style={{ fontFamily: 'var(--font-body)', fontSize: '11px', color: 'rgba(12,12,12,0.4)' }}>
-                        ✓ Flagged for our team — they&apos;ll follow up directly
-                      </span>
-                    )}
                   </div>
                 ))}
                 {sending && (
