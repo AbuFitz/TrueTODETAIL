@@ -1,7 +1,9 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { appAccountLoginUrl } from '@/lib/appUrl'
+import type { Session } from '@supabase/supabase-js'
+import { appAccountLoginUrl, appAccountUrl } from '@/lib/appUrl'
+import { supabaseBrowser } from '@/lib/supabaseBrowser'
 
 const NAV_LINKS = [
   { label: 'About',    href: '#howitworks' },
@@ -14,6 +16,23 @@ export default function Navbar({ onBookNow }: { onBookNow: () => void }) {
   const [scrolled, setScrolled] = useState(false)
   const [open, setOpen]         = useState(false)
   const [hovered, setHovered]   = useState<string | null>(null)
+
+  // Cross-subdomain SSO (see lib/supabaseBrowser.ts): reads whatever session
+  // cookie the Job System app already set. This site never signs anyone in
+  // itself, it just reflects that state — "My Account" becomes "Hi, <name> /
+  // Sign out" the moment someone's signed in on either app.
+  const [session, setSession] = useState<Session | null>(null)
+  useEffect(() => {
+    supabaseBrowser.auth.getSession().then(({ data }) => setSession(data.session))
+    const { data: sub } = supabaseBrowser.auth.onAuthStateChange((_event, s) => setSession(s))
+    return () => sub.subscription.unsubscribe()
+  }, [])
+  const firstName =
+    (session?.user.user_metadata?.first_name as string | undefined) ||
+    session?.user.email?.split('@')[0] ||
+    null
+  const accountLabel = firstName ? `Hi, ${firstName}` : 'My Account'
+  const accountHref = session ? appAccountUrl() : appAccountLoginUrl()
 
   useEffect(() => {
     const fn = () => setScrolled(window.scrollY > 40)
@@ -134,19 +153,20 @@ export default function Navbar({ onBookNow }: { onBookNow: () => void }) {
             ))}
 
             <a
-              href={appAccountLoginUrl()}
+              href={accountHref}
               style={{
                 position: 'relative',
                 fontFamily: 'var(--font-body)', fontWeight: 500, fontSize: '13px',
                 letterSpacing: '0.04em',
-                color: hovered === 'My Account' ? '#ffffff' : 'rgba(255,255,255,0.52)',
+                color: hovered === 'account' ? '#ffffff' : 'rgba(255,255,255,0.52)',
                 textDecoration: 'none',
                 padding: '0 18px', height: '80px',
                 display: 'flex', alignItems: 'center',
                 transition: 'color 0.2s',
                 flexShrink: 0,
+                whiteSpace: 'nowrap',
               }}
-              onMouseEnter={() => setHovered('My Account')}
+              onMouseEnter={() => setHovered('account')}
               onMouseLeave={() => setHovered(null)}
             >
               <span
@@ -157,15 +177,33 @@ export default function Navbar({ onBookNow }: { onBookNow: () => void }) {
                   height: '1.5px',
                   background: '#E84A0C',
                   transformOrigin: 'left center',
-                  transform: `scaleX(${hovered === 'My Account' ? 1 : 0})`,
-                  transition: hovered === 'My Account'
+                  transform: `scaleX(${hovered === 'account' ? 1 : 0})`,
+                  transition: hovered === 'account'
                     ? 'transform 0.28s cubic-bezier(0.22, 1, 0.36, 1)'
                     : 'transform 0.18s cubic-bezier(0.55, 0, 1, 0.45)',
                   pointerEvents: 'none',
                 }}
               />
-              My Account
+              {accountLabel}
             </a>
+
+            {session ? (
+              <button
+                onClick={() => supabaseBrowser.auth.signOut()}
+                style={{
+                  fontFamily: 'var(--font-body)', fontWeight: 500, fontSize: '12px',
+                  letterSpacing: '0.04em', textTransform: 'uppercase',
+                  background: 'none', border: 'none', cursor: 'pointer',
+                  color: hovered === 'signout' ? '#ffffff' : 'rgba(255,255,255,0.32)',
+                  padding: '0 14px', height: '80px',
+                  transition: 'color 0.2s', flexShrink: 0,
+                }}
+                onMouseEnter={() => setHovered('signout')}
+                onMouseLeave={() => setHovered(null)}
+              >
+                Sign out
+              </button>
+            ) : null}
 
             <span style={{
               display: 'block', width: 1, height: 20,
@@ -278,7 +316,7 @@ export default function Navbar({ onBookNow }: { onBookNow: () => void }) {
           ))}
 
           <a
-            href={appAccountLoginUrl()}
+            href={accountHref}
             onClick={() => setOpen(false)}
             style={{
               display: 'flex', alignItems: 'center', justifyContent: 'space-between',
@@ -299,11 +337,30 @@ export default function Navbar({ onBookNow }: { onBookNow: () => void }) {
                 fontSize: 'clamp(40px, 11vw, 64px)',
                 letterSpacing: '0.04em', color: 'white', lineHeight: 1,
               }}>
-                My Account
+                {accountLabel}
               </span>
             </div>
             <span style={{ color: 'rgba(255,255,255,0.18)', fontSize: '14px' }}>→</span>
           </a>
+
+          {session ? (
+            <button
+              onClick={() => { setOpen(false); supabaseBrowser.auth.signOut() }}
+              style={{
+                display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+                width: '100%', padding: '16px 0',
+                background: 'none', border: 'none', cursor: 'pointer', textAlign: 'left',
+              }}
+            >
+              <span style={{
+                fontFamily: 'var(--font-body)', fontSize: '13px', fontWeight: 500,
+                letterSpacing: '0.06em', textTransform: 'uppercase',
+                color: 'rgba(255,255,255,0.4)',
+              }}>
+                Sign out
+              </span>
+            </button>
+          ) : null}
         </div>
 
         <div style={{
