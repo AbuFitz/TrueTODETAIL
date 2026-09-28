@@ -5,11 +5,23 @@
 // human-escalation email is handled by the API route after it sees this
 // tool was called, so this module has no side effects of its own.
 
-import type Anthropic from '@anthropic-ai/sdk'
 import { PACKAGES, ADDONS, calculatePrice as computePrice, type VehicleType, TIME_SLOTS, BUSINESS_INFO } from '@/lib/pricing'
 import { findAreaByPostcode } from '@/lib/chat/knowledge'
 
-export const CHAT_TOOLS: Anthropic.Tool[] = [
+// Provider-agnostic tool definition (plain JSON Schema) — translated to
+// whichever LLM provider's own tool/function format at call time, so this
+// definition and executeTool() below don't depend on any specific SDK.
+export interface ToolDef {
+  name: string
+  description: string
+  input_schema: {
+    type: 'object'
+    properties: Record<string, unknown>
+    required?: string[]
+  }
+}
+
+export const CHAT_TOOLS: ToolDef[] = [
   {
     name: 'check_coverage',
     description: "Check whether a UK postcode falls within True To Detail's service area. Always call this instead of guessing when a customer gives a postcode.",
