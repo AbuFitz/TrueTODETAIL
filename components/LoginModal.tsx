@@ -3,7 +3,7 @@
 import { useState } from 'react'
 import { motion } from 'framer-motion'
 import { supabaseBrowser } from '@/lib/supabaseBrowser'
-import { appAdminLoginUrl } from '@/lib/appUrl'
+import { appAdminLoginUrl, appAdminUrl } from '@/lib/appUrl'
 
 interface LoginModalProps {
   isOpen: boolean
@@ -57,6 +57,13 @@ export default function LoginModal({ isOpen, onClose, onBookNow }: LoginModalPro
         ? "That email or password isn't right."
         : signInError.message)
       setSubmitting(false)
+      return
+    }
+    // A staff account belongs on the admin console, not the customer nav
+    // state — same check the Job System's own login does.
+    const { data: staff } = await supabaseBrowser.rpc('is_staff')
+    if (staff) {
+      window.location.href = appAdminUrl()
       return
     }
     handleClose()

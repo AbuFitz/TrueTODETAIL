@@ -13,3 +13,4 @@ export const APP_URL = (process.env.NEXT_PUBLIC_APP_URL || "https://app.truetode
 )
 
 export const appAdminLoginUrl = () => `${APP_URL}/admin/login`
+export const appAdminUrl = () => `${APP_URL}/admin`
