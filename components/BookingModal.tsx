@@ -477,7 +477,7 @@ export default function BookingModal({
             <form id="step2-form" onSubmit={e => { e.preventDefault(); setStep(3) }} style={{ display: 'flex', flexDirection: 'column', gap: '28px' }}>
 
               <div>
-                <p style={sectionHeading}>When</p>
+                <p style={sectionHeading}>Date &amp; Time</p>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '20px', marginTop: '12px' }}>
                   <div>
                     <label style={fieldLabel}>Preferred Date</label>
@@ -517,7 +517,7 @@ export default function BookingModal({
               </div>
 
               <div style={{ borderTop: '1px solid rgba(12,12,12,0.08)', paddingTop: '24px' }}>
-                <p style={sectionHeading}>Where &amp; What</p>
+                <p style={sectionHeading}>Location &amp; Vehicle</p>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '20px', marginTop: '12px' }}>
                   <ValidatedField
                     label="Service Postcode"
