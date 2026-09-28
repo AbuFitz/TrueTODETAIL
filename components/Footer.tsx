@@ -146,6 +146,24 @@ export default function Footer({ onBookNow }: { onBookNow: () => void }) {
                 {label}
               </a>
             ))}
+            <a
+              href="https://app.truetodetail.co.uk"
+              target="_blank"
+              rel="noopener noreferrer"
+              style={{
+                display: 'flex', alignItems: 'center', gap: '8px',
+                fontFamily: 'var(--font-body)', fontSize: '14px', fontWeight: 600,
+                color: '#E84A0C', textDecoration: 'none',
+              }}
+              onMouseEnter={e => (e.currentTarget.style.color = '#C53D08')}
+              onMouseLeave={e => (e.currentTarget.style.color = '#E84A0C')}
+            >
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+                <circle cx="12" cy="7" r="4" />
+              </svg>
+              Client Login
+            </a>
           </nav>
 
           {/* SEO service links */}
@@ -226,7 +244,7 @@ export default function Footer({ onBookNow }: { onBookNow: () => void }) {
       </div>
 
       {/* Areas We Cover — full-width band, all town pages for internal linking */}
-      <div style={{ borderTop: '1px solid rgba(12,12,12,0.06)', background: '#F5F4F1' }}>
+      <div style={{ borderTop: '1px solid rgba(12,12,12,0.06)', background: '#0C0C0C' }}>
         <div style={{
           maxWidth: '1400px', margin: '0 auto',
           padding: 'clamp(28px, 4vw, 40px) clamp(24px, 5vw, 72px)',
@@ -234,7 +252,7 @@ export default function Footer({ onBookNow }: { onBookNow: () => void }) {
           <p style={{
             fontFamily: 'var(--font-body)', fontWeight: 600, fontSize: '10px',
             letterSpacing: '0.2em', textTransform: 'uppercase',
-            color: 'rgba(12,12,12,0.3)', marginBottom: '16px',
+            color: 'rgba(255,255,255,0.35)', marginBottom: '16px',
           }}>
             Areas We Cover
           </p>
@@ -245,16 +263,16 @@ export default function Footer({ onBookNow }: { onBookNow: () => void }) {
                   href={`/areas/${area.slug}`}
                   style={{
                     fontFamily: 'var(--font-body)', fontSize: '13px',
-                    color: 'rgba(12,12,12,0.45)', textDecoration: 'none',
+                    color: 'rgba(255,255,255,0.55)', textDecoration: 'none',
                     whiteSpace: 'nowrap', transition: 'color 0.2s',
                   }}
                   onMouseEnter={e => (e.currentTarget.style.color = '#E84A0C')}
-                  onMouseLeave={e => (e.currentTarget.style.color = 'rgba(12,12,12,0.45)')}
+                  onMouseLeave={e => (e.currentTarget.style.color = 'rgba(255,255,255,0.55)')}
                 >
                   {area.name}
                 </a>
                 {i < AREAS.length - 1 && (
-                  <span aria-hidden style={{ color: 'rgba(12,12,12,0.18)', fontSize: '13px' }}>·</span>
+                  <span aria-hidden style={{ color: 'rgba(255,255,255,0.18)', fontSize: '13px' }}>·</span>
                 )}
               </span>
             ))}
@@ -279,28 +297,30 @@ export default function Footer({ onBookNow }: { onBookNow: () => void }) {
         Very low opacity — present but not competing.
       */}
       <div style={{ overflow: 'hidden', borderTop: '1px solid rgba(12,12,12,0.06)', opacity: 0.45 }}>
-        <div style={{
-          display: 'flex', alignItems: 'center', gap: 'clamp(6px, 1vw, 18px)',
-          fontFamily: 'var(--font-display)',
-          fontSize: 'clamp(56px, 14vw, 220px)',
-          letterSpacing: '0.04em',
-          color: 'rgba(12,12,12,0.1)',
-          lineHeight: 0.85,
-          whiteSpace: 'nowrap',
-          padding: '0 clamp(16px, 3vw, 48px)',
-          userSelect: 'none',
-          paddingBottom: 'clamp(8px, 1.5vw, 20px)',
-        }}>
-          <span>TRUE TO</span>
-          {/* Orange teardrop — same shape as the navbar/footer logo mark */}
-          <span aria-hidden style={{
-            display: 'inline-block', flexShrink: 0,
-            width: 'clamp(6px, 0.9vw, 14px)',
-            height: 'clamp(9px, 1.35vw, 21px)',
-            background: '#E84A0C',
-            borderRadius: '50% 50% 45% 45% / 55% 55% 45% 45%',
-          }} />
-          <span>DETAIL</span>
+        <div style={{ maxWidth: '1400px', margin: '0 auto', overflow: 'hidden' }}>
+          <div style={{
+            display: 'flex', alignItems: 'center', gap: 'clamp(6px, 1vw, 18px)',
+            fontFamily: 'var(--font-display)',
+            fontSize: 'clamp(56px, 11vw, 160px)',
+            letterSpacing: '0.04em',
+            color: 'rgba(12,12,12,0.1)',
+            lineHeight: 0.85,
+            whiteSpace: 'nowrap',
+            padding: '0 clamp(16px, 3vw, 48px)',
+            userSelect: 'none',
+            paddingBottom: 'clamp(8px, 1.5vw, 20px)',
+          }}>
+            <span>TRUE TO</span>
+            {/* Orange teardrop — same shape as the navbar/footer logo mark */}
+            <span aria-hidden style={{
+              display: 'inline-block', flexShrink: 0,
+              width: 'clamp(6px, 0.9vw, 14px)',
+              height: 'clamp(9px, 1.35vw, 21px)',
+              background: '#E84A0C',
+              borderRadius: '50% 50% 45% 45% / 55% 55% 45% 45%',
+            }} />
+            <span>DETAIL</span>
+          </div>
         </div>
       </div>
 

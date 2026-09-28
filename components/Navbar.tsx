@@ -138,6 +138,28 @@ export default function Navbar({ onBookNow }: { onBookNow: () => void }) {
               </a>
             ))}
 
+            <a
+              href="https://app.truetodetail.co.uk"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="Client Login"
+              title="Client Login"
+              style={{
+                display: 'flex', alignItems: 'center', justifyContent: 'center',
+                width: '36px', height: '36px', flexShrink: 0,
+                color: hovered === 'login' ? '#ffffff' : 'rgba(255,255,255,0.52)',
+                background: hovered === 'login' ? 'rgba(255,255,255,0.08)' : 'transparent',
+                borderRadius: '50%', transition: 'color 0.2s, background 0.2s',
+              }}
+              onMouseEnter={() => setHovered('login')}
+              onMouseLeave={() => setHovered(null)}
+            >
+              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+                <circle cx="12" cy="7" r="4" />
+              </svg>
+            </a>
+
             <span style={{
               display: 'block', width: 1, height: 20,
               background: 'rgba(255,255,255,0.1)',
@@ -247,6 +269,35 @@ export default function Navbar({ onBookNow }: { onBookNow: () => void }) {
               <span style={{ color: 'rgba(255,255,255,0.18)', fontSize: '14px' }}>→</span>
             </a>
           ))}
+          <a
+            href="https://app.truetodetail.co.uk"
+            target="_blank"
+            rel="noopener noreferrer"
+            onClick={() => setOpen(false)}
+            style={{
+              display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+              padding: '20px 0',
+              borderBottom: '1px solid rgba(255,255,255,0.06)',
+              textDecoration: 'none',
+            }}
+          >
+            <div style={{ display: 'flex', alignItems: 'baseline', gap: '16px' }}>
+              <span style={{
+                fontFamily: 'var(--font-body)', fontSize: '10px', fontWeight: 600,
+                color: 'rgba(255,255,255,0.2)', width: '20px',
+              }}>
+                0{NAV_LINKS.length + 1}
+              </span>
+              <span style={{
+                fontFamily: 'var(--font-display)',
+                fontSize: 'clamp(40px, 11vw, 64px)',
+                letterSpacing: '0.04em', color: '#E84A0C', lineHeight: 1,
+              }}>
+                Login
+              </span>
+            </div>
+            <span style={{ color: 'rgba(255,255,255,0.18)', fontSize: '14px' }}>→</span>
+          </a>
         </div>
 
         <div style={{
