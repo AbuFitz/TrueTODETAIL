@@ -6,6 +6,29 @@ import { mergeState } from '@/lib/chat/state'
 import { emptyConversationState, type ChatTurn, type ConversationState, type ChatAction } from '@/lib/chat/types'
 
 const MAX_MESSAGE_LENGTH = 1000
+
+type Engine = 'gemini' | 'groq' | 'rules'
+
+// Short, key-free description of why a provider failed, returned alongside a
+// rules-engine reply so a silent fallback is visible from the browser's
+// network tab instead of looking like "the AI just isn't there".
+function failureReason(provider: string, err: unknown): string {
+  const raw = err instanceof Error ? err.message : String(err)
+  const redacted = raw
+    .replace(/AIza[0-9A-Za-z_-]{10,}/g, '[key]')
+    .replace(/gsk_[0-9A-Za-z]{10,}/g, '[key]')
+    .replace(/\s+/g, ' ')
+  return `${provider}: ${redacted.slice(0, 180)}`
+}
+
+// Zero-cost health check: which provider keys this deployment can actually
+// see. Never calls a provider and never returns the keys themselves.
+export async function GET() {
+  return NextResponse.json({
+    geminiKeyPresent: Boolean(process.env.GEMINI_API_KEY),
+    groqKeyPresent: Boolean(process.env.GROQ_API_KEY),
+  })
+}
 const RECENT_MESSAGES_LIMIT = 20 // verbatim messages kept; older ones get folded into conversationSummary
 
 function isValidHistory(history: unknown): history is ChatTurn[] {
@@ -89,6 +112,9 @@ export async function POST(req: NextRequest) {
 
   const trimmedMessage = message.trim()
   let result: TurnResult | null = null
+  let engine: Engine = 'rules'
+  const failures: string[] = []
+  if (!process.env.GEMINI_API_KEY && !process.env.GROQ_API_KEY) failures.push('no GEMINI_API_KEY or GROQ_API_KEY in this deployment')
 
   // Free-tier LLMs first, each with an independent quota — Gemini, then Groq
   // if Gemini's is exhausted (or erroring) — before dropping to the
@@ -96,7 +122,9 @@ export async function POST(req: NextRequest) {
   if (process.env.GEMINI_API_KEY) {
     try {
       result = await runLlmTurn(GEMINI_PROVIDER, incomingState, history, trimmedMessage)
+      engine = 'gemini'
     } catch (err) {
+      failures.push(failureReason('gemini', err))
       if (err instanceof GeminiUnavailableError) {
         console.warn(`[support-chat] Gemini unavailable (quotaExceeded=${err.quotaExceeded}), trying Groq:`, err.message)
       } else {
@@ -108,7 +136,9 @@ export async function POST(req: NextRequest) {
   if (!result && process.env.GROQ_API_KEY) {
     try {
       result = await runLlmTurn(GROQ_PROVIDER, incomingState, history, trimmedMessage)
+      engine = 'groq'
     } catch (err) {
+      failures.push(failureReason('groq', err))
       if (err instanceof GroqUnavailableError) {
         console.warn(`[support-chat] Groq unavailable (quotaExceeded=${err.quotaExceeded}), falling back to rule-based:`, err.message)
       } else {
@@ -122,5 +152,11 @@ export async function POST(req: NextRequest) {
     result = { reply: ruleResult.text, state: ruleResult.state, action: ruleResult.action, escalationReason: ruleResult.escalationReason }
   }
 
-  return NextResponse.json({ reply: result.reply, conversationState: result.state, action: result.action })
+  return NextResponse.json({
+    reply: result.reply,
+    conversationState: result.state,
+    action: result.action,
+    engine,
+    ...(engine === 'rules' && failures.length ? { fallbackReason: failures } : {}),
+  })
 }
