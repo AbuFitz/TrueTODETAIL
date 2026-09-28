@@ -72,9 +72,9 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: 'Invalid JSON payload' }, { status: 400 })
   }
 
-  // ── Required field presence ──
+  // ── Required field presence — name is optional, everything else isn't ──
   const required: (keyof BookingPayload)[] = [
-    'pack', 'vehicle', 'date', 'time', 'name', 'phone', 'email', 'address', 'carReg',
+    'pack', 'vehicle', 'date', 'time', 'phone', 'email', 'address', 'carReg',
   ]
   for (const field of required) {
     if (body[field] === undefined || body[field] === '') {
@@ -108,8 +108,9 @@ export async function POST(req: NextRequest) {
   if (!VALID_TIMES.includes(data.time)) {
     return NextResponse.json({ error: 'Invalid time slot' }, { status: 400 })
   }
-  if (data.name.trim().length < 2 || data.name.trim().length > 100) {
-    return NextResponse.json({ error: 'Invalid name' }, { status: 400 })
+  // Name is optional, but cap length to keep it sane if provided.
+  if (data.name && data.name.trim().length > 100) {
+    return NextResponse.json({ error: 'Name is too long' }, { status: 400 })
   }
   const normalizedPostcode = data.address.trim().toUpperCase()
   if (!POSTCODE_RE.test(normalizedPostcode)) {
@@ -148,7 +149,7 @@ export async function POST(req: NextRequest) {
     price,
     date: data.date,
     time: data.time,
-    name: data.name.trim(),
+    name: (data.name ?? '').trim(),
     phone: data.phone.trim(),
     email: data.email.toLowerCase().trim(),
     address: normalizedPostcode,

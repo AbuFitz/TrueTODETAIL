@@ -61,7 +61,8 @@ const fieldLabel: React.CSSProperties = {
 const textInput: React.CSSProperties = {
   width: '100%', padding: '14px 16px',
   border: '1px solid rgba(12,12,12,0.12)',
-  fontFamily: 'var(--font-body)', fontSize: '14px', color: '#0C0C0C',
+  // 16px avoids iOS Safari zooming the page in when a field is focused.
+  fontFamily: 'var(--font-body)', fontSize: '16px', color: '#0C0C0C',
   outline: 'none', background: 'white', boxSizing: 'border-box' as const,
 }
 
@@ -82,7 +83,6 @@ export default function BookingModal({
   const [carReg,         setCarReg]         = useState('')
   const [carRegTouched,  setCarRegTouched]  = useState(false)
   const [name,           setName]           = useState('')
-  const [nameTouched,    setNameTouched]    = useState(false)
   const [phone,          setPhone]          = useState('')
   const [phoneTouched,   setPhoneTouched]   = useState(false)
   const [email,          setEmail]          = useState('')
@@ -96,7 +96,6 @@ export default function BookingModal({
   // Server strips whitespace before checking format (registrations are often
   // typed with a gap, e.g. "AB12 CDE") — mirror that here before validating.
   const carRegValid   = CAR_REG_RE.test(carReg.trim().replace(/\s+/g, ''))
-  const nameValid     = name.trim().length >= 2 && name.trim().length <= 100
   const phoneValid    = PHONE_RE.test(phone.trim())
   const emailValid    = EMAIL_RE.test(email.trim())
 
@@ -104,13 +103,22 @@ export default function BookingModal({
   const addonTotal  = ADDONS.filter(a => selectedAddons.includes(a.id)).reduce((s, a) => s + a.price, 0)
   const totalPrice  = basePrice !== null ? basePrice + addonTotal : null
 
+  // Price is always shown on Step 1, even before pack/vehicle are picked — as
+  // a range that narrows down to an exact total once both are selected.
+  const allPrices  = Object.values(priceMap).flatMap(v => Object.values(v))
+  const overallMin = Math.min(...allPrices)
+  const overallMax = Math.max(...allPrices)
+  const packPrices = pack ? Object.values(priceMap[pack]) : []
+  const packMin    = packPrices.length ? Math.min(...packPrices) : null
+  const packMax    = packPrices.length ? Math.max(...packPrices) : null
+
   const toggleAddon = (id: string) =>
     setSelectedAddons(prev => prev.includes(id) ? prev.filter(a => a !== id) : [...prev, id])
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    setNameTouched(true); setPhoneTouched(true); setEmailTouched(true)
-    if (!nameValid || !phoneValid || !emailValid) return
+    setPhoneTouched(true); setEmailTouched(true)
+    if (!phoneValid || !emailValid) return
     setSubmitting(true)
     setApiError('')
     try {
@@ -146,7 +154,7 @@ export default function BookingModal({
       setSelectedAddons([]); setCarReg('')
       setName(''); setPhone(''); setEmail(''); setAddress(''); setNotes('')
       setDate(''); setTime(''); setApiError(''); setBookingId('')
-      setPostcodeTouched(false); setCarRegTouched(false); setNameTouched(false); setPhoneTouched(false); setEmailTouched(false)
+      setPostcodeTouched(false); setCarRegTouched(false); setPhoneTouched(false); setEmailTouched(false)
     }, 400)
   }
 
@@ -259,11 +267,11 @@ export default function BookingModal({
                           {p.tagline} · {p.duration}
                         </span>
                       </div>
-                      {vehicle && (
-                        <span style={{ fontFamily: 'var(--font-display)', fontSize: '22px', color: pack === p.id ? '#E84A0C' : 'rgba(12,12,12,0.2)', letterSpacing: '0.02em', flexShrink: 0, marginLeft: '12px' }}>
-                          £{priceMap[p.id]?.[vehicle as VehicleType] ?? '—'}
-                        </span>
-                      )}
+                      <span style={{ fontFamily: 'var(--font-display)', fontSize: vehicle ? '22px' : '15px', color: pack === p.id ? '#E84A0C' : 'rgba(12,12,12,0.35)', letterSpacing: '0.02em', flexShrink: 0, marginLeft: '12px', textAlign: 'right' }}>
+                        {vehicle
+                          ? `£${priceMap[p.id]?.[vehicle as VehicleType] ?? '—'}`
+                          : `£${Math.min(...Object.values(priceMap[p.id]))}–£${Math.max(...Object.values(priceMap[p.id]))}`}
+                      </span>
                     </button>
                   ))}
                 </div>
@@ -340,28 +348,35 @@ export default function BookingModal({
                 </div>
               </div>
 
-              {/* Price preview */}
-              {totalPrice !== null && (
-                <div style={{ background: '#0C0C0C', padding: '20px 24px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                  <div>
-                    <p style={{ fontFamily: 'var(--font-body)', fontSize: '10px', fontWeight: 600, letterSpacing: '0.18em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.3)', marginBottom: '4px' }}>
-                      {addonTotal > 0 ? 'Total inc. add-ons' : 'Your Price'}
+              {/* Price preview — always visible: a range that narrows to an exact total */}
+              <div style={{ background: '#0C0C0C', padding: '20px 24px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <div>
+                  <p style={{ fontFamily: 'var(--font-body)', fontSize: '10px', fontWeight: 600, letterSpacing: '0.18em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.3)', marginBottom: '4px' }}>
+                    {totalPrice !== null ? (addonTotal > 0 ? 'Total inc. add-ons' : 'Your Price') : pack ? `${pack} Price Range` : 'Price Range'}
+                  </p>
+                  <span style={{ fontFamily: 'var(--font-display)', fontSize: '44px', color: '#ffffff', letterSpacing: '0.02em', lineHeight: 1 }}>
+                    {totalPrice !== null
+                      ? `£${totalPrice}`
+                      : pack
+                        ? `£${packMin}–£${packMax}`
+                        : `£${overallMin}–£${overallMax}`}
+                  </span>
+                  {totalPrice !== null && addonTotal > 0 && (
+                    <p style={{ fontFamily: 'var(--font-body)', fontSize: '11px', color: 'rgba(255,255,255,0.25)', marginTop: '4px' }}>
+                      Base £{basePrice} + add-ons £{addonTotal}
                     </p>
-                    <span style={{ fontFamily: 'var(--font-display)', fontSize: '44px', color: '#ffffff', letterSpacing: '0.02em', lineHeight: 1 }}>
-                      £{totalPrice}
-                    </span>
-                    {addonTotal > 0 && (
-                      <p style={{ fontFamily: 'var(--font-body)', fontSize: '11px', color: 'rgba(255,255,255,0.25)', marginTop: '4px' }}>
-                        Base £{basePrice} + add-ons £{addonTotal}
-                      </p>
-                    )}
-                  </div>
-                  <div style={{ textAlign: 'right' }}>
-                    <p style={{ fontFamily: 'var(--font-body)', fontSize: '13px', color: 'rgba(255,255,255,0.45)', marginBottom: '3px' }}>{pack}</p>
-                    <p style={{ fontFamily: 'var(--font-body)', fontSize: '12px', color: 'rgba(255,255,255,0.25)' }}>{vehicleLabels[vehicle as VehicleType]}</p>
-                  </div>
+                  )}
+                  {totalPrice === null && (
+                    <p style={{ fontFamily: 'var(--font-body)', fontSize: '11px', color: 'rgba(255,255,255,0.25)', marginTop: '4px' }}>
+                      {pack ? 'Depends on vehicle size' : 'Select a pack and vehicle for your exact price'}
+                    </p>
+                  )}
                 </div>
-              )}
+                <div style={{ textAlign: 'right' }}>
+                  <p style={{ fontFamily: 'var(--font-body)', fontSize: '13px', color: 'rgba(255,255,255,0.45)', marginBottom: '3px' }}>{pack || '—'}</p>
+                  <p style={{ fontFamily: 'var(--font-body)', fontSize: '12px', color: 'rgba(255,255,255,0.25)' }}>{vehicle ? vehicleLabels[vehicle as VehicleType] : '—'}</p>
+                </div>
+              </div>
             </div>
           )}
 
@@ -458,19 +473,13 @@ export default function BookingModal({
             <form id="step3-form" noValidate onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
               <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
                 <div>
-                  <label style={fieldLabel}>Full Name</label>
+                  <label style={fieldLabel}>Full Name (optional)</label>
                   <input
-                    required type="text" value={name}
+                    type="text" value={name}
                     onChange={e => setName(e.target.value)}
-                    onBlur={() => setNameTouched(true)}
                     placeholder="John Smith"
-                    style={{ ...textInput, border: `1px solid ${nameTouched && !nameValid ? '#dc2626' : 'rgba(12,12,12,0.12)'}` }}
+                    style={textInput}
                   />
-                  {nameTouched && !nameValid && (
-                    <p style={{ fontFamily: 'var(--font-body)', fontSize: '11px', fontWeight: 600, color: '#dc2626', marginTop: '6px' }}>
-                      Please enter your full name.
-                    </p>
-                  )}
                 </div>
                 <div>
                   <label style={fieldLabel}>Phone</label>

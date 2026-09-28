@@ -306,7 +306,9 @@ export default function SupportWidget() {
                   maxLength={1000}
                   style={{
                     flex: 1, padding: '11px 14px', border: '1px solid rgba(12,12,12,0.14)', borderRadius: '10px',
-                    fontFamily: 'var(--font-body)', fontSize: '13.5px', color: '#0C0C0C',
+                    // 16px prevents iOS Safari from zooming the whole page in on focus
+                    // (it auto-zooms any input below that size).
+                    fontFamily: 'var(--font-body)', fontSize: '16px', color: '#0C0C0C',
                     outline: 'none', background: 'white',
                   }}
                 />

@@ -184,7 +184,7 @@ export function notificationEmail(d: EmailData): string {
         Customer
       </h2>
       <table width="100%" cellpadding="0" cellspacing="0">
-        ${row('Name',  d.name)}
+        ${row('Name',  d.name.trim() || 'Not provided')}
         ${row('Phone', `<a href="tel:${d.phone}" style="color:${brand.dark};text-decoration:none;">${d.phone}</a>`)}
         ${row('Email', `<a href="mailto:${d.email}" style="color:${brand.dark};text-decoration:none;">${d.email}</a>`)}
       </table>
@@ -241,7 +241,7 @@ export function confirmationEmail(d: EmailData): string {
       <h1 style="margin:10px 0 6px;font-family:'Arial Black',Arial,sans-serif;font-size:32px;font-weight:bold;color:#ffffff;letter-spacing:2px;text-transform:uppercase;line-height:1.05;">
         REQUEST RECEIVED.
       </h1>
-      <p style="margin:0;font-family:Arial,sans-serif;font-size:15px;color:rgba(255,255,255,0.5);">Hi ${d.name.split(' ')[0]}, we've got your preferred slot. We'll be in touch shortly to confirm.</p>
+      <p style="margin:0;font-family:Arial,sans-serif;font-size:15px;color:rgba(255,255,255,0.5);">Hi ${d.name.trim() ? d.name.trim().split(' ')[0] : 'there'}, we've got your preferred slot. We'll be in touch shortly to confirm.</p>
     </td>
   </tr>
   <tr>

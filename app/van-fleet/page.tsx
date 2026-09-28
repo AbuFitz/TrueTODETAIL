@@ -101,7 +101,8 @@ export default function VanFleetPage() {
   const textInput: React.CSSProperties = {
     width: '100%', padding: '14px 16px',
     border: '1px solid rgba(255,255,255,0.1)',
-    fontFamily: 'var(--font-body)', fontSize: '14px', color: '#ffffff',
+    // 16px avoids iOS Safari zooming the page in when a field is focused.
+    fontFamily: 'var(--font-body)', fontSize: '16px', color: '#ffffff',
     outline: 'none', background: 'rgba(255,255,255,0.05)',
     boxSizing: 'border-box' as const, transition: 'border-color 0.2s',
   }
