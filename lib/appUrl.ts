@@ -16,3 +16,4 @@ export const appAccountLoginUrl = (nextPath?: string) =>
 
 export const appAccountUrl = () => `${APP_URL}/account`
 export const appBookUrl = () => `${APP_URL}/book`
+export const appAdminLoginUrl = () => `${APP_URL}/admin/login`

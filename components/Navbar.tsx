@@ -2,8 +2,9 @@
 
 import { useState, useEffect } from 'react'
 import type { Session } from '@supabase/supabase-js'
-import { appAccountLoginUrl, appAccountUrl } from '@/lib/appUrl'
+import { appAccountUrl } from '@/lib/appUrl'
 import { supabaseBrowser } from '@/lib/supabaseBrowser'
+import LoginModal from './LoginModal'
 
 const NAV_LINKS = [
   { label: 'About',    href: '#howitworks' },
@@ -16,11 +17,12 @@ export default function Navbar({ onBookNow }: { onBookNow: () => void }) {
   const [scrolled, setScrolled] = useState(false)
   const [open, setOpen]         = useState(false)
   const [hovered, setHovered]   = useState<string | null>(null)
+  const [loginOpen, setLoginOpen] = useState(false)
 
-  // Cross-subdomain SSO (see lib/supabaseBrowser.ts): reads whatever session
-  // cookie the Job System app already set. This site never signs anyone in
-  // itself, it just reflects that state — "My Account" becomes "Hi, <name> /
-  // Sign out" the moment someone's signed in on either app.
+  // Cross-subdomain SSO (see lib/supabaseBrowser.ts): signing in here (via
+  // LoginModal) sets the same session cookie the Job System app reads, and
+  // vice versa — "My Account" becomes "Hi, <name>" the moment someone's
+  // signed in on either app, no redirect needed just to sign in.
   const [session, setSession] = useState<Session | null>(null)
   useEffect(() => {
     supabaseBrowser.auth.getSession().then(({ data }) => setSession(data.session))
@@ -32,7 +34,13 @@ export default function Navbar({ onBookNow }: { onBookNow: () => void }) {
     session?.user.email?.split('@')[0] ||
     null
   const accountLabel = firstName ? `Hi, ${firstName}` : 'My Account'
-  const accountHref = session ? appAccountUrl() : appAccountLoginUrl()
+  const accountHref = session ? appAccountUrl() : undefined
+  const handleAccountClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
+    if (!session) {
+      e.preventDefault()
+      setLoginOpen(true)
+    }
+  }
 
   useEffect(() => {
     const fn = () => setScrolled(window.scrollY > 40)
@@ -154,6 +162,7 @@ export default function Navbar({ onBookNow }: { onBookNow: () => void }) {
 
             <a
               href={accountHref}
+              onClick={handleAccountClick}
               style={{
                 position: 'relative',
                 fontFamily: 'var(--font-body)', fontWeight: 500, fontSize: '13px',
@@ -162,6 +171,7 @@ export default function Navbar({ onBookNow }: { onBookNow: () => void }) {
                 textDecoration: 'none',
                 padding: '0 18px', height: '80px',
                 display: 'flex', alignItems: 'center',
+                cursor: 'pointer',
                 transition: 'color 0.2s',
                 flexShrink: 0,
                 whiteSpace: 'nowrap',
@@ -317,12 +327,13 @@ export default function Navbar({ onBookNow }: { onBookNow: () => void }) {
 
           <a
             href={accountHref}
-            onClick={() => setOpen(false)}
+            onClick={(e) => { setOpen(false); handleAccountClick(e) }}
             style={{
               display: 'flex', alignItems: 'center', justifyContent: 'space-between',
               padding: '20px 0',
               borderBottom: '1px solid rgba(255,255,255,0.06)',
               textDecoration: 'none',
+              cursor: 'pointer',
             }}
           >
             <div style={{ display: 'flex', alignItems: 'baseline', gap: '16px' }}>
@@ -389,6 +400,12 @@ export default function Navbar({ onBookNow }: { onBookNow: () => void }) {
           </p>
         </div>
       </div>
+
+      <LoginModal
+        isOpen={loginOpen}
+        onClose={() => setLoginOpen(false)}
+        onBookNow={onBookNow}
+      />
     </>
   )
 }
