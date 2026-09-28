@@ -196,6 +196,13 @@ export function notificationEmail(d: EmailData): string {
 
   const body = `
   <tr>
+    <td style="background:${brand.dark};padding:10px 32px;">
+      <p style="margin:0;font-family:Arial,sans-serif;font-size:11px;font-weight:bold;letter-spacing:2px;text-transform:uppercase;color:#ffffff;">
+        &#9888; High Priority — respond as soon as possible
+      </p>
+    </td>
+  </tr>
+  <tr>
     <td style="background:${brand.orange};padding:24px 32px;">
       <p style="margin:0;font-family:Arial,sans-serif;font-size:11px;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,0.7);">
         New Booking Request · Ref: ${d.id}
@@ -246,7 +253,7 @@ export function notificationEmail(d: EmailData): string {
       <!-- Action prompt -->
       <div style="margin-top:28px;background:${brand.dark};padding:20px 24px;">
         <p style="margin:0;font-family:Arial,sans-serif;font-size:13px;color:rgba(255,255,255,0.6);line-height:1.6;">
-          Confirm or reschedule with the customer within <strong style="color:#ffffff;">1 hour</strong> via text to
+          Confirm or reschedule with the customer <strong style="color:#ffffff;">as soon as possible</strong> via text to
           <strong style="color:#ffffff;"> ${d.phone}</strong> or email to
           <strong style="color:#ffffff;"> ${d.email}</strong>.
         </p>
@@ -279,52 +286,44 @@ export function confirmationEmail(d: EmailData): string {
   <tr>
     <td style="background:#ffffff;padding:32px;">
 
-      <!-- Important notice -->
-      <table width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:28px;">
+      <!-- Booking details — leads with what/when/where/price, the thing the customer actually wants to check first -->
+      <table width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:24px;border:1px solid #eeeeee;">
         <tr>
-          <td style="background:#FFF7F4;padding:20px 24px;border-left:4px solid ${brand.orange};">
-            <p style="margin:0;font-family:Arial,sans-serif;font-size:12px;font-weight:bold;color:${brand.orange};letter-spacing:1px;text-transform:uppercase;margin-bottom:6px;">Please Note: Pending Confirmation</p>
-            <p style="margin:0;font-family:Arial,sans-serif;font-size:14px;color:${brand.dark};line-height:1.6;">
-              This is your <strong>preferred date request</strong>, not a confirmed booking yet.
-              We'll review your slot and contact you within <strong>1 hour</strong> to confirm.
-              Occasionally we may need to suggest an alternative time, but we'll always give you plenty of notice.
-            </p>
-          </td>
-        </tr>
-      </table>
-
-      <!-- Key date/time highlight -->
-      <table width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:28px;">
-        <tr>
-          <td style="background:${brand.light};padding:20px 24px;border-left:4px solid #cccccc;">
+          <td style="background:${brand.light};padding:20px 24px;">
             <p style="margin:0;font-family:Arial,sans-serif;font-size:11px;letter-spacing:2px;text-transform:uppercase;color:${brand.midGrey};margin-bottom:6px;">Your Preferred Slot</p>
             <p style="margin:0;font-family:Arial,sans-serif;font-size:20px;font-weight:bold;color:${brand.dark};">${d.date} at ${d.time}</p>
             <p style="margin:4px 0 0;font-family:Arial,sans-serif;font-size:14px;color:${brand.midGrey};">${d.address}</p>
           </td>
         </tr>
+        <tr>
+          <td style="padding:20px 24px;">
+            <table width="100%" cellpadding="0" cellspacing="0">
+              ${row('Pack',    d.pack)}
+              ${row('Vehicle', d.vehicle)}
+              ${row('Reg',     d.carReg)}
+              ${d.addons.length > 0 ? row('Add-ons', addonsLine) : ''}
+              ${row('Total',   `£${d.price}`, true)}
+            </table>
+          </td>
+        </tr>
       </table>
 
-      <!-- Booking summary -->
-      <h2 style="margin:0 0 16px;font-family:Arial,sans-serif;font-size:12px;letter-spacing:2px;text-transform:uppercase;color:${brand.dark};border-bottom:1px solid #e8e8e8;padding-bottom:10px;">
-        Booking Summary
-      </h2>
-      <table width="100%" cellpadding="0" cellspacing="0">
-        ${row('Pack',    d.pack)}
-        ${row('Vehicle', d.vehicle)}
-        ${row('Reg',     d.carReg)}
-        ${d.addons.length > 0 ? row('Add-ons', addonsLine) : ''}
-        ${row('Total',   `£${d.price}`, true)}
-      </table>
+      <!-- Confirmation notice — plain text, not another boxed alert, so it reads as a footnote to the booking above rather than competing with it -->
+      <p style="margin:0 0 28px;font-family:Arial,sans-serif;font-size:13px;color:${brand.midGrey};line-height:1.6;">
+        This is your <strong style="color:${brand.dark};">preferred slot request</strong>, not a confirmed booking yet —
+        we'll be in touch <strong style="color:${brand.dark};">as soon as possible</strong> to confirm it.
+        Occasionally we may need to suggest an alternative time, but we'll always give you plenty of notice.
+      </p>
 
       <!-- What happens next -->
-      <h2 style="margin:28px 0 16px;font-family:Arial,sans-serif;font-size:12px;letter-spacing:2px;text-transform:uppercase;color:${brand.dark};border-bottom:1px solid #e8e8e8;padding-bottom:10px;">
+      <h2 style="margin:0 0 16px;font-family:Arial,sans-serif;font-size:12px;letter-spacing:2px;text-transform:uppercase;color:${brand.dark};border-bottom:1px solid #e8e8e8;padding-bottom:10px;">
         What Happens Next
       </h2>
       <table width="100%" cellpadding="0" cellspacing="0">
         <tr>
           <td style="padding:10px 0;border-bottom:1px solid #eeeeee;vertical-align:top;">
             <p style="margin:0;font-family:Arial,sans-serif;font-size:12px;font-weight:bold;color:${brand.orange};">1. We confirm your slot</p>
-            <p style="margin:4px 0 0;font-family:Arial,sans-serif;font-size:13px;color:${brand.midGrey};line-height:1.6;">We'll text or call you within 1 hour to lock in your date. If we need to adjust the time slightly, we'll give you options and plenty of notice.</p>
+            <p style="margin:4px 0 0;font-family:Arial,sans-serif;font-size:13px;color:${brand.midGrey};line-height:1.6;">We'll text or call you as soon as possible to lock in your date. If we need to adjust the time slightly, we'll give you options and plenty of notice.</p>
           </td>
         </tr>
         <tr>

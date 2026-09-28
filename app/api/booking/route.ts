@@ -181,12 +181,19 @@ export async function POST(req: NextRequest) {
     }
 
     await Promise.allSettled([
-      // Staff notification
+      // Staff notification — flagged high-importance so it stands out in the
+      // inbox (Gmail/Outlook show a priority marker on these headers), since
+      // every new booking needs a same-day response.
       resend.emails.send({
         from: fromEmail,
         to: 'bookings@truetodetail.co.uk',
         subject: `New Booking: ${booking.pack} · ${booking.date} · Ref ${booking.id}`,
         html: notificationEmail(emailData),
+        headers: {
+          Importance: 'high',
+          'X-Priority': '1',
+          'X-MSMail-Priority': 'High',
+        },
       }),
       // Customer confirmation
       resend.emails.send({
