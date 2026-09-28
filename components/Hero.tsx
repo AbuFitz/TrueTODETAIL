@@ -149,19 +149,19 @@ export default function Hero({ onBookNow }: { onBookNow: () => void }) {
           }}
         >
           {/* Location label */}
-          <motion.p
+          <motion.h1
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 0.8, ease }}
             style={{
               fontFamily: 'var(--font-body)', fontSize: '11px', fontWeight: 600,
-              letterSpacing: '0.22em', textTransform: 'uppercase',
+              letterSpacing: '0.22em', textTransform: 'uppercase', lineHeight: 1.4, marginTop: 0,
               color: 'rgba(255,255,255,0.22)',
               marginBottom: 'clamp(24px, 5vh, 56px)',
             }}
           >
-            Hertfordshire, UK
-          </motion.p>
+            Mobile Car Valeting · Hertfordshire
+          </motion.h1>
 
           {/* Typewriter headline — grows to fill available space */}
           <motion.div
@@ -320,13 +320,13 @@ export default function Hero({ onBookNow }: { onBookNow: () => void }) {
           }}
         >
           {/* Location */}
-          <motion.p
+          <motion.h1
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 0.7, ease }}
             style={{
               fontFamily: 'var(--font-body)', fontSize: '9px', fontWeight: 700,
-              letterSpacing: '0.22em', textTransform: 'uppercase',
+              letterSpacing: '0.22em', textTransform: 'uppercase', lineHeight: 1.4, marginTop: 0,
               color: 'rgba(255,255,255,0.28)', margin: 0,
               display: 'flex', alignItems: 'center', gap: '7px',
             }}
@@ -335,8 +335,8 @@ export default function Hero({ onBookNow }: { onBookNow: () => void }) {
               width: '4px', height: '4px', borderRadius: '50%',
               background: '#E84A0C', display: 'inline-block', flexShrink: 0,
             }} />
-            Hertfordshire, UK
-          </motion.p>
+            Mobile Car Valeting · Hertfordshire
+          </motion.h1>
 
           {/* Spacer — pushes headline to vertical centre */}
           <div style={{ flex: 1 }} />

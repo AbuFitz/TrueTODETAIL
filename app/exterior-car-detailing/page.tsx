@@ -1,6 +1,8 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import { SiteNavbar, SiteFooter } from '@/components/SiteChrome'
+import BookNowButton from '@/components/BookNowButton'
+import { breadcrumbJsonLd, jsonLdGraph, serviceJsonLd } from '@/lib/seo'
 
 export const metadata: Metadata = {
   title: 'Exterior Car Detailing Service | Hemel Hempstead & Hertfordshire',
@@ -16,20 +18,20 @@ export const metadata: Metadata = {
   },
 }
 
-const jsonLd = {
-  '@context': 'https://schema.org',
-  '@type': 'Service',
-  name: 'Exterior Car Detailing',
-  provider: { '@type': 'LocalBusiness', name: 'True To Detail', url: 'https://www.truetodetail.co.uk', telephone: '+447359591800' },
-  areaServed: ['Hemel Hempstead', 'Watford', 'St Albans', 'Berkhamsted', 'Harpenden', 'Kings Langley', 'Tring', 'Abbots Langley', 'Chesham', 'Rickmansworth'],
-  serviceType: 'Exterior Car Detailing',
-  url: 'https://www.truetodetail.co.uk/exterior-car-detailing',
-}
+const jsonLd = jsonLdGraph(
+  breadcrumbJsonLd([['Home', '/'], ['Exterior Car Detailing', '/exterior-car-detailing']]),
+  serviceJsonLd({
+    name: 'Exterior Car Detailing',
+    path: '/exterior-car-detailing',
+    description: 'Mobile exterior car detailing: safe hand wash, decontamination, clay bar, machine polish and paint protection at your home or workplace.',
+    serviceType: 'Exterior car detailing',
+  }),
+)
 
 export default function ExteriorCarDetailingPage() {
   return (
     <>
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLd }} />
       <SiteNavbar />
       <main style={{ background: '#fff', minHeight: '100vh' }}>
         <div style={{ maxWidth: '860px', margin: '0 auto', padding: 'calc(80px + clamp(48px, 8vw, 96px)) clamp(24px, 5vw, 48px) clamp(48px, 8vw, 96px)' }}>
@@ -110,9 +112,9 @@ export default function ExteriorCarDetailingPage() {
           </section>
 
           <div style={{ display: 'flex', gap: '16px', flexWrap: 'wrap', marginBottom: '64px' }}>
-            <Link href="/" style={{ display: 'inline-block', background: '#E84A0C', color: '#fff', padding: '15px 36px', textDecoration: 'none', fontFamily: 'var(--font-body)', fontWeight: 700, fontSize: '12px', letterSpacing: '0.12em', textTransform: 'uppercase' }}>
+            <BookNowButton style={{ display: 'inline-block', background: '#E84A0C', color: '#fff', padding: '15px 36px', fontFamily: 'var(--font-body)', fontWeight: 700, fontSize: '12px', letterSpacing: '0.12em', textTransform: 'uppercase' }}>
               Book Your Detail
-            </Link>
+            </BookNowButton>
             <Link href="/full-car-detail" style={{ display: 'inline-block', background: 'transparent', color: '#0C0C0C', padding: '15px 36px', textDecoration: 'none', fontFamily: 'var(--font-body)', fontWeight: 600, fontSize: '12px', letterSpacing: '0.12em', textTransform: 'uppercase', border: '1px solid rgba(12,12,12,0.2)' }}>
               Full Car Detail →
             </Link>

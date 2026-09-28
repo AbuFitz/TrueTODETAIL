@@ -2,7 +2,11 @@ import Link from 'next/link'
 import { SiteNavbar, SiteFooter } from '@/components/SiteChrome'
 import ManageCookiesButton from '@/components/ManageCookiesButton'
 
-export const metadata = { title: 'Cookie Policy | True To Detail' }
+export const metadata = {
+  title: 'Cookie Policy',
+  description: 'Which cookies the True To Detail website uses, what they do, and how to manage your cookie choices.',
+  alternates: { canonical: '/cookies' },
+}
 
 export default function CookiesPage() {
   return (

@@ -1,7 +1,11 @@
 import Link from 'next/link'
 import { SiteNavbar, SiteFooter } from '@/components/SiteChrome'
 
-export const metadata = { title: 'Privacy Policy | True To Detail' }
+export const metadata = {
+  title: 'Privacy Policy',
+  description: 'How True To Detail collects, uses and protects your personal information when you book a mobile car valet or detail with us.',
+  alternates: { canonical: '/privacy' },
+}
 
 export default function PrivacyPage() {
   return (

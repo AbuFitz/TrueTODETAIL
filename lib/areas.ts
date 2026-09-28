@@ -261,6 +261,22 @@ export const AREAS: Area[] = [
   },
 ]
 
+/** The n closest other areas by straight-line distance, for "nearby areas" links. */
+export function nearestAreas(area: Area, n: number): Area[] {
+  const toRad = (d: number) => (d * Math.PI) / 180
+  const dist = (b: Area) => {
+    const dLat = toRad(b.lat - area.lat)
+    const dLng = toRad(b.lng - area.lng)
+    const h =
+      Math.sin(dLat / 2) ** 2 +
+      Math.cos(toRad(area.lat)) * Math.cos(toRad(b.lat)) * Math.sin(dLng / 2) ** 2
+    return 2 * Math.asin(Math.sqrt(h))
+  }
+  return AREAS.filter((a) => a.slug !== area.slug)
+    .sort((a, b) => dist(a) - dist(b))
+    .slice(0, n)
+}
+
 export function getAreaBySlug(slug: string): Area | undefined {
   return AREAS.find((a) => a.slug === slug)
 }

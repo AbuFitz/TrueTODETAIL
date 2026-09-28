@@ -1,7 +1,11 @@
 import Link from 'next/link'
 import { SiteNavbar, SiteFooter } from '@/components/SiteChrome'
 
-export const metadata = { title: 'Terms & Conditions | True To Detail' }
+export const metadata = {
+  title: 'Terms & Conditions',
+  description: 'The terms that apply when you book a mobile car valeting or detailing service with True To Detail, including payment and cancellation.',
+  alternates: { canonical: '/terms' },
+}
 
 export default function TermsPage() {
   return (

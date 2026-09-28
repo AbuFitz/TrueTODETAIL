@@ -1,6 +1,8 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import { SiteNavbar, SiteFooter } from '@/components/SiteChrome'
+import BookNowButton from '@/components/BookNowButton'
+import { breadcrumbJsonLd, jsonLdGraph, serviceJsonLd } from '@/lib/seo'
 
 export const metadata: Metadata = {
   title: 'Mobile Car Detailing Near Hemel Hempstead & Hertfordshire',
@@ -17,33 +19,22 @@ export const metadata: Metadata = {
   },
 }
 
-const jsonLd = {
-  '@context': 'https://schema.org',
-  '@type': 'Service',
-  name: 'Mobile Car Detailing',
-  provider: {
-    '@type': 'LocalBusiness',
-    name: 'True To Detail',
-    url: 'https://www.truetodetail.co.uk',
-    telephone: '+447359591800',
-  },
-  areaServed: [
-    'Hemel Hempstead', 'Watford', 'St Albans', 'Berkhamsted', 'Harpenden',
-    'Kings Langley', 'Tring', 'Abbots Langley', 'Chesham', 'Rickmansworth',
-    'Apsley', 'Leverstock Green', 'Redbourn', 'Boxmoor', 'Bovingdon', 'Markyate',
-  ],
-  description:
-    'Professional mobile car detailing service operating across Hemel Hempstead and surrounding Hertfordshire towns.',
-  serviceType: 'Mobile Car Detailing',
-  url: 'https://www.truetodetail.co.uk/mobile-car-detailing',
-}
+const jsonLd = jsonLdGraph(
+  breadcrumbJsonLd([['Home', '/'], ['Mobile Car Detailing', '/mobile-car-detailing']]),
+  serviceJsonLd({
+    name: 'Mobile Car Detailing',
+    path: '/mobile-car-detailing',
+    description: 'Professional mobile car detailing at your home or workplace across Hemel Hempstead and Hertfordshire, with our own water and power.',
+    serviceType: 'Mobile car detailing',
+  }),
+)
 
 export default function MobileCarDetailingPage() {
   return (
     <>
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        dangerouslySetInnerHTML={{ __html: jsonLd }}
       />
       <SiteNavbar />
       <main style={{ background: '#fff', minHeight: '100vh' }}>
@@ -135,17 +126,16 @@ export default function MobileCarDetailingPage() {
           </section>
 
           <div style={{ display: 'flex', gap: '16px', flexWrap: 'wrap', marginBottom: '64px' }}>
-            <Link
-              href="/"
+            <BookNowButton
               style={{
                 display: 'inline-block', background: '#E84A0C', color: '#fff',
-                padding: '15px 36px', textDecoration: 'none',
+                padding: '15px 36px',
                 fontFamily: 'var(--font-body)', fontWeight: 700, fontSize: '12px',
                 letterSpacing: '0.12em', textTransform: 'uppercase',
               }}
             >
               Book Your Detail
-            </Link>
+            </BookNowButton>
             <Link href="/interior-car-detailing" style={{ display: 'inline-block', background: 'transparent', color: '#0C0C0C', padding: '15px 36px', textDecoration: 'none', fontFamily: 'var(--font-body)', fontWeight: 600, fontSize: '12px', letterSpacing: '0.12em', textTransform: 'uppercase', border: '1px solid rgba(12,12,12,0.2)' }}>
               Interior Detailing →
             </Link>

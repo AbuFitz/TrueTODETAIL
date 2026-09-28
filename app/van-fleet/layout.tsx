@@ -1,7 +1,7 @@
 import type { Metadata } from 'next'
 
 export const metadata: Metadata = {
-  title: 'Van & Fleet Cleaning Services | True To Detail',
+  title: 'Van & Fleet Cleaning in Hemel Hempstead & Hertfordshire',
   description:
     'Commercial van and fleet cleaning across Hemel Hempstead and Hertfordshire. Priority scheduling, consistent results and discounted rates for 3+ vehicles. Get a tailored quote.',
   alternates: {

@@ -1,10 +1,14 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
-import { AREAS, getAreaBySlug, mapEmbedUrl } from '@/lib/areas'
+import { AREAS, getAreaBySlug, mapEmbedUrl, nearestAreas } from '@/lib/areas'
+import { PACKAGES, VEHICLE_LABELS, type VehicleType } from '@/lib/pricing'
+import { breadcrumbJsonLd, faqJsonLd, jsonLdGraph, serviceJsonLd } from '@/lib/seo'
 import { SiteNavbar, SiteFooter } from '@/components/SiteChrome'
+import BookNowButton from '@/components/BookNowButton'
 
-const SITE_URL = 'https://www.truetodetail.co.uk'
+const VEHICLES = Object.keys(VEHICLE_LABELS) as VehicleType[]
+const FROM_PRICE = Math.min(...PACKAGES.flatMap((p) => Object.values(p.price)))
 
 export function generateStaticParams() {
   return AREAS.map((area) => ({ slug: area.slug }))
@@ -15,14 +19,16 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   const area = getAreaBySlug(slug)
   if (!area) return {}
 
-  const title = `Mobile Car Detailing in ${area.name} | True To Detail`
-  const description = `Fully mobile car detailing in ${area.name} (${area.postcodes.join(', ')}). Fixed prices, no drop-off. True To Detail comes to you across ${area.name} and surrounding areas.`
+  // Matches how people in the UK actually search: "valeting" and "car wash"
+  // alongside "detailing". The template appends "| True To Detail".
+  const title = `Mobile Car Valeting & Detailing in ${area.name}`
+  const description = `Mobile car valeting, detailing and hand car washes in ${area.name} (${area.postcodes.join(', ')}). We come to your driveway with our own water and power. Fixed prices from £${FROM_PRICE}.`
 
   return {
     title,
     description,
-    alternates: { canonical: `${SITE_URL}/areas/${area.slug}` },
-    openGraph: { title, description, url: `${SITE_URL}/areas/${area.slug}` },
+    alternates: { canonical: `/areas/${area.slug}` },
+    openGraph: { title: `${title} | True To Detail`, description, url: `/areas/${area.slug}` },
   }
 }
 
@@ -31,50 +37,24 @@ export default async function AreaPage({ params }: { params: Promise<{ slug: str
   const area = getAreaBySlug(slug)
   if (!area) notFound()
 
-  const otherAreas = AREAS.filter((a) => a.slug !== area.slug).slice(0, 4)
+  const otherAreas = nearestAreas(area, 5)
 
-  const jsonLd = {
-    '@context': 'https://schema.org',
-    '@graph': [
-      {
-        '@type': 'BreadcrumbList',
-        itemListElement: [
-          { '@type': 'ListItem', position: 1, name: 'Home', item: SITE_URL },
-          { '@type': 'ListItem', position: 2, name: 'Areas We Cover', item: `${SITE_URL}/areas` },
-          { '@type': 'ListItem', position: 3, name: area.name, item: `${SITE_URL}/areas/${area.slug}` },
-        ],
-      },
-      {
-        '@type': 'Service',
-        name: `Mobile Car Detailing in ${area.name}`,
-        provider: {
-          '@type': 'LocalBusiness',
-          name: 'True To Detail',
-          url: SITE_URL,
-          telephone: '+447359591800',
-        },
-        areaServed: {
-          '@type': 'City',
-          name: area.name,
-          containedInPlace: { '@type': 'AdministrativeArea', name: area.county },
-        },
-        description: area.intro,
-        url: `${SITE_URL}/areas/${area.slug}`,
-      },
-      {
-        '@type': 'FAQPage',
-        mainEntity: area.faqs.map((f) => ({
-          '@type': 'Question',
-          name: f.q,
-          acceptedAnswer: { '@type': 'Answer', text: f.a },
-        })),
-      },
-    ],
-  }
+  const jsonLd = jsonLdGraph(
+    breadcrumbJsonLd([['Home', '/'], ['Areas We Cover', '/areas'], [area.name, `/areas/${area.slug}`]]),
+    serviceJsonLd({
+      name: `Mobile Car Valeting & Detailing in ${area.name}`,
+      path: `/areas/${area.slug}`,
+      description: area.intro,
+      serviceType: 'Mobile car valeting and detailing',
+      areaName: area.name,
+      county: area.county,
+    }),
+    faqJsonLd(area.faqs),
+  )
 
   return (
     <>
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLd }} />
       <SiteNavbar />
       <main style={{ background: '#0C0C0C' }}>
 
@@ -103,8 +83,8 @@ export default async function AreaPage({ params }: { params: Promise<{ slug: str
               fontFamily: 'var(--font-display)', fontSize: 'clamp(40px, 6vw, 72px)',
               letterSpacing: '0.02em', color: '#ffffff', lineHeight: 0.92, marginBottom: '24px',
             }}>
-              MOBILE CAR DETAILING<br />
-              <span style={{ color: '#E84A0C' }}>IN {area.name.toUpperCase()}</span>
+              MOBILE CAR VALETING<br />
+              <span style={{ color: '#E84A0C' }}>& DETAILING IN {area.name.toUpperCase()}</span>
             </h1>
 
             <p style={{ fontSize: '18px', lineHeight: 1.7, color: 'rgba(255,255,255,0.55)', fontWeight: 500 }}>
@@ -178,15 +158,44 @@ export default async function AreaPage({ params }: { params: Promise<{ slug: str
         <section style={{ background: '#F5F4F1' }}>
           <div style={{ maxWidth: '900px', margin: '0 auto', padding: 'clamp(48px, 7vw, 72px) clamp(24px, 5vw, 48px)' }}>
             <h2 style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(28px, 4vw, 44px)', letterSpacing: '0.02em', color: '#0C0C0C', marginBottom: '16px' }}>
-              PACKAGES AVAILABLE IN {area.name.toUpperCase()}
+              CAR VALETING PRICES IN {area.name.toUpperCase()}
             </h2>
+            <p style={{ fontSize: '15px', lineHeight: 1.78, color: 'rgba(12,12,12,0.62)', marginBottom: '20px' }}>
+              The same fixed prices apply in {area.name} as everywhere else we cover. No call-out fee and no travel surcharge.
+            </p>
+            <div style={{ overflowX: 'auto', marginBottom: '20px' }}>
+              <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '14px', background: '#ffffff' }}>
+                <thead>
+                  <tr>
+                    <th scope="col" style={{ textAlign: 'left', padding: '12px 10px', borderBottom: '2px solid #E84A0C', fontWeight: 700, color: '#0C0C0C' }}>Package</th>
+                    {VEHICLES.map((v) => (
+                      <th key={v} scope="col" style={{ textAlign: 'right', padding: '12px 10px', borderBottom: '2px solid #E84A0C', fontWeight: 700, color: '#0C0C0C' }}>{VEHICLE_LABELS[v]}</th>
+                    ))}
+                  </tr>
+                </thead>
+                <tbody>
+                  {PACKAGES.map((p) => (
+                    <tr key={p.id}>
+                      <th scope="row" style={{ textAlign: 'left', padding: '12px 10px', borderBottom: '1px solid rgba(12,12,12,0.08)', fontWeight: 600, color: '#0C0C0C' }}>
+                        {p.id}
+                        <span style={{ display: 'block', fontWeight: 400, fontSize: '12px', color: 'rgba(12,12,12,0.45)' }}>{p.duration}</span>
+                      </th>
+                      {VEHICLES.map((v) => (
+                        <td key={v} style={{ textAlign: 'right', padding: '12px 10px', borderBottom: '1px solid rgba(12,12,12,0.08)', color: '#0C0C0C' }}>£{p.price[v]}</td>
+                      ))}
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
             <ul style={{ fontSize: '15px', lineHeight: 2, color: 'rgba(12,12,12,0.62)', paddingLeft: '20px', marginBottom: '16px' }}>
-              <li><strong>Essential</strong>: Safe wash & dry, wheels cleaned, interior vacuum, dashboard wipe, glass cleaned, tyre dressing. From £80.</li>
-              <li><strong>Full Valet</strong>: Everything in Essential, plus deep interior clean, seat shampoo, carpet extraction, spray wax protection. From £140.</li>
-              <li><strong>Premium Detail</strong>: Everything in Full Valet, plus clay bar decontamination, light machine polish, paint sealant, trim restoration. From £220.</li>
+              {PACKAGES.map((p) => (
+                <li key={p.id}><strong>{p.id}</strong>: {p.includes.join(', ')}.</li>
+              ))}
             </ul>
             <p style={{ fontSize: '15px', lineHeight: 1.78, color: 'rgba(12,12,12,0.62)' }}>
-              All prices are fixed at the time of booking, with no hidden charges and no changes on the day.
+              Looking for a car wash in {area.name}? Our Essential package is a proper hand wash done on your driveway, which is far kinder to paintwork than a brush car wash, plus a quick interior tidy.
+              See our <Link href="/mobile-car-wash" style={{ color: '#E84A0C', textDecoration: 'none' }}>mobile car wash</Link> page for what&apos;s included.
             </p>
           </div>
         </section>
@@ -216,17 +225,16 @@ export default async function AreaPage({ params }: { params: Promise<{ slug: str
         <section style={{ background: '#0C0C0C', borderTop: '3px solid #E84A0C' }}>
           <div style={{ maxWidth: '900px', margin: '0 auto', padding: 'clamp(48px, 7vw, 72px) clamp(24px, 5vw, 48px)' }}>
             <div style={{ display: 'flex', gap: '16px', flexWrap: 'wrap', marginBottom: '48px' }}>
-              <Link
-                href="/"
+              <BookNowButton
                 style={{
                   display: 'inline-block', background: '#E84A0C', color: '#fff',
-                  padding: '15px 36px', textDecoration: 'none',
+                  padding: '15px 36px',
                   fontFamily: 'var(--font-body)', fontWeight: 700, fontSize: '12px',
                   letterSpacing: '0.12em', textTransform: 'uppercase',
                 }}
               >
-                Book Your Detail in {area.name}
-              </Link>
+                Book Your Valet in {area.name}
+              </BookNowButton>
               <a href="tel:+447359591800" style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', background: 'transparent', color: '#fff', padding: '15px 36px', textDecoration: 'none', fontFamily: 'var(--font-body)', fontWeight: 600, fontSize: '12px', letterSpacing: '0.12em', textTransform: 'uppercase', border: '1px solid rgba(255,255,255,0.2)' }}>
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
                   <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.9.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z" />
@@ -237,7 +245,7 @@ export default async function AreaPage({ params }: { params: Promise<{ slug: str
 
             <nav aria-label="Nearby areas" style={{ borderTop: '1px solid rgba(255,255,255,0.1)', paddingTop: '32px' }}>
               <p style={{ fontFamily: 'var(--font-body)', fontSize: '11px', fontWeight: 600, letterSpacing: '0.2em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.3)', marginBottom: '16px' }}>
-                Other Areas We Cover
+                Nearby Areas We Also Cover
               </p>
               <div style={{ display: 'flex', flexWrap: 'wrap', gap: '12px' }}>
                 {otherAreas.map((a) => (

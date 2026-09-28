@@ -2,11 +2,13 @@ import type { Metadata } from 'next'
 import Link from 'next/link'
 import { AREAS, REGIONS } from '@/lib/areas'
 import { SiteNavbar, SiteFooter } from '@/components/SiteChrome'
+import BookNowButton from '@/components/BookNowButton'
+import { breadcrumbJsonLd, jsonLdGraph } from '@/lib/seo'
 
 export const metadata: Metadata = {
-  title: 'Areas We Cover | Mobile Car Detailing Across Hertfordshire',
+  title: 'Areas We Cover: Mobile Car Valeting Across Hertfordshire',
   description:
-    'True To Detail provides fully mobile car detailing across Hertfordshire and selected areas of Buckinghamshire and Bedfordshire, within roughly 25 miles of Hemel Hempstead. See full coverage by town.',
+    'True To Detail provides fully mobile car valeting and detailing across Hertfordshire and selected areas of Buckinghamshire and Bedfordshire, within roughly 25 miles of Hemel Hempstead. See full coverage by town.',
   alternates: {
     canonical: 'https://www.truetodetail.co.uk/areas',
   },
@@ -21,6 +23,10 @@ export const metadata: Metadata = {
 export default function AreasPage() {
   return (
     <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: jsonLdGraph(breadcrumbJsonLd([['Home', '/'], ['Areas We Cover', '/areas']])) }}
+      />
       <SiteNavbar />
       <main style={{ background: '#0C0C0C' }}>
 
@@ -118,17 +124,16 @@ export default function AreasPage() {
               READY TO BOOK YOUR <span style={{ color: '#E84A0C' }}>DETAIL?</span>
             </h2>
             <div style={{ display: 'flex', gap: '16px', flexWrap: 'wrap' }}>
-              <Link
-                href="/"
+              <BookNowButton
                 style={{
                   display: 'inline-block', background: '#E84A0C', color: '#fff',
-                  padding: '15px 36px', textDecoration: 'none',
+                  padding: '15px 36px',
                   fontFamily: 'var(--font-body)', fontWeight: 700, fontSize: '12px',
                   letterSpacing: '0.12em', textTransform: 'uppercase',
                 }}
               >
                 Book Your Detail
-              </Link>
+              </BookNowButton>
               <Link href="/van-fleet" style={{ display: 'inline-block', background: 'transparent', color: '#fff', padding: '15px 36px', textDecoration: 'none', fontFamily: 'var(--font-body)', fontWeight: 600, fontSize: '12px', letterSpacing: '0.12em', textTransform: 'uppercase', border: '1px solid rgba(255,255,255,0.2)' }}>
                 Van & Fleet →
               </Link>

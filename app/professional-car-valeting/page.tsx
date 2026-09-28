@@ -1,6 +1,8 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import { SiteNavbar, SiteFooter } from '@/components/SiteChrome'
+import BookNowButton from '@/components/BookNowButton'
+import { breadcrumbJsonLd, jsonLdGraph, serviceJsonLd } from '@/lib/seo'
 
 export const metadata: Metadata = {
   title: 'Professional Car Valeting Service | Hemel Hempstead & Hertfordshire',
@@ -16,20 +18,20 @@ export const metadata: Metadata = {
   },
 }
 
-const jsonLd = {
-  '@context': 'https://schema.org',
-  '@type': 'Service',
-  name: 'Professional Car Valeting',
-  provider: { '@type': 'LocalBusiness', name: 'True To Detail', url: 'https://www.truetodetail.co.uk', telephone: '+447359591800' },
-  areaServed: ['Hemel Hempstead', 'Watford', 'St Albans', 'Berkhamsted', 'Harpenden', 'Kings Langley', 'Tring', 'Abbots Langley', 'Chesham', 'Rickmansworth'],
-  serviceType: 'Professional Car Valeting',
-  url: 'https://www.truetodetail.co.uk/professional-car-valeting',
-}
+const jsonLd = jsonLdGraph(
+  breadcrumbJsonLd([['Home', '/'], ['Professional Car Valeting', '/professional-car-valeting']]),
+  serviceJsonLd({
+    name: 'Professional Car Valeting',
+    path: '/professional-car-valeting',
+    description: 'Professional mobile car valeting across Hemel Hempstead and Hertfordshire. Fixed prices, no drop-off, we bring our own water and power.',
+    serviceType: 'Mobile car valeting',
+  }),
+)
 
 export default function ProfessionalCarValetingPage() {
   return (
     <>
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLd }} />
       <SiteNavbar />
       <main style={{ background: '#fff', minHeight: '100vh' }}>
         <div style={{ maxWidth: '860px', margin: '0 auto', padding: 'calc(80px + clamp(48px, 8vw, 96px)) clamp(24px, 5vw, 48px) clamp(48px, 8vw, 96px)' }}>
@@ -114,9 +116,9 @@ export default function ProfessionalCarValetingPage() {
           </section>
 
           <div style={{ display: 'flex', gap: '16px', flexWrap: 'wrap', marginBottom: '64px' }}>
-            <Link href="/" style={{ display: 'inline-block', background: '#E84A0C', color: '#fff', padding: '15px 36px', textDecoration: 'none', fontFamily: 'var(--font-body)', fontWeight: 700, fontSize: '12px', letterSpacing: '0.12em', textTransform: 'uppercase' }}>
+            <BookNowButton style={{ display: 'inline-block', background: '#E84A0C', color: '#fff', padding: '15px 36px', fontFamily: 'var(--font-body)', fontWeight: 700, fontSize: '12px', letterSpacing: '0.12em', textTransform: 'uppercase' }}>
               Book Your Valet
-            </Link>
+            </BookNowButton>
             <Link href="/mobile-car-detailing" style={{ display: 'inline-block', background: 'transparent', color: '#0C0C0C', padding: '15px 36px', textDecoration: 'none', fontFamily: 'var(--font-body)', fontWeight: 600, fontSize: '12px', letterSpacing: '0.12em', textTransform: 'uppercase', border: '1px solid rgba(12,12,12,0.2)' }}>
               All Services →
             </Link>

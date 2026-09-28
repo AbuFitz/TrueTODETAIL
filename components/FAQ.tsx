@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
+import { faqJsonLd, jsonLdGraph } from '@/lib/seo'
 
 const ease = [0.22, 1, 0.36, 1] as [number, number, number, number]
 
@@ -55,6 +56,8 @@ export default function FAQ() {
         paddingBottom: 'clamp(64px, 9vw, 120px)',
       }}
     >
+      {/* FAQ structured data sits with the FAQ it describes, generated from the same list. */}
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLdGraph(faqJsonLd(FAQS)) }} />
       <div style={{ maxWidth: '1400px', margin: '0 auto', padding: '0 clamp(24px, 5vw, 72px)' }}>
 
         <div

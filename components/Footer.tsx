@@ -126,10 +126,10 @@ export default function Footer({ onBookNow }: { onBookNow: () => void }) {
           </p>
           <nav style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
             {[
-              ['About',           '#howitworks'],
-              ['Packages',        '#packages'],
-              ['Reviews',         '#reviews'],
-              ['Book Now',        '#contact'],
+              ['About',           '/#howitworks'],
+              ['Packages',        '/#packages'],
+              ['Reviews',         '/#reviews'],
+              ['Areas We Cover',  '/areas'],
             ].map(([label, href]) => (
               <a
                 key={label}
@@ -158,10 +158,12 @@ export default function Footer({ onBookNow }: { onBookNow: () => void }) {
           <nav aria-label="Detailing services" style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
             {[
               ['Mobile Car Detailing',       '/mobile-car-detailing'],
+              ['Mobile Car Wash',            '/mobile-car-wash'],
               ['Interior Car Detailing',     '/interior-car-detailing'],
               ['Exterior Car Detailing',     '/exterior-car-detailing'],
               ['Full Car Detail Packages',   '/full-car-detail'],
               ['Professional Car Valeting',  '/professional-car-valeting'],
+              ['Van & Fleet Cleaning',       '/van-fleet'],
             ].map(([label, href]) => (
               <a
                 key={label}
