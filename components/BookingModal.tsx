@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { motion } from 'framer-motion'
+import { motion, AnimatePresence } from 'framer-motion'
 import { PACKAGES, ADDONS, VEHICLE_LABELS as vehicleLabels, TIME_SLOTS as timeSlots, type VehicleType } from '@/lib/pricing'
 
 type Step = 1 | 2 | 3 | 4
@@ -24,7 +24,8 @@ const CAR_REG_RE  = /^[A-Z0-9]{2,8}$/
 const packOptions = PACKAGES
 const priceMap: Record<string, Record<VehicleType, number>> = Object.fromEntries(PACKAGES.map(p => [p.id, p.price]))
 
-const STEP_LABELS = ['Select Pack', 'Schedule', 'Your Details']
+const STEP_LABELS = ['Vehicle & Pack', 'Schedule', 'Your Details']
+const ease = [0.22, 1, 0.36, 1] as [number, number, number, number]
 
 const fieldLabel: React.CSSProperties = {
   display: 'block',
@@ -33,12 +34,98 @@ const fieldLabel: React.CSSProperties = {
   color: 'rgba(12,12,12,0.38)', marginBottom: '10px',
 }
 
+const sectionHeading: React.CSSProperties = {
+  fontFamily: 'var(--font-body)', fontWeight: 700, fontSize: '11px',
+  letterSpacing: '0.14em', textTransform: 'uppercase' as const,
+  color: '#E84A0C', marginBottom: '4px',
+}
+
 const textInput: React.CSSProperties = {
   width: '100%', padding: '14px 16px',
   border: '1px solid rgba(12,12,12,0.12)',
   // 16px avoids iOS Safari zooming the page in when a field is focused.
   fontFamily: 'var(--font-body)', fontSize: '16px', color: '#0C0C0C',
   outline: 'none', background: 'white', boxSizing: 'border-box' as const,
+}
+
+function CheckIcon({ size = 9, color = 'white' }: { size?: number; color?: string }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 9 7" fill="none">
+      <polyline points="1 3.5 3.5 6 8 1" stroke={color} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+  )
+}
+
+// A text input with a live valid/invalid visual state — a green check appears
+// the moment the value is correct, a red border + message the moment it
+// isn't, so the customer never has to guess whether something is wrong.
+function ValidatedField({
+  label, value, onChange, onBlur, placeholder, type = 'text', maxLength,
+  touched, valid, errorText, helperText, uppercase, letterSpacing,
+}: {
+  label: string
+  value: string
+  onChange: (v: string) => void
+  onBlur: () => void
+  placeholder: string
+  type?: string
+  maxLength?: number
+  touched: boolean
+  valid: boolean
+  errorText: string
+  helperText: string
+  uppercase?: boolean
+  letterSpacing?: string
+}) {
+  const showError = touched && value.trim() !== '' && !valid
+  const showValid = touched && value.trim() !== '' && valid
+  return (
+    <div>
+      <label style={fieldLabel}>{label}</label>
+      <div style={{ position: 'relative' }}>
+        <input
+          required type={type} value={value}
+          onChange={e => onChange(uppercase ? e.target.value.toUpperCase() : e.target.value)}
+          onBlur={onBlur}
+          placeholder={placeholder}
+          maxLength={maxLength}
+          style={{
+            ...textInput,
+            textTransform: uppercase ? 'uppercase' : 'none',
+            letterSpacing: letterSpacing ?? textInput.letterSpacing,
+            paddingRight: '42px',
+            borderColor: showError ? '#dc2626' : showValid ? '#16a34a' : 'rgba(12,12,12,0.12)',
+            transition: 'border-color 0.15s',
+          }}
+        />
+        {showValid && (
+          <span style={{
+            position: 'absolute', right: '14px', top: '50%', transform: 'translateY(-50%)',
+            width: 20, height: 20, borderRadius: '50%', background: '#16a34a',
+            display: 'flex', alignItems: 'center', justifyContent: 'center',
+          }}>
+            <CheckIcon size={10} />
+          </span>
+        )}
+        {showError && (
+          <span style={{
+            position: 'absolute', right: '14px', top: '50%', transform: 'translateY(-50%)',
+            width: 20, height: 20, borderRadius: '50%', background: '#dc2626',
+            display: 'flex', alignItems: 'center', justifyContent: 'center',
+            color: 'white', fontSize: '13px', fontWeight: 700, lineHeight: 1,
+          }}>
+            !
+          </span>
+        )}
+      </div>
+      <p style={{
+        fontFamily: 'var(--font-body)', fontSize: '11px', fontWeight: showError ? 600 : 400,
+        color: showError ? '#dc2626' : 'rgba(12,12,12,0.28)', marginTop: '8px',
+      }}>
+        {showError ? errorText : helperText}
+      </p>
+    </div>
+  )
 }
 
 export default function BookingModal({
@@ -145,7 +232,7 @@ export default function BookingModal({
       <motion.div
         initial={{ x: '100%' }}
         animate={{ x: 0 }}
-        transition={{ duration: 0.42, ease: [0.22, 1, 0.36, 1] }}
+        transition={{ duration: 0.42, ease }}
         style={{
           position: 'relative', zIndex: 1,
           width: '100%', maxWidth: '520px',
@@ -158,7 +245,7 @@ export default function BookingModal({
 
         {/* ── Header ── */}
         <div style={{ background: '#0C0C0C', padding: '24px 32px 20px', flexShrink: 0 }}>
-          <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', marginBottom: '20px' }}>
+          <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', marginBottom: '22px' }}>
             <div>
               <p style={{
                 fontFamily: 'var(--font-body)', fontSize: '10px', fontWeight: 600,
@@ -190,34 +277,92 @@ export default function BookingModal({
             </button>
           </div>
 
+          {/* Numbered stepper — clearer sense of progress than a plain bar */}
           {step < 4 && (
-            <div>
-              <div style={{ display: 'flex', gap: '4px', marginBottom: '8px' }}>
-                {[1, 2, 3].map(s => (
-                  <div key={s} style={{
-                    flex: 1, height: '2px',
-                    background: s <= step ? '#E84A0C' : 'rgba(255,255,255,0.1)',
-                    transition: 'background 0.3s',
-                  }} />
-                ))}
-              </div>
-              <p style={{ fontFamily: 'var(--font-body)', fontSize: '11px', fontWeight: 500, color: 'rgba(255,255,255,0.3)', letterSpacing: '0.06em' }}>
-                Step {step} of 3: {STEP_LABELS[step - 1]}
-              </p>
+            <div style={{ display: 'flex', alignItems: 'flex-start' }}>
+              {STEP_LABELS.map((label, i) => {
+                const stepNum = (i + 1) as Step
+                const isDone = stepNum < step
+                const isActive = stepNum === step
+                return (
+                  <div key={label} style={{ display: 'flex', alignItems: 'flex-start', flex: i < STEP_LABELS.length - 1 ? 1 : undefined }}>
+                    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '6px', flexShrink: 0 }}>
+                      <div style={{
+                        width: 22, height: 22, borderRadius: '50%', flexShrink: 0,
+                        background: isDone ? '#16a34a' : isActive ? '#E84A0C' : 'rgba(255,255,255,0.12)',
+                        display: 'flex', alignItems: 'center', justifyContent: 'center',
+                        fontFamily: 'var(--font-body)', fontSize: '10px', fontWeight: 700,
+                        color: isDone || isActive ? '#ffffff' : 'rgba(255,255,255,0.4)',
+                        transition: 'background 0.3s',
+                      }}>
+                        {isDone ? <CheckIcon size={9} /> : stepNum}
+                      </div>
+                      <span style={{
+                        fontFamily: 'var(--font-body)', fontSize: '9px', fontWeight: 600,
+                        letterSpacing: '0.04em', textTransform: 'uppercase', textAlign: 'center',
+                        color: isActive ? '#ffffff' : 'rgba(255,255,255,0.35)', whiteSpace: 'nowrap',
+                      }}>
+                        {label}
+                      </span>
+                    </div>
+                    {i < STEP_LABELS.length - 1 && (
+                      <div style={{
+                        flex: 1, height: '2px', marginTop: '10px', marginLeft: '4px', marginRight: '4px',
+                        background: isDone ? '#16a34a' : 'rgba(255,255,255,0.12)', transition: 'background 0.3s',
+                      }} />
+                    )}
+                  </div>
+                )
+              })}
             </div>
           )}
         </div>
 
         {/* ── Scrollable body ── */}
         <div style={{ flex: 1, overflowY: 'auto', padding: '32px' }}>
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={step}
+              initial={{ opacity: 0, y: 12 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -12 }}
+              transition={{ duration: 0.22, ease }}
+            >
 
-          {/* ── STEP 1: Pack, Vehicle, Add-ons ── */}
+          {/* ── STEP 1: Vehicle, Pack, Add-ons ── */}
           {step === 1 && (
             <div style={{ display: 'flex', flexDirection: 'column', gap: '28px' }}>
 
+              {/* Vehicle type comes first — a quick, easy first decision that
+                  immediately unlocks exact pack prices below instead of ranges. */}
+              <div>
+                <p style={sectionHeading}>Vehicle</p>
+                <p style={fieldLabel}>What size is your vehicle?</p>
+                <div style={{ display: 'flex', gap: '6px' }}>
+                  {(Object.entries(vehicleLabels) as [VehicleType, string][]).map(([key, label]) => (
+                    <button
+                      key={key}
+                      onClick={() => setVehicle(key)}
+                      style={{
+                        flex: 1, padding: '14px 8px',
+                        background: vehicle === key ? '#0C0C0C' : 'transparent',
+                        border: `1px solid ${vehicle === key ? '#0C0C0C' : 'rgba(12,12,12,0.12)'}`,
+                        cursor: 'pointer',
+                        fontFamily: 'var(--font-body)', fontWeight: 600, fontSize: '12.5px',
+                        color: vehicle === key ? '#ffffff' : 'rgba(12,12,12,0.55)',
+                        textAlign: 'center', letterSpacing: '0.02em', transition: 'all 0.15s',
+                      }}
+                    >
+                      {label}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
               {/* Pack selection */}
               <div>
-                <p style={fieldLabel}>Select Your Pack</p>
+                <p style={sectionHeading}>Package</p>
+                <p style={fieldLabel}>Choose your package</p>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
                   {packOptions.map(p => (
                     <button
@@ -252,33 +397,10 @@ export default function BookingModal({
                 </div>
               </div>
 
-              {/* Vehicle type */}
-              <div>
-                <p style={fieldLabel}>Vehicle Type</p>
-                <div style={{ display: 'flex', gap: '6px' }}>
-                  {(Object.entries(vehicleLabels) as [VehicleType, string][]).map(([key, label]) => (
-                    <button
-                      key={key}
-                      onClick={() => setVehicle(key)}
-                      style={{
-                        flex: 1, padding: '13px 8px',
-                        background: vehicle === key ? '#0C0C0C' : 'transparent',
-                        border: `1px solid ${vehicle === key ? '#0C0C0C' : 'rgba(12,12,12,0.12)'}`,
-                        cursor: 'pointer',
-                        fontFamily: 'var(--font-body)', fontWeight: 600, fontSize: '12px',
-                        color: vehicle === key ? '#ffffff' : 'rgba(12,12,12,0.55)',
-                        textAlign: 'center', letterSpacing: '0.02em', transition: 'all 0.15s',
-                      }}
-                    >
-                      {label}
-                    </button>
-                  ))}
-                </div>
-              </div>
-
               {/* Add-ons */}
               <div>
-                <p style={fieldLabel}>Add-Ons (optional)</p>
+                <p style={sectionHeading}>Add-ons</p>
+                <p style={fieldLabel}>Optional extras</p>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
                   {ADDONS.map(addon => {
                     const selected = selectedAddons.includes(addon.id)
@@ -296,7 +418,6 @@ export default function BookingModal({
                         }}
                       >
                         <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                          {/* Checkbox indicator */}
                           <span style={{
                             width: 16, height: 16, flexShrink: 0,
                             border: `1.5px solid ${selected ? '#E84A0C' : 'rgba(12,12,12,0.2)'}`,
@@ -304,11 +425,7 @@ export default function BookingModal({
                             display: 'flex', alignItems: 'center', justifyContent: 'center',
                             transition: 'all 0.15s',
                           }}>
-                            {selected && (
-                              <svg width="9" height="7" viewBox="0 0 9 7" fill="none">
-                                <polyline points="1 3.5 3.5 6 8 1" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-                              </svg>
-                            )}
+                            {selected && <CheckIcon size={9} />}
                           </span>
                           <span style={{ fontFamily: 'var(--font-body)', fontSize: '13px', fontWeight: 500, color: selected ? '#0C0C0C' : 'rgba(12,12,12,0.6)' }}>
                             {addon.label}
@@ -343,7 +460,7 @@ export default function BookingModal({
                   )}
                   {totalPrice === null && (
                     <p style={{ fontFamily: 'var(--font-body)', fontSize: '11px', color: 'rgba(255,255,255,0.25)', marginTop: '4px' }}>
-                      {pack ? 'Depends on vehicle size' : 'Select a pack and vehicle for your exact price'}
+                      {pack ? 'Depends on vehicle size' : 'Select a vehicle and pack for your exact price'}
                     </p>
                   )}
                 </div>
@@ -357,88 +474,81 @@ export default function BookingModal({
 
           {/* ── STEP 2: Date, Time, Address, Car Reg ── */}
           {step === 2 && (
-            <form id="step2-form" onSubmit={e => { e.preventDefault(); setStep(3) }} style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
-              <div>
-                <label style={fieldLabel}>Preferred Date</label>
-                <input
-                  type="date" required
-                  min={new Date().toISOString().split('T')[0]}
-                  value={date} onChange={e => setDate(e.target.value)}
-                  style={textInput}
-                />
-              </div>
+            <form id="step2-form" onSubmit={e => { e.preventDefault(); setStep(3) }} style={{ display: 'flex', flexDirection: 'column', gap: '28px' }}>
 
               <div>
-                <label style={fieldLabel}>Preferred Time Slot</label>
-                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '6px' }}>
-                  {timeSlots.map(t => (
-                    <button
-                      key={t} type="button" onClick={() => setTime(t)}
-                      style={{
-                        padding: '13px 8px',
-                        border: `1px solid ${time === t ? '#0C0C0C' : 'rgba(12,12,12,0.1)'}`,
-                        background: time === t ? '#0C0C0C' : 'transparent',
-                        cursor: 'pointer',
-                        fontFamily: 'var(--font-body)', fontWeight: 600, fontSize: '13px',
-                        color: time === t ? '#ffffff' : 'rgba(12,12,12,0.5)',
-                        transition: 'all 0.15s',
-                      }}
-                    >
-                      {t}
-                    </button>
-                  ))}
+                <p style={sectionHeading}>When</p>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '20px', marginTop: '12px' }}>
+                  <div>
+                    <label style={fieldLabel}>Preferred Date</label>
+                    <input
+                      type="date" required
+                      min={new Date().toISOString().split('T')[0]}
+                      value={date} onChange={e => setDate(e.target.value)}
+                      style={textInput}
+                    />
+                  </div>
+
+                  <div>
+                    <label style={fieldLabel}>Preferred Time Slot</label>
+                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '6px' }}>
+                      {timeSlots.map(t => (
+                        <button
+                          key={t} type="button" onClick={() => setTime(t)}
+                          style={{
+                            padding: '13px 8px',
+                            border: `1px solid ${time === t ? '#0C0C0C' : 'rgba(12,12,12,0.1)'}`,
+                            background: time === t ? '#0C0C0C' : 'transparent',
+                            cursor: 'pointer',
+                            fontFamily: 'var(--font-body)', fontWeight: 600, fontSize: '13px',
+                            color: time === t ? '#ffffff' : 'rgba(12,12,12,0.5)',
+                            transition: 'all 0.15s',
+                          }}
+                        >
+                          {t}
+                        </button>
+                      ))}
+                    </div>
+                    <p style={{ fontFamily: 'var(--font-body)', fontSize: '11px', color: 'rgba(12,12,12,0.28)', marginTop: '10px' }}>
+                      Exact arrival window confirmed within 1 hour of booking.
+                    </p>
+                  </div>
                 </div>
-                <p style={{ fontFamily: 'var(--font-body)', fontSize: '11px', color: 'rgba(12,12,12,0.28)', marginTop: '10px' }}>
-                  Exact arrival window confirmed within 1 hour of booking.
-                </p>
               </div>
 
-              <div>
-                <label style={fieldLabel}>Service Postcode</label>
-                <input
-                  required type="text" value={address}
-                  onChange={e => setAddress(e.target.value.toUpperCase())}
-                  onBlur={() => setPostcodeTouched(true)}
-                  placeholder="Enter your postcode"
-                  maxLength={8}
-                  style={{
-                    ...textInput, textTransform: 'uppercase', letterSpacing: '0.12em',
-                    border: `1px solid ${postcodeTouched && address.trim() && !postcodeValid ? '#dc2626' : 'rgba(12,12,12,0.12)'}`,
-                  }}
-                />
-                {postcodeTouched && address.trim() && !postcodeValid ? (
-                  <p style={{ fontFamily: 'var(--font-body)', fontSize: '11px', fontWeight: 600, color: '#dc2626', marginTop: '8px' }}>
-                    That doesn&apos;t look like a valid UK postcode — double-check it.
-                  </p>
-                ) : (
-                  <p style={{ fontFamily: 'var(--font-body)', fontSize: '11px', color: 'rgba(12,12,12,0.28)', marginTop: '8px' }}>
-                    We use this to confirm we cover your area.
-                  </p>
-                )}
-              </div>
+              <div style={{ borderTop: '1px solid rgba(12,12,12,0.08)', paddingTop: '24px' }}>
+                <p style={sectionHeading}>Where &amp; What</p>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '20px', marginTop: '12px' }}>
+                  <ValidatedField
+                    label="Service Postcode"
+                    value={address}
+                    onChange={setAddress}
+                    onBlur={() => setPostcodeTouched(true)}
+                    placeholder="Enter your postcode"
+                    maxLength={8}
+                    touched={postcodeTouched}
+                    valid={postcodeValid}
+                    errorText="That doesn't look like a valid UK postcode — double-check it."
+                    helperText="We use this to confirm we cover your area."
+                    uppercase
+                    letterSpacing="0.12em"
+                  />
 
-              <div>
-                <label style={fieldLabel}>Vehicle Registration</label>
-                <input
-                  required type="text" value={carReg}
-                  onChange={e => setCarReg(e.target.value.toUpperCase())}
-                  onBlur={() => setCarRegTouched(true)}
-                  placeholder="e.g. AB12 CDE"
-                  maxLength={8}
-                  style={{
-                    ...textInput, textTransform: 'uppercase', letterSpacing: '0.1em',
-                    border: `1px solid ${carRegTouched && carReg.trim() && !carRegValid ? '#dc2626' : 'rgba(12,12,12,0.12)'}`,
-                  }}
-                />
-                {carRegTouched && carReg.trim() && !carRegValid ? (
-                  <p style={{ fontFamily: 'var(--font-body)', fontSize: '11px', fontWeight: 600, color: '#dc2626', marginTop: '8px' }}>
-                    That doesn&apos;t look like a valid registration — letters and numbers only.
-                  </p>
-                ) : (
-                  <p style={{ fontFamily: 'var(--font-body)', fontSize: '11px', color: 'rgba(12,12,12,0.28)', marginTop: '8px' }}>
-                    Helps us confirm vehicle details before we arrive.
-                  </p>
-                )}
+                  <ValidatedField
+                    label="Vehicle Registration"
+                    value={carReg}
+                    onChange={setCarReg}
+                    onBlur={() => setCarRegTouched(true)}
+                    placeholder="e.g. AB12 CDE"
+                    maxLength={8}
+                    touched={carRegTouched}
+                    valid={carRegValid}
+                    errorText="That doesn't look like a valid registration — letters and numbers only."
+                    helperText="Helps us confirm vehicle details before we arrive."
+                    uppercase
+                    letterSpacing="0.1em"
+                  />
+                </div>
               </div>
             </form>
           )}
@@ -446,6 +556,10 @@ export default function BookingModal({
           {/* ── STEP 3: Contact + Summary ── */}
           {step === 3 && (
             <form id="step3-form" noValidate onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+              <div>
+                <p style={sectionHeading}>Your Details</p>
+              </div>
+
               <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
                 <div>
                   <label style={fieldLabel}>Full Name (optional)</label>
@@ -456,38 +570,33 @@ export default function BookingModal({
                     style={textInput}
                   />
                 </div>
-                <div>
-                  <label style={fieldLabel}>Phone</label>
-                  <input
-                    required type="tel" value={phone}
-                    onChange={e => setPhone(e.target.value)}
-                    onBlur={() => setPhoneTouched(true)}
-                    placeholder="07700 900000"
-                    style={{ ...textInput, border: `1px solid ${phoneTouched && !phoneValid ? '#dc2626' : 'rgba(12,12,12,0.12)'}` }}
-                  />
-                  {phoneTouched && !phoneValid && (
-                    <p style={{ fontFamily: 'var(--font-body)', fontSize: '11px', fontWeight: 600, color: '#dc2626', marginTop: '6px' }}>
-                      Please enter a valid phone number.
-                    </p>
-                  )}
-                </div>
+
+                <ValidatedField
+                  label="Phone"
+                  value={phone}
+                  onChange={setPhone}
+                  onBlur={() => setPhoneTouched(true)}
+                  placeholder="07700 900000"
+                  type="tel"
+                  touched={phoneTouched}
+                  valid={phoneValid}
+                  errorText="Please enter a valid phone number."
+                  helperText="We'll text to confirm your slot."
+                />
               </div>
 
-              <div>
-                <label style={fieldLabel}>Email</label>
-                <input
-                  required type="email" value={email}
-                  onChange={e => setEmail(e.target.value)}
-                  onBlur={() => setEmailTouched(true)}
-                  placeholder="john@example.com"
-                  style={{ ...textInput, border: `1px solid ${emailTouched && !emailValid ? '#dc2626' : 'rgba(12,12,12,0.12)'}` }}
-                />
-                {emailTouched && !emailValid && (
-                  <p style={{ fontFamily: 'var(--font-body)', fontSize: '11px', fontWeight: 600, color: '#dc2626', marginTop: '6px' }}>
-                    Please enter a valid email address.
-                  </p>
-                )}
-              </div>
+              <ValidatedField
+                label="Email"
+                value={email}
+                onChange={setEmail}
+                onBlur={() => setEmailTouched(true)}
+                placeholder="john@example.com"
+                type="email"
+                touched={emailTouched}
+                valid={emailValid}
+                errorText="Please enter a valid email address."
+                helperText="Your booking confirmation goes here."
+              />
 
               <div>
                 <label style={fieldLabel}>Notes (optional)</label>
@@ -506,7 +615,10 @@ export default function BookingModal({
               </div>
 
               {/* Summary */}
-              <div style={{ background: '#F5F4F1', padding: '20px' }}>
+              <div style={{ background: '#F5F4F1', padding: '20px', borderTop: '3px solid #E84A0C' }}>
+                <p style={{ fontFamily: 'var(--font-body)', fontWeight: 700, fontSize: '10px', letterSpacing: '0.16em', textTransform: 'uppercase', color: 'rgba(12,12,12,0.35)', marginBottom: '14px' }}>
+                  Booking Summary
+                </p>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '9px' }}>
                   {([
                     ['Pack',       pack],
@@ -548,11 +660,16 @@ export default function BookingModal({
           {/* ── STEP 4: Confirmation ── */}
           {step === 4 && (
             <div style={{ textAlign: 'center', paddingTop: '8px' }}>
-              <div style={{ width: 72, height: 72, background: '#E84A0C', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 24px' }}>
+              <motion.div
+                initial={{ scale: 0.6, opacity: 0 }}
+                animate={{ scale: 1, opacity: 1 }}
+                transition={{ duration: 0.4, ease }}
+                style={{ width: 72, height: 72, background: '#E84A0C', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 24px', borderRadius: '50%' }}
+              >
                 <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
                   <polyline points="20 6 9 17 4 12" />
                 </svg>
-              </div>
+              </motion.div>
 
               <h3 style={{ fontFamily: 'var(--font-display)', fontSize: '36px', letterSpacing: '0.03em', color: '#0C0C0C', lineHeight: 1, marginBottom: '12px' }}>
                 CONFIRMED
@@ -611,6 +728,9 @@ export default function BookingModal({
               </button>
             </div>
           )}
+
+            </motion.div>
+          </AnimatePresence>
         </div>
 
         {/* ── Footer nav ── */}
@@ -641,7 +761,7 @@ export default function BookingModal({
                 onMouseEnter={e => { if (pack && vehicle) e.currentTarget.style.background = '#C53D08' }}
                 onMouseLeave={e => { if (pack && vehicle) e.currentTarget.style.background = '#E84A0C' }}
               >
-                Next: Schedule
+                {!vehicle ? 'Select your vehicle size' : !pack ? 'Select a package' : 'Next: Schedule'}
                 <span style={{ width: 5, height: 5, borderRadius: '50%', background: 'rgba(255,255,255,0.5)' }} />
               </button>
             )}
@@ -654,7 +774,7 @@ export default function BookingModal({
                 onMouseEnter={e => { if (date && time && postcodeValid && carRegValid) e.currentTarget.style.background = '#C53D08' }}
                 onMouseLeave={e => { if (date && time && postcodeValid && carRegValid) e.currentTarget.style.background = '#E84A0C' }}
               >
-                Next: Your Details
+                {!date ? 'Select a date' : !time ? 'Select a time' : !postcodeValid ? 'Enter your postcode' : !carRegValid ? 'Enter vehicle registration' : 'Next: Your Details'}
                 <span style={{ width: 5, height: 5, borderRadius: '50%', background: 'rgba(255,255,255,0.5)' }} />
               </button>
             )}
