@@ -96,6 +96,11 @@ export const metadata: Metadata = {
       'max-snippet': -1,
     },
   },
+  manifest: '/manifest.webmanifest',
+}
+
+export const viewport = {
+  themeColor: '#0C0C0C',
 }
 
 // JSON-LD Structured Data

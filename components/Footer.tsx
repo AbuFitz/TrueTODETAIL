@@ -54,7 +54,7 @@ export default function Footer({ onBookNow }: { onBookNow: () => void }) {
         {/* Col 1 — Brand */}
         <div>
           <a
-            href="#"
+            href="/"
             style={{ textDecoration: 'none', display: 'inline-flex', alignItems: 'center', gap: '10px', marginBottom: '20px' }}
           >
             <span style={{
@@ -128,7 +128,6 @@ export default function Footer({ onBookNow }: { onBookNow: () => void }) {
             {[
               ['About',           '#howitworks'],
               ['Packages',        '#packages'],
-              ['Areas We Cover',  '/areas'],
               ['Reviews',         '#reviews'],
               ['Book Now',        '#contact'],
             ].map(([label, href]) => (
@@ -273,7 +272,19 @@ export default function Footer({ onBookNow }: { onBookNow: () => void }) {
         Very low opacity — present but not competing with the copyright/
         social/legal row stacked on top of it.
       */}
-      <div style={{ position: 'relative', overflow: 'hidden', borderTop: '1px solid rgba(12,12,12,0.06)' }}>
+      {/*
+        minHeight matters here: this wrapper only auto-sizes to the
+        in-flow bottom bar (~60px), and the watermark below is taken out
+        of flow (absolute) — without an explicit minHeight, overflow:
+        hidden clips the box down to that ~60px, leaving only a sliver of
+        the watermark visible instead of the intended tall band it's
+        stamped into.
+      */}
+      <div style={{
+        position: 'relative', overflow: 'hidden', minHeight: 'clamp(150px, 15vw, 230px)',
+        borderTop: '1px solid rgba(12,12,12,0.06)',
+        display: 'flex', flexDirection: 'column', justifyContent: 'flex-end',
+      }}>
         <div
           aria-hidden
           style={{
@@ -281,7 +292,10 @@ export default function Footer({ onBookNow }: { onBookNow: () => void }) {
             zIndex: 0, pointerEvents: 'none',
             display: 'flex', alignItems: 'center', gap: 'clamp(6px, 1vw, 18px)',
             fontFamily: 'var(--font-display)',
-            fontSize: 'clamp(80px, 19vw, 300px)',
+            // High floor on purpose — on mobile this should overflow off the
+            // edges and get cropped by the wrapper's overflow: hidden, not
+            // shrink down to politely fit the viewport.
+            fontSize: 'clamp(170px, 19vw, 300px)',
             letterSpacing: '0.04em',
             color: 'rgba(12,12,12,0.05)',
             lineHeight: 0.85,

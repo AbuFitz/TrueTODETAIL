@@ -3,14 +3,18 @@
 import Navbar from './Navbar'
 import Footer from './Footer'
 
-// Pages outside the homepage have no BookingModal of their own. Reuse the
-// same cross-page event the SupportWidget uses: dispatch it (the homepage
-// listens and opens its modal), then navigate home if we're not there yet.
+// Pages outside the homepage have no BookingModal of their own. On the
+// homepage itself, dispatch the event the homepage already listens for.
+// From any other page, a plain event fired right before navigating away
+// is lost — the homepage's listener doesn't exist until after the new
+// page has loaded — so instead flag it via a query param the homepage
+// checks for on mount.
 function handleBookNow() {
   if (typeof window === 'undefined') return
-  window.dispatchEvent(new Event('ttd:book-now'))
   if (window.location.pathname !== '/') {
-    window.location.href = '/'
+    window.location.href = '/?book=1'
+  } else {
+    window.dispatchEvent(new Event('ttd:book-now'))
   }
 }
 

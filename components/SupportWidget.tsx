@@ -2,6 +2,7 @@
 
 import { useState, useRef, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
+import { emptyConversationState, type ConversationState, type ChatAction } from '@/lib/chat/types'
 
 const ease = [0.22, 1, 0.36, 1] as [number, number, number, number]
 
@@ -9,6 +10,7 @@ type Role = 'user' | 'assistant'
 interface Message {
   role: Role
   content: string
+  action?: ChatAction
 }
 
 const PHONE_DISPLAY = '07359 591800'
@@ -25,9 +27,10 @@ const GREETING: Message = {
 
 function goToBooking() {
   if (typeof window === 'undefined') return
-  window.dispatchEvent(new Event('ttd:book-now'))
   if (window.location.pathname !== '/') {
-    window.location.href = '/'
+    window.location.href = '/?book=1'
+  } else {
+    window.dispatchEvent(new Event('ttd:book-now'))
   }
 }
 
@@ -66,6 +69,7 @@ export default function SupportWidget() {
   const [messages, setMessages] = useState<Message[]>([GREETING])
   const [input, setInput] = useState('')
   const [sending, setSending] = useState(false)
+  const [conversationState, setConversationState] = useState<ConversationState>(emptyConversationState())
   const listRef = useRef<HTMLDivElement>(null)
   const inputRef = useRef<HTMLInputElement>(null)
 
@@ -100,11 +104,14 @@ export default function SupportWidget() {
         body: JSON.stringify({
           message: text,
           history: history.map((m) => ({ role: m.role, content: m.content })),
+          conversationState,
         }),
       })
       const json = await res.json()
       const reply: string = json.reply ?? `Sorry, something went wrong there. Try WhatsApp or give us a call on ${PHONE_DISPLAY}.`
-      setMessages((prev) => [...prev, { role: 'assistant', content: reply }])
+      const action: ChatAction = json.action ?? null
+      if (json.conversationState) setConversationState(json.conversationState)
+      setMessages((prev) => [...prev, { role: 'assistant', content: reply, action }])
     } catch {
       setMessages((prev) => [
         ...prev,
@@ -259,21 +266,32 @@ export default function SupportWidget() {
               {/* Message list */}
               <div ref={listRef} style={{ flex: 1, overflowY: 'auto', padding: '14px 16px', display: 'flex', flexDirection: 'column', gap: '10px' }}>
                 {messages.map((m, i) => (
-                  <div
-                    key={i}
-                    style={{
-                      alignSelf: m.role === 'user' ? 'flex-end' : 'flex-start',
-                      maxWidth: '84%',
-                      background: m.role === 'user' ? '#0C0C0C' : '#F5F4F1',
-                      color: m.role === 'user' ? '#ffffff' : '#0C0C0C',
-                      padding: '10px 14px',
-                      borderRadius: '14px',
-                      borderBottomRightRadius: m.role === 'user' ? '4px' : '14px',
-                      borderBottomLeftRadius: m.role === 'user' ? '14px' : '4px',
-                      fontFamily: 'var(--font-body)', fontSize: '13.5px', lineHeight: 1.55,
-                    }}
-                  >
-                    {m.content}
+                  <div key={i} style={{ display: 'flex', flexDirection: 'column', alignItems: m.role === 'user' ? 'flex-end' : 'flex-start', gap: '6px', maxWidth: '84%', alignSelf: m.role === 'user' ? 'flex-end' : 'flex-start' }}>
+                    <div
+                      style={{
+                        background: m.role === 'user' ? '#0C0C0C' : '#F5F4F1',
+                        color: m.role === 'user' ? '#ffffff' : '#0C0C0C',
+                        padding: '10px 14px',
+                        borderRadius: '14px',
+                        borderBottomRightRadius: m.role === 'user' ? '4px' : '14px',
+                        borderBottomLeftRadius: m.role === 'user' ? '14px' : '4px',
+                        fontFamily: 'var(--font-body)', fontSize: '13.5px', lineHeight: 1.55,
+                      }}
+                    >
+                      {m.content}
+                    </div>
+                    {m.action?.type === 'open_booking' && (
+                      <button
+                        onClick={() => { setOpen(false); goToBooking() }}
+                        style={{
+                          fontFamily: 'var(--font-body)', fontWeight: 600, fontSize: '12px',
+                          color: '#fff', background: '#E84A0C', border: 'none', borderRadius: '8px',
+                          padding: '9px 14px', cursor: 'pointer',
+                        }}
+                      >
+                        Continue to Booking →
+                      </button>
+                    )}
                   </div>
                 ))}
                 {sending && (
@@ -305,7 +323,9 @@ export default function SupportWidget() {
                   maxLength={1000}
                   style={{
                     flex: 1, padding: '11px 14px', border: '1px solid rgba(12,12,12,0.14)', borderRadius: '10px',
-                    fontFamily: 'var(--font-body)', fontSize: '13.5px', color: '#0C0C0C',
+                    // 16px prevents iOS Safari from zooming the whole page in on focus
+                    // (it auto-zooms any input below that size).
+                    fontFamily: 'var(--font-body)', fontSize: '16px', color: '#0C0C0C',
                     outline: 'none', background: 'white',
                   }}
                 />

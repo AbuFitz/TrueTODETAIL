@@ -8,7 +8,7 @@ import type { NextConfig } from 'next'
 // root-relative paths, which the browser would otherwise request from
 // *this* site (where they don't exist) rather than the app. Staff/admin and
 // detailer links stay on the app's own subdomain on purpose — see
-// components/LoginModal.tsx.
+// lib/appUrl.ts.
 const APP_URL = (process.env.NEXT_PUBLIC_APP_URL || 'https://app.truetodetail.co.uk').replace(/\/$/, '')
 
 const nextConfig: NextConfig = {

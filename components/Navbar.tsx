@@ -3,7 +3,6 @@
 import { useState, useEffect } from 'react'
 import type { Session } from '@supabase/supabase-js'
 import { supabaseBrowser } from '@/lib/supabaseBrowser'
-import LoginModal from './LoginModal'
 
 const NAV_LINKS = [
   { label: 'About',    href: '#howitworks' },
@@ -16,12 +15,10 @@ export default function Navbar({ onBookNow }: { onBookNow: () => void }) {
   const [scrolled, setScrolled] = useState(false)
   const [open, setOpen]         = useState(false)
   const [hovered, setHovered]   = useState<string | null>(null)
-  const [loginOpen, setLoginOpen] = useState(false)
 
-  // Cross-subdomain SSO (see lib/supabaseBrowser.ts): signing in here (via
-  // LoginModal) sets the same session cookie the Job System app reads, and
-  // vice versa — "My Account" becomes "Hi, <name>" the moment someone's
-  // signed in on either app, no redirect needed just to sign in.
+  // Cross-subdomain SSO (see lib/supabaseBrowser.ts): both this site and the
+  // Job System app read/write the same session cookie, so "My Account"
+  // becomes "Hi, <name>" the moment someone's signed in on either one.
   const [session, setSession] = useState<Session | null>(null)
   useEffect(() => {
     supabaseBrowser.auth.getSession().then(({ data }) => setSession(data.session))
@@ -33,16 +30,11 @@ export default function Navbar({ onBookNow }: { onBookNow: () => void }) {
     session?.user.email?.split('@')[0] ||
     null
   const accountLabel = firstName ? `Hi, ${firstName}` : 'My Account'
-  // "/account" is this site's own path once signed in — next.config.ts
-  // proxies it in from the Job System app, so this stays same-origin
-  // instead of jumping to app.truetodetail.co.uk.
-  const accountHref = session ? '/account' : undefined
-  const handleAccountClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
-    if (!session) {
-      e.preventDefault()
-      setLoginOpen(true)
-    }
-  }
+  // Both paths are this site's own — next.config.ts proxies them in from the
+  // Job System app, so signing in stays same-origin instead of jumping to
+  // app.truetodetail.co.uk. Signed out, this goes straight to the actual
+  // sign-in page rather than a popup.
+  const accountHref = session ? '/account' : '/account/login'
 
   useEffect(() => {
     const fn = () => setScrolled(window.scrollY > 40)
@@ -84,7 +76,13 @@ export default function Navbar({ onBookNow }: { onBookNow: () => void }) {
 
           {/* Logo */}
           <a
-            href="#"
+            href="/"
+            onClick={(e) => {
+              if (window.location.pathname === '/') {
+                e.preventDefault()
+                window.scrollTo({ top: 0, behavior: 'smooth' })
+              }
+            }}
             style={{
               textDecoration: 'none', flexShrink: 0,
               display: 'flex', alignItems: 'center',
@@ -164,7 +162,6 @@ export default function Navbar({ onBookNow }: { onBookNow: () => void }) {
 
             <a
               href={accountHref}
-              onClick={handleAccountClick}
               style={{
                 position: 'relative',
                 fontFamily: 'var(--font-body)', fontWeight: 500, fontSize: '13px',
@@ -329,13 +326,12 @@ export default function Navbar({ onBookNow }: { onBookNow: () => void }) {
 
           <a
             href={accountHref}
-            onClick={(e) => { setOpen(false); handleAccountClick(e) }}
+            onClick={() => setOpen(false)}
             style={{
               display: 'flex', alignItems: 'center', justifyContent: 'space-between',
               padding: '20px 0',
               borderBottom: '1px solid rgba(255,255,255,0.06)',
               textDecoration: 'none',
-              cursor: 'pointer',
             }}
           >
             <div style={{ display: 'flex', alignItems: 'baseline', gap: '16px' }}>
@@ -402,12 +398,6 @@ export default function Navbar({ onBookNow }: { onBookNow: () => void }) {
           </p>
         </div>
       </div>
-
-      <LoginModal
-        isOpen={loginOpen}
-        onClose={() => setLoginOpen(false)}
-        onBookNow={onBookNow}
-      />
     </>
   )
 }
