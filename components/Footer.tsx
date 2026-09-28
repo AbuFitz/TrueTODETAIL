@@ -48,7 +48,7 @@ export default function Footer({ onBookNow }: { onBookNow: () => void }) {
           display: 'grid',
           gap: 'clamp(32px, 5vw, 72px)',
         }}
-        className="grid-cols-1 md:grid-cols-3"
+        className="grid-cols-1 md:grid-cols-4"
       >
 
         {/* Col 1 — Brand */}
@@ -128,7 +128,6 @@ export default function Footer({ onBookNow }: { onBookNow: () => void }) {
             {[
               ['About',           '#howitworks'],
               ['Packages',        '#packages'],
-              ['Areas We Cover',  '/areas'],
               ['Reviews',         '#reviews'],
               ['Book Now',        '#contact'],
             ].map(([label, href]) => (
@@ -199,7 +198,44 @@ export default function Footer({ onBookNow }: { onBookNow: () => void }) {
           </nav>
         </div>
 
-        {/* Col 3 — Book */}
+        {/* Col 3 — Areas we cover */}
+        <div>
+          <p style={{
+            fontFamily: 'var(--font-body)', fontWeight: 600, fontSize: '10px',
+            letterSpacing: '0.2em', textTransform: 'uppercase',
+            color: 'rgba(12,12,12,0.25)', marginBottom: '20px',
+          }}>
+            Areas We Cover
+          </p>
+          <nav aria-label="Areas we cover" style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+            {AREAS.slice(0, 6).map(area => (
+              <a
+                key={area.slug}
+                href={`/areas/${area.slug}`}
+                style={{
+                  fontFamily: 'var(--font-body)', fontSize: '13px',
+                  color: 'rgba(12,12,12,0.38)', textDecoration: 'none',
+                  transition: 'color 0.2s',
+                }}
+                onMouseEnter={e => (e.currentTarget.style.color = '#E84A0C')}
+                onMouseLeave={e => (e.currentTarget.style.color = 'rgba(12,12,12,0.38)')}
+              >
+                {area.name}
+              </a>
+            ))}
+            <a
+              href="/areas"
+              style={{
+                fontFamily: 'var(--font-body)', fontWeight: 600, fontSize: '13px',
+                color: '#E84A0C', textDecoration: 'none',
+              }}
+            >
+              View all areas →
+            </a>
+          </nav>
+        </div>
+
+        {/* Col 4 — Book */}
         <div>
           <p style={{
             fontFamily: 'var(--font-body)', fontWeight: 600, fontSize: '10px',
@@ -241,53 +277,6 @@ export default function Footer({ onBookNow }: { onBookNow: () => void }) {
           </button>
         </div>
 
-      </div>
-
-      {/* Areas We Cover — full-width band, all town pages for internal linking */}
-      <div style={{ borderTop: '1px solid rgba(12,12,12,0.06)', background: '#0C0C0C' }}>
-        <div style={{
-          maxWidth: '1400px', margin: '0 auto',
-          padding: 'clamp(28px, 4vw, 40px) clamp(24px, 5vw, 72px)',
-        }}>
-          <p style={{
-            fontFamily: 'var(--font-body)', fontWeight: 600, fontSize: '10px',
-            letterSpacing: '0.2em', textTransform: 'uppercase',
-            color: 'rgba(255,255,255,0.35)', marginBottom: '16px',
-          }}>
-            Areas We Cover
-          </p>
-          <nav aria-label="Areas we cover" style={{ display: 'flex', flexWrap: 'wrap', columnGap: '10px', rowGap: '10px', alignItems: 'center' }}>
-            {AREAS.map((area, i) => (
-              <span key={area.slug} style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                <a
-                  href={`/areas/${area.slug}`}
-                  style={{
-                    fontFamily: 'var(--font-body)', fontSize: '13px',
-                    color: 'rgba(255,255,255,0.55)', textDecoration: 'none',
-                    whiteSpace: 'nowrap', transition: 'color 0.2s',
-                  }}
-                  onMouseEnter={e => (e.currentTarget.style.color = '#E84A0C')}
-                  onMouseLeave={e => (e.currentTarget.style.color = 'rgba(255,255,255,0.55)')}
-                >
-                  {area.name}
-                </a>
-                {i < AREAS.length - 1 && (
-                  <span aria-hidden style={{ color: 'rgba(255,255,255,0.18)', fontSize: '13px' }}>·</span>
-                )}
-              </span>
-            ))}
-            <a
-              href="/areas"
-              style={{
-                fontFamily: 'var(--font-body)', fontWeight: 600, fontSize: '13px',
-                color: '#E84A0C', textDecoration: 'none', whiteSpace: 'nowrap',
-                marginLeft: '4px',
-              }}
-            >
-              View all areas →
-            </a>
-          </nav>
-        </div>
       </div>
 
       {/*
