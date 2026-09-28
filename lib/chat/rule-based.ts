@@ -18,6 +18,23 @@ import type { ConversationState, ChatAction, ChatIntent } from '@/lib/chat/types
 
 const GREETING_RE = /^(hi+|hey+|hello+|yo+|sup|howdy|good\s?(morning|afternoon|evening)|whats?\s?up|greetings)\b[!.? ]*$/i
 
+// Conversational filler — not a question at all, so it shouldn't count as a
+// failed answer (and shouldn't push the "escalate to the team" counter).
+const FILLER_RE = /^(nothing|nah+|no+p?e?|not\s?(really|much)|meh|idk|i\s?dunno|dunno|just\s?(looking|browsing)|no\s?worries|nvm|never\s?mind|ok(ay)?|cool|cheers|thanks?|ta)[!.? ]*$/i
+
+// Well-known major UK cities/towns far outside Hertfordshire that customers
+// occasionally ask about — enough to give a real "that's outside our area"
+// answer instead of looping the generic coverage blurb forever. Not
+// exhaustive; a genuine postcode check (findAreaByPostcode) is still the
+// authoritative source whenever a real postcode is given.
+const OUT_OF_AREA_PLACES = [
+  'manchester', 'birmingham', 'leeds', 'liverpool', 'glasgow', 'edinburgh',
+  'sheffield', 'bristol', 'newcastle', 'nottingham', 'leicester', 'cardiff',
+  'belfast', 'brighton', 'southampton', 'portsmouth', 'plymouth', 'york',
+  'cambridge', 'oxford', 'norwich', 'exeter', 'bath',
+]
+const OUT_OF_AREA_RE = new RegExp(`\\b(${OUT_OF_AREA_PLACES.join('|')})\\b`, 'i')
+
 // Weighted keyword phrases per intent — scored by summed weight of matching
 // phrases, not a single anchored pattern, so varied phrasing still
 // classifies correctly. Weights matter: a specific need signal ("seats are
@@ -108,7 +125,31 @@ export function runRuleBasedTurn(state: ConversationState, message: string, isFi
     return { text, state: next, action, escalationReason }
   }
 
-  const intent = next.enquiry.intent
+  // Conversational filler isn't a failed answer — respond lightly and don't
+  // let it count toward "couldn't handle this twice" escalation below.
+  if (FILLER_RE.test(message.trim())) {
+    text = "No worries — I'm here if pricing, coverage, or booking comes to mind!"
+    return { text, state: next, action, escalationReason }
+  }
+
+  // A clearly-named major city/town well outside Hertfordshire deserves a
+  // real "that's too far" answer, not the generic coverage blurb repeated
+  // forever — this can't be confirmed from a postcode (none was given), so
+  // it's a judgement call flagged as such rather than a hard no.
+  if (OUT_OF_AREA_RE.test(message) && !next.postcode) {
+    const place = message.match(OUT_OF_AREA_RE)?.[0] ?? 'that area'
+    text = `${place[0].toUpperCase()}${place.slice(1)} is a fair way outside our usual patch — we're based in ${BUSINESS_INFO.baseLocation} and cover roughly a ${BUSINESS_INFO.coverageRadiusMiles}-mile radius, so that's likely too far for us. Best to double check via WhatsApp/call on ${BUSINESS_INFO.phone} if you're close to the boundary.`
+    return { text, state: next, action, escalationReason }
+  }
+
+  // Branch on THIS message's own classification, not the merged/persisted
+  // state.enquiry.intent — that field is meant to carry context forward
+  // (e.g. for the LLM path), but using it here meant an intent set several
+  // turns ago (e.g. "what areas do you cover?") kept re-triggering its
+  // canned response for every later, unrelated, unclassifiable message
+  // ("what cities", "manchester?") instead of falling through to a
+  // genuine "I don't understand" reply.
+  const intent = (extracted.intent as ChatIntent | undefined) ?? null
 
   if (intent === 'human_assistance_request' || intent === 'complaint') {
     const result = executeTool('request_human_support', { reason: intent === 'complaint' ? `Complaint: "${message}"` : 'Customer asked to speak to a person.' })
@@ -200,9 +241,11 @@ export function runRuleBasedTurn(state: ConversationState, message: string, isFi
     return { text, state: next, action, escalationReason }
   }
 
-  // Unmatched — track it, and escalate once this happens more than once in the conversation.
+  // Unmatched — track it, and escalate once this happens repeatedly in the
+  // conversation. Threshold is 3, not 2: a single stray typo or one-off
+  // unclear message shouldn't trigger a fake "escalated to our team" reply.
   next.unresolvedQuestions = [...next.unresolvedQuestions, message].slice(-10)
-  const repeatedConfusion = next.unresolvedQuestions.length >= 2
+  const repeatedConfusion = next.unresolvedQuestions.length >= 3
   if (repeatedConfusion) {
     const result = executeTool('request_human_support', { reason: `Rule-based assistant couldn't confidently handle: ${next.unresolvedQuestions.join(' | ')}` })
     escalationReason = result.escalationReason

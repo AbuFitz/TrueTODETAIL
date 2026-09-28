@@ -104,7 +104,7 @@ export const BUSINESS_INFO = {
   email: 'info@truetodetail.co.uk',
   whatsappUrl: 'https://wa.me/447359591800',
   coverageRadiusMiles: 25,
-  bookingConfirmationWindow: 'within about an hour, during working hours',
+  bookingConfirmationWindow: 'as soon as possible, during working hours',
   depositRequired: false,
   paymentMethods: ['card', 'bank transfer', 'cash'],
   paymentTiming: 'on the day, on completion',
