@@ -40,7 +40,7 @@ export default function Footer({ onBookNow }: { onBookNow: () => void }) {
   return (
     <footer style={{ background: '#fff', borderTop: '1px solid rgba(12,12,12,0.07)' }}>
 
-      {/* Main 3-column grid */}
+      {/* Main 4-column grid */}
       <div
         style={{
           maxWidth: '1400px', margin: '0 auto',
@@ -48,7 +48,7 @@ export default function Footer({ onBookNow }: { onBookNow: () => void }) {
           display: 'grid',
           gap: 'clamp(32px, 5vw, 72px)',
         }}
-        className="grid-cols-1 md:grid-cols-3"
+        className="grid-cols-1 sm:grid-cols-2 md:grid-cols-4"
       >
 
         {/* Col 1 — Brand */}
@@ -223,90 +223,89 @@ export default function Footer({ onBookNow }: { onBookNow: () => void }) {
           </button>
         </div>
 
-      </div>
-
-      {/* Areas We Cover — full-width band, all town pages for internal linking */}
-      <div style={{ borderTop: '1px solid rgba(12,12,12,0.06)', background: '#F5F4F1' }}>
-        <div style={{
-          maxWidth: '1400px', margin: '0 auto',
-          padding: 'clamp(28px, 4vw, 40px) clamp(24px, 5vw, 72px)',
-        }}>
+        {/* Col 4 — Areas We Cover, same list treatment as Our Services so it reads as part of the same grid instead of a separate banded section */}
+        <div>
           <p style={{
             fontFamily: 'var(--font-body)', fontWeight: 600, fontSize: '10px',
             letterSpacing: '0.2em', textTransform: 'uppercase',
-            color: 'rgba(12,12,12,0.3)', marginBottom: '16px',
+            color: 'rgba(12,12,12,0.25)', marginBottom: '20px',
           }}>
             Areas We Cover
           </p>
-          <nav aria-label="Areas we cover" style={{ display: 'flex', flexWrap: 'wrap', columnGap: '10px', rowGap: '10px', alignItems: 'center' }}>
-            {AREAS.map((area, i) => (
-              <span key={area.slug} style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                <a
-                  href={`/areas/${area.slug}`}
-                  style={{
-                    fontFamily: 'var(--font-body)', fontSize: '13px',
-                    color: 'rgba(12,12,12,0.45)', textDecoration: 'none',
-                    whiteSpace: 'nowrap', transition: 'color 0.2s',
-                  }}
-                  onMouseEnter={e => (e.currentTarget.style.color = '#E84A0C')}
-                  onMouseLeave={e => (e.currentTarget.style.color = 'rgba(12,12,12,0.45)')}
-                >
-                  {area.name}
-                </a>
-                {i < AREAS.length - 1 && (
-                  <span aria-hidden style={{ color: 'rgba(12,12,12,0.18)', fontSize: '13px' }}>·</span>
-                )}
-              </span>
+          <nav
+            aria-label="Areas we cover"
+            style={{ display: 'grid', gridTemplateColumns: 'repeat(2, auto)', columnGap: '20px', rowGap: '10px' }}
+          >
+            {AREAS.map(area => (
+              <a
+                key={area.slug}
+                href={`/areas/${area.slug}`}
+                style={{
+                  fontFamily: 'var(--font-body)', fontSize: '13px',
+                  color: 'rgba(12,12,12,0.38)', textDecoration: 'none',
+                  whiteSpace: 'nowrap', transition: 'color 0.2s',
+                }}
+                onMouseEnter={e => (e.currentTarget.style.color = '#E84A0C')}
+                onMouseLeave={e => (e.currentTarget.style.color = 'rgba(12,12,12,0.38)')}
+              >
+                {area.name}
+              </a>
             ))}
-            <a
-              href="/areas"
-              style={{
-                fontFamily: 'var(--font-body)', fontWeight: 600, fontSize: '13px',
-                color: '#E84A0C', textDecoration: 'none', whiteSpace: 'nowrap',
-                marginLeft: '4px',
-              }}
-            >
-              View all areas →
-            </a>
           </nav>
+          <a
+            href="/areas"
+            style={{
+              fontFamily: 'var(--font-body)', fontWeight: 600, fontSize: '13px',
+              color: '#E84A0C', textDecoration: 'none', whiteSpace: 'nowrap',
+              display: 'inline-block', marginTop: '14px',
+            }}
+          >
+            View all areas →
+          </a>
         </div>
+
       </div>
 
       {/*
-        Massive wordmark stamp.
-        Architectural brand element — the same way luxury brands print their name
-        as a watermark across the bottom of their website.
-        Very low opacity — present but not competing.
+        Massive wordmark stamp, layered directly behind the bottom bar rather
+        than sitting in its own row — the same way luxury brands print their
+        name as a watermark overlapping the page furniture, not beside it.
+        Very low opacity — present but not competing with the copyright/
+        social/legal row stacked on top of it.
       */}
-      <div style={{ overflow: 'hidden', borderTop: '1px solid rgba(12,12,12,0.06)', opacity: 0.45 }}>
-        <div style={{
-          display: 'flex', alignItems: 'center', gap: 'clamp(6px, 1vw, 18px)',
-          fontFamily: 'var(--font-display)',
-          fontSize: 'clamp(56px, 14vw, 220px)',
-          letterSpacing: '0.04em',
-          color: 'rgba(12,12,12,0.1)',
-          lineHeight: 0.85,
-          whiteSpace: 'nowrap',
-          padding: '0 clamp(16px, 3vw, 48px)',
-          userSelect: 'none',
-          paddingBottom: 'clamp(8px, 1.5vw, 20px)',
-        }}>
+      <div style={{ position: 'relative', overflow: 'hidden', borderTop: '1px solid rgba(12,12,12,0.06)' }}>
+        <div
+          aria-hidden
+          style={{
+            position: 'absolute', left: 0, right: 0, bottom: 'clamp(-28px, -3vw, -10px)',
+            zIndex: 0, pointerEvents: 'none',
+            display: 'flex', alignItems: 'center', gap: 'clamp(6px, 1vw, 18px)',
+            fontFamily: 'var(--font-display)',
+            fontSize: 'clamp(80px, 19vw, 300px)',
+            letterSpacing: '0.04em',
+            color: 'rgba(12,12,12,0.05)',
+            lineHeight: 0.85,
+            whiteSpace: 'nowrap',
+            padding: '0 clamp(16px, 3vw, 48px)',
+            userSelect: 'none',
+          }}
+        >
           <span>TRUE TO</span>
           {/* Orange teardrop — same shape as the navbar/footer logo mark */}
           <span aria-hidden style={{
             display: 'inline-block', flexShrink: 0,
-            width: 'clamp(6px, 0.9vw, 14px)',
-            height: 'clamp(9px, 1.35vw, 21px)',
+            width: 'clamp(8px, 1.2vw, 19px)',
+            height: 'clamp(12px, 1.8vw, 28px)',
             background: '#E84A0C',
+            opacity: 0.5,
             borderRadius: '50% 50% 45% 45% / 55% 55% 45% 45%',
           }} />
           <span>DETAIL</span>
         </div>
-      </div>
 
-      {/* Bottom bar — copyright + social icons (desktop) + legal links */}
-      <div style={{ borderTop: '1px solid rgba(12,12,12,0.06)' }}>
+        {/* Bottom bar — copyright + social icons (desktop) + legal links */}
         <div style={{
+          position: 'relative', zIndex: 1,
           maxWidth: '1400px', margin: '0 auto',
           padding: '16px clamp(24px, 5vw, 72px)',
           display: 'flex', alignItems: 'center', justifyContent: 'space-between',
