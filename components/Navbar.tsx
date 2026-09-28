@@ -2,7 +2,6 @@
 
 import { useState, useEffect } from 'react'
 import type { Session } from '@supabase/supabase-js'
-import { appAccountUrl } from '@/lib/appUrl'
 import { supabaseBrowser } from '@/lib/supabaseBrowser'
 import LoginModal from './LoginModal'
 
@@ -34,7 +33,10 @@ export default function Navbar({ onBookNow }: { onBookNow: () => void }) {
     session?.user.email?.split('@')[0] ||
     null
   const accountLabel = firstName ? `Hi, ${firstName}` : 'My Account'
-  const accountHref = session ? appAccountUrl() : undefined
+  // "/account" is this site's own path once signed in — next.config.ts
+  // proxies it in from the Job System app, so this stays same-origin
+  // instead of jumping to app.truetodetail.co.uk.
+  const accountHref = session ? '/account' : undefined
   const handleAccountClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
     if (!session) {
       e.preventDefault()
