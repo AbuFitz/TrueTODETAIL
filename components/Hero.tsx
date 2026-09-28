@@ -27,7 +27,12 @@ export default function Hero({ onBookNow }: { onBookNow: () => void }) {
       setWordIndex(i => (i + 1) % WORDS.length)
       return
     }
-    const speed = isDeleting ? 65 : 130
+    // Slower than a uniform interval, and jittered per character (±40ms)
+    // rather than perfectly even, so it reads as an actual person typing
+    // instead of a metronome.
+    const baseSpeed = isDeleting ? 95 : 190
+    const jitter = Math.floor(Math.random() * 80) - 40
+    const speed = Math.max(40, baseSpeed + jitter)
     const t = setTimeout(() => {
       setDisplayText(
         isDeleting
@@ -345,10 +350,10 @@ export default function Hero({ onBookNow }: { onBookNow: () => void }) {
           >
             <div style={{
               fontFamily: 'var(--font-display)',
-              fontSize: 'clamp(74px, 21vw, 98px)',
+              fontSize: 'clamp(92px, 26vw, 122px)',
               letterSpacing: '0.01em', color: '#ffffff',
               lineHeight: 0.88,
-              minHeight: 'calc(clamp(74px, 21vw, 98px) * 0.88)',
+              minHeight: 'calc(clamp(92px, 26vw, 122px) * 0.88)',
               display: 'flex', alignItems: 'baseline',
             }}>
               <span>{displayText}</span>
@@ -366,7 +371,7 @@ export default function Hero({ onBookNow }: { onBookNow: () => void }) {
 
             <div style={{
               fontFamily: 'var(--font-display)',
-              fontSize: 'clamp(59px, 16.8vw, 78px)',
+              fontSize: 'clamp(74px, 21vw, 98px)',
               letterSpacing: '0.01em', color: 'rgba(255,255,255,0.30)',
               lineHeight: 0.88,
               paddingLeft: 'clamp(12px, 3vw, 20px)',
@@ -376,7 +381,7 @@ export default function Hero({ onBookNow }: { onBookNow: () => void }) {
 
             <div style={{
               fontFamily: 'var(--font-display)',
-              fontSize: 'clamp(48px, 13.5vw, 64px)',
+              fontSize: 'clamp(60px, 17vw, 80px)',
               letterSpacing: '0.01em', color: 'rgba(255,255,255,0.16)',
               lineHeight: 0.88,
               paddingLeft: 'clamp(26px, 6.5vw, 42px)',
