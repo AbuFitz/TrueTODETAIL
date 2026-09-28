@@ -510,7 +510,7 @@ export default function BookingModal({
                       ))}
                     </div>
                     <p style={{ fontFamily: 'var(--font-body)', fontSize: '11px', color: 'rgba(12,12,12,0.28)', marginTop: '10px' }}>
-                      Exact arrival window confirmed within 1 hour of booking.
+                      Exact arrival window confirmed as soon as possible.
                     </p>
                   </div>
                 </div>
@@ -680,7 +680,7 @@ export default function BookingModal({
                 </p>
               )}
               <p style={{ fontFamily: 'var(--font-body)', fontSize: '15px', lineHeight: 1.72, color: 'rgba(12,12,12,0.5)', maxWidth: '340px', margin: '0 auto 28px' }}>
-                We&apos;ll confirm by text and email within the hour. Your detailer arrives on{' '}
+                We&apos;ll confirm by text and email as soon as possible. Your detailer arrives on{' '}
                 <strong style={{ color: '#0C0C0C' }}>{date}</strong> at{' '}
                 <strong style={{ color: '#0C0C0C' }}>{time}</strong>.
               </p>
