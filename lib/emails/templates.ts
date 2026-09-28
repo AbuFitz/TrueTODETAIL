@@ -42,6 +42,16 @@ export interface FleetEnquiryData {
   createdAt: string
 }
 
+export interface ChatEscalationData {
+  reason:             string
+  conversationSummary: string
+  customerName:       string | null
+  phone:              string | null
+  email:              string | null
+  postcode:           string | null
+  createdAt:          string
+}
+
 // Matches the live site's actual palette exactly (components use rgba(12,12,12,a)
 // over white for muted text — these are the solid-hex equivalents, since email
 // clients are inconsistent about rgba() text colour).
@@ -368,4 +378,53 @@ export function fleetEnquiryEmail(d: FleetEnquiryData): string {
   </tr>`
 
   return wrap(`New Van & Fleet Enquiry: ${d.name}`, body)
+}
+
+/* ══════════════════════════════════════════════════════════════════════════
+   TEMPLATE 4 — Chat escalation to staff (to info@truetodetail.co.uk)
+   ══════════════════════════════════════════════════════════════════════════ */
+export function chatEscalationEmail(d: ChatEscalationData): string {
+  const body = `
+  <tr>
+    <td style="background:${brand.orange};padding:24px 32px;">
+      <p style="margin:0;font-family:Arial,sans-serif;font-size:11px;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,0.7);">
+        Chat Assistant Escalation
+      </p>
+      <h1 style="margin:8px 0 0;font-family:'Arial Black',Arial,sans-serif;font-size:26px;font-weight:bold;color:#ffffff;letter-spacing:1px;text-transform:uppercase;line-height:1.1;">
+        A customer needs a human
+      </h1>
+    </td>
+  </tr>
+  <tr>
+    <td style="background:#ffffff;padding:32px;">
+      <h2 style="margin:0 0 20px;font-family:Arial,sans-serif;font-size:13px;letter-spacing:2px;text-transform:uppercase;color:${brand.dark};border-bottom:2px solid ${brand.orange};padding-bottom:10px;">
+        Why
+      </h2>
+      <p style="margin:0 0 24px;font-family:Arial,sans-serif;font-size:14px;color:${brand.dark};line-height:1.6;">${d.reason}</p>
+
+      <h2 style="margin:0 0 20px;font-family:Arial,sans-serif;font-size:13px;letter-spacing:2px;text-transform:uppercase;color:${brand.dark};border-bottom:2px solid ${brand.orange};padding-bottom:10px;">
+        What we know so far
+      </h2>
+      <table width="100%" cellpadding="0" cellspacing="0">
+        ${row('Name',     d.customerName || 'Not given')}
+        ${row('Phone',    d.phone ? `<a href="tel:${d.phone}" style="color:${brand.dark};text-decoration:none;">${d.phone}</a>` : 'Not given')}
+        ${row('Email',    d.email ? `<a href="mailto:${d.email}" style="color:${brand.dark};text-decoration:none;">${d.email}</a>` : 'Not given')}
+        ${row('Postcode', d.postcode || 'Not given')}
+      </table>
+
+      <div style="margin-top:20px;background:${brand.light};padding:16px;border-left:3px solid ${brand.orange};">
+        <p style="margin:0;font-family:Arial,sans-serif;font-size:11px;letter-spacing:1px;text-transform:uppercase;color:${brand.muted};margin-bottom:6px;">Conversation Summary</p>
+        <p style="margin:0;font-family:Arial,sans-serif;font-size:14px;color:${brand.dark};line-height:1.6;white-space:pre-line;">${d.conversationSummary || 'No summary available yet — early in the conversation.'}</p>
+      </div>
+
+      <div style="margin-top:28px;background:${brand.dark};padding:20px 24px;">
+        <p style="margin:0;font-family:Arial,sans-serif;font-size:13px;color:rgba(255,255,255,0.6);line-height:1.6;">
+          The customer was told a team member will follow up. Reply using the contact details above if given, or via WhatsApp/call if not.
+        </p>
+      </div>
+
+    </td>
+  </tr>`
+
+  return wrap(`Chat Escalation: ${d.reason}`, body)
 }

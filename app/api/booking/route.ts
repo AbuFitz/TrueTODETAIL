@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { Resend } from 'resend'
 import { notificationEmail, confirmationEmail, EmailData } from '@/lib/emails/templates'
+import { PACKAGES, ADDONS, VEHICLE_LABELS, TIME_SLOTS, calculatePrice, type VehicleType } from '@/lib/pricing'
 
 export interface BookingPayload {
   pack: string
@@ -28,40 +29,14 @@ const PHONE_RE = /^[\d\s\+\-\(\)]{7,20}$/
 const CAR_REG_RE = /^[A-Z0-9]{2,8}$/
 const POSTCODE_RE = /^[A-Z]{1,2}[0-9][0-9A-Z]?\s?[0-9][A-Z]{2}$/
 
-const VALID_PACKS = ['Essential', 'Full Valet', 'Premium Detail']
-const VALID_VEHICLES = ['small', 'midsize', 'largesuv']
-const VALID_TIMES = ['8:00 AM', '10:00 AM', '12:00 PM', '2:00 PM', '4:00 PM', '6:00 PM']
-const VALID_ADDONS = ['engine-bay', 'pet-hair', 'odour', 'seat-shampoo', 'steam']
+// Packages, vehicle types, time slots and add-ons all come from lib/pricing.ts
+// — the single source of truth shared with the booking modal and chat assistant.
+const VALID_PACKS = PACKAGES.map(p => p.id)
+const VALID_VEHICLES: string[] = ['small', 'midsize', 'largesuv']
+const VALID_TIMES = TIME_SLOTS
+const VALID_ADDONS = ADDONS.map(a => a.id)
 
-const ADDON_LABELS: Record<string, string> = {
-  'engine-bay':   'Engine Bay Clean',
-  'pet-hair':     'Pet Hair Removal',
-  'odour':        'Odour Treatment',
-  'seat-shampoo': 'Seat Shampoo (Extra Heavy)',
-  'steam':        'Interior Steam Sanitisation',
-}
-
-const VEHICLE_LABELS: Record<string, string> = {
-  small:    'Small Car',
-  midsize:  'Mid-Size',
-  largesuv: 'Large SUV / 4×4',
-}
-
-// Source of truth for pricing — kept in sync with components/Packages.tsx and BookingModal.tsx.
-// The API computes price itself rather than trusting whatever the client submits.
-const PRICE_MAP: Record<string, Record<string, number>> = {
-  'Essential':      { small: 80,  midsize: 90,  largesuv: 105 },
-  'Full Valet':     { small: 140, midsize: 155, largesuv: 175 },
-  'Premium Detail': { small: 220, midsize: 240, largesuv: 270 },
-}
-
-const ADDON_PRICES: Record<string, number> = {
-  'engine-bay':   40,
-  'pet-hair':     25,
-  'odour':        30,
-  'seat-shampoo': 30,
-  'steam':        35,
-}
+const ADDON_LABELS: Record<string, string> = Object.fromEntries(ADDONS.map(a => [a.id, a.label]))
 
 export async function POST(req: NextRequest) {
   let body: Partial<BookingPayload>
@@ -131,9 +106,8 @@ export async function POST(req: NextRequest) {
   }
 
   // ── Price is always computed server-side — never trust a client-supplied price ──
-  const basePrice = PRICE_MAP[data.pack][data.vehicle]
-  const addonTotal = data.addons.reduce((sum, a) => sum + (ADDON_PRICES[a] ?? 0), 0)
-  const price = basePrice + addonTotal
+  const priced = calculatePrice(data.pack, data.vehicle as VehicleType, data.addons)
+  const price = priced?.total ?? 0
 
   // ── Build booking record ──
   // Short, human-readable reference: TTD-YYMMDD-XXXX
@@ -172,7 +146,7 @@ export async function POST(req: NextRequest) {
     const emailData: EmailData = {
       id: booking.id,
       pack: booking.pack,
-      vehicle: VEHICLE_LABELS[booking.vehicle] ?? booking.vehicle,
+      vehicle: VEHICLE_LABELS[booking.vehicle as VehicleType] ?? booking.vehicle,
       price: booking.price,
       date: booking.date,
       time: booking.time,

@@ -2,8 +2,8 @@
 
 import { useState } from 'react'
 import { motion } from 'framer-motion'
+import { PACKAGES, ADDONS, VEHICLE_LABELS as vehicleLabels, TIME_SLOTS as timeSlots, type VehicleType } from '@/lib/pricing'
 
-type VehicleType = 'small' | 'midsize' | 'largesuv'
 type Step = 1 | 2 | 3 | 4
 
 interface BookingModalProps {
@@ -13,28 +13,6 @@ interface BookingModalProps {
   initialVehicle?: VehicleType | ''
 }
 
-const packOptions = [
-  { id: 'Essential',      tagline: 'Quick refresh',                    duration: '2–3 hrs' },
-  { id: 'Full Valet',     tagline: 'Our most popular service',         duration: '4–5 hrs' },
-  { id: 'Premium Detail', tagline: 'Best for resale / transformation', duration: '6–7 hrs' },
-]
-
-const ADDONS = [
-  { id: 'engine-bay',   label: 'Engine Bay Clean',            price: 40 },
-  { id: 'pet-hair',     label: 'Pet Hair Removal',            price: 25 },
-  { id: 'odour',        label: 'Odour Treatment',             price: 30 },
-  { id: 'seat-shampoo', label: 'Seat Shampoo (extra heavy)',  price: 30 },
-  { id: 'steam',        label: 'Interior Steam Sanitisation', price: 35 },
-]
-
-const vehicleLabels: Record<VehicleType, string> = {
-  small:    'Small Car',
-  midsize:  'Mid-Size',
-  largesuv: 'Large SUV / 4×4',
-}
-
-const timeSlots = ['8:00 AM', '10:00 AM', '12:00 PM', '2:00 PM', '4:00 PM', '6:00 PM']
-
 // Mirror the server-side checks in app/api/booking/route.ts exactly, so every
 // field that can fail server validation is caught immediately in the UI
 // instead of surfacing only after the customer finishes the whole form.
@@ -43,11 +21,8 @@ const EMAIL_RE    = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 const PHONE_RE    = /^[\d\s\+\-\(\)]{7,20}$/
 const CAR_REG_RE  = /^[A-Z0-9]{2,8}$/
 
-const priceMap: Record<string, Record<VehicleType, number>> = {
-  'Essential':      { small: 80,  midsize: 90,  largesuv: 105 },
-  'Full Valet':     { small: 140, midsize: 155, largesuv: 175 },
-  'Premium Detail': { small: 220, midsize: 240, largesuv: 270 },
-}
+const packOptions = PACKAGES
+const priceMap: Record<string, Record<VehicleType, number>> = Object.fromEntries(PACKAGES.map(p => [p.id, p.price]))
 
 const STEP_LABELS = ['Select Pack', 'Schedule', 'Your Details']
 
