@@ -176,7 +176,7 @@ export function notificationEmail(d: EmailData): string {
   <tr>
     <td style="background:${brand.dark};padding:10px 32px;">
       <p style="margin:0;font-family:Arial,sans-serif;font-size:11px;font-weight:bold;letter-spacing:2px;text-transform:uppercase;color:#ffffff;">
-        &#9888; High Priority — respond as soon as possible
+        &#9888; High Priority: respond as soon as possible
       </p>
     </td>
   </tr>
@@ -286,44 +286,19 @@ export function confirmationEmail(d: EmailData): string {
         </tr>
       </table>
 
-      <!-- Confirmation notice — plain text, not another boxed alert, so it reads as a footnote to the booking above rather than competing with it -->
-      <p style="margin:0 0 28px;font-family:Arial,sans-serif;font-size:13px;color:${brand.muted};line-height:1.6;">
-        This is your <strong style="color:${brand.dark};">preferred slot request</strong>, not a confirmed booking yet —
-        we'll be in touch <strong style="color:${brand.dark};">as soon as possible</strong> to confirm it.
-        Occasionally we may need to suggest an alternative time, but we'll always give you plenty of notice.
+      <!-- Confirmation notice, plain text so it reads as a footnote to the booking above rather than competing with it -->
+      <p style="margin:0 0 24px;font-family:Arial,sans-serif;font-size:13px;color:${brand.muted};line-height:1.6;">
+        This is your <strong style="color:${brand.dark};">preferred slot request</strong>, not a confirmed booking yet.
+        We'll be in touch <strong style="color:${brand.dark};">as soon as possible</strong> to confirm it. No prep needed,
+        we bring everything, and payment is on the day.
       </p>
 
-      <!-- What happens next -->
-      <h2 style="margin:0 0 16px;font-family:Arial,sans-serif;font-size:12px;letter-spacing:2px;text-transform:uppercase;color:${brand.dark};border-bottom:1px solid #e8e8e8;padding-bottom:10px;">
-        What Happens Next
-      </h2>
-      <table width="100%" cellpadding="0" cellspacing="0">
-        <tr>
-          <td style="padding:10px 0;border-bottom:1px solid #eeeeee;vertical-align:top;">
-            <p style="margin:0;font-family:Arial,sans-serif;font-size:12px;font-weight:bold;color:${brand.orange};">1. We confirm your slot</p>
-            <p style="margin:4px 0 0;font-family:Arial,sans-serif;font-size:13px;color:${brand.muted};line-height:1.6;">We'll text or call you as soon as possible to lock in your date. If we need to adjust the time slightly, we'll give you options and plenty of notice.</p>
-          </td>
-        </tr>
-        <tr>
-          <td style="padding:10px 0;border-bottom:1px solid #eeeeee;vertical-align:top;">
-            <p style="margin:0;font-family:Arial,sans-serif;font-size:12px;font-weight:bold;color:${brand.orange};">2. No prep needed</p>
-            <p style="margin:4px 0 0;font-family:Arial,sans-serif;font-size:13px;color:${brand.muted};line-height:1.6;">We bring everything: power, water, all equipment. Just make sure we can access the vehicle.</p>
-          </td>
-        </tr>
-        <tr>
-          <td style="padding:10px 0;vertical-align:top;">
-            <p style="margin:0;font-family:Arial,sans-serif;font-size:12px;font-weight:bold;color:${brand.orange};">3. Payment on the day</p>
-            <p style="margin:4px 0 0;font-family:Arial,sans-serif;font-size:13px;color:${brand.muted};line-height:1.6;">Card, bank transfer or cash. Your price is fixed at £${d.price}, with no changes on the day.</p>
-          </td>
-        </tr>
-      </table>
-
       <!-- Questions / contact -->
-      <div style="margin-top:28px;background:${brand.light};padding:20px 24px;">
+      <div style="background:${brand.light};padding:20px 24px;">
         <p style="margin:0 0 8px;font-family:Arial,sans-serif;font-size:12px;font-weight:bold;color:${brand.dark};">Any questions?</p>
         <p style="margin:0;font-family:Arial,sans-serif;font-size:13px;color:${brand.muted};line-height:1.6;">
           Reply to this email, call <a href="tel:+447359591800" style="color:${brand.orange};text-decoration:none;">07359 591800</a>,
-          or WhatsApp us. We typically respond within minutes during working hours.
+          or WhatsApp us.
         </p>
       </div>
 
@@ -355,9 +330,9 @@ export function fleetEnquiryEmail(d: FleetEnquiryData): string {
       </h2>
       <table width="100%" cellpadding="0" cellspacing="0">
         ${row('Name',        d.name)}
-        ${row('Business',    d.business || '—')}
+        ${row('Business',    d.business || 'Not given')}
         ${row('Phone',       `<a href="tel:${d.phone}" style="color:${brand.dark};text-decoration:none;">${d.phone}</a>`)}
-        ${row('Fleet Size',  d.fleetSize || '—')}
+        ${row('Fleet Size',  d.fleetSize || 'Not given')}
       </table>
 
       ${d.message ? `
@@ -413,7 +388,7 @@ export function chatEscalationEmail(d: ChatEscalationData): string {
 
       <div style="margin-top:20px;background:${brand.light};padding:16px;border-left:3px solid ${brand.orange};">
         <p style="margin:0;font-family:Arial,sans-serif;font-size:11px;letter-spacing:1px;text-transform:uppercase;color:${brand.muted};margin-bottom:6px;">Conversation Summary</p>
-        <p style="margin:0;font-family:Arial,sans-serif;font-size:14px;color:${brand.dark};line-height:1.6;white-space:pre-line;">${d.conversationSummary || 'No summary available yet — early in the conversation.'}</p>
+        <p style="margin:0;font-family:Arial,sans-serif;font-size:14px;color:${brand.dark};line-height:1.6;white-space:pre-line;">${d.conversationSummary || 'No summary available yet. Early in the conversation.'}</p>
       </div>
 
       <div style="margin-top:28px;background:${brand.dark};padding:20px 24px;">
