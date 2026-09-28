@@ -59,7 +59,8 @@ export const CHAT_TOOLS: ToolDef[] = [
   {
     name: 'check_availability',
     description: 'Get the real fixed appointment time slots and confirmation policy. There is no live calendar — this returns the honest, fixed slot list and the confirmation window, never a fabricated "yes that slot is free".',
-    input_schema: { type: 'object', properties: {} },
+    // Gemini rejects object schemas with no properties, so give it one optional field.
+    input_schema: { type: 'object', properties: { date: { type: 'string', description: 'Optional date the customer asked about.' } } },
   },
   {
     name: 'lookup_booking',

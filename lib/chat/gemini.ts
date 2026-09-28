@@ -11,8 +11,10 @@ import { businessFactsText, pricingSummaryText, coverageSummaryText, vehicleLabe
 import type { ChatTurn, ConversationState, ChatAction, ChatIntent } from '@/lib/chat/types'
 
 // Free-tier Gemini models (Google AI Studio, no billing required within quota).
-const EXTRACTION_MODEL = 'gemini-2.5-flash-lite'
-const RESPONSE_MODEL = 'gemini-2.5-flash'
+// Overridable from the environment so a model retirement is a settings change,
+// not a code change. Defaults are Google's current stable free-tier models.
+const EXTRACTION_MODEL = process.env.GEMINI_EXTRACTION_MODEL || 'gemini-3.5-flash-lite'
+const RESPONSE_MODEL = process.env.GEMINI_RESPONSE_MODEL || 'gemini-3.8-flash'
 const MAX_TOOL_ITERATIONS = 4
 
 export class GeminiUnavailableError extends Error {
@@ -192,6 +194,7 @@ export async function generateResponseGemini(
     ...toGeminiContents(recentTurns),
     { role: 'user', parts: [{ text: latestMessage }] },
   ]
+  const baseContents = [...contents]
 
   let action: ChatAction = null
   let escalationReason: string | undefined
@@ -240,6 +243,19 @@ export async function generateResponseGemini(
     return { text: '', action, escalationReason, bookingSummary }
   } catch (err) {
     if (isQuotaError(err)) throw new GeminiUnavailableError('Gemini quota exceeded during response generation', true)
+    // A rejected tool schema shouldn't cost the customer a real answer: retry
+    // once without tools, answering from the knowledge in the system prompt.
+    try {
+      const plain = await ai.models.generateContent({
+        model: RESPONSE_MODEL,
+        contents: baseContents,
+        config: { systemInstruction: buildSystemPrompt(state), temperature: 0.4, maxOutputTokens: 1024 },
+      })
+      const text = plain.text?.trim()
+      if (text) return { text, action, escalationReason, bookingSummary }
+    } catch (retryErr) {
+      if (isQuotaError(retryErr)) throw new GeminiUnavailableError('Gemini quota exceeded during response generation', true)
+    }
     throw new GeminiUnavailableError(`Gemini call failed: ${err}`, false)
   }
 }

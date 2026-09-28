@@ -9,8 +9,17 @@ import { CHAT_TOOLS, executeTool, type ToolDef } from '@/lib/chat/tools'
 import { businessFactsText, pricingSummaryText, coverageSummaryText, vehicleLabelList } from '@/lib/chat/knowledge'
 import type { ChatTurn, ConversationState, ChatAction, ChatIntent } from '@/lib/chat/types'
 
-const EXTRACTION_MODEL = 'llama-3.1-8b-instant'
-const RESPONSE_MODEL = 'llama-3.3-70b-versatile'
+// Groq decommissioned llama-3.1-8b-instant and llama-3.3-70b-versatile on
+// 2026-08-16; these are its recommended replacements. Overridable from the
+// environment so the next retirement is a settings change, not a code change.
+const EXTRACTION_MODEL = process.env.GROQ_EXTRACTION_MODEL || 'openai/gpt-oss-20b'
+const RESPONSE_MODEL = process.env.GROQ_RESPONSE_MODEL || 'openai/gpt-oss-120b'
+
+// gpt-oss models reason before answering; keep that short so it can't eat the
+// token budget and leave an empty reply. Other models reject this parameter.
+function reasoningParams(model: string): { reasoning_effort?: 'low' } {
+  return model.startsWith('openai/gpt-oss') ? { reasoning_effort: 'low' } : {}
+}
 const MAX_TOOL_ITERATIONS = 4
 
 export class GroqUnavailableError extends Error {
@@ -90,8 +99,9 @@ export async function extractEntitiesGroq(
   try {
     const completion = await client.chat.completions.create({
       model: EXTRACTION_MODEL,
+      ...reasoningParams(EXTRACTION_MODEL),
       temperature: 0.1,
-      max_tokens: 1024,
+      max_tokens: 2048,
       messages: [
         { role: 'system', content: `Extract new customer facts from a car-detailing chat. Current known state (don't repeat what's already known unless it changed): ${JSON.stringify(state)}. Vehicle size categories in use: ${vehicleLabelList()}. Always call extract_state.` },
         ...toGroqMessages(recentTurns.slice(-6)),
@@ -115,8 +125,9 @@ export async function updateSummaryGroq(previousSummary: string, overflow: ChatT
   try {
     const completion = await client.chat.completions.create({
       model: EXTRACTION_MODEL,
+      ...reasoningParams(EXTRACTION_MODEL),
       temperature: 0.2,
-      max_tokens: 512,
+      max_tokens: 1024,
       messages: [
         { role: 'system', content: 'Update the running summary of a customer-service chat so far. Keep it short (max ~120 words) but preserve every concrete fact (names, vehicle, postcode, prices discussed, decisions made, concerns raised). Do not lose facts from the previous summary.' },
         { role: 'user', content: `Previous summary: ${previousSummary || '(none yet)'}\n\nEarlier messages to fold in:\n${overflow.map(t => `${t.role}: ${t.content}`).join('\n')}\n\nWrite the updated summary.` },
@@ -179,6 +190,7 @@ export async function generateResponseGroq(
     ...toGroqMessages(recentTurns),
     { role: 'user', content: latestMessage },
   ]
+  const baseMessages = [...messages]
 
   let action: ChatAction = null
   let escalationReason: string | undefined
@@ -188,8 +200,9 @@ export async function generateResponseGroq(
     for (let i = 0; i < MAX_TOOL_ITERATIONS; i++) {
       const completion = await client.chat.completions.create({
         model: RESPONSE_MODEL,
+        ...reasoningParams(RESPONSE_MODEL),
         temperature: 0.4,
-        max_tokens: 1024,
+        max_tokens: 2048,
         messages,
         tools,
       })
@@ -220,6 +233,21 @@ export async function generateResponseGroq(
     return { text: '', action, escalationReason, bookingSummary }
   } catch (err) {
     if (isQuotaError(err)) throw new GroqUnavailableError('Groq quota exceeded during response generation', true)
+    // A rejected tool call shouldn't cost the customer a real answer: retry
+    // once without tools, answering from the knowledge in the system prompt.
+    try {
+      const plain = await client.chat.completions.create({
+        model: RESPONSE_MODEL,
+        ...reasoningParams(RESPONSE_MODEL),
+        temperature: 0.4,
+        max_tokens: 2048,
+        messages: baseMessages,
+      })
+      const text = plain.choices[0]?.message?.content?.trim()
+      if (text) return { text, action, escalationReason, bookingSummary }
+    } catch (retryErr) {
+      if (isQuotaError(retryErr)) throw new GroqUnavailableError('Groq quota exceeded during response generation', true)
+    }
     throw new GroqUnavailableError(`Groq call failed: ${err}`, false)
   }
 }
