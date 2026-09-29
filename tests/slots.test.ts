@@ -1,6 +1,6 @@
 import { test } from 'node:test'
 import assert from 'node:assert/strict'
-import { formatBookingDate, isSlotAvailable, isValidBookingDate, slotMinutes, ukNow } from '@/lib/slots'
+import { formatBookingDate, formatShortDate, isSlotAvailable, isValidBookingDate, slotMinutes, ukNow } from '@/lib/slots'
 
 test('slot labels convert to minutes past midnight', () => {
   assert.equal(slotMinutes('8:00 AM'), 480)
@@ -36,4 +36,5 @@ test('malformed dates are rejected', () => {
 
 test('booking dates read naturally in emails', () => {
   assert.equal(formatBookingDate('2026-10-10'), 'Saturday 10 October 2026')
+  assert.equal(formatShortDate('2026-10-10'), 'Sat 10 Oct')
 })

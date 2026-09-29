@@ -1,9 +1,9 @@
 'use client'
 
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { PACKAGES, ADDONS, VEHICLE_LABELS as vehicleLabels, TIME_SLOTS as timeSlots, type VehicleType } from '@/lib/pricing'
-import { isSlotAvailable, ukNow } from '@/lib/slots'
+import { formatBookingDate, formatShortDate, isSlotAvailable, ukNow } from '@/lib/slots'
 
 type Step = 1 | 2 | 3 | 4
 
@@ -221,10 +221,24 @@ export default function BookingModal({
     }, 400)
   }
 
+  // Escape closes the popup, as with any dialog.
+  useEffect(() => {
+    if (!isOpen) return
+    const onKey = (e: KeyboardEvent) => { if (e.key === 'Escape') handleClose() }
+    window.addEventListener('keydown', onKey)
+    return () => window.removeEventListener('keydown', onKey)
+  })
+
   if (!isOpen) return null
 
   return (
-    <div data-testid="booking-modal" style={{ position: 'fixed', inset: 0, zIndex: 100, display: 'flex', justifyContent: 'flex-end' }}>
+    <div
+      data-testid="booking-modal"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="booking-modal-title"
+      style={{ position: 'fixed', inset: 0, zIndex: 100, display: 'flex', justifyContent: 'flex-end' }}
+    >
       <div
         style={{ position: 'absolute', inset: 0, background: 'rgba(12,12,12,0.82)', backdropFilter: 'blur(3px)' }}
         onClick={handleClose}
@@ -253,13 +267,13 @@ export default function BookingModal({
                 letterSpacing: '0.22em', textTransform: 'uppercase',
                 color: 'rgba(255,255,255,0.28)', marginBottom: '6px',
               }}>
-                {step === 4 ? 'Booking Confirmed' : 'Mobile Detailing · Hertfordshire'}
+                {step === 4 ? 'Booking Requested' : 'Mobile Detailing · Hertfordshire'}
               </p>
-              <h2 style={{
+              <h2 id="booking-modal-title" style={{
                 fontFamily: 'var(--font-display)', fontSize: '28px',
                 letterSpacing: '0.04em', color: '#ffffff', lineHeight: 1,
               }}>
-                {step === 4 ? "YOU'RE BOOKED IN" : <>BOOK YOUR <span style={{ color: '#E84A0C' }}>DETAIL</span></>}
+                {step === 4 ? 'REQUEST SENT.' : <>BOOK YOUR <span style={{ color: '#E84A0C' }}>DETAIL</span></>}
               </h2>
             </div>
             <button
@@ -640,7 +654,7 @@ export default function BookingModal({
                     ['Pack',       pack],
                     ['Vehicle',    vehicle ? vehicleLabels[vehicle as VehicleType] : 'Not set'],
                     ['Reg',        carReg || 'Not set'],
-                    ['Date & Time', date && time ? `${date} · ${time}` : 'Not set'],
+                    ['Date & Time', date && time ? `${formatShortDate(date)} · ${time}` : 'Not set'],
                     ['Postcode',   address || 'Not set'],
                   ] as [string, string][]).map(([k, v]) => (
                     <div key={k} style={{ display: 'flex', justifyContent: 'space-between', gap: '16px' }}>
@@ -688,7 +702,7 @@ export default function BookingModal({
               </motion.div>
 
               <h3 style={{ fontFamily: 'var(--font-display)', fontSize: '36px', letterSpacing: '0.03em', color: '#0C0C0C', lineHeight: 1, marginBottom: '12px' }}>
-                CONFIRMED
+                THANK YOU
               </h3>
               {bookingId && (
                 <p style={{ fontFamily: 'var(--font-body)', fontSize: '10px', fontWeight: 600, letterSpacing: '0.2em', textTransform: 'uppercase', color: 'rgba(12,12,12,0.28)', marginBottom: '16px' }}>
@@ -696,8 +710,8 @@ export default function BookingModal({
                 </p>
               )}
               <p style={{ fontFamily: 'var(--font-body)', fontSize: '15px', lineHeight: 1.72, color: 'rgba(12,12,12,0.5)', maxWidth: '340px', margin: '0 auto 28px' }}>
-                We&apos;ll confirm by text and email as soon as possible. Your detailer arrives on{' '}
-                <strong style={{ color: '#0C0C0C' }}>{date}</strong> at{' '}
+                We&apos;ll be in touch by text and email as soon as possible to confirm your slot on{' '}
+                <strong style={{ color: '#0C0C0C' }}>{formatBookingDate(date)}</strong> at{' '}
                 <strong style={{ color: '#0C0C0C' }}>{time}</strong>.
               </p>
 
