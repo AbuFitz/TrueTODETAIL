@@ -85,7 +85,7 @@ export default function ExteriorCarDetailingPage() {
               Over time, every vehicle develops swirl marks, light scratches and surface marring, often caused by improper washing techniques or automatic car washes. These defects scatter light and dull your paint&apos;s natural clarity and depth.
             </p>
             <p style={{ fontSize: '15px', lineHeight: 1.78, color: 'rgba(12,12,12,0.62)', marginBottom: '16px' }}>
-              Machine polishing corrects these defects by removing a microscopic layer of clear coat, eliminating the scratches and restoring a mirror-like finish. Our light machine polish (included in the Premium Detail package) dramatically improves paint clarity and gloss. For more severe defects, multi-stage paint correction is available as a bespoke, quoted service: get in touch and we'll assess your vehicle.
+              Machine polishing corrects these defects by removing a microscopic layer of clear coat, eliminating the scratches and restoring a mirror-like finish. Our light machine polish (included in the Premium Detail package) dramatically improves paint clarity and gloss. For more severe defects, multi-stage paint correction is available as a bespoke, quoted service: get in touch and we&apos;ll assess your vehicle.
             </p>
           </section>
 

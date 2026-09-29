@@ -1,5 +1,6 @@
 'use client'
 
+import Link from 'next/link'
 import { AREA_LINKS } from '@/lib/area-links'
 
 const YEAR = new Date().getFullYear()
@@ -53,7 +54,7 @@ export default function Footer({ onBookNow }: { onBookNow: () => void }) {
 
         {/* Col 1 — Brand */}
         <div>
-          <a
+          <Link
             href="/"
             style={{ textDecoration: 'none', display: 'inline-flex', alignItems: 'center', gap: '10px', marginBottom: '20px' }}
           >
@@ -78,7 +79,7 @@ export default function Footer({ onBookNow }: { onBookNow: () => void }) {
             }}>
               DETAIL
             </span>
-          </a>
+          </Link>
 
           <p style={{
             fontFamily: 'var(--font-body)', fontSize: '14px', lineHeight: 1.72,
@@ -253,7 +254,7 @@ export default function Footer({ onBookNow }: { onBookNow: () => void }) {
               </a>
             ))}
           </nav>
-          <a
+          <Link
             href="/areas"
             style={{
               fontFamily: 'var(--font-body)', fontWeight: 600, fontSize: '13px',
@@ -262,7 +263,7 @@ export default function Footer({ onBookNow }: { onBookNow: () => void }) {
             }}
           >
             View all areas →
-          </a>
+          </Link>
         </div>
 
       </div>

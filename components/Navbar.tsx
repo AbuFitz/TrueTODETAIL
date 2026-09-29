@@ -1,5 +1,6 @@
 'use client'
 
+import Link from 'next/link'
 import { useState, useEffect } from 'react'
 import type { Session } from '@supabase/supabase-js'
 import { supabaseBrowser } from '@/lib/supabaseBrowser'
@@ -75,7 +76,7 @@ export default function Navbar({ onBookNow }: { onBookNow: () => void }) {
         >
 
           {/* Logo */}
-          <a
+          <Link
             href="/"
             onClick={(e) => {
               if (window.location.pathname === '/') {
@@ -117,7 +118,7 @@ export default function Navbar({ onBookNow }: { onBookNow: () => void }) {
             }}>
               DETAIL
             </span>
-          </a>
+          </Link>
 
           <div style={{ flex: 1 }} />
 

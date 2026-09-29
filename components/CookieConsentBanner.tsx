@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import Link from 'next/link'
 
 declare global {
@@ -25,14 +25,12 @@ export default function CookieConsentBanner() {
   const [visible, setVisible] = useState(false)
 
   useEffect(() => {
-    try {
-      const stored = localStorage.getItem(STORAGE_KEY)
-      if (stored !== 'granted' && stored !== 'denied') {
-        setVisible(true)
-      }
-    } catch {
-      setVisible(true)
-    }
+    // localStorage only exists after hydration, so the banner can't know
+    // whether to show until this effect runs. One extra render on first load.
+    let stored: string | null = null
+    try { stored = localStorage.getItem(STORAGE_KEY) } catch { /* blocked storage: ask again */ }
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    if (stored !== 'granted' && stored !== 'denied') setVisible(true)
 
     const reopen = () => setVisible(true)
     window.addEventListener('ttd:manage-cookies', reopen)
@@ -49,10 +47,28 @@ export default function CookieConsentBanner() {
     setVisible(false)
   }
 
+  // Publish the banner's height so floating buttons (the chat launcher) can
+  // sit above it instead of underneath it while it's showing.
+  const bannerRef = useRef<HTMLDivElement>(null)
+  useEffect(() => {
+    const root = document.documentElement
+    const el = bannerRef.current
+    if (!visible || !el) {
+      root.style.removeProperty('--cookie-banner-h')
+      return
+    }
+    const update = () => root.style.setProperty('--cookie-banner-h', `${el.offsetHeight}px`)
+    update()
+    const observer = new ResizeObserver(update)
+    observer.observe(el)
+    return () => { observer.disconnect(); root.style.removeProperty('--cookie-banner-h') }
+  }, [visible])
+
   if (!visible) return null
 
   return (
     <div
+      ref={bannerRef}
       role="dialog"
       aria-label="Cookie consent"
       style={{

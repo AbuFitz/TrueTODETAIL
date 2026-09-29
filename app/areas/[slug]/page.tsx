@@ -119,7 +119,7 @@ export default async function AreaPage({ params }: { params: Promise<{ slug: str
             </p>
             <p style={{ fontSize: '14px', lineHeight: 1.7, color: 'rgba(12,12,12,0.62)' }}>
               {area.driveTime} Not sure your exact postcode is included? Message us on WhatsApp or call{' '}
-              <a href="tel:+447359591800" style={{ color: '#E84A0C', textDecoration: 'none' }}>07359 591800</a> and we'll confirm straight away.
+              <a href="tel:+447359591800" style={{ color: '#E84A0C', textDecoration: 'none' }}>07359 591800</a> and we&apos;ll confirm straight away.
             </p>
           </div>
         </section>

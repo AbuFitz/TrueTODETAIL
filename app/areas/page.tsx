@@ -62,7 +62,7 @@ export default function AreasPage() {
               Based in Hemel Hempstead, True To Detail provides fully mobile car detailing throughout Hertfordshire and selected areas of Buckinghamshire, Bedfordshire and North West London. Our standard service area covers approximately 25 miles from Hemel Hempstead.
             </p>
             <p style={{ fontSize: '15px', lineHeight: 1.78, color: 'rgba(255,255,255,0.35)', maxWidth: '720px' }}>
-              Not sure if your postcode is covered? Message us on WhatsApp or call <a href="tel:+447359591800" style={{ color: '#E84A0C', textDecoration: 'none' }}>07359 591800</a> and we'll confirm straight away, or pick your town below for local postcodes, nearby villages and a map of the area.
+              Not sure if your postcode is covered? Message us on WhatsApp or call <a href="tel:+447359591800" style={{ color: '#E84A0C', textDecoration: 'none' }}>07359 591800</a> and we&apos;ll confirm straight away, or pick your town below for local postcodes, nearby villages and a map of the area.
             </p>
           </div>
         </section>

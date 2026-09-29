@@ -134,7 +134,8 @@ export default function SupportWidget() {
         aria-label={open ? 'Close support chat' : 'Open support chat'}
         style={{
           position: 'fixed',
-          bottom: 'clamp(16px, 3vw, 28px)',
+          // Lifts above the cookie banner while it's on screen.
+          bottom: 'calc(clamp(16px, 3vw, 28px) + var(--cookie-banner-h, 0px))',
           right: 'clamp(16px, 3vw, 28px)',
           zIndex: 55,
           width: 56, height: 56,
@@ -144,7 +145,7 @@ export default function SupportWidget() {
           cursor: 'pointer',
           display: open ? 'none' : 'flex', alignItems: 'center', justifyContent: 'center',
           boxShadow: '0 8px 28px rgba(232,74,12,0.4)',
-          transition: 'background 0.2s, transform 0.2s',
+          transition: 'background 0.2s, transform 0.2s, bottom 0.25s ease',
         }}
         onMouseEnter={e => (e.currentTarget.style.background = '#C53D08')}
         onMouseLeave={e => (e.currentTarget.style.background = '#E84A0C')}

@@ -23,9 +23,11 @@ export default function Hero({ onBookNow }: { onBookNow: () => void }) {
       return () => clearTimeout(t)
     }
     if (isDeleting && displayText === '') {
-      setIsDeleting(false)
-      setWordIndex(i => (i + 1) % WORDS.length)
-      return
+      const t = setTimeout(() => {
+        setIsDeleting(false)
+        setWordIndex(i => (i + 1) % WORDS.length)
+      }, 120)
+      return () => clearTimeout(t)
     }
     // Slower than a uniform interval, and jittered per character (±40ms)
     // rather than perfectly even, so it reads as an actual person typing
