@@ -6,9 +6,9 @@ import { motion } from 'framer-motion'
 type VehicleType = 'small' | 'midsize' | 'largesuv'
 
 const VEHICLES: { key: VehicleType; label: string; sub: string }[] = [
-  { key: 'small',    label: 'Small Car',      sub: 'Hatch / Saloon'        },
-  { key: 'midsize',  label: 'Mid-Size',        sub: 'Saloon / Estate / SUV' },
-  { key: 'largesuv', label: 'Large SUV / 4×4', sub: 'Big SUVs, 7 seaters'  },
+  { key: 'small',    label: 'Small Car',       sub: 'Hatchbacks & coupes'          },
+  { key: 'midsize',  label: 'Mid-Size',        sub: 'Saloons & estates'            },
+  { key: 'largesuv', label: 'Large SUV / 4×4', sub: 'SUVs, 4x4s & people carriers' },
 ]
 
 interface Pkg {

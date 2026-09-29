@@ -19,11 +19,11 @@ export function coverageSummaryText(): string {
 
 export function pricingSummaryText(): string {
   const lines = PACKAGES.map(p =>
-    `${p.id} (${p.duration}): £${p.price.small}/£${p.price.midsize}/£${p.price.largesuv} (Small/Mid-Size/Large SUV). ${p.description} Includes: ${p.includes.join(', ')}.`
+    `${p.id} (${p.duration}): £${p.price.small}/£${p.price.midsize}/£${p.price.largesuv} (Small Car: hatchbacks and coupes / Mid-Size: saloons and estates / Large SUV or 4x4: SUVs, 4x4s and people carriers). ${p.description} Includes: ${p.includes.join(', ')}.`
   )
   const addonLines = ADDONS.map(a => `${a.label} +£${a.price}`).join(', ')
   return [
-    'Packages (price varies by vehicle size: Small Car / Mid-Size / Large SUV & 4x4):',
+    'Packages (price varies by vehicle size: Small Car / Mid-Size / Large SUV or 4x4):',
     ...lines,
     `Add-ons (any package): ${addonLines}.`,
     `Bespoke, quoted-only (never a fixed price, always requires a real quote): ${BESPOKE_SERVICES.join(', ')}.`,

@@ -14,6 +14,7 @@ import { executeTool } from '@/lib/chat/tools'
 import { BUSINESS_INFO, PACKAGES, VEHICLE_LABELS, type VehicleType } from '@/lib/pricing'
 import { AREAS, type Area } from '@/lib/areas'
 import { mergeState } from '@/lib/chat/state'
+import { resolveVehicleSize, SIZE_HELP_RE, sizeGuideText } from '@/lib/chat/vehicle-size'
 import type { ConversationState, ChatAction, ChatIntent } from '@/lib/chat/types'
 
 const GREETING_RE = /^(hi+|hey+|hello+|hiya|yo+|sup|howdy|good\s?(morning|afternoon|evening)|whats?\s?up|greetings)(\s+(there|again|all|everyone|guys|team|ava|mate))?[!.?, ]*$/i
@@ -68,12 +69,6 @@ const INTENT_PATTERNS: Partial<Record<ChatIntent, Array<[RegExp, number]>>> = {
 const POSTCODE_SEARCH_RE = /\b([A-Z]{1,2}[0-9][0-9A-Z]?)\s?([0-9][A-Z]{2})\b/i
 const CAR_REG_SEARCH_RE = /\b([A-Z]{2}[0-9]{2}\s?[A-Z]{3})\b/i
 const PACKAGE_NAME_RE = /\b(essential|full valet|premium(?: detail)?)\b/i
-const VEHICLE_SIZE_RE: [RegExp, VehicleType][] = [
-  [/\b(large|big)\s*(suv|4x4|4wd)/i, 'largesuv'],
-  [/\bsuv\b|\b4x4\b/i, 'largesuv'],
-  [/\bmid[\s-]?size|\bmedium\b|\bestate\b|\bsaloon\b/i, 'midsize'],
-  [/\bsmall\s*(car)?\b|hatchback|supermini/i, 'small'],
-]
 
 function classifyIntent(message: string): ChatIntent | null {
   let best: { intent: ChatIntent; score: number } | null = null
@@ -99,9 +94,9 @@ function extractEntitiesRuleBased(message: string): Record<string, unknown> {
     if (found) out.package = found.id
   }
 
-  for (const [re, vehicle] of VEHICLE_SIZE_RE) {
-    if (re.test(message)) { out.vehicleSize = vehicle; break }
-  }
+  const sizeRead = resolveVehicleSize(message)
+  if (sizeRead.size) out.vehicleSize = sizeRead.size
+  if (sizeRead.ambiguous) out.vehicleSizeAmbiguous = true
 
   const intent = classifyIntent(message)
   if (intent) out.intent = intent
@@ -174,7 +169,7 @@ const OTHER_VEHICLE_RE = /\b(motor ?bikes?|motorcycles?|scooters?|boats?|caravan
 interface Answer { text: string; action?: ChatAction; counts: boolean }
 
 // How each size reads mid-sentence ("a Full Valet for a mid-size car").
-const SIZE_PROSE: Record<VehicleType, string> = { small: 'small car', midsize: 'mid-size car', largesuv: 'large SUV or 4x4' }
+const SIZE_PROSE: Record<VehicleType, string> = { small: 'small car (hatchback or coupe)', midsize: 'mid-size car (saloon or estate)', largesuv: 'large SUV, 4x4 or people carrier' }
 
 function sizePrices(pkgId: string): string {
   const p = PACKAGES.find(x => x.id === pkgId)
@@ -245,6 +240,15 @@ function answerTurn(next: ConversationState, extracted: Record<string, unknown>,
     const what = message.match(OTHER_VEHICLE_RE)?.[0]?.toLowerCase() ?? 'that'
     return {
       text: `Our packages are built for cars and vans. For ${what}, WhatsApp us a photo on ${BUSINESS_INFO.phone} and we'll let you know if we can help.`,
+      counts: true,
+    }
+  }
+
+  if (SIZE_HELP_RE.test(message) || extracted.vehicleSizeAmbiguous) {
+    return {
+      text: extracted.vehicleSizeAmbiguous
+        ? `That could fit more than one size. ${sizeGuideText()}`
+        : sizeGuideText(),
       counts: true,
     }
   }
