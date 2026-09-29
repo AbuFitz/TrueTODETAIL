@@ -32,7 +32,7 @@ const fieldLabel: React.CSSProperties = {
   display: 'block',
   fontFamily: 'var(--font-body)', fontWeight: 600, fontSize: '10px',
   letterSpacing: '0.2em', textTransform: 'uppercase' as const,
-  color: 'rgba(12,12,12,0.38)', marginBottom: '10px',
+  color: 'rgba(12,12,12,0.62)', marginBottom: '10px',
 }
 
 const sectionHeading: React.CSSProperties = {
@@ -121,7 +121,7 @@ function ValidatedField({
       </div>
       <p style={{
         fontFamily: 'var(--font-body)', fontSize: '11px', fontWeight: showError ? 600 : 400,
-        color: showError ? '#dc2626' : 'rgba(12,12,12,0.28)', marginTop: '8px',
+        color: showError ? '#dc2626' : 'rgba(12,12,12,0.62)', marginTop: '8px',
       }}>
         {showError ? errorText : helperText}
       </p>
@@ -265,7 +265,7 @@ export default function BookingModal({
               <p style={{
                 fontFamily: 'var(--font-body)', fontSize: '10px', fontWeight: 600,
                 letterSpacing: '0.22em', textTransform: 'uppercase',
-                color: 'rgba(255,255,255,0.28)', marginBottom: '6px',
+                color: 'rgba(255,255,255,0.55)', marginBottom: '6px',
               }}>
                 {step === 4 ? 'Booking Requested' : 'Mobile Detailing · Hertfordshire'}
               </p>
@@ -283,10 +283,10 @@ export default function BookingModal({
                 width: 36, height: 36, background: 'rgba(255,255,255,0.07)',
                 border: 'none', cursor: 'pointer', flexShrink: 0,
                 display: 'flex', alignItems: 'center', justifyContent: 'center',
-                color: 'rgba(255,255,255,0.5)', fontSize: '16px', transition: 'background 0.2s, color 0.2s',
+                color: 'rgba(255,255,255,0.55)', fontSize: '16px', transition: 'background 0.2s, color 0.2s',
               }}
               onMouseEnter={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.15)'; e.currentTarget.style.color = '#fff' }}
-              onMouseLeave={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.07)'; e.currentTarget.style.color = 'rgba(255,255,255,0.5)' }}
+              onMouseLeave={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.07)'; e.currentTarget.style.color = 'rgba(255,255,255,0.55)' }}
             >
               ✕
             </button>
@@ -307,7 +307,7 @@ export default function BookingModal({
                         background: isDone ? '#16a34a' : isActive ? '#E84A0C' : 'rgba(255,255,255,0.12)',
                         display: 'flex', alignItems: 'center', justifyContent: 'center',
                         fontFamily: 'var(--font-body)', fontSize: '10px', fontWeight: 700,
-                        color: isDone || isActive ? '#ffffff' : 'rgba(255,255,255,0.4)',
+                        color: isDone || isActive ? '#ffffff' : 'rgba(255,255,255,0.55)',
                         transition: 'background 0.3s',
                       }}>
                         {isDone ? <CheckIcon size={9} /> : stepNum}
@@ -315,7 +315,7 @@ export default function BookingModal({
                       <span style={{
                         fontFamily: 'var(--font-body)', fontSize: '9px', fontWeight: 600,
                         letterSpacing: '0.04em', textTransform: 'uppercase', textAlign: 'center',
-                        color: isActive ? '#ffffff' : 'rgba(255,255,255,0.35)', whiteSpace: 'nowrap',
+                        color: isActive ? '#ffffff' : 'rgba(255,255,255,0.55)', whiteSpace: 'nowrap',
                       }}>
                         {label}
                       </span>
@@ -364,7 +364,7 @@ export default function BookingModal({
                         border: `1px solid ${vehicle === key ? '#0C0C0C' : 'rgba(12,12,12,0.12)'}`,
                         cursor: 'pointer',
                         fontFamily: 'var(--font-body)', fontWeight: 600, fontSize: '12.5px',
-                        color: vehicle === key ? '#ffffff' : 'rgba(12,12,12,0.55)',
+                        color: vehicle === key ? '#ffffff' : 'rgba(12,12,12,0.62)',
                         textAlign: 'center', letterSpacing: '0.02em', transition: 'all 0.15s',
                       }}
                     >
@@ -398,11 +398,11 @@ export default function BookingModal({
                         <span style={{ fontFamily: 'var(--font-body)', fontWeight: 600, fontSize: '15px', color: pack === p.id ? '#ffffff' : '#0C0C0C', display: 'block', marginBottom: '3px' }}>
                           {p.id}
                         </span>
-                        <span style={{ fontFamily: 'var(--font-body)', fontSize: '12px', color: pack === p.id ? 'rgba(255,255,255,0.42)' : 'rgba(12,12,12,0.38)' }}>
+                        <span style={{ fontFamily: 'var(--font-body)', fontSize: '12px', color: pack === p.id ? 'rgba(255,255,255,0.55)' : 'rgba(12,12,12,0.62)' }}>
                           {p.tagline} · {p.duration}
                         </span>
                       </div>
-                      <span style={{ fontFamily: 'var(--font-display)', fontSize: vehicle ? '22px' : '15px', color: pack === p.id ? '#E84A0C' : 'rgba(12,12,12,0.35)', letterSpacing: '0.02em', flexShrink: 0, marginLeft: '12px', textAlign: 'right' }}>
+                      <span style={{ fontFamily: 'var(--font-display)', fontSize: vehicle ? '22px' : '15px', color: pack === p.id ? '#E84A0C' : 'rgba(12,12,12,0.62)', letterSpacing: '0.02em', flexShrink: 0, marginLeft: '12px', textAlign: 'right' }}>
                         {vehicle
                           ? `£${priceMap[p.id]?.[vehicle as VehicleType] ?? 0}`
                           : `£${Math.min(...Object.values(priceMap[p.id]))}–£${Math.max(...Object.values(priceMap[p.id]))}`}
@@ -442,11 +442,11 @@ export default function BookingModal({
                           }}>
                             {selected && <CheckIcon size={9} />}
                           </span>
-                          <span style={{ fontFamily: 'var(--font-body)', fontSize: '13px', fontWeight: 500, color: selected ? '#0C0C0C' : 'rgba(12,12,12,0.6)' }}>
+                          <span style={{ fontFamily: 'var(--font-body)', fontSize: '13px', fontWeight: 500, color: selected ? '#0C0C0C' : 'rgba(12,12,12,0.62)' }}>
                             {addon.label}
                           </span>
                         </div>
-                        <span style={{ fontFamily: 'var(--font-display)', fontSize: '16px', color: selected ? '#E84A0C' : 'rgba(12,12,12,0.3)', flexShrink: 0 }}>
+                        <span style={{ fontFamily: 'var(--font-display)', fontSize: '16px', color: selected ? '#E84A0C' : 'rgba(12,12,12,0.62)', flexShrink: 0 }}>
                           +£{addon.price}
                         </span>
                       </button>
@@ -458,7 +458,7 @@ export default function BookingModal({
               {/* Price preview — always visible: a range that narrows to an exact total */}
               <div style={{ background: '#0C0C0C', padding: '20px 24px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                 <div>
-                  <p style={{ fontFamily: 'var(--font-body)', fontSize: '10px', fontWeight: 600, letterSpacing: '0.18em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.3)', marginBottom: '4px' }}>
+                  <p style={{ fontFamily: 'var(--font-body)', fontSize: '10px', fontWeight: 600, letterSpacing: '0.18em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.55)', marginBottom: '4px' }}>
                     {totalPrice !== null ? (addonTotal > 0 ? 'Total inc. add-ons' : 'Your Price') : pack ? `${pack} Price Range` : 'Price Range'}
                   </p>
                   <span style={{ fontFamily: 'var(--font-display)', fontSize: '44px', color: '#ffffff', letterSpacing: '0.02em', lineHeight: 1 }}>
@@ -469,19 +469,19 @@ export default function BookingModal({
                         : `£${overallMin}–£${overallMax}`}
                   </span>
                   {totalPrice !== null && addonTotal > 0 && (
-                    <p style={{ fontFamily: 'var(--font-body)', fontSize: '11px', color: 'rgba(255,255,255,0.25)', marginTop: '4px' }}>
+                    <p style={{ fontFamily: 'var(--font-body)', fontSize: '11px', color: 'rgba(255,255,255,0.55)', marginTop: '4px' }}>
                       Base £{basePrice} + add-ons £{addonTotal}
                     </p>
                   )}
                   {totalPrice === null && (
-                    <p style={{ fontFamily: 'var(--font-body)', fontSize: '11px', color: 'rgba(255,255,255,0.25)', marginTop: '4px' }}>
+                    <p style={{ fontFamily: 'var(--font-body)', fontSize: '11px', color: 'rgba(255,255,255,0.55)', marginTop: '4px' }}>
                       {pack ? 'Depends on vehicle size' : 'Select a vehicle and pack for your exact price'}
                     </p>
                   )}
                 </div>
                 <div style={{ textAlign: 'right' }}>
-                  <p style={{ fontFamily: 'var(--font-body)', fontSize: '13px', color: 'rgba(255,255,255,0.45)', marginBottom: '3px' }}>{pack || 'No package yet'}</p>
-                  <p style={{ fontFamily: 'var(--font-body)', fontSize: '12px', color: 'rgba(255,255,255,0.25)' }}>{vehicle ? vehicleLabels[vehicle as VehicleType] : 'No vehicle yet'}</p>
+                  <p style={{ fontFamily: 'var(--font-body)', fontSize: '13px', color: 'rgba(255,255,255,0.55)', marginBottom: '3px' }}>{pack || 'No package yet'}</p>
+                  <p style={{ fontFamily: 'var(--font-body)', fontSize: '12px', color: 'rgba(255,255,255,0.55)' }}>{vehicle ? vehicleLabels[vehicle as VehicleType] : 'No vehicle yet'}</p>
                 </div>
               </div>
             </div>
@@ -530,7 +530,7 @@ export default function BookingModal({
                             opacity: unavailable ? 0.3 : 1,
                             textDecoration: unavailable ? 'line-through' : 'none',
                             fontFamily: 'var(--font-body)', fontWeight: 600, fontSize: '13px',
-                            color: time === t ? '#ffffff' : 'rgba(12,12,12,0.5)',
+                            color: time === t ? '#ffffff' : 'rgba(12,12,12,0.62)',
                             transition: 'all 0.15s',
                           }}
                         >
@@ -539,7 +539,7 @@ export default function BookingModal({
                         )
                       })}
                     </div>
-                    <p style={{ fontFamily: 'var(--font-body)', fontSize: '11px', color: 'rgba(12,12,12,0.28)', marginTop: '10px' }}>
+                    <p style={{ fontFamily: 'var(--font-body)', fontSize: '11px', color: 'rgba(12,12,12,0.62)', marginTop: '10px' }}>
                       Exact arrival window confirmed as soon as possible.
                     </p>
                   </div>
@@ -638,7 +638,7 @@ export default function BookingModal({
                   style={{ ...textInput, resize: 'none' }}
                 />
                 {notes.length > 800 && (
-                  <p style={{ fontFamily: 'var(--font-body)', fontSize: '11px', color: notes.length >= 1000 ? '#dc2626' : 'rgba(12,12,12,0.28)', marginTop: '6px' }}>
+                  <p style={{ fontFamily: 'var(--font-body)', fontSize: '11px', color: notes.length >= 1000 ? '#dc2626' : 'rgba(12,12,12,0.62)', marginTop: '6px' }}>
                     {notes.length}/1000
                   </p>
                 )}
@@ -646,7 +646,7 @@ export default function BookingModal({
 
               {/* Summary */}
               <div style={{ background: '#F5F4F1', padding: '20px', borderTop: '3px solid #E84A0C' }}>
-                <p style={{ fontFamily: 'var(--font-body)', fontWeight: 700, fontSize: '10px', letterSpacing: '0.16em', textTransform: 'uppercase', color: 'rgba(12,12,12,0.35)', marginBottom: '14px' }}>
+                <p style={{ fontFamily: 'var(--font-body)', fontWeight: 700, fontSize: '10px', letterSpacing: '0.16em', textTransform: 'uppercase', color: 'rgba(12,12,12,0.62)', marginBottom: '14px' }}>
                   Booking Summary
                 </p>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '9px' }}>
@@ -658,13 +658,13 @@ export default function BookingModal({
                     ['Postcode',   address || 'Not set'],
                   ] as [string, string][]).map(([k, v]) => (
                     <div key={k} style={{ display: 'flex', justifyContent: 'space-between', gap: '16px' }}>
-                      <span style={{ fontFamily: 'var(--font-body)', fontSize: '13px', color: 'rgba(12,12,12,0.4)', flexShrink: 0 }}>{k}</span>
+                      <span style={{ fontFamily: 'var(--font-body)', fontSize: '13px', color: 'rgba(12,12,12,0.62)', flexShrink: 0 }}>{k}</span>
                       <span style={{ fontFamily: 'var(--font-body)', fontWeight: 600, fontSize: '13px', color: '#0C0C0C', textAlign: 'right', maxWidth: '220px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{v}</span>
                     </div>
                   ))}
                   {selectedAddons.length > 0 && (
                     <div style={{ display: 'flex', justifyContent: 'space-between', gap: '16px' }}>
-                      <span style={{ fontFamily: 'var(--font-body)', fontSize: '13px', color: 'rgba(12,12,12,0.4)', flexShrink: 0 }}>Add-ons</span>
+                      <span style={{ fontFamily: 'var(--font-body)', fontSize: '13px', color: 'rgba(12,12,12,0.62)', flexShrink: 0 }}>Add-ons</span>
                       <span style={{ fontFamily: 'var(--font-body)', fontWeight: 600, fontSize: '13px', color: '#0C0C0C', textAlign: 'right', maxWidth: '220px' }}>
                         {ADDONS.filter(a => selectedAddons.includes(a.id)).map(a => a.label).join(', ')}
                       </span>
@@ -705,11 +705,11 @@ export default function BookingModal({
                 THANK YOU
               </h3>
               {bookingId && (
-                <p style={{ fontFamily: 'var(--font-body)', fontSize: '10px', fontWeight: 600, letterSpacing: '0.2em', textTransform: 'uppercase', color: 'rgba(12,12,12,0.28)', marginBottom: '16px' }}>
+                <p style={{ fontFamily: 'var(--font-body)', fontSize: '10px', fontWeight: 600, letterSpacing: '0.2em', textTransform: 'uppercase', color: 'rgba(12,12,12,0.62)', marginBottom: '16px' }}>
                   Ref: {bookingId}
                 </p>
               )}
-              <p style={{ fontFamily: 'var(--font-body)', fontSize: '15px', lineHeight: 1.72, color: 'rgba(12,12,12,0.5)', maxWidth: '340px', margin: '0 auto 28px' }}>
+              <p style={{ fontFamily: 'var(--font-body)', fontSize: '15px', lineHeight: 1.72, color: 'rgba(12,12,12,0.62)', maxWidth: '340px', margin: '0 auto 28px' }}>
                 We&apos;ll be in touch by text and email as soon as possible to confirm your slot on{' '}
                 <strong style={{ color: '#0C0C0C' }}>{formatBookingDate(date)}</strong> at{' '}
                 <strong style={{ color: '#0C0C0C' }}>{time}</strong>.
@@ -722,13 +722,13 @@ export default function BookingModal({
                   ['Postcode', address],
                 ].map(([k, v]) => (
                   <div key={k} style={{ display: 'flex', justifyContent: 'space-between', fontFamily: 'var(--font-body)', fontSize: '13px', marginBottom: '8px' }}>
-                    <span style={{ color: 'rgba(12,12,12,0.4)' }}>{k}</span>
+                    <span style={{ color: 'rgba(12,12,12,0.62)' }}>{k}</span>
                     <span style={{ fontWeight: 600, color: '#0C0C0C', maxWidth: '220px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{v}</span>
                   </div>
                 ))}
                 {selectedAddons.length > 0 && (
                   <div style={{ display: 'flex', justifyContent: 'space-between', fontFamily: 'var(--font-body)', fontSize: '13px', marginBottom: '8px' }}>
-                    <span style={{ color: 'rgba(12,12,12,0.4)' }}>Add-ons</span>
+                    <span style={{ color: 'rgba(12,12,12,0.62)' }}>Add-ons</span>
                     <span style={{ fontWeight: 600, color: '#0C0C0C', maxWidth: '220px', textAlign: 'right' }}>
                       {ADDONS.filter(a => selectedAddons.includes(a.id)).map(a => a.label).join(', ')}
                     </span>
@@ -774,7 +774,7 @@ export default function BookingModal({
                   padding: '15px 20px', border: '1px solid rgba(12,12,12,0.12)',
                   background: 'transparent', cursor: 'pointer',
                   fontFamily: 'var(--font-body)', fontWeight: 600, fontSize: '11px',
-                  letterSpacing: '0.1em', textTransform: 'uppercase', color: 'rgba(12,12,12,0.45)',
+                  letterSpacing: '0.1em', textTransform: 'uppercase', color: 'rgba(12,12,12,0.62)',
                   transition: 'border-color 0.2s', flexShrink: 0,
                 }}
                 onMouseEnter={e => e.currentTarget.style.borderColor = 'rgba(12,12,12,0.35)'}

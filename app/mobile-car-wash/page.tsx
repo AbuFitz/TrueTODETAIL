@@ -151,7 +151,7 @@ export default function MobileCarWashPage() {
               {FAQS.map((f) => (
                 <div key={f.q} style={{ padding: '20px 0', borderBottom: '1px solid rgba(12,12,12,0.08)' }}>
                   <h3 style={{ fontFamily: 'var(--font-body)', fontWeight: 700, fontSize: '15px', color: '#0C0C0C', marginBottom: '8px', textTransform: 'none', letterSpacing: 0 }}>{f.q}</h3>
-                  <p style={{ fontSize: '14px', lineHeight: 1.72, color: 'rgba(12,12,12,0.58)' }}>{f.a}</p>
+                  <p style={{ fontSize: '14px', lineHeight: 1.72, color: 'rgba(12,12,12,0.62)' }}>{f.a}</p>
                 </div>
               ))}
             </div>
@@ -167,7 +167,7 @@ export default function MobileCarWashPage() {
           </div>
 
           <nav aria-label="Related services" style={{ borderTop: '1px solid rgba(12,12,12,0.08)', paddingTop: '32px' }}>
-            <p style={{ fontFamily: 'var(--font-body)', fontSize: '11px', fontWeight: 600, letterSpacing: '0.2em', textTransform: 'uppercase', color: 'rgba(12,12,12,0.35)', marginBottom: '16px' }}>Related Services</p>
+            <p style={{ fontFamily: 'var(--font-body)', fontSize: '11px', fontWeight: 600, letterSpacing: '0.2em', textTransform: 'uppercase', color: 'rgba(12,12,12,0.62)', marginBottom: '16px' }}>Related Services</p>
             <div style={{ display: 'flex', flexWrap: 'wrap', gap: '12px' }}>
               {[['Mobile Car Detailing', '/mobile-car-detailing'], ['Professional Car Valeting', '/professional-car-valeting'], ['Interior Car Detailing', '/interior-car-detailing'], ['Exterior Car Detailing', '/exterior-car-detailing'], ['Van & Fleet Cleaning', '/van-fleet']].map(([label, href]) => (
                 <Link key={href} href={href} style={{ fontSize: '14px', color: '#E84A0C', textDecoration: 'none' }}>{label}</Link>

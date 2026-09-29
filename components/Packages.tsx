@@ -79,7 +79,7 @@ export default function Packages({
               <span style={{ width: 20, height: '1.5px', background: '#E84A0C', flexShrink: 0 }} />
               <span style={{
                 fontFamily: 'var(--font-body)', fontWeight: 600, fontSize: '11px',
-                letterSpacing: '0.2em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.28)',
+                letterSpacing: '0.2em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.55)',
               }}>
                 Packages
               </span>
@@ -104,7 +104,7 @@ export default function Packages({
               className="text-left md:text-right"
               style={{
                 fontFamily: 'var(--font-body)', fontSize: '13px',
-                color: 'rgba(255,255,255,0.3)', maxWidth: '220px', lineHeight: 1.6,
+                color: 'rgba(255,255,255,0.55)', maxWidth: '220px', lineHeight: 1.6,
               }}
             >
               Select your vehicle type. Prices update instantly.
@@ -129,7 +129,7 @@ export default function Packages({
                     display: 'block',
                     fontFamily: 'var(--font-body)', fontWeight: 600, fontSize: '12px',
                     letterSpacing: '0.04em', textTransform: 'uppercase', lineHeight: 1,
-                    color: vehicle === key ? '#0C0C0C' : 'rgba(255,255,255,0.45)',
+                    color: vehicle === key ? '#0C0C0C' : 'rgba(255,255,255,0.55)',
                     transition: 'color 0.15s',
                   }}>
                     {label}
@@ -137,7 +137,7 @@ export default function Packages({
                   <span style={{
                     display: 'block', marginTop: '3px',
                     fontFamily: 'var(--font-body)', fontSize: '10px', lineHeight: 1,
-                    color: vehicle === key ? 'rgba(12,12,12,0.4)' : 'rgba(255,255,255,0.22)',
+                    color: vehicle === key ? 'rgba(12,12,12,0.62)' : 'rgba(255,255,255,0.55)',
                     transition: 'color 0.15s',
                   }}>
                     {sub}
@@ -199,7 +199,7 @@ export default function Packages({
                   <span style={{
                     fontFamily: 'var(--font-body)', fontWeight: 600, fontSize: '10px',
                     letterSpacing: '0.1em', textTransform: 'uppercase',
-                    color: pkg.featured ? 'rgba(12,12,12,0.35)' : 'rgba(255,255,255,0.25)',
+                    color: pkg.featured ? 'rgba(12,12,12,0.62)' : 'rgba(255,255,255,0.55)',
                     border: `1px solid ${pkg.featured ? 'rgba(12,12,12,0.12)' : 'rgba(255,255,255,0.1)'}`,
                     padding: '3px 8px',
                   }}>
@@ -218,7 +218,7 @@ export default function Packages({
                 </h3>
                 <p style={{
                   fontFamily: 'var(--font-body)', fontSize: '13px',
-                  color: pkg.featured ? 'rgba(12,12,12,0.42)' : 'rgba(255,255,255,0.32)',
+                  color: pkg.featured ? 'rgba(12,12,12,0.62)' : 'rgba(255,255,255,0.55)',
                   marginBottom: '20px',
                 }}>
                   {pkg.tagline}
@@ -229,7 +229,7 @@ export default function Packages({
                     display: 'block',
                     fontFamily: 'var(--font-body)', fontSize: '11px', fontWeight: 500,
                     letterSpacing: '0.06em',
-                    color: pkg.featured ? 'rgba(12,12,12,0.32)' : 'rgba(255,255,255,0.28)',
+                    color: pkg.featured ? 'rgba(12,12,12,0.62)' : 'rgba(255,255,255,0.55)',
                     marginBottom: '2px',
                   }}>
                     from
@@ -257,14 +257,14 @@ export default function Packages({
                     <li key={item} style={{ display: 'flex', alignItems: 'flex-start', gap: '10px' }}>
                       <span style={{
                         fontFamily: 'var(--font-body)', fontWeight: 600, fontSize: '11px',
-                        color: pkg.featured ? '#E84A0C' : 'rgba(255,255,255,0.2)',
+                        color: pkg.featured ? '#E84A0C' : 'rgba(255,255,255,0.55)',
                         flexShrink: 0, marginTop: '2px',
                       }}>
                         {pkg.featured ? '→' : '–'}
                       </span>
                       <span style={{
                         fontFamily: 'var(--font-body)', fontSize: '13px', lineHeight: 1.5,
-                        color: pkg.featured ? 'rgba(12,12,12,0.55)' : 'rgba(255,255,255,0.4)',
+                        color: pkg.featured ? 'rgba(12,12,12,0.62)' : 'rgba(255,255,255,0.55)',
                       }}>
                         {item}
                       </span>
@@ -470,7 +470,7 @@ export default function Packages({
           <span style={{
             fontFamily: 'var(--font-body)', fontWeight: 600, fontSize: '10px',
             letterSpacing: '0.2em', textTransform: 'uppercase',
-            color: 'rgba(255,255,255,0.22)', flexShrink: 0,
+            color: 'rgba(255,255,255,0.55)', flexShrink: 0,
           }}>
             Add-ons
           </span>
@@ -483,7 +483,7 @@ export default function Packages({
             ['Interior Steam Sanitisation', '£35'],
           ].map(([name, price]) => (
             <div key={name} style={{ display: 'flex', alignItems: 'baseline', gap: '6px' }}>
-              <span style={{ fontFamily: 'var(--font-body)', fontSize: '13px', color: 'rgba(255,255,255,0.35)' }}>
+              <span style={{ fontFamily: 'var(--font-body)', fontSize: '13px', color: 'rgba(255,255,255,0.55)' }}>
                 {name}
               </span>
               <span style={{
@@ -521,7 +521,7 @@ export default function Packages({
               </p>
               <p style={{
                 fontFamily: 'var(--font-body)', fontSize: '12px',
-                color: 'rgba(255,255,255,0.3)',
+                color: 'rgba(255,255,255,0.55)',
               }}>
                 We have dedicated commercial services, fleet pricing and business packages.
               </p>

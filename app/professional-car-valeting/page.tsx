@@ -126,7 +126,7 @@ export default function ProfessionalCarValetingPage() {
           </div>
 
           <nav aria-label="Related services" style={{ borderTop: '1px solid rgba(12,12,12,0.08)', paddingTop: '32px' }}>
-            <p style={{ fontFamily: 'var(--font-body)', fontSize: '11px', fontWeight: 600, letterSpacing: '0.2em', textTransform: 'uppercase', color: 'rgba(12,12,12,0.35)', marginBottom: '16px' }}>Related Services</p>
+            <p style={{ fontFamily: 'var(--font-body)', fontSize: '11px', fontWeight: 600, letterSpacing: '0.2em', textTransform: 'uppercase', color: 'rgba(12,12,12,0.62)', marginBottom: '16px' }}>Related Services</p>
             <div style={{ display: 'flex', flexWrap: 'wrap', gap: '12px' }}>
               {[['Mobile Car Detailing', '/mobile-car-detailing'], ['Interior Car Detailing', '/interior-car-detailing'], ['Exterior Car Detailing', '/exterior-car-detailing'], ['Full Car Detail', '/full-car-detail']].map(([label, href]) => (
                 <Link key={href} href={href} style={{ fontSize: '14px', color: '#E84A0C', textDecoration: 'none' }}>{label}</Link>

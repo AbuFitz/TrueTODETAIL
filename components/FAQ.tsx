@@ -124,7 +124,7 @@ export default function FAQ() {
                       border: '1px solid rgba(12,12,12,0.15)',
                       display: 'flex', alignItems: 'center', justifyContent: 'center',
                       fontFamily: 'var(--font-body)', fontSize: '18px', fontWeight: 300,
-                      color: open === i ? '#E84A0C' : 'rgba(12,12,12,0.4)',
+                      color: open === i ? '#E84A0C' : 'rgba(12,12,12,0.62)',
                       transition: 'color 0.2s, border-color 0.2s',
                       borderColor: open === i ? '#E84A0C' : 'rgba(12,12,12,0.15)',
                     }}
@@ -145,7 +145,7 @@ export default function FAQ() {
                     >
                       <p style={{
                         fontFamily: 'var(--font-body)', fontSize: '14px', lineHeight: 1.78,
-                        color: 'rgba(12,12,12,0.52)',
+                        color: 'rgba(12,12,12,0.62)',
                         paddingBottom: 'clamp(16px, 2vw, 24px)',
                         maxWidth: '600px',
                       }}>

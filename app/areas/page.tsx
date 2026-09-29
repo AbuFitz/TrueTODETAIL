@@ -36,7 +36,7 @@ export default function AreasPage() {
           <div style={{ maxWidth: '1100px', margin: '0 auto', padding: '0 clamp(24px, 5vw, 48px)' }}>
 
             <nav aria-label="Breadcrumb" style={{ marginBottom: '32px' }}>
-              <ol style={{ display: 'flex', gap: '8px', listStyle: 'none', padding: 0, margin: 0, fontSize: '13px', color: 'rgba(255,255,255,0.35)' }}>
+              <ol style={{ display: 'flex', gap: '8px', listStyle: 'none', padding: 0, margin: 0, fontSize: '13px', color: 'rgba(255,255,255,0.55)' }}>
                 <li><Link href="/" style={{ color: '#E84A0C', textDecoration: 'none' }}>Home</Link></li>
                 <li aria-hidden>›</li>
                 <li aria-current="page">Areas We Cover</li>
@@ -61,8 +61,8 @@ export default function AreasPage() {
             <p style={{ fontSize: '18px', lineHeight: 1.7, color: 'rgba(255,255,255,0.55)', marginBottom: '20px', fontWeight: 500, maxWidth: '720px' }}>
               Based in Hemel Hempstead, True To Detail provides fully mobile car detailing throughout Hertfordshire and selected areas of Buckinghamshire, Bedfordshire and North West London. Our standard service area covers approximately 25 miles from Hemel Hempstead.
             </p>
-            <p style={{ fontSize: '15px', lineHeight: 1.78, color: 'rgba(255,255,255,0.35)', maxWidth: '720px' }}>
-              Not sure if your postcode is covered? Message us on WhatsApp or call <a href="tel:+447359591800" style={{ color: '#E84A0C', textDecoration: 'none' }}>07359 591800</a> and we&apos;ll confirm straight away, or pick your town below for local postcodes, nearby villages and a map of the area.
+            <p style={{ fontSize: '15px', lineHeight: 1.78, color: 'rgba(255,255,255,0.55)', maxWidth: '720px' }}>
+              Not sure if your postcode is covered? Message us on WhatsApp or call <a href="tel:+447359591800" style={{ color: '#E84A0C', textDecoration: 'underline', textUnderlineOffset: '3px' }}>07359 591800</a> and we&apos;ll confirm straight away, or pick your town below for local postcodes, nearby villages and a map of the area.
             </p>
           </div>
         </section>
@@ -100,10 +100,10 @@ export default function AreasPage() {
                         }}>
                           {area.name}
                         </p>
-                        <p style={{ fontFamily: 'var(--font-body)', fontSize: '12px', color: 'rgba(12,12,12,0.4)', marginBottom: '10px' }}>
+                        <p style={{ fontFamily: 'var(--font-body)', fontSize: '12px', color: 'rgba(12,12,12,0.62)', marginBottom: '10px' }}>
                           {area.postcodes.join(' · ')}
                         </p>
-                        <p style={{ fontFamily: 'var(--font-body)', fontSize: '13px', lineHeight: 1.6, color: 'rgba(12,12,12,0.55)' }}>
+                        <p style={{ fontFamily: 'var(--font-body)', fontSize: '13px', lineHeight: 1.6, color: 'rgba(12,12,12,0.62)' }}>
                           {area.tagline}
                         </p>
                       </Link>

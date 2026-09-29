@@ -52,7 +52,7 @@ export default function HowItWorks({ onBookNow }: { onBookNow: () => void }) {
               <span style={{ width: 20, height: '1.5px', background: '#E84A0C', flexShrink: 0 }} />
               <span style={{
                 fontFamily: 'var(--font-body)', fontWeight: 600, fontSize: '11px',
-                letterSpacing: '0.2em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.28)',
+                letterSpacing: '0.2em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.55)',
               }}>
                 Why Choose Us
               </span>
@@ -69,7 +69,7 @@ export default function HowItWorks({ onBookNow }: { onBookNow: () => void }) {
 
             <p style={{
               fontFamily: 'var(--font-body)', fontSize: '15px', lineHeight: 1.78,
-              color: 'rgba(255,255,255,0.35)', marginBottom: '36px', maxWidth: '360px',
+              color: 'rgba(255,255,255,0.55)', marginBottom: '36px', maxWidth: '360px',
             }}>
               We built this business on doing the job properly, not on cutting corners or chasing volume. Every car gets the same standard.
             </p>
@@ -134,7 +134,7 @@ export default function HowItWorks({ onBookNow }: { onBookNow: () => void }) {
               >
                 <span style={{
                   fontFamily: 'var(--font-body)', fontWeight: 600, fontSize: '10px',
-                  letterSpacing: '0.2em', color: 'rgba(255,255,255,0.18)',
+                  letterSpacing: '0.2em', color: 'rgba(255,255,255,0.55)',
                   paddingTop: '4px',
                 }}>
                   {p.n}
@@ -149,7 +149,7 @@ export default function HowItWorks({ onBookNow }: { onBookNow: () => void }) {
                   </h3>
                   <p style={{
                     fontFamily: 'var(--font-body)', fontSize: '14px', lineHeight: 1.72,
-                    color: 'rgba(255,255,255,0.35)',
+                    color: 'rgba(255,255,255,0.55)',
                   }}>
                     {p.body}
                   </p>
@@ -189,7 +189,7 @@ export default function HowItWorks({ onBookNow }: { onBookNow: () => void }) {
                   fontFamily: 'var(--font-body)', fontWeight: 600, fontSize: '12px',
                   letterSpacing: '0.07em', textTransform: 'uppercase',
                   border: '1px solid rgba(255,255,255,0.12)',
-                  color: 'rgba(255,255,255,0.4)', textDecoration: 'none',
+                  color: 'rgba(255,255,255,0.55)', textDecoration: 'none',
                   padding: '15px 24px',
                   display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px',
                   transition: 'all 0.2s',
@@ -200,7 +200,7 @@ export default function HowItWorks({ onBookNow }: { onBookNow: () => void }) {
                 }}
                 onMouseLeave={e => {
                   e.currentTarget.style.borderColor = 'rgba(255,255,255,0.12)'
-                  e.currentTarget.style.color = 'rgba(255,255,255,0.4)'
+                  e.currentTarget.style.color = 'rgba(255,255,255,0.55)'
                 }}
               >
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden>

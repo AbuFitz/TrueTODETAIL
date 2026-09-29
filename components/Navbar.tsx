@@ -132,7 +132,7 @@ export default function Navbar({ onBookNow }: { onBookNow: () => void }) {
                   position: 'relative',
                   fontFamily: 'var(--font-body)', fontWeight: 500, fontSize: '13px',
                   letterSpacing: '0.04em',
-                  color: hovered === l.label ? '#ffffff' : 'rgba(255,255,255,0.52)',
+                  color: hovered === l.label ? '#ffffff' : 'rgba(255,255,255,0.55)',
                   textDecoration: 'none',
                   padding: '0 18px', height: '80px',
                   display: 'flex', alignItems: 'center',
@@ -167,7 +167,7 @@ export default function Navbar({ onBookNow }: { onBookNow: () => void }) {
                 position: 'relative',
                 fontFamily: 'var(--font-body)', fontWeight: 500, fontSize: '13px',
                 letterSpacing: '0.04em',
-                color: hovered === 'account' ? '#ffffff' : 'rgba(255,255,255,0.52)',
+                color: hovered === 'account' ? '#ffffff' : 'rgba(255,255,255,0.55)',
                 textDecoration: 'none',
                 padding: '0 18px', height: '80px',
                 display: 'flex', alignItems: 'center',
@@ -204,7 +204,7 @@ export default function Navbar({ onBookNow }: { onBookNow: () => void }) {
                   fontFamily: 'var(--font-body)', fontWeight: 500, fontSize: '12px',
                   letterSpacing: '0.04em', textTransform: 'uppercase',
                   background: 'none', border: 'none', cursor: 'pointer',
-                  color: hovered === 'signout' ? '#ffffff' : 'rgba(255,255,255,0.32)',
+                  color: hovered === 'signout' ? '#ffffff' : 'rgba(255,255,255,0.55)',
                   padding: '0 14px', height: '80px',
                   transition: 'color 0.2s', flexShrink: 0,
                 }}
@@ -309,7 +309,7 @@ export default function Navbar({ onBookNow }: { onBookNow: () => void }) {
               <div style={{ display: 'flex', alignItems: 'baseline', gap: '16px' }}>
                 <span style={{
                   fontFamily: 'var(--font-body)', fontSize: '10px', fontWeight: 600,
-                  color: 'rgba(255,255,255,0.2)', width: '20px',
+                  color: 'rgba(255,255,255,0.55)', width: '20px',
                 }}>
                   0{i + 1}
                 </span>
@@ -321,7 +321,7 @@ export default function Navbar({ onBookNow }: { onBookNow: () => void }) {
                   {l.label}
                 </span>
               </div>
-              <span style={{ color: 'rgba(255,255,255,0.18)', fontSize: '14px' }}>→</span>
+              <span style={{ color: 'rgba(255,255,255,0.55)', fontSize: '14px' }}>→</span>
             </a>
           ))}
 
@@ -338,7 +338,7 @@ export default function Navbar({ onBookNow }: { onBookNow: () => void }) {
             <div style={{ display: 'flex', alignItems: 'baseline', gap: '16px' }}>
               <span style={{
                 fontFamily: 'var(--font-body)', fontSize: '10px', fontWeight: 600,
-                color: 'rgba(255,255,255,0.2)', width: '20px',
+                color: 'rgba(255,255,255,0.55)', width: '20px',
               }}>
                 0{NAV_LINKS.length + 1}
               </span>
@@ -350,7 +350,7 @@ export default function Navbar({ onBookNow }: { onBookNow: () => void }) {
                 {accountLabel}
               </span>
             </div>
-            <span style={{ color: 'rgba(255,255,255,0.18)', fontSize: '14px' }}>→</span>
+            <span style={{ color: 'rgba(255,255,255,0.55)', fontSize: '14px' }}>→</span>
           </a>
 
           {session ? (
@@ -365,7 +365,7 @@ export default function Navbar({ onBookNow }: { onBookNow: () => void }) {
               <span style={{
                 fontFamily: 'var(--font-body)', fontSize: '13px', fontWeight: 500,
                 letterSpacing: '0.06em', textTransform: 'uppercase',
-                color: 'rgba(255,255,255,0.4)',
+                color: 'rgba(255,255,255,0.55)',
               }}>
                 Sign out
               </span>
@@ -393,7 +393,7 @@ export default function Navbar({ onBookNow }: { onBookNow: () => void }) {
           </button>
           <p style={{
             fontFamily: 'var(--font-body)', fontSize: '11px',
-            color: 'rgba(255,255,255,0.2)', marginTop: '12px', letterSpacing: '0.06em',
+            color: 'rgba(255,255,255,0.55)', marginTop: '12px', letterSpacing: '0.06em',
           }}>
             07359 591800 · Mon–Sat 8am–7pm
           </p>
