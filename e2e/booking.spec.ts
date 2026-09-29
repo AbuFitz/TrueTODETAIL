@@ -21,7 +21,7 @@ test('booking popup: past slots are blocked and a request goes through', async (
   const popup = page.getByTestId('booking-modal')
   await expect(popup).toBeVisible()
 
-  await popup.getByRole('button', { name: /Mid-Size/ }).first().click()
+  await popup.getByRole('radio', { name: /Mid-Size/ }).first().click()
   await popup.getByRole('button', { name: /Full Valet/ }).first().click()
   await popup.getByRole('button', { name: /Next: Schedule/ }).click()
 
@@ -58,7 +58,7 @@ test('booking popup: a delivery failure tells the customer to call', async ({ pa
   await page.goto('/', { waitUntil: 'networkidle' })
   await page.evaluate(() => window.dispatchEvent(new CustomEvent('ttd:book-now')))
   const popup = page.getByTestId('booking-modal')
-  await popup.getByRole('button', { name: /Small Car/ }).first().click()
+  await popup.getByRole('radio', { name: /Small Car/ }).first().click()
   await popup.getByRole('button', { name: /Essential/ }).first().click()
   await popup.getByRole('button', { name: /Next: Schedule/ }).click()
   await popup.locator('input[type="date"]').fill('2026-10-12')
