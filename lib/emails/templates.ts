@@ -74,359 +74,119 @@ function escapeFields<T extends object>(data: T): T {
   ) as T
 }
 
-// Matches the live site's actual palette exactly (components use rgba(12,12,12,a)
-// over white for muted text — these are the solid-hex equivalents, since email
-// clients are inconsistent about rgba() text colour).
-const brand = {
-  orange: '#E84A0C',
-  dark:   '#0C0C0C',
-  light:  '#F5F4F1',
-  muted:  '#8A8A8A', // ≈ rgba(12,12,12,0.42) on white
-  faint:  '#BFBFBF', // ≈ rgba(12,12,12,0.25) on white
-}
+import { renderEmail, detail, groupTitle, paragraph, link, colour, FONT } from './layout'
 
-/*
-  Logo — real brand mark, hosted at /brand/logo-email.png (trimmed, @2x for
-  retina, flattened onto the exact header background colour so there's no
-  seam). Email clients require absolute URLs for images.
-*/
-const SITE_URL = 'https://www.truetodetail.co.uk'
-const logoHtml = `
-  <img
-    src="${SITE_URL}/brand/logo-email.png"
-    width="108" height="34" alt="True To Detail"
-    style="display:block;border:0;outline:none;text-decoration:none;height:34px;width:108px;"
-  />`
+/** Rows for a group of details; the values are already escaped by escapeFields. */
+const rows = (items: [string, string][]) => items.map(([l, v]) => detail(l, v)).join('')
+const tel = (n: string) => link(`tel:${n}`, n)
+const mail = (e: string) => link(`mailto:${e}`, e)
+const labelled = (label: string, html: string) =>
+  `<p style="margin:0;font-family:${FONT};font-size:12px;line-height:16px;letter-spacing:0.08em;text-transform:uppercase;color:${colour.muted};">${label}</p>` +
+  `<p style="margin:4px 0 0;font-family:${FONT};font-size:15px;line-height:23px;color:${colour.dark};white-space:pre-line;">${html}</p>`
 
-/* ── Social icon buttons — real hosted icon images, /public/brand/icon-*.png ── */
-const socialLinks = `
-  <table cellpadding="0" cellspacing="0" style="margin-top:18px;">
-    <tr>
-      <td style="padding-right:8px;">
-        <a href="https://www.instagram.com/truetodetail" target="_blank" style="display:inline-block;">
-          <img src="${SITE_URL}/brand/icon-instagram.png" width="30" height="30" alt="Instagram" style="display:block;border:0;width:30px;height:30px;" />
-        </a>
-      </td>
-      <td style="padding-right:8px;">
-        <a href="https://www.tiktok.com/@truetodetail" target="_blank" style="display:inline-block;">
-          <img src="${SITE_URL}/brand/icon-tiktok.png" width="30" height="30" alt="TikTok" style="display:block;border:0;width:30px;height:30px;" />
-        </a>
-      </td>
-      <td>
-        <a href="https://www.facebook.com/truetodetail" target="_blank" style="display:inline-block;">
-          <img src="${SITE_URL}/brand/icon-facebook.png" width="30" height="30" alt="Facebook" style="display:block;border:0;width:30px;height:30px;" />
-        </a>
-      </td>
-    </tr>
-  </table>`
-
-/* ── Shared HTML wrapper ───────────────────────────────────────────────── */
-function wrap(title: string, body: string): string {
-  return `<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>${title}</title>
-</head>
-<body style="margin:0;padding:0;background:${brand.light};font-family:Arial,Helvetica,sans-serif;-webkit-font-smoothing:antialiased;">
-  <table width="100%" cellpadding="0" cellspacing="0" style="background:${brand.light};padding:32px 16px;">
-    <tr><td align="center">
-      <table width="100%" cellpadding="0" cellspacing="0" style="max-width:580px;">
-
-        <!-- Logo / header -->
-        <tr>
-          <td style="background:${brand.dark};padding:26px 32px;">
-            <table width="100%" cellpadding="0" cellspacing="0">
-              <tr>
-                <td style="vertical-align:middle;line-height:0;">
-                  ${logoHtml}
-                </td>
-                <td align="right" style="vertical-align:middle;">
-                  <span style="font-family:Arial,sans-serif;font-size:11px;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,0.35);">
-                    Hertfordshire, UK
-                  </span>
-                </td>
-              </tr>
-            </table>
-          </td>
-        </tr>
-
-        <!-- Body -->
-        ${body}
-
-        <!-- Footer -->
-        <tr>
-          <td style="background:#ffffff;padding:24px 32px;border-top:1px solid #ececec;">
-            <p style="margin:0;font-family:Arial,sans-serif;font-size:11px;color:${brand.muted};letter-spacing:1px;text-transform:uppercase;">
-              True To Detail · Hertfordshire, UK
-            </p>
-            <p style="margin:6px 0 0;font-family:Arial,sans-serif;font-size:11px;color:${brand.faint};">
-              07359 591800 · info@truetodetail.co.uk
-            </p>
-            ${socialLinks}
-          </td>
-        </tr>
-
-      </table>
-    </td></tr>
-  </table>
-</body>
-</html>`
-}
-
-/* ── Summary table row ─────────────────────────────────────────────────── */
-function row(label: string, value: string, highlight = false): string {
-  return `
-  <tr>
-    <td style="padding:10px 0;border-bottom:1px solid #eeeeee;font-family:Arial,sans-serif;font-size:12px;color:${brand.muted};letter-spacing:1px;text-transform:uppercase;width:38%;vertical-align:top;">
-      ${label}
-    </td>
-    <td style="padding:10px 0;border-bottom:1px solid #eeeeee;font-family:Arial,sans-serif;font-size:14px;font-weight:600;color:${highlight ? brand.orange : brand.dark};text-align:right;vertical-align:top;">
-      ${value}
-    </td>
-  </tr>`
-}
-
-/* ══════════════════════════════════════════════════════════════════════════
-   TEMPLATE 1 — Staff notification (to bookings@truetodetail.co.uk)
-   ══════════════════════════════════════════════════════════════════════════ */
+/* Staff notification (to the bookings inbox). */
 export function notificationEmail(raw: EmailData): string {
   const d = escapeFields(raw)
   const addonsLine = d.addons.length > 0 ? d.addons.join(', ') : 'None'
-
-  const body = `
-  <tr>
-    <td style="background:${brand.dark};padding:10px 32px;">
-      <p style="margin:0;font-family:Arial,sans-serif;font-size:11px;font-weight:bold;letter-spacing:2px;text-transform:uppercase;color:#ffffff;">
-        &#9888; High Priority: respond as soon as possible
-      </p>
-    </td>
-  </tr>
-  <tr>
-    <td style="background:${brand.orange};padding:24px 32px;">
-      <p style="margin:0;font-family:Arial,sans-serif;font-size:11px;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,0.7);">
-        New Booking Request · Ref: ${d.id}
-      </p>
-      <h1 style="margin:8px 0 0;font-family:'Arial Black',Arial,sans-serif;font-size:28px;font-weight:bold;color:#ffffff;letter-spacing:2px;text-transform:uppercase;line-height:1.1;">
-        ${d.pack}
-      </h1>
-      <p style="margin:6px 0 0;font-family:Arial,sans-serif;font-size:15px;color:rgba(255,255,255,0.85);">
-        Preferred: ${d.date} at ${d.time}, ${d.address}
-      </p>
-    </td>
-  </tr>
-  <tr>
-    <td style="background:#ffffff;padding:32px;">
-
-      <!-- Customer details -->
-      <h2 style="margin:0 0 20px;font-family:Arial,sans-serif;font-size:13px;letter-spacing:2px;text-transform:uppercase;color:${brand.dark};border-bottom:2px solid ${brand.orange};padding-bottom:10px;">
-        Customer
-      </h2>
-      <table width="100%" cellpadding="0" cellspacing="0">
-        ${row('Name',  d.name.trim() || 'Not provided')}
-        ${row('Phone', `<a href="tel:${d.phone}" style="color:${brand.dark};text-decoration:none;">${d.phone}</a>`)}
-        ${row('Email', `<a href="mailto:${d.email}" style="color:${brand.dark};text-decoration:none;">${d.email}</a>`)}
-      </table>
-
-      <!-- Booking details -->
-      <h2 style="margin:28px 0 20px;font-family:Arial,sans-serif;font-size:13px;letter-spacing:2px;text-transform:uppercase;color:${brand.dark};border-bottom:2px solid ${brand.orange};padding-bottom:10px;">
-        Booking Details
-      </h2>
-      <table width="100%" cellpadding="0" cellspacing="0">
-        ${row('Pack',        d.pack)}
-        ${row('Vehicle',     d.vehicle)}
-        ${row('Reg',         d.carReg)}
-        ${row('Preferred Date', d.date)}
-        ${row('Preferred Time', d.time)}
-        ${row('Postcode',    d.address)}
-        ${row('Add-ons',     addonsLine)}
-        ${d.notes ? row('Notes', d.notes) : ''}
-        ${row('Total',       `£${d.price}`, true)}
-      </table>
-
-      ${d.notes ? `
-      <div style="margin-top:20px;background:${brand.light};padding:16px;border-left:3px solid ${brand.orange};">
-        <p style="margin:0;font-family:Arial,sans-serif;font-size:11px;letter-spacing:1px;text-transform:uppercase;color:${brand.muted};margin-bottom:6px;">Customer Notes</p>
-        <p style="margin:0;font-family:Arial,sans-serif;font-size:14px;color:${brand.dark};line-height:1.6;">${d.notes}</p>
-      </div>` : ''}
-
-      <!-- Action prompt -->
-      <div style="margin-top:28px;background:${brand.dark};padding:20px 24px;">
-        <p style="margin:0;font-family:Arial,sans-serif;font-size:13px;color:rgba(255,255,255,0.6);line-height:1.6;">
-          Confirm or reschedule with the customer <strong style="color:#ffffff;">as soon as possible</strong> via text to
-          <strong style="color:#ffffff;"> ${d.phone}</strong> or email to
-          <strong style="color:#ffffff;"> ${d.email}</strong>.
-        </p>
-      </div>
-
-    </td>
-  </tr>`
-
-  return wrap(`New Booking Request: ${d.pack} · ${d.date}`, body)
+  return renderEmail({
+    title: `New Booking Request: ${d.pack} · ${d.date}`,
+    preheader: `${d.pack}, ${d.date} at ${d.time}, ${d.address}`,
+    eyebrow: `New booking request · Ref ${d.id}`,
+    heading: d.pack,
+    intro: `Preferred: ${d.date} at ${d.time}, ${d.address}. Please confirm with the customer as soon as possible.`,
+    details: [
+      groupTitle('Customer'),
+      rows([
+        ['Name', d.name.trim() || 'Not provided'],
+        ['Phone', tel(d.phone)],
+        ['Email', mail(d.email)],
+      ]),
+      groupTitle('Booking'),
+      rows([
+        ['Package', d.pack],
+        ['Vehicle', `${d.vehicle} · ${d.carReg}`],
+        ['Date and time', `${d.date} at ${d.time}`],
+        ['Postcode', d.address],
+        ['Add-ons', addonsLine],
+        ['Total', `£${d.price}`],
+      ]),
+    ],
+    after: d.notes ? [labelled('Customer notes', d.notes)] : [],
+    cta: { href: `tel:${d.phone.replace(/[^\d+]/g, '')}`, label: `Call ${d.name.trim().split(' ')[0] || 'the customer'}` },
+    footer: 'staff',
+  })
 }
 
-/* ══════════════════════════════════════════════════════════════════════════
-   TEMPLATE 2 — Customer confirmation
-   ══════════════════════════════════════════════════════════════════════════ */
+/* Customer: booking request received (used when the portal is not connected). */
 export function confirmationEmail(raw: EmailData): string {
   const d = escapeFields(raw)
-  const addonsLine = d.addons.length > 0 ? d.addons.join(', ') : 'None'
-
-  const body = `
-  <tr>
-    <td style="background:${brand.dark};padding:32px;">
-      <p style="margin:0;font-family:Arial,sans-serif;font-size:11px;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,0.4);">
-        Booking Request Received · Ref: ${d.id}
-      </p>
-      <h1 style="margin:10px 0 6px;font-family:'Arial Black',Arial,sans-serif;font-size:32px;font-weight:bold;color:#ffffff;letter-spacing:2px;text-transform:uppercase;line-height:1.05;">
-        REQUEST RECEIVED.
-      </h1>
-      <p style="margin:0;font-family:Arial,sans-serif;font-size:15px;color:rgba(255,255,255,0.5);">Hi ${d.name.trim() ? d.name.trim().split(' ')[0] : 'there'}, we've got your preferred slot. We'll be in touch shortly to confirm.</p>
-    </td>
-  </tr>
-  <tr>
-    <td style="background:#ffffff;padding:32px;">
-
-      <!-- Booking details — leads with what/when/where/price, the thing the customer actually wants to check first -->
-      <table width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:24px;border:1px solid #eeeeee;">
-        <tr>
-          <td style="background:${brand.light};padding:20px 24px;">
-            <p style="margin:0;font-family:Arial,sans-serif;font-size:11px;letter-spacing:2px;text-transform:uppercase;color:${brand.muted};margin-bottom:6px;">Your Preferred Slot</p>
-            <p style="margin:0;font-family:Arial,sans-serif;font-size:20px;font-weight:bold;color:${brand.dark};">${d.date} at ${d.time}</p>
-            <p style="margin:4px 0 0;font-family:Arial,sans-serif;font-size:14px;color:${brand.muted};">${d.address}</p>
-          </td>
-        </tr>
-        <tr>
-          <td style="padding:20px 24px;">
-            <table width="100%" cellpadding="0" cellspacing="0">
-              ${row('Pack',    d.pack)}
-              ${row('Vehicle', d.vehicle)}
-              ${row('Reg',     d.carReg)}
-              ${d.addons.length > 0 ? row('Add-ons', addonsLine) : ''}
-              ${row('Total',   `£${d.price}`, true)}
-            </table>
-          </td>
-        </tr>
-      </table>
-
-      <!-- Confirmation notice, plain text so it reads as a footnote to the booking above rather than competing with it -->
-      <p style="margin:0 0 24px;font-family:Arial,sans-serif;font-size:13px;color:${brand.muted};line-height:1.6;">
-        This is your <strong style="color:${brand.dark};">preferred slot request</strong>, not a confirmed booking yet.
-        We'll be in touch <strong style="color:${brand.dark};">as soon as possible</strong> to confirm it. No prep needed,
-        we bring everything, and payment is on the day.
-      </p>
-
-      <!-- Questions / contact -->
-      <div style="background:${brand.light};padding:20px 24px;">
-        <p style="margin:0 0 8px;font-family:Arial,sans-serif;font-size:12px;font-weight:bold;color:${brand.dark};">Any questions?</p>
-        <p style="margin:0;font-family:Arial,sans-serif;font-size:13px;color:${brand.muted};line-height:1.6;">
-          Reply to this email, call <a href="tel:+447359591800" style="color:${brand.orange};text-decoration:none;">07359 591800</a>,
-          or WhatsApp us.
-        </p>
-      </div>
-
-    </td>
-  </tr>`
-
-  return wrap(`Booking Request Received: ${d.date}`, body)
+  const first = d.name.trim() ? d.name.trim().split(' ')[0] : 'there'
+  return renderEmail({
+    title: `Booking Request Received: ${d.date}`,
+    preheader: `We have your preferred slot for ${d.date} at ${d.time}.`,
+    eyebrow: `Ref ${d.id}`,
+    heading: 'Request received',
+    intro: `Hi ${first}, we've got your preferred slot. We'll be in touch as soon as possible to confirm it. This is not a confirmed booking yet. No prep needed, we bring everything, and payment is on the day.`,
+    details: [
+      rows([
+        ['Preferred slot', `${d.date} at ${d.time}`],
+        ['Postcode', d.address],
+        ['Package', d.pack + (d.addons.length ? ` + ${d.addons.join(', ')}` : '')],
+        ['Vehicle', `${d.vehicle} · ${d.carReg}`],
+        ['Total', `£${d.price}`],
+      ]),
+    ],
+    footer: 'customer',
+  })
 }
 
-/* ══════════════════════════════════════════════════════════════════════════
-   TEMPLATE 3 — Van & Fleet enquiry notification (to info@truetodetail.co.uk)
-   ══════════════════════════════════════════════════════════════════════════ */
+/* Staff: van & fleet enquiry. */
 export function fleetEnquiryEmail(raw: FleetEnquiryData): string {
   const d = escapeFields(raw)
-  const body = `
-  <tr>
-    <td style="background:${brand.orange};padding:24px 32px;">
-      <p style="margin:0;font-family:Arial,sans-serif;font-size:11px;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,0.7);">
-        New Van & Fleet Enquiry
-      </p>
-      <h1 style="margin:8px 0 0;font-family:'Arial Black',Arial,sans-serif;font-size:28px;font-weight:bold;color:#ffffff;letter-spacing:2px;text-transform:uppercase;line-height:1.1;">
-        ${d.business || d.name}
-      </h1>
-    </td>
-  </tr>
-  <tr>
-    <td style="background:#ffffff;padding:32px;">
-      <h2 style="margin:0 0 20px;font-family:Arial,sans-serif;font-size:13px;letter-spacing:2px;text-transform:uppercase;color:${brand.dark};border-bottom:2px solid ${brand.orange};padding-bottom:10px;">
-        Contact Details
-      </h2>
-      <table width="100%" cellpadding="0" cellspacing="0">
-        ${row('Name',        d.name)}
-        ${row('Business',    d.business || 'Not given')}
-        ${row('Phone',       `<a href="tel:${d.phone}" style="color:${brand.dark};text-decoration:none;">${d.phone}</a>`)}
-        ${row('Fleet Size',  d.fleetSize || 'Not given')}
-      </table>
-
-      ${d.message ? `
-      <div style="margin-top:20px;background:${brand.light};padding:16px;border-left:3px solid ${brand.orange};">
-        <p style="margin:0;font-family:Arial,sans-serif;font-size:11px;letter-spacing:1px;text-transform:uppercase;color:${brand.muted};margin-bottom:6px;">Message</p>
-        <p style="margin:0;font-family:Arial,sans-serif;font-size:14px;color:${brand.dark};line-height:1.6;">${d.message}</p>
-      </div>` : ''}
-
-      <div style="margin-top:28px;background:${brand.dark};padding:20px 24px;">
-        <p style="margin:0;font-family:Arial,sans-serif;font-size:13px;color:rgba(255,255,255,0.6);line-height:1.6;">
-          Reply within a few hours via text to
-          <strong style="color:#ffffff;"> ${d.phone}</strong>.
-        </p>
-      </div>
-
-    </td>
-  </tr>`
-
-  return wrap(`New Van & Fleet Enquiry: ${d.name}`, body)
+  return renderEmail({
+    title: `New Van & Fleet Enquiry: ${d.name}`,
+    preheader: `${d.business || d.name}, fleet size ${d.fleetSize || 'not given'}`,
+    eyebrow: 'New van and fleet enquiry',
+    heading: d.business || d.name,
+    intro: `Please reply within a few hours by text or call to ${d.phone}.`,
+    details: [
+      rows([
+        ['Name', d.name],
+        ['Business', d.business || 'Not given'],
+        ['Phone', tel(d.phone)],
+        ['Fleet size', d.fleetSize || 'Not given'],
+      ]),
+    ],
+    after: d.message ? [labelled('Message', d.message)] : [],
+    cta: { href: `tel:${d.phone.replace(/[^\d+]/g, '')}`, label: `Call ${d.name.trim().split(' ')[0] || 'them'}` },
+    footer: 'staff',
+  })
 }
 
-/* ══════════════════════════════════════════════════════════════════════════
-   TEMPLATE 4 — Chat escalation to staff (to info@truetodetail.co.uk)
-   ══════════════════════════════════════════════════════════════════════════ */
+/* Staff: chat assistant handed a customer over. */
 export function chatEscalationEmail(raw: ChatEscalationData): string {
   const d = escapeFields(raw)
-  const body = `
-  <tr>
-    <td style="background:${brand.orange};padding:24px 32px;">
-      <p style="margin:0;font-family:Arial,sans-serif;font-size:11px;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,0.7);">
-        Chat Assistant Escalation
-      </p>
-      <h1 style="margin:8px 0 0;font-family:'Arial Black',Arial,sans-serif;font-size:26px;font-weight:bold;color:#ffffff;letter-spacing:1px;text-transform:uppercase;line-height:1.1;">
-        A customer needs a human
-      </h1>
-    </td>
-  </tr>
-  <tr>
-    <td style="background:#ffffff;padding:32px;">
-      <h2 style="margin:0 0 20px;font-family:Arial,sans-serif;font-size:13px;letter-spacing:2px;text-transform:uppercase;color:${brand.dark};border-bottom:2px solid ${brand.orange};padding-bottom:10px;">
-        Why
-      </h2>
-      <p style="margin:0 0 24px;font-family:Arial,sans-serif;font-size:14px;color:${brand.dark};line-height:1.6;">${d.reason}</p>
-
-      <h2 style="margin:0 0 20px;font-family:Arial,sans-serif;font-size:13px;letter-spacing:2px;text-transform:uppercase;color:${brand.dark};border-bottom:2px solid ${brand.orange};padding-bottom:10px;">
-        What we know so far
-      </h2>
-      <table width="100%" cellpadding="0" cellspacing="0">
-        ${row('Name',     d.customerName || 'Not given')}
-        ${row('Phone',    d.phone ? `<a href="tel:${d.phone}" style="color:${brand.dark};text-decoration:none;">${d.phone}</a>` : 'Not given')}
-        ${row('Email',    d.email ? `<a href="mailto:${d.email}" style="color:${brand.dark};text-decoration:none;">${d.email}</a>` : 'Not given')}
-        ${row('Postcode', d.postcode || 'Not given')}
-      </table>
-
-      <div style="margin-top:20px;background:${brand.light};padding:16px;border-left:3px solid ${brand.orange};">
-        <p style="margin:0;font-family:Arial,sans-serif;font-size:11px;letter-spacing:1px;text-transform:uppercase;color:${brand.muted};margin-bottom:6px;">Conversation Summary</p>
-        <p style="margin:0;font-family:Arial,sans-serif;font-size:14px;color:${brand.dark};line-height:1.6;white-space:pre-line;">${d.conversationSummary || 'No summary available yet. Early in the conversation.'}</p>
-      </div>
-
-      <div style="margin-top:28px;background:${brand.dark};padding:20px 24px;">
-        <p style="margin:0;font-family:Arial,sans-serif;font-size:13px;color:rgba(255,255,255,0.6);line-height:1.6;">
-          The customer was told a team member will follow up. Reply using the contact details above if given, or via WhatsApp/call if not.
-        </p>
-      </div>
-
-    </td>
-  </tr>`
-
-  return wrap(`Chat Escalation: ${d.reason}`, body)
+  return renderEmail({
+    title: `Chat Escalation: ${d.reason}`,
+    preheader: d.reason,
+    eyebrow: 'Chat assistant escalation',
+    heading: 'A customer needs a human',
+    intro: 'The customer was told a team member will follow up. Reply using the details below if given, or via WhatsApp or call if not.',
+    details: [
+      groupTitle('Why'),
+      paragraph(d.reason),
+      `<div style="height:18px;line-height:18px;">&nbsp;</div>`,
+      groupTitle('What we know so far'),
+      rows([
+        ['Name', d.customerName || 'Not given'],
+        ['Phone', d.phone ? tel(d.phone) : 'Not given'],
+        ['Email', d.email ? mail(d.email) : 'Not given'],
+        ['Postcode', d.postcode || 'Not given'],
+      ]),
+    ],
+    after: [labelled('Conversation summary', d.conversationSummary || 'No summary available yet. Early in the conversation.')],
+    footer: 'staff',
+  })
 }
 
 /* Plain-text versions, sent alongside the HTML. Spam filters score

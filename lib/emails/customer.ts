@@ -28,20 +28,7 @@ export interface CustomerEmailData {
 
 export interface RenderedEmail { subject: string; html: string; text: string }
 
-const SITE = 'https://www.truetodetail.co.uk'
-const PHONE = '07359\u00a0591800'
-
-const c = {
-  orange: '#E84A0C',
-  dark: '#0C0C0C',
-  page: '#F5F4F1',
-  muted: '#6B6B6B',
-  line: '#E9E7E2',
-}
-
-function esc(v: string): string {
-  return v.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;')
-}
+import { SITE, PHONE, colour as c, FONT, esc, detail, renderEmail, orangeLink, paragraph } from './layout'
 
 export function ukWhen(iso: string): string {
   const d = new Date(iso)
@@ -55,26 +42,10 @@ export const trackUrl = (token: string) => `${SITE}/account/track/${encodeURICom
 export const createAccountUrl = (email: string, token: string) =>
   `${SITE}/account/create?email=${encodeURIComponent(email)}&from=${encodeURIComponent(token)}`
 
-const FONT = "-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif"
-
-function button(href: string, label: string): string {
-  return `<a href="${href}" style="display:block;background:${c.orange};color:#ffffff;text-decoration:none;text-align:center;font-family:${FONT};font-size:16px;font-weight:600;line-height:20px;padding:16px 20px;border-radius:6px;">${esc(label)}</a>`
-}
-
-function detail(label: string, value: string): string {
-  return `<p style="margin:0 0 14px;font-family:${FONT};font-size:12px;line-height:16px;letter-spacing:0.08em;text-transform:uppercase;color:${c.muted};">${esc(label)}<br><span style="font-size:16px;line-height:22px;letter-spacing:0;text-transform:none;color:${c.dark};font-weight:600;">${esc(value)}</span></p>`
-}
-
-function accountCard(d: CustomerEmailData): string {
-  if (d.hasAccount) return ''
-  return `
-    <tr><td style="padding:8px 20px 4px;">
-      <div style="border:1px solid ${c.line};border-radius:8px;padding:20px;">
-        <p style="margin:0 0 6px;font-family:${FONT};font-size:17px;line-height:23px;font-weight:700;color:${c.dark};">Make it easier next time</p>
-        <p style="margin:0 0 14px;font-family:${FONT};font-size:14px;line-height:21px;color:${c.muted};">A free account keeps your cars and addresses, lets you rebook in two taps and track every visit in one place.</p>
-        <a href="${createAccountUrl(d.email, d.trackingToken)}" style="font-family:${FONT};font-size:15px;font-weight:600;color:${c.orange};text-decoration:none;">Create your account &rarr;</a>
-      </div>
-    </td></tr>`
+/** The account invite: a plain block under the button, not a box of its own. */
+function accountInvite(d: CustomerEmailData): string {
+  if (d.hasAccount || d.kind === 'cancelled') return ''
+  return `<p style="margin:0 0 6px;font-family:${FONT};font-size:17px;line-height:23px;font-weight:700;color:${c.dark};">Make it easier next time</p>${paragraph('A free account keeps your cars and addresses, lets you rebook in two taps and track every visit in one place.', { small: true })}<p style="margin:12px 0 0;">${orangeLink(createAccountUrl(d.email, d.trackingToken), 'Create your account &rarr;')}</p>`
 }
 
 interface Copy { subject: string; heading: string; intro: string; cta: string; footnote?: string }
@@ -143,51 +114,19 @@ export function renderCustomerEmail(d: CustomerEmailData): RenderedEmail {
   if (d.postcode) lines.push(['Where', d.postcode])
   if (d.price != null) lines.push(['Price', `£${Number(d.price).toFixed(Number(d.price) % 1 ? 2 : 0)}`])
 
-  const html = `<!DOCTYPE html>
-<html lang="en-GB">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="color-scheme" content="light">
-<title>${esc(copy.subject)}</title>
-<style>
-  @media only screen and (max-width:480px) {
-    .shell { padding:0 !important; }
-    .card { border-radius:0 !important; }
-  }
-</style>
-</head>
-<body style="margin:0;padding:0;background:${c.page};">
-<div style="display:none;max-height:0;overflow:hidden;opacity:0;">${esc(copy.intro.slice(0, 110))}</div>
-<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:${c.page};">
-<tr><td class="shell" align="center" style="padding:24px 12px;">
-  <table role="presentation" class="card" width="100%" cellpadding="0" cellspacing="0" style="max-width:520px;background:#ffffff;border-radius:10px;">
-    <tr><td style="padding:24px 20px 4px;">
-      <a href="${SITE}" style="font-family:${FONT};font-size:13px;font-weight:800;letter-spacing:0.14em;text-transform:uppercase;color:${c.dark};text-decoration:none;">True <span style="color:${c.orange};">To</span> Detail</a>
-    </td></tr>
-    <tr><td style="padding:20px 20px 4px;">
-      <h1 style="margin:0 0 12px;font-family:${FONT};font-size:26px;line-height:32px;font-weight:800;color:${c.dark};">${esc(copy.heading)}</h1>
-      <p style="margin:0;font-family:${FONT};font-size:16px;line-height:24px;color:#3A3A3A;">${esc(copy.intro)}</p>
-    </td></tr>
-    ${showDetails ? `<tr><td style="padding:20px 20px 4px;">
-      <div style="border-top:1px solid ${c.line};padding-top:18px;">
-        ${lines.map(([l, v]) => detail(l, v)).join('')}
-        <p style="margin:0;font-family:${FONT};font-size:12px;line-height:16px;color:${c.muted};">Reference ${esc(d.reference)}</p>
-      </div>
-    </td></tr>` : ''}
-    <tr><td style="padding:16px 20px 20px;">
-      ${button(link, copy.cta)}
-      ${copy.footnote ? `<p style="margin:14px 0 0;font-family:${FONT};font-size:13px;line-height:19px;color:${c.muted};">${esc(copy.footnote)}</p>` : ''}
-    </td></tr>
-    ${d.kind === 'cancelled' ? '' : accountCard(d)}
-    <tr><td style="padding:20px 20px 24px;">
-      <p style="margin:0;font-family:${FONT};font-size:13px;line-height:20px;color:${c.muted};border-top:1px solid ${c.line};padding-top:16px;">Questions? Reply to this email or call or WhatsApp <a href="tel:+447359591800" style="color:${c.dark};text-decoration:none;font-weight:600;">${PHONE}</a>.<br>True To Detail, mobile car detailing in Hertfordshire.</p>
-    </td></tr>
-  </table>
-</td></tr>
-</table>
-</body>
-</html>`
+  const html = renderEmail({
+    title: copy.subject,
+    preheader: copy.intro,
+    heading: esc(copy.heading),
+    intro: esc(copy.intro),
+    details: showDetails
+      ? [...lines.map(([l, v]) => detail(esc(l), esc(v))), paragraph(`Reference ${esc(d.reference)}`, { small: true })]
+      : [],
+    cta: { href: link, label: esc(copy.cta) },
+    ...(copy.footnote ? { footnote: copy.footnote } : {}),
+    ...(accountInvite(d) ? { aside: accountInvite(d) } : {}),
+    footer: 'customer',
+  })
 
   const text = [
     copy.heading.toUpperCase(),
