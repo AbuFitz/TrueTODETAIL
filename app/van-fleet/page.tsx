@@ -2,9 +2,9 @@
 
 import { useState } from 'react'
 import { motion } from 'framer-motion'
+import { SiteNavbar, SiteFooter } from '@/components/SiteChrome'
 
 const ease = [0.22, 1, 0.36, 1] as [number, number, number, number]
-const YEAR = new Date().getFullYear()
 
 const VAN_PACKAGES = [
   {
@@ -110,78 +110,11 @@ export default function VanFleetPage() {
   return (
     <div style={{ background: '#0C0C0C', minHeight: '100vh' }}>
 
-      {/* ── Sticky nav ── */}
-      <nav style={{
-        position: 'sticky', top: 0, zIndex: 50,
-        height: '72px', background: '#0C0C0C',
-        borderBottom: '1px solid rgba(255,255,255,0.06)',
-        display: 'flex', alignItems: 'center',
-      }}>
-        <div style={{
-          width: '100%', maxWidth: '1400px', margin: '0 auto',
-          padding: '0 clamp(20px, 4vw, 64px)',
-          display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-        }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
-            {/* Back link — hidden on small screens to prevent overflow */}
-            <a
-              href="/"
-              className="hidden sm:flex"
-              style={{
-                fontFamily: 'var(--font-body)', fontSize: '12px', fontWeight: 600,
-                letterSpacing: '0.08em', textTransform: 'uppercase',
-                color: 'rgba(255,255,255,0.35)', textDecoration: 'none',
-                alignItems: 'center', gap: '6px',
-                transition: 'color 0.2s',
-              }}
-              onMouseEnter={e => (e.currentTarget.style.color = 'rgba(255,255,255,0.7)')}
-              onMouseLeave={e => (e.currentTarget.style.color = 'rgba(255,255,255,0.35)')}
-            >
-              ← Back
-            </a>
-            <span className="hidden sm:block" style={{ width: 1, height: 16, background: 'rgba(255,255,255,0.1)' }} />
-            <a href="/" style={{ textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '7px' }}>
-              <span style={{
-                fontFamily: 'var(--font-display)', fontSize: 'clamp(16px, 4vw, 22px)',
-                letterSpacing: '0.06em', color: '#ffffff', lineHeight: 1,
-              }}>
-                TRUE TO
-              </span>
-              <span style={{
-                display: 'inline-block', width: 'clamp(4px, 1vw, 5px)', height: 'clamp(6px, 1.5vw, 8px)',
-                background: '#E84A0C',
-                borderRadius: '50% 50% 45% 45% / 55% 55% 45% 45%',
-                flexShrink: 0, marginBottom: '-1px',
-              }} />
-              <span style={{
-                fontFamily: 'var(--font-display)', fontSize: 'clamp(16px, 4vw, 22px)',
-                letterSpacing: '0.06em', color: '#ffffff', lineHeight: 1,
-              }}>
-                DETAIL
-              </span>
-            </a>
-          </div>
-
-          <a
-            href="#enquire"
-            style={{
-              fontFamily: 'var(--font-body)', fontWeight: 700, fontSize: 'clamp(10px, 2vw, 11px)',
-              letterSpacing: '0.1em', textTransform: 'uppercase',
-              background: '#E84A0C', color: '#fff', textDecoration: 'none',
-              padding: 'clamp(9px, 2vw, 11px) clamp(14px, 3vw, 22px)', display: 'inline-block',
-              transition: 'background 0.2s', whiteSpace: 'nowrap',
-            }}
-            onMouseEnter={e => (e.currentTarget.style.background = '#C53D08')}
-            onMouseLeave={e => (e.currentTarget.style.background = '#E84A0C')}
-          >
-            Get a Quote
-          </a>
-        </div>
-      </nav>
+      <SiteNavbar />
 
       {/* ── Hero ── */}
       <section style={{
-        paddingTop: 'clamp(40px, 8vw, 160px)',
+        paddingTop: 'calc(80px + clamp(40px, 8vw, 160px))',
         paddingBottom: 'clamp(40px, 8vw, 120px)',
         borderBottom: '1px solid rgba(255,255,255,0.06)',
       }}>
@@ -811,31 +744,7 @@ export default function VanFleetPage() {
         </div>
       </section>
 
-      {/* ── Footer strip ── */}
-      <div style={{
-        borderTop: '1px solid rgba(255,255,255,0.06)',
-        padding: 'clamp(20px, 3vw, 28px) clamp(24px, 5vw, 72px)',
-        display: 'flex', flexWrap: 'wrap', alignItems: 'center',
-        justifyContent: 'space-between', gap: '12px',
-        maxWidth: '1400px', margin: '0 auto',
-      }}>
-        <span style={{ fontFamily: 'var(--font-body)', fontSize: '12px', color: 'rgba(255,255,255,0.2)' }}>
-          © {YEAR} True To Detail · Hertfordshire
-        </span>
-        <a
-          href="/"
-          style={{
-            fontFamily: 'var(--font-body)', fontWeight: 600, fontSize: '11px',
-            letterSpacing: '0.1em', textTransform: 'uppercase',
-            color: 'rgba(255,255,255,0.3)', textDecoration: 'none',
-            transition: 'color 0.2s',
-          }}
-          onMouseEnter={e => (e.currentTarget.style.color = 'rgba(255,255,255,0.7)')}
-          onMouseLeave={e => (e.currentTarget.style.color = 'rgba(255,255,255,0.3)')}
-        >
-          Back to main site →
-        </a>
-      </div>
+      <SiteFooter />
 
     </div>
   )
