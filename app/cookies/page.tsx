@@ -2,7 +2,11 @@ import Link from 'next/link'
 import { SiteNavbar, SiteFooter } from '@/components/SiteChrome'
 import ManageCookiesButton from '@/components/ManageCookiesButton'
 
-export const metadata = { title: 'Cookie Policy | True To Detail' }
+export const metadata = {
+  title: 'Cookie Policy',
+  description: 'Which cookies the True To Detail website uses, what they do, and how to manage your cookie choices.',
+  alternates: { canonical: '/cookies' },
+}
 
 export default function CookiesPage() {
   return (
@@ -17,7 +21,7 @@ export default function CookiesPage() {
             display: 'inline-flex', alignItems: 'center', gap: '8px',
             fontFamily: 'var(--font-body)', fontSize: '12px', fontWeight: 600,
             letterSpacing: '0.12em', textTransform: 'uppercase',
-            color: 'rgba(12,12,12,0.38)', textDecoration: 'none',
+            color: 'rgba(12,12,12,0.62)', textDecoration: 'none',
             marginBottom: '48px',
           }}
         >
@@ -38,7 +42,7 @@ export default function CookiesPage() {
         }}>
           COOKIE<br />POLICY
         </h1>
-        <p style={{ fontFamily: 'var(--font-body)', fontSize: '13px', color: 'rgba(12,12,12,0.38)', marginBottom: '24px' }}>
+        <p style={{ fontFamily: 'var(--font-body)', fontSize: '13px', color: 'rgba(12,12,12,0.62)', marginBottom: '24px' }}>
           Last updated: September 2026
         </p>
 
@@ -91,7 +95,7 @@ export default function CookiesPage() {
               </h2>
               <p style={{
                 fontFamily: 'var(--font-body)', fontSize: '14px', lineHeight: 1.78,
-                color: 'rgba(12,12,12,0.55)', margin: 0,
+                color: 'rgba(12,12,12,0.62)', margin: 0,
               }}>
                 {section.body}
               </p>

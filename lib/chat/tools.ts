@@ -35,7 +35,7 @@ export const CHAT_TOOLS: ToolDef[] = [
   },
   {
     name: 'calculate_price',
-    description: 'Get the exact fixed price for a package + vehicle size + optional add-ons. Always call this before quoting any figure — never compute or state a price from memory.',
+    description: 'Get the exact fixed price for a package + vehicle size + optional add-ons. Always call this before quoting any figure, never compute or state a price from memory.',
     input_schema: {
       type: 'object',
       properties: {
@@ -58,12 +58,13 @@ export const CHAT_TOOLS: ToolDef[] = [
   },
   {
     name: 'check_availability',
-    description: 'Get the real fixed appointment time slots and confirmation policy. There is no live calendar — this returns the honest, fixed slot list and the confirmation window, never a fabricated "yes that slot is free".',
-    input_schema: { type: 'object', properties: {} },
+    description: 'Get the real fixed appointment time slots and confirmation policy. There is no live calendar, this returns the honest, fixed slot list and the confirmation window, never a fabricated "yes that slot is free".',
+    // Gemini rejects object schemas with no properties, so give it one optional field.
+    input_schema: { type: 'object', properties: { date: { type: 'string', description: 'Optional date the customer asked about.' } } },
   },
   {
     name: 'lookup_booking',
-    description: 'Attempt to look up an existing booking. There is no chat-accessible booking database, so this always returns that lookups must go through phone/WhatsApp — call it so the assistant gives that honest answer rather than guessing.',
+    description: 'Attempt to look up an existing booking. There is no chat-accessible booking database, so this always returns that lookups must go through phone/WhatsApp, call it so the assistant gives that honest answer rather than guessing.',
     input_schema: {
       type: 'object',
       properties: {
@@ -74,7 +75,7 @@ export const CHAT_TOOLS: ToolDef[] = [
   {
     name: 'request_human_support',
     description:
-      'Escalate to a real staff member. Call this when: the customer explicitly asks for a person; a complaint is sensitive or the customer is upset; the enquiry needs a bespoke/commercial quote (ceramic coating, paint correction, fleet); the request falls outside available services; you are not confident you can answer correctly; or the customer says your answer is wrong more than once.',
+      'Hand the customer over to the team. This does not send a message to anyone, it returns the contact details to give the customer. Call this when: the customer explicitly asks for a person; a complaint is sensitive or the customer is upset; the enquiry needs a bespoke/commercial quote (ceramic coating, paint correction, fleet); the request falls outside available services; you are not confident you can answer correctly; or the customer says your answer is wrong more than once.',
     input_schema: {
       type: 'object',
       properties: {
@@ -85,7 +86,7 @@ export const CHAT_TOOLS: ToolDef[] = [
   },
   {
     name: 'prepare_booking_summary',
-    description: "Call this once you have enough information (package, vehicle, postcode, and ideally a date/time preference) to summarise a ready-to-book enquiry. This does NOT create a real booking — it only prepares a summary and prompts the customer to confirm via the site's Book Now flow, which handles real submission.",
+    description: "Call this once you have enough information (package, vehicle, postcode, and ideally a date/time preference) to summarise a ready-to-book enquiry. This does NOT create a real booking, it only prepares a summary and prompts the customer to confirm via the site's Book Now flow, which handles real submission.",
     input_schema: {
       type: 'object',
       properties: {
@@ -152,7 +153,7 @@ export function executeTool(name: string, input: Record<string, unknown>): ToolE
         output: {
           timeSlots: TIME_SLOTS,
           hours: BUSINESS_INFO.hours,
-          confirmationPolicy: `No live calendar exists — a requested slot is a preference, confirmed ${BUSINESS_INFO.bookingConfirmationWindow}.`,
+          confirmationPolicy: `No live calendar exists, a requested slot is a preference, confirmed ${BUSINESS_INFO.bookingConfirmationWindow}.`,
         },
       }
     }
@@ -168,7 +169,15 @@ export function executeTool(name: string, input: Record<string, unknown>): ToolE
 
     case 'request_human_support': {
       const reason = String(input.reason ?? 'Customer requested human assistance.')
-      return { output: { escalated: true, reason }, action: 'human_escalated', escalationReason: reason }
+      return {
+        output: {
+          notified: false,
+          reason,
+          instruction: `Nobody has been notified. Give the customer ${BUSINESS_INFO.phone} (call or WhatsApp, ${BUSINESS_INFO.hours}) and ${BUSINESS_INFO.email} so they can reach the team directly. Do not say the team will be in touch.`,
+        },
+        action: 'human_escalated',
+        escalationReason: reason,
+      }
     }
 
     case 'prepare_booking_summary': {

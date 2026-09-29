@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
+import { faqJsonLd, jsonLdGraph } from '@/lib/jsonld'
 
 const ease = [0.22, 1, 0.36, 1] as [number, number, number, number]
 
@@ -55,6 +56,8 @@ export default function FAQ() {
         paddingBottom: 'clamp(64px, 9vw, 120px)',
       }}
     >
+      {/* FAQ structured data sits with the FAQ it describes, generated from the same list. */}
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLdGraph(faqJsonLd(FAQS)) }} />
       <div style={{ maxWidth: '1400px', margin: '0 auto', padding: '0 clamp(24px, 5vw, 72px)' }}>
 
         <div
@@ -121,7 +124,7 @@ export default function FAQ() {
                       border: '1px solid rgba(12,12,12,0.15)',
                       display: 'flex', alignItems: 'center', justifyContent: 'center',
                       fontFamily: 'var(--font-body)', fontSize: '18px', fontWeight: 300,
-                      color: open === i ? '#E84A0C' : 'rgba(12,12,12,0.4)',
+                      color: open === i ? '#E84A0C' : 'rgba(12,12,12,0.62)',
                       transition: 'color 0.2s, border-color 0.2s',
                       borderColor: open === i ? '#E84A0C' : 'rgba(12,12,12,0.15)',
                     }}
@@ -142,7 +145,7 @@ export default function FAQ() {
                     >
                       <p style={{
                         fontFamily: 'var(--font-body)', fontSize: '14px', lineHeight: 1.78,
-                        color: 'rgba(12,12,12,0.52)',
+                        color: 'rgba(12,12,12,0.62)',
                         paddingBottom: 'clamp(16px, 2vw, 24px)',
                         maxWidth: '600px',
                       }}>

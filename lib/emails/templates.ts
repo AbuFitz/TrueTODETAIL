@@ -52,6 +52,28 @@ export interface ChatEscalationData {
   createdAt:          string
 }
 
+// Every value that came from a visitor (name, notes, phone, email, fleet
+// message) is escaped before it touches the email HTML. Without this, anyone
+// could put links or markup in the booking form and have them sent, on our
+// letterhead, to any address they typed in.
+function esc(value: string): string {
+  return value
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;')
+}
+
+function escapeFields<T extends object>(data: T): T {
+  return Object.fromEntries(
+    Object.entries(data).map(([k, v]) => [
+      k,
+      typeof v === 'string' ? esc(v) : Array.isArray(v) ? v.map((x) => (typeof x === 'string' ? esc(x) : x)) : v,
+    ]),
+  ) as T
+}
+
 // Matches the live site's actual palette exactly (components use rgba(12,12,12,a)
 // over white for muted text — these are the solid-hex equivalents, since email
 // clients are inconsistent about rgba() text colour).
@@ -169,10 +191,18 @@ function row(label: string, value: string, highlight = false): string {
 /* ══════════════════════════════════════════════════════════════════════════
    TEMPLATE 1 — Staff notification (to bookings@truetodetail.co.uk)
    ══════════════════════════════════════════════════════════════════════════ */
-export function notificationEmail(d: EmailData): string {
+export function notificationEmail(raw: EmailData): string {
+  const d = escapeFields(raw)
   const addonsLine = d.addons.length > 0 ? d.addons.join(', ') : 'None'
 
   const body = `
+  <tr>
+    <td style="background:${brand.dark};padding:10px 32px;">
+      <p style="margin:0;font-family:Arial,sans-serif;font-size:11px;font-weight:bold;letter-spacing:2px;text-transform:uppercase;color:#ffffff;">
+        &#9888; High Priority: respond as soon as possible
+      </p>
+    </td>
+  </tr>
   <tr>
     <td style="background:${brand.orange};padding:24px 32px;">
       <p style="margin:0;font-family:Arial,sans-serif;font-size:11px;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,0.7);">
@@ -224,7 +254,7 @@ export function notificationEmail(d: EmailData): string {
       <!-- Action prompt -->
       <div style="margin-top:28px;background:${brand.dark};padding:20px 24px;">
         <p style="margin:0;font-family:Arial,sans-serif;font-size:13px;color:rgba(255,255,255,0.6);line-height:1.6;">
-          Confirm or reschedule with the customer within <strong style="color:#ffffff;">1 hour</strong> via text to
+          Confirm or reschedule with the customer <strong style="color:#ffffff;">as soon as possible</strong> via text to
           <strong style="color:#ffffff;"> ${d.phone}</strong> or email to
           <strong style="color:#ffffff;"> ${d.email}</strong>.
         </p>
@@ -239,7 +269,8 @@ export function notificationEmail(d: EmailData): string {
 /* ══════════════════════════════════════════════════════════════════════════
    TEMPLATE 2 — Customer confirmation
    ══════════════════════════════════════════════════════════════════════════ */
-export function confirmationEmail(d: EmailData): string {
+export function confirmationEmail(raw: EmailData): string {
+  const d = escapeFields(raw)
   const addonsLine = d.addons.length > 0 ? d.addons.join(', ') : 'None'
 
   const body = `
@@ -257,74 +288,41 @@ export function confirmationEmail(d: EmailData): string {
   <tr>
     <td style="background:#ffffff;padding:32px;">
 
-      <!-- Important notice -->
-      <table width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:28px;">
+      <!-- Booking details — leads with what/when/where/price, the thing the customer actually wants to check first -->
+      <table width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:24px;border:1px solid #eeeeee;">
         <tr>
-          <td style="background:${brand.light};padding:20px 24px;border-left:4px solid ${brand.orange};">
-            <p style="margin:0;font-family:Arial,sans-serif;font-size:12px;font-weight:bold;color:${brand.orange};letter-spacing:1px;text-transform:uppercase;margin-bottom:6px;">Please Note: Pending Confirmation</p>
-            <p style="margin:0;font-family:Arial,sans-serif;font-size:14px;color:${brand.dark};line-height:1.6;">
-              This is your <strong>preferred date request</strong>, not a confirmed booking yet.
-              We'll review your slot and contact you within <strong>1 hour</strong> to confirm.
-              Occasionally we may need to suggest an alternative time, but we'll always give you plenty of notice.
-            </p>
-          </td>
-        </tr>
-      </table>
-
-      <!-- Key date/time highlight -->
-      <table width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:28px;">
-        <tr>
-          <td style="background:${brand.light};padding:20px 24px;border-left:4px solid ${brand.faint};">
+          <td style="background:${brand.light};padding:20px 24px;">
             <p style="margin:0;font-family:Arial,sans-serif;font-size:11px;letter-spacing:2px;text-transform:uppercase;color:${brand.muted};margin-bottom:6px;">Your Preferred Slot</p>
             <p style="margin:0;font-family:Arial,sans-serif;font-size:20px;font-weight:bold;color:${brand.dark};">${d.date} at ${d.time}</p>
             <p style="margin:4px 0 0;font-family:Arial,sans-serif;font-size:14px;color:${brand.muted};">${d.address}</p>
           </td>
         </tr>
+        <tr>
+          <td style="padding:20px 24px;">
+            <table width="100%" cellpadding="0" cellspacing="0">
+              ${row('Pack',    d.pack)}
+              ${row('Vehicle', d.vehicle)}
+              ${row('Reg',     d.carReg)}
+              ${d.addons.length > 0 ? row('Add-ons', addonsLine) : ''}
+              ${row('Total',   `£${d.price}`, true)}
+            </table>
+          </td>
+        </tr>
       </table>
 
-      <!-- Booking summary -->
-      <h2 style="margin:0 0 16px;font-family:Arial,sans-serif;font-size:12px;letter-spacing:2px;text-transform:uppercase;color:${brand.dark};border-bottom:1px solid #e8e8e8;padding-bottom:10px;">
-        Booking Summary
-      </h2>
-      <table width="100%" cellpadding="0" cellspacing="0">
-        ${row('Pack',    d.pack)}
-        ${row('Vehicle', d.vehicle)}
-        ${row('Reg',     d.carReg)}
-        ${d.addons.length > 0 ? row('Add-ons', addonsLine) : ''}
-        ${row('Total',   `£${d.price}`, true)}
-      </table>
-
-      <!-- What happens next -->
-      <h2 style="margin:28px 0 16px;font-family:Arial,sans-serif;font-size:12px;letter-spacing:2px;text-transform:uppercase;color:${brand.dark};border-bottom:1px solid #e8e8e8;padding-bottom:10px;">
-        What Happens Next
-      </h2>
-      <table width="100%" cellpadding="0" cellspacing="0">
-        <tr>
-          <td style="padding:10px 0;border-bottom:1px solid #eeeeee;vertical-align:top;">
-            <p style="margin:0;font-family:Arial,sans-serif;font-size:12px;font-weight:bold;color:${brand.orange};">1. We confirm your slot</p>
-            <p style="margin:4px 0 0;font-family:Arial,sans-serif;font-size:13px;color:${brand.muted};line-height:1.6;">We'll text or call you within 1 hour to lock in your date. If we need to adjust the time slightly, we'll give you options and plenty of notice.</p>
-          </td>
-        </tr>
-        <tr>
-          <td style="padding:10px 0;border-bottom:1px solid #eeeeee;vertical-align:top;">
-            <p style="margin:0;font-family:Arial,sans-serif;font-size:12px;font-weight:bold;color:${brand.orange};">2. No prep needed</p>
-            <p style="margin:4px 0 0;font-family:Arial,sans-serif;font-size:13px;color:${brand.muted};line-height:1.6;">We bring everything: power, water, all equipment. Just make sure we can access the vehicle.</p>
-          </td>
-        </tr>
-        <tr>
-          <td style="padding:10px 0;vertical-align:top;">
-            <p style="margin:0;font-family:Arial,sans-serif;font-size:12px;font-weight:bold;color:${brand.orange};">3. Payment on the day</p>
-            <p style="margin:4px 0 0;font-family:Arial,sans-serif;font-size:13px;color:${brand.muted};line-height:1.6;">Card, bank transfer or cash. Your price is fixed at £${d.price}, with no changes on the day.</p>
-          </td>
-        </tr>
-      </table>
+      <!-- Confirmation notice, plain text so it reads as a footnote to the booking above rather than competing with it -->
+      <p style="margin:0 0 24px;font-family:Arial,sans-serif;font-size:13px;color:${brand.muted};line-height:1.6;">
+        This is your <strong style="color:${brand.dark};">preferred slot request</strong>, not a confirmed booking yet.
+        We'll be in touch <strong style="color:${brand.dark};">as soon as possible</strong> to confirm it. No prep needed,
+        we bring everything, and payment is on the day.
+      </p>
 
       <!-- Questions / contact -->
-      <div style="margin-top:28px;background:${brand.light};padding:20px 24px;">
+      <div style="background:${brand.light};padding:20px 24px;">
         <p style="margin:0 0 8px;font-family:Arial,sans-serif;font-size:12px;font-weight:bold;color:${brand.dark};">Any questions?</p>
         <p style="margin:0;font-family:Arial,sans-serif;font-size:13px;color:${brand.muted};line-height:1.6;">
           Reply to this email, call <a href="tel:+447359591800" style="color:${brand.orange};text-decoration:none;">07359 591800</a>,
-          or WhatsApp us. We typically respond within minutes during working hours.
+          or WhatsApp us.
         </p>
       </div>
 
@@ -337,7 +335,8 @@ export function confirmationEmail(d: EmailData): string {
 /* ══════════════════════════════════════════════════════════════════════════
    TEMPLATE 3 — Van & Fleet enquiry notification (to info@truetodetail.co.uk)
    ══════════════════════════════════════════════════════════════════════════ */
-export function fleetEnquiryEmail(d: FleetEnquiryData): string {
+export function fleetEnquiryEmail(raw: FleetEnquiryData): string {
+  const d = escapeFields(raw)
   const body = `
   <tr>
     <td style="background:${brand.orange};padding:24px 32px;">
@@ -356,9 +355,9 @@ export function fleetEnquiryEmail(d: FleetEnquiryData): string {
       </h2>
       <table width="100%" cellpadding="0" cellspacing="0">
         ${row('Name',        d.name)}
-        ${row('Business',    d.business || '—')}
+        ${row('Business',    d.business || 'Not given')}
         ${row('Phone',       `<a href="tel:${d.phone}" style="color:${brand.dark};text-decoration:none;">${d.phone}</a>`)}
-        ${row('Fleet Size',  d.fleetSize || '—')}
+        ${row('Fleet Size',  d.fleetSize || 'Not given')}
       </table>
 
       ${d.message ? `
@@ -383,7 +382,8 @@ export function fleetEnquiryEmail(d: FleetEnquiryData): string {
 /* ══════════════════════════════════════════════════════════════════════════
    TEMPLATE 4 — Chat escalation to staff (to info@truetodetail.co.uk)
    ══════════════════════════════════════════════════════════════════════════ */
-export function chatEscalationEmail(d: ChatEscalationData): string {
+export function chatEscalationEmail(raw: ChatEscalationData): string {
+  const d = escapeFields(raw)
   const body = `
   <tr>
     <td style="background:${brand.orange};padding:24px 32px;">
@@ -414,7 +414,7 @@ export function chatEscalationEmail(d: ChatEscalationData): string {
 
       <div style="margin-top:20px;background:${brand.light};padding:16px;border-left:3px solid ${brand.orange};">
         <p style="margin:0;font-family:Arial,sans-serif;font-size:11px;letter-spacing:1px;text-transform:uppercase;color:${brand.muted};margin-bottom:6px;">Conversation Summary</p>
-        <p style="margin:0;font-family:Arial,sans-serif;font-size:14px;color:${brand.dark};line-height:1.6;white-space:pre-line;">${d.conversationSummary || 'No summary available yet — early in the conversation.'}</p>
+        <p style="margin:0;font-family:Arial,sans-serif;font-size:14px;color:${brand.dark};line-height:1.6;white-space:pre-line;">${d.conversationSummary || 'No summary available yet. Early in the conversation.'}</p>
       </div>
 
       <div style="margin-top:28px;background:${brand.dark};padding:20px 24px;">
@@ -427,4 +427,63 @@ export function chatEscalationEmail(d: ChatEscalationData): string {
   </tr>`
 
   return wrap(`Chat Escalation: ${d.reason}`, body)
+}
+
+/* Plain-text versions, sent alongside the HTML. Spam filters score
+   HTML-only mail worse, and some clients show only the text part. */
+
+const TEXT_FOOTER = 'True To Detail · Hertfordshire\n07359 591800 · info@truetodetail.co.uk\nhttps://www.truetodetail.co.uk'
+
+export function confirmationText(d: EmailData): string {
+  const first = d.name.trim() ? d.name.trim().split(' ')[0] : 'there'
+  return [
+    `Hi ${first},`,
+    '',
+    "We've got your booking request. We'll be in touch as soon as possible to confirm it.",
+    '',
+    `Preferred slot: ${d.date} at ${d.time}`,
+    `Postcode: ${d.address}`,
+    `Package: ${d.pack}`,
+    `Vehicle: ${d.vehicle} (${d.carReg})`,
+    ...(d.addons.length ? [`Add-ons: ${d.addons.join(', ')}`] : []),
+    `Total: £${d.price}`,
+    `Reference: ${d.id}`,
+    '',
+    'This is a request, not a confirmed booking yet. No prep needed, we bring everything, and payment is on the day.',
+    '',
+    'Any questions? Reply to this email, call 07359 591800, or WhatsApp us.',
+    '',
+    TEXT_FOOTER,
+  ].join('\n')
+}
+
+export function notificationText(d: EmailData): string {
+  return [
+    'HIGH PRIORITY: new booking request, respond as soon as possible.',
+    '',
+    `Ref: ${d.id}`,
+    `Package: ${d.pack}`,
+    `Preferred: ${d.date} at ${d.time}, ${d.address}`,
+    '',
+    `Name: ${d.name.trim() || 'Not provided'}`,
+    `Phone: ${d.phone}`,
+    `Email: ${d.email}`,
+    '',
+    `Vehicle: ${d.vehicle}, reg ${d.carReg}`,
+    `Add-ons: ${d.addons.length ? d.addons.join(', ') : 'None'}`,
+    ...(d.notes ? [`Notes: ${d.notes}`] : []),
+    `Total: £${d.price}`,
+  ].join('\n')
+}
+
+export function fleetEnquiryText(d: FleetEnquiryData): string {
+  return [
+    'New van & fleet enquiry',
+    '',
+    `Name: ${d.name}`,
+    `Business: ${d.business || 'Not given'}`,
+    `Phone: ${d.phone}`,
+    `Fleet size: ${d.fleetSize || 'Not given'}`,
+    ...(d.message ? ['', `Message: ${d.message}`] : []),
+  ].join('\n')
 }

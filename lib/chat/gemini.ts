@@ -7,13 +7,17 @@
 
 import { GoogleGenAI, FunctionCallingConfigMode, type Content } from '@google/genai'
 import { CHAT_TOOLS, executeTool, type ToolDef } from '@/lib/chat/tools'
-import { businessFactsText, pricingSummaryText, coverageSummaryText, vehicleLabelList } from '@/lib/chat/knowledge'
+import { vehicleLabelList } from '@/lib/chat/knowledge'
+import { buildSystemPrompt } from '@/lib/chat/prompt'
 import type { ChatTurn, ConversationState, ChatAction, ChatIntent } from '@/lib/chat/types'
 
 // Free-tier Gemini models (Google AI Studio, no billing required within quota).
-const EXTRACTION_MODEL = 'gemini-2.5-flash-lite'
-const RESPONSE_MODEL = 'gemini-2.5-flash'
+// Overridable from the environment so a model retirement is a settings change,
+// not a code change. Defaults are Google's current stable free-tier models.
+const EXTRACTION_MODEL = process.env.GEMINI_EXTRACTION_MODEL || 'gemini-3.5-flash-lite'
+const RESPONSE_MODEL = process.env.GEMINI_RESPONSE_MODEL || 'gemini-3.8-flash'
 const MAX_TOOL_ITERATIONS = 4
+const REQUEST_TIMEOUT_MS = 10_000
 
 export class GeminiUnavailableError extends Error {
   quotaExceeded: boolean
@@ -49,7 +53,9 @@ function toGeminiContents(turns: ChatTurn[]): Content[] {
 function getClient(): GoogleGenAI {
   const apiKey = process.env.GEMINI_API_KEY
   if (!apiKey) throw new GeminiUnavailableError('GEMINI_API_KEY not set', false)
-  return new GoogleGenAI({ apiKey })
+  // No retries (the SDK only retries when asked) and a per-request timeout,
+  // so a slow call hands over to Groq instead of stalling the customer.
+  return new GoogleGenAI({ apiKey, httpOptions: { timeout: REQUEST_TIMEOUT_MS } })
 }
 
 const INTENTS: ChatIntent[] = [
@@ -143,35 +149,6 @@ export async function updateSummaryGemini(previousSummary: string, overflow: Cha
   }
 }
 
-function buildSystemPrompt(state: ConversationState): string {
-  return `You are Ava, the support and sales assistant embedded on the True To Detail website, a professional mobile car detailing and valeting business.
-
-You are a real conversational assistant, not a form. Read the full conversation state below before replying — if something is already known, never ask for it again. Reassess the customer's intent fresh each turn; it can change mid-conversation.
-
-Behaviour rules:
-- Acknowledge what the customer just said before moving the conversation forward. Don't open every reply with a greeting or "How can I help?" — only greet once, at the very start.
-- Ask for at most one or two missing pieces of information at a time. Never re-ask for something already in the conversation state below.
-- Keep replies short and conversational (2-4 sentences) unless the customer asks for a detailed comparison. No em dashes. No corporate fluff, no excessive exclamation marks.
-- Never state a price, coverage answer, availability, or booking-lookup result from memory — always call the matching tool and use its returned result.
-- Recommend packages based on what the customer describes without aggressive upselling.
-- If the request is bespoke/commercial (ceramic coating, paint correction, fleet), or the customer asks for a person, seems upset, or says you've got something wrong more than once, call request_human_support rather than continuing to guess.
-- When you have enough to describe a concrete booking (package, vehicle, ideally postcode and a date/time preference), call prepare_booking_summary and then tell the customer to confirm it via the Book Now button.
-
-## Business facts
-${businessFactsText()}
-
-## Pricing
-${pricingSummaryText()}
-
-## Coverage
-${coverageSummaryText()}
-
-## Conversation state (what's already known — do not re-ask for any of this)
-${JSON.stringify(state)}
-
-## Conversation summary so far
-${state.conversationSummary || '(conversation just started)'}`
-}
 
 export interface GeminiResponseResult {
   text: string
@@ -192,6 +169,7 @@ export async function generateResponseGemini(
     ...toGeminiContents(recentTurns),
     { role: 'user', parts: [{ text: latestMessage }] },
   ]
+  const baseContents = [...contents]
 
   let action: ChatAction = null
   let escalationReason: string | undefined
@@ -240,6 +218,19 @@ export async function generateResponseGemini(
     return { text: '', action, escalationReason, bookingSummary }
   } catch (err) {
     if (isQuotaError(err)) throw new GeminiUnavailableError('Gemini quota exceeded during response generation', true)
+    // A rejected tool schema shouldn't cost the customer a real answer: retry
+    // once without tools, answering from the knowledge in the system prompt.
+    try {
+      const plain = await ai.models.generateContent({
+        model: RESPONSE_MODEL,
+        contents: baseContents,
+        config: { systemInstruction: buildSystemPrompt(state), temperature: 0.4, maxOutputTokens: 1024 },
+      })
+      const text = plain.text?.trim()
+      if (text) return { text, action, escalationReason, bookingSummary }
+    } catch (retryErr) {
+      if (isQuotaError(retryErr)) throw new GeminiUnavailableError('Gemini quota exceeded during response generation', true)
+    }
     throw new GeminiUnavailableError(`Gemini call failed: ${err}`, false)
   }
 }

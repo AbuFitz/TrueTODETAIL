@@ -3,6 +3,7 @@
 import { useState, useRef, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { emptyConversationState, type ConversationState, type ChatAction } from '@/lib/chat/types'
+import { useDialogFocus } from '@/lib/useDialogFocus'
 
 const ease = [0.22, 1, 0.36, 1] as [number, number, number, number]
 
@@ -25,13 +26,11 @@ const GREETING: Message = {
     "Hey, welcome to True To Detail! I can help with pricing, coverage, booking, or anything else on your mind. What can I help with?",
 }
 
+// Every page listens for this and opens the booking popup in place, so the
+// chat never needs to send the visitor away from what they were reading.
 function goToBooking() {
   if (typeof window === 'undefined') return
-  if (window.location.pathname !== '/') {
-    window.location.href = '/?book=1'
-  } else {
-    window.dispatchEvent(new Event('ttd:book-now'))
-  }
+  window.dispatchEvent(new Event('ttd:book-now'))
 }
 
 const QUICK_ACTIONS = [
@@ -77,13 +76,16 @@ export default function SupportWidget() {
     listRef.current?.scrollTo({ top: listRef.current.scrollHeight, behavior: 'smooth' })
   }, [messages, sending])
 
+  // Focus lands in the message box, Tab stays in the panel, the page behind
+  // stops scrolling, and focus returns to the launcher on close.
+  const panelRef = useRef<HTMLDivElement>(null)
+  useDialogFocus(panelRef, open, inputRef)
+
   useEffect(() => {
-    if (open) {
-      document.body.style.overflow = 'hidden'
-      const t = setTimeout(() => inputRef.current?.focus(), 250)
-      return () => { clearTimeout(t); document.body.style.overflow = '' }
-    }
-    document.body.style.overflow = ''
+    if (!open) return
+    const onKey = (e: KeyboardEvent) => { if (e.key === 'Escape') setOpen(false) }
+    window.addEventListener('keydown', onKey)
+    return () => window.removeEventListener('keydown', onKey)
   }, [open])
 
   const handleSend = async (e: React.FormEvent) => {
@@ -98,6 +100,8 @@ export default function SupportWidget() {
     setSending(true)
 
     try {
+      // The server gives each AI provider a fixed time before answering from
+      // its rules, so this only trips if the request itself is lost.
       const res = await fetch('/api/support-chat', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -106,6 +110,7 @@ export default function SupportWidget() {
           history: history.map((m) => ({ role: m.role, content: m.content })),
           conversationState,
         }),
+        signal: AbortSignal.timeout(45_000),
       })
       const json = await res.json()
       const reply: string = json.reply ?? `Sorry, something went wrong there. Try WhatsApp or give us a call on ${PHONE_DISPLAY}.`
@@ -133,7 +138,8 @@ export default function SupportWidget() {
         aria-label={open ? 'Close support chat' : 'Open support chat'}
         style={{
           position: 'fixed',
-          bottom: 'clamp(16px, 3vw, 28px)',
+          // Lifts above the cookie banner while it's on screen.
+          bottom: 'calc(clamp(16px, 3vw, 28px) + var(--cookie-banner-h, 0px))',
           right: 'clamp(16px, 3vw, 28px)',
           zIndex: 55,
           width: 56, height: 56,
@@ -143,7 +149,7 @@ export default function SupportWidget() {
           cursor: 'pointer',
           display: open ? 'none' : 'flex', alignItems: 'center', justifyContent: 'center',
           boxShadow: '0 8px 28px rgba(232,74,12,0.4)',
-          transition: 'background 0.2s, transform 0.2s',
+          transition: 'background 0.2s, transform 0.2s, bottom 0.25s ease',
         }}
         onMouseEnter={e => (e.currentTarget.style.background = '#C53D08')}
         onMouseLeave={e => (e.currentTarget.style.background = '#E84A0C')}
@@ -167,6 +173,10 @@ export default function SupportWidget() {
               style={{ position: 'fixed', inset: 0, zIndex: 85, background: 'rgba(12,12,12,0.25)' }}
             />
             <motion.div
+              ref={panelRef}
+              role="dialog"
+              aria-modal="true"
+              aria-label="Support chat"
               initial={{ opacity: 0, y: 16, scale: 0.97 }}
               animate={{ opacity: 1, y: 0, scale: 1 }}
               exit={{ opacity: 0, y: 16, scale: 0.97 }}
@@ -192,7 +202,7 @@ export default function SupportWidget() {
                   <p style={{
                     fontFamily: 'var(--font-body)', fontSize: '10px', fontWeight: 600,
                     letterSpacing: '0.2em', textTransform: 'uppercase',
-                    color: 'rgba(255,255,255,0.3)', marginBottom: '4px',
+                    color: 'rgba(255,255,255,0.55)', marginBottom: '4px',
                   }}>
                     True To Detail
                   </p>

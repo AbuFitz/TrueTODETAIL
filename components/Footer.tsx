@@ -1,6 +1,7 @@
 'use client'
 
-import { AREAS } from '@/lib/areas'
+import Link from 'next/link'
+import { AREA_LINKS } from '@/lib/area-links'
 
 const YEAR = new Date().getFullYear()
 
@@ -40,7 +41,7 @@ export default function Footer({ onBookNow }: { onBookNow: () => void }) {
   return (
     <footer style={{ background: '#fff', borderTop: '1px solid rgba(12,12,12,0.07)' }}>
 
-      {/* Main 3-column grid */}
+      {/* Main 4-column grid */}
       <div
         style={{
           maxWidth: '1400px', margin: '0 auto',
@@ -48,12 +49,12 @@ export default function Footer({ onBookNow }: { onBookNow: () => void }) {
           display: 'grid',
           gap: 'clamp(32px, 5vw, 72px)',
         }}
-        className="grid-cols-1 md:grid-cols-4"
+        className="grid-cols-1 sm:grid-cols-2 md:grid-cols-4"
       >
 
         {/* Col 1 — Brand */}
         <div>
-          <a
+          <Link
             href="/"
             style={{ textDecoration: 'none', display: 'inline-flex', alignItems: 'center', gap: '10px', marginBottom: '20px' }}
           >
@@ -78,11 +79,11 @@ export default function Footer({ onBookNow }: { onBookNow: () => void }) {
             }}>
               DETAIL
             </span>
-          </a>
+          </Link>
 
           <p style={{
             fontFamily: 'var(--font-body)', fontSize: '14px', lineHeight: 1.72,
-            color: 'rgba(12,12,12,0.42)', marginBottom: '24px', maxWidth: '220px',
+            color: 'rgba(12,12,12,0.62)', marginBottom: '24px', maxWidth: '220px',
           }}>
             Professional mobile car detailing in Hertfordshire. We come to you.
           </p>
@@ -92,11 +93,11 @@ export default function Footer({ onBookNow }: { onBookNow: () => void }) {
               href="tel:+447359591800"
               style={{
                 fontFamily: 'var(--font-body)', fontSize: '13px',
-                color: 'rgba(12,12,12,0.38)', textDecoration: 'none',
+                color: 'rgba(12,12,12,0.62)', textDecoration: 'none',
                 transition: 'color 0.2s',
               }}
               onMouseEnter={e => (e.currentTarget.style.color = '#0C0C0C')}
-              onMouseLeave={e => (e.currentTarget.style.color = 'rgba(12,12,12,0.38)')}
+              onMouseLeave={e => (e.currentTarget.style.color = 'rgba(12,12,12,0.62)')}
             >
               07359 591800
             </a>
@@ -104,11 +105,11 @@ export default function Footer({ onBookNow }: { onBookNow: () => void }) {
               href="mailto:info@truetodetail.co.uk"
               style={{
                 fontFamily: 'var(--font-body)', fontSize: '13px',
-                color: 'rgba(12,12,12,0.38)', textDecoration: 'none',
+                color: 'rgba(12,12,12,0.62)', textDecoration: 'none',
                 transition: 'color 0.2s',
               }}
               onMouseEnter={e => (e.currentTarget.style.color = '#0C0C0C')}
-              onMouseLeave={e => (e.currentTarget.style.color = 'rgba(12,12,12,0.38)')}
+              onMouseLeave={e => (e.currentTarget.style.color = 'rgba(12,12,12,0.62)')}
             >
               info@truetodetail.co.uk
             </a>
@@ -120,77 +121,61 @@ export default function Footer({ onBookNow }: { onBookNow: () => void }) {
           <p style={{
             fontFamily: 'var(--font-body)', fontWeight: 600, fontSize: '10px',
             letterSpacing: '0.2em', textTransform: 'uppercase',
-            color: 'rgba(12,12,12,0.25)', marginBottom: '20px',
+            color: 'rgba(12,12,12,0.62)', marginBottom: '20px',
           }}>
             Navigation
           </p>
           <nav style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
             {[
-              ['About',           '#howitworks'],
-              ['Packages',        '#packages'],
-              ['Reviews',         '#reviews'],
-              ['Book Now',        '#contact'],
+              ['About',           '/#howitworks'],
+              ['Packages',        '/#packages'],
+              ['Reviews',         '/#reviews'],
+              ['Areas We Cover',  '/areas'],
             ].map(([label, href]) => (
               <a
                 key={label}
                 href={href}
                 style={{
                   fontFamily: 'var(--font-body)', fontSize: '14px',
-                  color: 'rgba(12,12,12,0.38)', textDecoration: 'none',
+                  color: 'rgba(12,12,12,0.62)', textDecoration: 'none',
                   transition: 'color 0.2s',
                 }}
                 onMouseEnter={e => (e.currentTarget.style.color = '#0C0C0C')}
-                onMouseLeave={e => (e.currentTarget.style.color = 'rgba(12,12,12,0.38)')}
+                onMouseLeave={e => (e.currentTarget.style.color = 'rgba(12,12,12,0.62)')}
               >
                 {label}
               </a>
             ))}
-            <a
-              href="https://app.truetodetail.co.uk"
-              target="_blank"
-              rel="noopener noreferrer"
-              style={{
-                display: 'flex', alignItems: 'center', gap: '8px',
-                fontFamily: 'var(--font-body)', fontSize: '14px', fontWeight: 600,
-                color: '#E84A0C', textDecoration: 'none',
-              }}
-              onMouseEnter={e => (e.currentTarget.style.color = '#C53D08')}
-              onMouseLeave={e => (e.currentTarget.style.color = '#E84A0C')}
-            >
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
-                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
-                <circle cx="12" cy="7" r="4" />
-              </svg>
-              Client Login
-            </a>
           </nav>
 
           {/* SEO service links */}
           <p style={{
             fontFamily: 'var(--font-body)', fontWeight: 600, fontSize: '10px',
             letterSpacing: '0.2em', textTransform: 'uppercase',
-            color: 'rgba(12,12,12,0.25)', marginBottom: '14px', marginTop: '28px',
+            color: 'rgba(12,12,12,0.62)', marginBottom: '14px', marginTop: '28px',
           }}>
             Our Services
           </p>
           <nav aria-label="Detailing services" style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
             {[
               ['Mobile Car Detailing',       '/mobile-car-detailing'],
+              ['Mobile Car Wash',            '/mobile-car-wash'],
               ['Interior Car Detailing',     '/interior-car-detailing'],
               ['Exterior Car Detailing',     '/exterior-car-detailing'],
               ['Full Car Detail Packages',   '/full-car-detail'],
               ['Professional Car Valeting',  '/professional-car-valeting'],
+              ['Van & Fleet Cleaning',       '/van-fleet'],
             ].map(([label, href]) => (
               <a
                 key={label}
                 href={href}
                 style={{
                   fontFamily: 'var(--font-body)', fontSize: '13px',
-                  color: 'rgba(12,12,12,0.38)', textDecoration: 'none',
+                  color: 'rgba(12,12,12,0.62)', textDecoration: 'none',
                   transition: 'color 0.2s',
                 }}
                 onMouseEnter={e => (e.currentTarget.style.color = '#E84A0C')}
-                onMouseLeave={e => (e.currentTarget.style.color = 'rgba(12,12,12,0.38)')}
+                onMouseLeave={e => (e.currentTarget.style.color = 'rgba(12,12,12,0.62)')}
               >
                 {label}
               </a>
@@ -198,56 +183,19 @@ export default function Footer({ onBookNow }: { onBookNow: () => void }) {
           </nav>
         </div>
 
-        {/* Col 3 — Areas we cover */}
+        {/* Col 3 — Book */}
         <div>
           <p style={{
             fontFamily: 'var(--font-body)', fontWeight: 600, fontSize: '10px',
             letterSpacing: '0.2em', textTransform: 'uppercase',
-            color: 'rgba(12,12,12,0.25)', marginBottom: '20px',
-          }}>
-            Areas We Cover
-          </p>
-          <nav aria-label="Areas we cover" style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
-            {AREAS.slice(0, 6).map(area => (
-              <a
-                key={area.slug}
-                href={`/areas/${area.slug}`}
-                style={{
-                  fontFamily: 'var(--font-body)', fontSize: '13px',
-                  color: 'rgba(12,12,12,0.38)', textDecoration: 'none',
-                  transition: 'color 0.2s',
-                }}
-                onMouseEnter={e => (e.currentTarget.style.color = '#E84A0C')}
-                onMouseLeave={e => (e.currentTarget.style.color = 'rgba(12,12,12,0.38)')}
-              >
-                {area.name}
-              </a>
-            ))}
-            <a
-              href="/areas"
-              style={{
-                fontFamily: 'var(--font-body)', fontWeight: 600, fontSize: '13px',
-                color: '#E84A0C', textDecoration: 'none',
-              }}
-            >
-              View all areas →
-            </a>
-          </nav>
-        </div>
-
-        {/* Col 4 — Book */}
-        <div>
-          <p style={{
-            fontFamily: 'var(--font-body)', fontWeight: 600, fontSize: '10px',
-            letterSpacing: '0.2em', textTransform: 'uppercase',
-            color: 'rgba(12,12,12,0.25)', marginBottom: '20px',
+            color: 'rgba(12,12,12,0.62)', marginBottom: '20px',
           }}>
             Book A Detail
           </p>
 
           <p style={{
             fontFamily: 'var(--font-body)', fontSize: '14px', lineHeight: 1.72,
-            color: 'rgba(12,12,12,0.42)', marginBottom: '24px',
+            color: 'rgba(12,12,12,0.62)', marginBottom: '24px',
           }}>
             Mon–Sat, 8am–7pm<br />
             Hertfordshire &amp; surrounds
@@ -277,45 +225,104 @@ export default function Footer({ onBookNow }: { onBookNow: () => void }) {
           </button>
         </div>
 
+        {/* Col 4 — Areas We Cover, same list treatment as Our Services so it reads as part of the same grid instead of a separate banded section */}
+        <div>
+          <p style={{
+            fontFamily: 'var(--font-body)', fontWeight: 600, fontSize: '10px',
+            letterSpacing: '0.2em', textTransform: 'uppercase',
+            color: 'rgba(12,12,12,0.62)', marginBottom: '20px',
+          }}>
+            Areas We Cover
+          </p>
+          <nav
+            aria-label="Areas we cover"
+            style={{ display: 'grid', gridTemplateColumns: 'repeat(2, auto)', columnGap: '20px', rowGap: '10px' }}
+          >
+            {AREA_LINKS.map(area => (
+              <a
+                key={area.slug}
+                href={`/areas/${area.slug}`}
+                style={{
+                  fontFamily: 'var(--font-body)', fontSize: '13px',
+                  color: 'rgba(12,12,12,0.62)', textDecoration: 'none',
+                  whiteSpace: 'nowrap', transition: 'color 0.2s',
+                }}
+                onMouseEnter={e => (e.currentTarget.style.color = '#E84A0C')}
+                onMouseLeave={e => (e.currentTarget.style.color = 'rgba(12,12,12,0.62)')}
+              >
+                {area.name}
+              </a>
+            ))}
+          </nav>
+          <Link
+            href="/areas"
+            style={{
+              fontFamily: 'var(--font-body)', fontWeight: 600, fontSize: '13px',
+              color: '#E84A0C', textDecoration: 'none', whiteSpace: 'nowrap',
+              display: 'inline-block', marginTop: '14px',
+            }}
+          >
+            View all areas →
+          </Link>
+        </div>
+
       </div>
 
       {/*
-        Massive wordmark stamp.
-        Architectural brand element — the same way luxury brands print their name
-        as a watermark across the bottom of their website.
-        Very low opacity — present but not competing.
+        Massive wordmark stamp, layered directly behind the bottom bar rather
+        than sitting in its own row — the same way luxury brands print their
+        name as a watermark overlapping the page furniture, not beside it.
+        Very low opacity — present but not competing with the copyright/
+        social/legal row stacked on top of it.
       */}
-      <div style={{ overflow: 'hidden', borderTop: '1px solid rgba(12,12,12,0.06)', opacity: 0.45 }}>
-        <div style={{ maxWidth: '1400px', margin: '0 auto', overflow: 'hidden' }}>
-          <div style={{
+      {/*
+        minHeight matters here: this wrapper only auto-sizes to the
+        in-flow bottom bar (~60px), and the watermark below is taken out
+        of flow (absolute) — without an explicit minHeight, overflow:
+        hidden clips the box down to that ~60px, leaving only a sliver of
+        the watermark visible instead of the intended tall band it's
+        stamped into.
+      */}
+      <div style={{
+        position: 'relative', overflow: 'hidden', minHeight: 'clamp(150px, 15vw, 230px)',
+        borderTop: '1px solid rgba(12,12,12,0.06)',
+        display: 'flex', flexDirection: 'column', justifyContent: 'flex-end',
+      }}>
+        <div
+          aria-hidden
+          style={{
+            position: 'absolute', left: 0, right: 0, bottom: 'clamp(-28px, -3vw, -10px)',
+            zIndex: 0, pointerEvents: 'none',
             display: 'flex', alignItems: 'center', gap: 'clamp(6px, 1vw, 18px)',
             fontFamily: 'var(--font-display)',
-            fontSize: 'clamp(56px, 11vw, 160px)',
+            // High floor on purpose — on mobile this should overflow off the
+            // edges and get cropped by the wrapper's overflow: hidden, not
+            // shrink down to politely fit the viewport.
+            fontSize: 'clamp(170px, 19vw, 300px)',
             letterSpacing: '0.04em',
-            color: 'rgba(12,12,12,0.1)',
+            color: 'rgba(12,12,12,0.05)',
             lineHeight: 0.85,
             whiteSpace: 'nowrap',
             padding: '0 clamp(16px, 3vw, 48px)',
             userSelect: 'none',
-            paddingBottom: 'clamp(8px, 1.5vw, 20px)',
-          }}>
-            <span>TRUE TO</span>
-            {/* Orange teardrop — same shape as the navbar/footer logo mark */}
-            <span aria-hidden style={{
-              display: 'inline-block', flexShrink: 0,
-              width: 'clamp(6px, 0.9vw, 14px)',
-              height: 'clamp(9px, 1.35vw, 21px)',
-              background: '#E84A0C',
-              borderRadius: '50% 50% 45% 45% / 55% 55% 45% 45%',
-            }} />
-            <span>DETAIL</span>
-          </div>
+          }}
+        >
+          <span>TRUE TO</span>
+          {/* Orange teardrop — same shape as the navbar/footer logo mark */}
+          <span aria-hidden style={{
+            display: 'inline-block', flexShrink: 0,
+            width: 'clamp(8px, 1.2vw, 19px)',
+            height: 'clamp(12px, 1.8vw, 28px)',
+            background: '#E84A0C',
+            opacity: 0.5,
+            borderRadius: '50% 50% 45% 45% / 55% 55% 45% 45%',
+          }} />
+          <span>DETAIL</span>
         </div>
-      </div>
 
-      {/* Bottom bar — copyright + social icons (desktop) + legal links */}
-      <div style={{ borderTop: '1px solid rgba(12,12,12,0.06)' }}>
+        {/* Bottom bar — copyright + social icons (desktop) + legal links */}
         <div style={{
+          position: 'relative', zIndex: 1,
           maxWidth: '1400px', margin: '0 auto',
           padding: '16px clamp(24px, 5vw, 72px)',
           display: 'flex', alignItems: 'center', justifyContent: 'space-between',
@@ -323,7 +330,7 @@ export default function Footer({ onBookNow }: { onBookNow: () => void }) {
         }}>
           <span style={{
             fontFamily: 'var(--font-body)', fontSize: '11px',
-            color: 'rgba(12,12,12,0.25)', letterSpacing: '0.04em',
+            color: 'rgba(12,12,12,0.62)', letterSpacing: '0.04em',
           }}>
             © {YEAR} True To Detail · Hertfordshire, UK
           </span>
@@ -338,12 +345,12 @@ export default function Footer({ onBookNow }: { onBookNow: () => void }) {
                 rel="noopener noreferrer"
                 aria-label={s.label}
                 style={{
-                  color: 'rgba(12,12,12,0.28)',
+                  color: 'rgba(12,12,12,0.62)',
                   display: 'flex', alignItems: 'center',
                   transition: 'color 0.2s',
                 }}
                 onMouseEnter={e => (e.currentTarget.style.color = '#E84A0C')}
-                onMouseLeave={e => (e.currentTarget.style.color = 'rgba(12,12,12,0.28)')}
+                onMouseLeave={e => (e.currentTarget.style.color = 'rgba(12,12,12,0.62)')}
               >
                 {s.icon}
               </a>
@@ -361,11 +368,11 @@ export default function Footer({ onBookNow }: { onBookNow: () => void }) {
                 href={href}
                 style={{
                   fontFamily: 'var(--font-body)', fontSize: '11px',
-                  color: 'rgba(12,12,12,0.28)', textDecoration: 'none', letterSpacing: '0.04em',
+                  color: 'rgba(12,12,12,0.62)', textDecoration: 'none', letterSpacing: '0.04em',
                   transition: 'color 0.2s',
                 }}
                 onMouseEnter={e => (e.currentTarget.style.color = '#0C0C0C')}
-                onMouseLeave={e => (e.currentTarget.style.color = 'rgba(12,12,12,0.28)')}
+                onMouseLeave={e => (e.currentTarget.style.color = 'rgba(12,12,12,0.62)')}
               >
                 {label}
               </a>

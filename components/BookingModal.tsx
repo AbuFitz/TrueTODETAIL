@@ -1,8 +1,10 @@
 'use client'
 
-import { useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { PACKAGES, ADDONS, VEHICLE_LABELS as vehicleLabels, TIME_SLOTS as timeSlots, type VehicleType } from '@/lib/pricing'
+import { formatBookingDate, formatShortDate, isSlotAvailable, ukNow } from '@/lib/slots'
+import { useDialogFocus } from '@/lib/useDialogFocus'
 
 type Step = 1 | 2 | 3 | 4
 
@@ -31,7 +33,7 @@ const fieldLabel: React.CSSProperties = {
   display: 'block',
   fontFamily: 'var(--font-body)', fontWeight: 600, fontSize: '10px',
   letterSpacing: '0.2em', textTransform: 'uppercase' as const,
-  color: 'rgba(12,12,12,0.38)', marginBottom: '10px',
+  color: 'rgba(12,12,12,0.62)', marginBottom: '10px',
 }
 
 const sectionHeading: React.CSSProperties = {
@@ -120,7 +122,7 @@ function ValidatedField({
       </div>
       <p style={{
         fontFamily: 'var(--font-body)', fontSize: '11px', fontWeight: showError ? 600 : 400,
-        color: showError ? '#dc2626' : 'rgba(12,12,12,0.28)', marginTop: '8px',
+        color: showError ? '#dc2626' : 'rgba(12,12,12,0.62)', marginTop: '8px',
       }}>
         {showError ? errorText : helperText}
       </p>
@@ -220,16 +222,34 @@ export default function BookingModal({
     }, 400)
   }
 
+  const panelRef = useRef<HTMLDivElement>(null)
+  useDialogFocus(panelRef, isOpen)
+
+  // Escape closes the popup, as with any dialog.
+  useEffect(() => {
+    if (!isOpen) return
+    const onKey = (e: KeyboardEvent) => { if (e.key === 'Escape') handleClose() }
+    window.addEventListener('keydown', onKey)
+    return () => window.removeEventListener('keydown', onKey)
+  })
+
   if (!isOpen) return null
 
   return (
-    <div data-testid="booking-modal" style={{ position: 'fixed', inset: 0, zIndex: 100, display: 'flex', justifyContent: 'flex-end' }}>
+    <div
+      data-testid="booking-modal"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="booking-modal-title"
+      style={{ position: 'fixed', inset: 0, zIndex: 100, display: 'flex', justifyContent: 'flex-end' }}
+    >
       <div
         style={{ position: 'absolute', inset: 0, background: 'rgba(12,12,12,0.82)', backdropFilter: 'blur(3px)' }}
         onClick={handleClose}
       />
 
       <motion.div
+        ref={panelRef}
         initial={{ x: '100%' }}
         animate={{ x: 0 }}
         transition={{ duration: 0.42, ease }}
@@ -250,15 +270,15 @@ export default function BookingModal({
               <p style={{
                 fontFamily: 'var(--font-body)', fontSize: '10px', fontWeight: 600,
                 letterSpacing: '0.22em', textTransform: 'uppercase',
-                color: 'rgba(255,255,255,0.28)', marginBottom: '6px',
+                color: 'rgba(255,255,255,0.55)', marginBottom: '6px',
               }}>
-                {step === 4 ? 'Booking Confirmed' : 'Mobile Detailing · Hertfordshire'}
+                {step === 4 ? 'Booking Requested' : 'Mobile Detailing · Hertfordshire'}
               </p>
-              <h2 style={{
+              <h2 id="booking-modal-title" style={{
                 fontFamily: 'var(--font-display)', fontSize: '28px',
                 letterSpacing: '0.04em', color: '#ffffff', lineHeight: 1,
               }}>
-                {step === 4 ? "YOU'RE BOOKED IN" : <>BOOK YOUR <span style={{ color: '#E84A0C' }}>DETAIL</span></>}
+                {step === 4 ? 'REQUEST SENT.' : <>BOOK YOUR <span style={{ color: '#E84A0C' }}>DETAIL</span></>}
               </h2>
             </div>
             <button
@@ -268,10 +288,10 @@ export default function BookingModal({
                 width: 36, height: 36, background: 'rgba(255,255,255,0.07)',
                 border: 'none', cursor: 'pointer', flexShrink: 0,
                 display: 'flex', alignItems: 'center', justifyContent: 'center',
-                color: 'rgba(255,255,255,0.5)', fontSize: '16px', transition: 'background 0.2s, color 0.2s',
+                color: 'rgba(255,255,255,0.55)', fontSize: '16px', transition: 'background 0.2s, color 0.2s',
               }}
               onMouseEnter={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.15)'; e.currentTarget.style.color = '#fff' }}
-              onMouseLeave={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.07)'; e.currentTarget.style.color = 'rgba(255,255,255,0.5)' }}
+              onMouseLeave={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.07)'; e.currentTarget.style.color = 'rgba(255,255,255,0.55)' }}
             >
               ✕
             </button>
@@ -292,7 +312,7 @@ export default function BookingModal({
                         background: isDone ? '#16a34a' : isActive ? '#E84A0C' : 'rgba(255,255,255,0.12)',
                         display: 'flex', alignItems: 'center', justifyContent: 'center',
                         fontFamily: 'var(--font-body)', fontSize: '10px', fontWeight: 700,
-                        color: isDone || isActive ? '#ffffff' : 'rgba(255,255,255,0.4)',
+                        color: isDone || isActive ? '#ffffff' : 'rgba(255,255,255,0.55)',
                         transition: 'background 0.3s',
                       }}>
                         {isDone ? <CheckIcon size={9} /> : stepNum}
@@ -300,7 +320,7 @@ export default function BookingModal({
                       <span style={{
                         fontFamily: 'var(--font-body)', fontSize: '9px', fontWeight: 600,
                         letterSpacing: '0.04em', textTransform: 'uppercase', textAlign: 'center',
-                        color: isActive ? '#ffffff' : 'rgba(255,255,255,0.35)', whiteSpace: 'nowrap',
+                        color: isActive ? '#ffffff' : 'rgba(255,255,255,0.55)', whiteSpace: 'nowrap',
                       }}>
                         {label}
                       </span>
@@ -349,7 +369,7 @@ export default function BookingModal({
                         border: `1px solid ${vehicle === key ? '#0C0C0C' : 'rgba(12,12,12,0.12)'}`,
                         cursor: 'pointer',
                         fontFamily: 'var(--font-body)', fontWeight: 600, fontSize: '12.5px',
-                        color: vehicle === key ? '#ffffff' : 'rgba(12,12,12,0.55)',
+                        color: vehicle === key ? '#ffffff' : 'rgba(12,12,12,0.62)',
                         textAlign: 'center', letterSpacing: '0.02em', transition: 'all 0.15s',
                       }}
                     >
@@ -383,13 +403,13 @@ export default function BookingModal({
                         <span style={{ fontFamily: 'var(--font-body)', fontWeight: 600, fontSize: '15px', color: pack === p.id ? '#ffffff' : '#0C0C0C', display: 'block', marginBottom: '3px' }}>
                           {p.id}
                         </span>
-                        <span style={{ fontFamily: 'var(--font-body)', fontSize: '12px', color: pack === p.id ? 'rgba(255,255,255,0.42)' : 'rgba(12,12,12,0.38)' }}>
+                        <span style={{ fontFamily: 'var(--font-body)', fontSize: '12px', color: pack === p.id ? 'rgba(255,255,255,0.55)' : 'rgba(12,12,12,0.62)' }}>
                           {p.tagline} · {p.duration}
                         </span>
                       </div>
-                      <span style={{ fontFamily: 'var(--font-display)', fontSize: vehicle ? '22px' : '15px', color: pack === p.id ? '#E84A0C' : 'rgba(12,12,12,0.35)', letterSpacing: '0.02em', flexShrink: 0, marginLeft: '12px', textAlign: 'right' }}>
+                      <span style={{ fontFamily: 'var(--font-display)', fontSize: vehicle ? '22px' : '15px', color: pack === p.id ? '#E84A0C' : 'rgba(12,12,12,0.62)', letterSpacing: '0.02em', flexShrink: 0, marginLeft: '12px', textAlign: 'right' }}>
                         {vehicle
-                          ? `£${priceMap[p.id]?.[vehicle as VehicleType] ?? '—'}`
+                          ? `£${priceMap[p.id]?.[vehicle as VehicleType] ?? 0}`
                           : `£${Math.min(...Object.values(priceMap[p.id]))}–£${Math.max(...Object.values(priceMap[p.id]))}`}
                       </span>
                     </button>
@@ -427,11 +447,11 @@ export default function BookingModal({
                           }}>
                             {selected && <CheckIcon size={9} />}
                           </span>
-                          <span style={{ fontFamily: 'var(--font-body)', fontSize: '13px', fontWeight: 500, color: selected ? '#0C0C0C' : 'rgba(12,12,12,0.6)' }}>
+                          <span style={{ fontFamily: 'var(--font-body)', fontSize: '13px', fontWeight: 500, color: selected ? '#0C0C0C' : 'rgba(12,12,12,0.62)' }}>
                             {addon.label}
                           </span>
                         </div>
-                        <span style={{ fontFamily: 'var(--font-display)', fontSize: '16px', color: selected ? '#E84A0C' : 'rgba(12,12,12,0.3)', flexShrink: 0 }}>
+                        <span style={{ fontFamily: 'var(--font-display)', fontSize: '16px', color: selected ? '#E84A0C' : 'rgba(12,12,12,0.62)', flexShrink: 0 }}>
                           +£{addon.price}
                         </span>
                       </button>
@@ -443,7 +463,7 @@ export default function BookingModal({
               {/* Price preview — always visible: a range that narrows to an exact total */}
               <div style={{ background: '#0C0C0C', padding: '20px 24px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                 <div>
-                  <p style={{ fontFamily: 'var(--font-body)', fontSize: '10px', fontWeight: 600, letterSpacing: '0.18em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.3)', marginBottom: '4px' }}>
+                  <p style={{ fontFamily: 'var(--font-body)', fontSize: '10px', fontWeight: 600, letterSpacing: '0.18em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.55)', marginBottom: '4px' }}>
                     {totalPrice !== null ? (addonTotal > 0 ? 'Total inc. add-ons' : 'Your Price') : pack ? `${pack} Price Range` : 'Price Range'}
                   </p>
                   <span style={{ fontFamily: 'var(--font-display)', fontSize: '44px', color: '#ffffff', letterSpacing: '0.02em', lineHeight: 1 }}>
@@ -454,19 +474,19 @@ export default function BookingModal({
                         : `£${overallMin}–£${overallMax}`}
                   </span>
                   {totalPrice !== null && addonTotal > 0 && (
-                    <p style={{ fontFamily: 'var(--font-body)', fontSize: '11px', color: 'rgba(255,255,255,0.25)', marginTop: '4px' }}>
+                    <p style={{ fontFamily: 'var(--font-body)', fontSize: '11px', color: 'rgba(255,255,255,0.55)', marginTop: '4px' }}>
                       Base £{basePrice} + add-ons £{addonTotal}
                     </p>
                   )}
                   {totalPrice === null && (
-                    <p style={{ fontFamily: 'var(--font-body)', fontSize: '11px', color: 'rgba(255,255,255,0.25)', marginTop: '4px' }}>
+                    <p style={{ fontFamily: 'var(--font-body)', fontSize: '11px', color: 'rgba(255,255,255,0.55)', marginTop: '4px' }}>
                       {pack ? 'Depends on vehicle size' : 'Select a vehicle and pack for your exact price'}
                     </p>
                   )}
                 </div>
                 <div style={{ textAlign: 'right' }}>
-                  <p style={{ fontFamily: 'var(--font-body)', fontSize: '13px', color: 'rgba(255,255,255,0.45)', marginBottom: '3px' }}>{pack || '—'}</p>
-                  <p style={{ fontFamily: 'var(--font-body)', fontSize: '12px', color: 'rgba(255,255,255,0.25)' }}>{vehicle ? vehicleLabels[vehicle as VehicleType] : '—'}</p>
+                  <p style={{ fontFamily: 'var(--font-body)', fontSize: '13px', color: 'rgba(255,255,255,0.55)', marginBottom: '3px' }}>{pack || 'No package yet'}</p>
+                  <p style={{ fontFamily: 'var(--font-body)', fontSize: '12px', color: 'rgba(255,255,255,0.55)' }}>{vehicle ? vehicleLabels[vehicle as VehicleType] : 'No vehicle yet'}</p>
                 </div>
               </div>
             </div>
@@ -477,14 +497,20 @@ export default function BookingModal({
             <form id="step2-form" onSubmit={e => { e.preventDefault(); setStep(3) }} style={{ display: 'flex', flexDirection: 'column', gap: '28px' }}>
 
               <div>
-                <p style={sectionHeading}>When</p>
+                <p style={sectionHeading}>Date &amp; Time</p>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '20px', marginTop: '12px' }}>
                   <div>
                     <label style={fieldLabel}>Preferred Date</label>
                     <input
                       type="date" required
-                      min={new Date().toISOString().split('T')[0]}
-                      value={date} onChange={e => setDate(e.target.value)}
+                      min={ukNow().date}
+                      value={date}
+                      onChange={e => {
+                        const d = e.target.value
+                        setDate(d)
+                        // Drop a picked slot that isn't possible on the new date.
+                        if (time && !isSlotAvailable(d, time)) setTime('')
+                      }}
                       style={textInput}
                     />
                   </div>
@@ -492,32 +518,41 @@ export default function BookingModal({
                   <div>
                     <label style={fieldLabel}>Preferred Time Slot</label>
                     <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '6px' }}>
-                      {timeSlots.map(t => (
+                      {timeSlots.map(t => {
+                        // Slots already passed today (or within the hour) can't be picked.
+                        const unavailable = Boolean(date) && !isSlotAvailable(date, t)
+                        return (
                         <button
                           key={t} type="button" onClick={() => setTime(t)}
+                          disabled={unavailable}
+                          aria-disabled={unavailable}
+                          title={unavailable ? 'This time has passed today' : undefined}
                           style={{
                             padding: '13px 8px',
                             border: `1px solid ${time === t ? '#0C0C0C' : 'rgba(12,12,12,0.1)'}`,
                             background: time === t ? '#0C0C0C' : 'transparent',
-                            cursor: 'pointer',
+                            cursor: unavailable ? 'not-allowed' : 'pointer',
+                            opacity: unavailable ? 0.3 : 1,
+                            textDecoration: unavailable ? 'line-through' : 'none',
                             fontFamily: 'var(--font-body)', fontWeight: 600, fontSize: '13px',
-                            color: time === t ? '#ffffff' : 'rgba(12,12,12,0.5)',
+                            color: time === t ? '#ffffff' : 'rgba(12,12,12,0.62)',
                             transition: 'all 0.15s',
                           }}
                         >
                           {t}
                         </button>
-                      ))}
+                        )
+                      })}
                     </div>
-                    <p style={{ fontFamily: 'var(--font-body)', fontSize: '11px', color: 'rgba(12,12,12,0.28)', marginTop: '10px' }}>
-                      Exact arrival window confirmed within 1 hour of booking.
+                    <p style={{ fontFamily: 'var(--font-body)', fontSize: '11px', color: 'rgba(12,12,12,0.62)', marginTop: '10px' }}>
+                      Exact arrival window confirmed as soon as possible.
                     </p>
                   </div>
                 </div>
               </div>
 
               <div style={{ borderTop: '1px solid rgba(12,12,12,0.08)', paddingTop: '24px' }}>
-                <p style={sectionHeading}>Where &amp; What</p>
+                <p style={sectionHeading}>Location &amp; Vehicle</p>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '20px', marginTop: '12px' }}>
                   <ValidatedField
                     label="Service Postcode"
@@ -528,7 +563,7 @@ export default function BookingModal({
                     maxLength={8}
                     touched={postcodeTouched}
                     valid={postcodeValid}
-                    errorText="That doesn't look like a valid UK postcode — double-check it."
+                    errorText="That doesn't look like a valid UK postcode. Please double-check it."
                     helperText="We use this to confirm we cover your area."
                     uppercase
                     letterSpacing="0.12em"
@@ -543,7 +578,7 @@ export default function BookingModal({
                     maxLength={8}
                     touched={carRegTouched}
                     valid={carRegValid}
-                    errorText="That doesn't look like a valid registration — letters and numbers only."
+                    errorText="That doesn't look like a valid registration. Letters and numbers only."
                     helperText="Helps us confirm vehicle details before we arrive."
                     uppercase
                     letterSpacing="0.1em"
@@ -608,7 +643,7 @@ export default function BookingModal({
                   style={{ ...textInput, resize: 'none' }}
                 />
                 {notes.length > 800 && (
-                  <p style={{ fontFamily: 'var(--font-body)', fontSize: '11px', color: notes.length >= 1000 ? '#dc2626' : 'rgba(12,12,12,0.28)', marginTop: '6px' }}>
+                  <p style={{ fontFamily: 'var(--font-body)', fontSize: '11px', color: notes.length >= 1000 ? '#dc2626' : 'rgba(12,12,12,0.62)', marginTop: '6px' }}>
                     {notes.length}/1000
                   </p>
                 )}
@@ -616,25 +651,25 @@ export default function BookingModal({
 
               {/* Summary */}
               <div style={{ background: '#F5F4F1', padding: '20px', borderTop: '3px solid #E84A0C' }}>
-                <p style={{ fontFamily: 'var(--font-body)', fontWeight: 700, fontSize: '10px', letterSpacing: '0.16em', textTransform: 'uppercase', color: 'rgba(12,12,12,0.35)', marginBottom: '14px' }}>
+                <p style={{ fontFamily: 'var(--font-body)', fontWeight: 700, fontSize: '10px', letterSpacing: '0.16em', textTransform: 'uppercase', color: 'rgba(12,12,12,0.62)', marginBottom: '14px' }}>
                   Booking Summary
                 </p>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '9px' }}>
                   {([
                     ['Pack',       pack],
-                    ['Vehicle',    vehicle ? vehicleLabels[vehicle as VehicleType] : '—'],
-                    ['Reg',        carReg || '—'],
-                    ['Date & Time', date && time ? `${date} · ${time}` : '—'],
-                    ['Postcode',   address || '—'],
+                    ['Vehicle',    vehicle ? vehicleLabels[vehicle as VehicleType] : 'Not set'],
+                    ['Reg',        carReg || 'Not set'],
+                    ['Date & Time', date && time ? `${formatShortDate(date)} · ${time}` : 'Not set'],
+                    ['Postcode',   address || 'Not set'],
                   ] as [string, string][]).map(([k, v]) => (
                     <div key={k} style={{ display: 'flex', justifyContent: 'space-between', gap: '16px' }}>
-                      <span style={{ fontFamily: 'var(--font-body)', fontSize: '13px', color: 'rgba(12,12,12,0.4)', flexShrink: 0 }}>{k}</span>
+                      <span style={{ fontFamily: 'var(--font-body)', fontSize: '13px', color: 'rgba(12,12,12,0.62)', flexShrink: 0 }}>{k}</span>
                       <span style={{ fontFamily: 'var(--font-body)', fontWeight: 600, fontSize: '13px', color: '#0C0C0C', textAlign: 'right', maxWidth: '220px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{v}</span>
                     </div>
                   ))}
                   {selectedAddons.length > 0 && (
                     <div style={{ display: 'flex', justifyContent: 'space-between', gap: '16px' }}>
-                      <span style={{ fontFamily: 'var(--font-body)', fontSize: '13px', color: 'rgba(12,12,12,0.4)', flexShrink: 0 }}>Add-ons</span>
+                      <span style={{ fontFamily: 'var(--font-body)', fontSize: '13px', color: 'rgba(12,12,12,0.62)', flexShrink: 0 }}>Add-ons</span>
                       <span style={{ fontFamily: 'var(--font-body)', fontWeight: 600, fontSize: '13px', color: '#0C0C0C', textAlign: 'right', maxWidth: '220px' }}>
                         {ADDONS.filter(a => selectedAddons.includes(a.id)).map(a => a.label).join(', ')}
                       </span>
@@ -644,7 +679,7 @@ export default function BookingModal({
                 <div style={{ borderTop: '1px solid rgba(12,12,12,0.08)', marginTop: '14px', paddingTop: '14px', display: 'flex', justifyContent: 'space-between', alignItems: 'baseline' }}>
                   <span style={{ fontFamily: 'var(--font-body)', fontWeight: 600, fontSize: '11px', letterSpacing: '0.12em', textTransform: 'uppercase', color: '#0C0C0C' }}>Total</span>
                   <span style={{ fontFamily: 'var(--font-display)', fontSize: '28px', color: '#0C0C0C' }}>
-                    {totalPrice !== null ? `£${totalPrice}` : '—'}
+                    {totalPrice !== null ? `£${totalPrice}` : '£0'}
                   </span>
                 </div>
               </div>
@@ -672,16 +707,16 @@ export default function BookingModal({
               </motion.div>
 
               <h3 style={{ fontFamily: 'var(--font-display)', fontSize: '36px', letterSpacing: '0.03em', color: '#0C0C0C', lineHeight: 1, marginBottom: '12px' }}>
-                CONFIRMED
+                THANK YOU
               </h3>
               {bookingId && (
-                <p style={{ fontFamily: 'var(--font-body)', fontSize: '10px', fontWeight: 600, letterSpacing: '0.2em', textTransform: 'uppercase', color: 'rgba(12,12,12,0.28)', marginBottom: '16px' }}>
+                <p style={{ fontFamily: 'var(--font-body)', fontSize: '10px', fontWeight: 600, letterSpacing: '0.2em', textTransform: 'uppercase', color: 'rgba(12,12,12,0.62)', marginBottom: '16px' }}>
                   Ref: {bookingId}
                 </p>
               )}
-              <p style={{ fontFamily: 'var(--font-body)', fontSize: '15px', lineHeight: 1.72, color: 'rgba(12,12,12,0.5)', maxWidth: '340px', margin: '0 auto 28px' }}>
-                We&apos;ll confirm by text and email within the hour. Your detailer arrives on{' '}
-                <strong style={{ color: '#0C0C0C' }}>{date}</strong> at{' '}
+              <p style={{ fontFamily: 'var(--font-body)', fontSize: '15px', lineHeight: 1.72, color: 'rgba(12,12,12,0.62)', maxWidth: '340px', margin: '0 auto 28px' }}>
+                We&apos;ll be in touch by text and email as soon as possible to confirm your slot on{' '}
+                <strong style={{ color: '#0C0C0C' }}>{formatBookingDate(date)}</strong> at{' '}
                 <strong style={{ color: '#0C0C0C' }}>{time}</strong>.
               </p>
 
@@ -692,13 +727,13 @@ export default function BookingModal({
                   ['Postcode', address],
                 ].map(([k, v]) => (
                   <div key={k} style={{ display: 'flex', justifyContent: 'space-between', fontFamily: 'var(--font-body)', fontSize: '13px', marginBottom: '8px' }}>
-                    <span style={{ color: 'rgba(12,12,12,0.4)' }}>{k}</span>
+                    <span style={{ color: 'rgba(12,12,12,0.62)' }}>{k}</span>
                     <span style={{ fontWeight: 600, color: '#0C0C0C', maxWidth: '220px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{v}</span>
                   </div>
                 ))}
                 {selectedAddons.length > 0 && (
                   <div style={{ display: 'flex', justifyContent: 'space-between', fontFamily: 'var(--font-body)', fontSize: '13px', marginBottom: '8px' }}>
-                    <span style={{ color: 'rgba(12,12,12,0.4)' }}>Add-ons</span>
+                    <span style={{ color: 'rgba(12,12,12,0.62)' }}>Add-ons</span>
                     <span style={{ fontWeight: 600, color: '#0C0C0C', maxWidth: '220px', textAlign: 'right' }}>
                       {ADDONS.filter(a => selectedAddons.includes(a.id)).map(a => a.label).join(', ')}
                     </span>
@@ -744,7 +779,7 @@ export default function BookingModal({
                   padding: '15px 20px', border: '1px solid rgba(12,12,12,0.12)',
                   background: 'transparent', cursor: 'pointer',
                   fontFamily: 'var(--font-body)', fontWeight: 600, fontSize: '11px',
-                  letterSpacing: '0.1em', textTransform: 'uppercase', color: 'rgba(12,12,12,0.45)',
+                  letterSpacing: '0.1em', textTransform: 'uppercase', color: 'rgba(12,12,12,0.62)',
                   transition: 'border-color 0.2s', flexShrink: 0,
                 }}
                 onMouseEnter={e => e.currentTarget.style.borderColor = 'rgba(12,12,12,0.35)'}

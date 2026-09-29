@@ -2,9 +2,9 @@
 
 import { useState } from 'react'
 import { motion } from 'framer-motion'
+import { SiteNavbar, SiteFooter } from '@/components/SiteChrome'
 
 const ease = [0.22, 1, 0.36, 1] as [number, number, number, number]
-const YEAR = new Date().getFullYear()
 
 const VAN_PACKAGES = [
   {
@@ -95,7 +95,7 @@ export default function VanFleetPage() {
     display: 'block',
     fontFamily: 'var(--font-body)', fontWeight: 600, fontSize: '10px',
     letterSpacing: '0.2em', textTransform: 'uppercase' as const,
-    color: 'rgba(255,255,255,0.3)', marginBottom: '10px',
+    color: 'rgba(255,255,255,0.55)', marginBottom: '10px',
   }
 
   const textInput: React.CSSProperties = {
@@ -110,78 +110,11 @@ export default function VanFleetPage() {
   return (
     <div style={{ background: '#0C0C0C', minHeight: '100vh' }}>
 
-      {/* ── Sticky nav ── */}
-      <nav style={{
-        position: 'sticky', top: 0, zIndex: 50,
-        height: '72px', background: '#0C0C0C',
-        borderBottom: '1px solid rgba(255,255,255,0.06)',
-        display: 'flex', alignItems: 'center',
-      }}>
-        <div style={{
-          width: '100%', maxWidth: '1400px', margin: '0 auto',
-          padding: '0 clamp(20px, 4vw, 64px)',
-          display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-        }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
-            {/* Back link — hidden on small screens to prevent overflow */}
-            <a
-              href="/"
-              className="hidden sm:flex"
-              style={{
-                fontFamily: 'var(--font-body)', fontSize: '12px', fontWeight: 600,
-                letterSpacing: '0.08em', textTransform: 'uppercase',
-                color: 'rgba(255,255,255,0.35)', textDecoration: 'none',
-                alignItems: 'center', gap: '6px',
-                transition: 'color 0.2s',
-              }}
-              onMouseEnter={e => (e.currentTarget.style.color = 'rgba(255,255,255,0.7)')}
-              onMouseLeave={e => (e.currentTarget.style.color = 'rgba(255,255,255,0.35)')}
-            >
-              ← Back
-            </a>
-            <span className="hidden sm:block" style={{ width: 1, height: 16, background: 'rgba(255,255,255,0.1)' }} />
-            <a href="/" style={{ textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '7px' }}>
-              <span style={{
-                fontFamily: 'var(--font-display)', fontSize: 'clamp(16px, 4vw, 22px)',
-                letterSpacing: '0.06em', color: '#ffffff', lineHeight: 1,
-              }}>
-                TRUE TO
-              </span>
-              <span style={{
-                display: 'inline-block', width: 'clamp(4px, 1vw, 5px)', height: 'clamp(6px, 1.5vw, 8px)',
-                background: '#E84A0C',
-                borderRadius: '50% 50% 45% 45% / 55% 55% 45% 45%',
-                flexShrink: 0, marginBottom: '-1px',
-              }} />
-              <span style={{
-                fontFamily: 'var(--font-display)', fontSize: 'clamp(16px, 4vw, 22px)',
-                letterSpacing: '0.06em', color: '#ffffff', lineHeight: 1,
-              }}>
-                DETAIL
-              </span>
-            </a>
-          </div>
-
-          <a
-            href="#enquire"
-            style={{
-              fontFamily: 'var(--font-body)', fontWeight: 700, fontSize: 'clamp(10px, 2vw, 11px)',
-              letterSpacing: '0.1em', textTransform: 'uppercase',
-              background: '#E84A0C', color: '#fff', textDecoration: 'none',
-              padding: 'clamp(9px, 2vw, 11px) clamp(14px, 3vw, 22px)', display: 'inline-block',
-              transition: 'background 0.2s', whiteSpace: 'nowrap',
-            }}
-            onMouseEnter={e => (e.currentTarget.style.background = '#C53D08')}
-            onMouseLeave={e => (e.currentTarget.style.background = '#E84A0C')}
-          >
-            Get a Quote
-          </a>
-        </div>
-      </nav>
+      <SiteNavbar />
 
       {/* ── Hero ── */}
       <section style={{
-        paddingTop: 'clamp(40px, 8vw, 160px)',
+        paddingTop: 'calc(80px + clamp(40px, 8vw, 160px))',
         paddingBottom: 'clamp(40px, 8vw, 120px)',
         borderBottom: '1px solid rgba(255,255,255,0.06)',
       }}>
@@ -196,7 +129,7 @@ export default function VanFleetPage() {
               <span style={{ width: 24, height: '1.5px', background: '#E84A0C', flexShrink: 0 }} />
               <span style={{
                 fontFamily: 'var(--font-body)', fontWeight: 600, fontSize: '11px',
-                letterSpacing: '0.22em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.3)',
+                letterSpacing: '0.22em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.55)',
               }}>
                 Commercial & Fleet Services
               </span>
@@ -215,7 +148,7 @@ export default function VanFleetPage() {
 
             <p style={{
               fontFamily: 'var(--font-body)', fontSize: 'clamp(14px, 1.8vw, 17px)',
-              lineHeight: 1.72, color: 'rgba(255,255,255,0.38)',
+              lineHeight: 1.72, color: 'rgba(255,255,255,0.55)',
               maxWidth: '520px', marginBottom: 'clamp(28px, 4vw, 40px)',
             }}>
               Designed for working vehicles, fleets and business owners who need reliable,
@@ -243,7 +176,7 @@ export default function VanFleetPage() {
                   <div style={{
                     fontFamily: 'var(--font-body)', fontSize: 'clamp(8px, 1.5vw, 11px)', fontWeight: 600,
                     letterSpacing: '0.1em', textTransform: 'uppercase',
-                    color: 'rgba(255,255,255,0.28)', marginTop: '5px', lineHeight: 1.3,
+                    color: 'rgba(255,255,255,0.55)', marginTop: '5px', lineHeight: 1.3,
                   }}>
                     {lab}
                   </div>
@@ -274,7 +207,7 @@ export default function VanFleetPage() {
               <span style={{ width: 20, height: '1.5px', background: '#E84A0C', flexShrink: 0 }} />
               <span style={{
                 fontFamily: 'var(--font-body)', fontWeight: 600, fontSize: '11px',
-                letterSpacing: '0.2em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.28)',
+                letterSpacing: '0.2em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.55)',
               }}>
                 Van Services
               </span>
@@ -339,7 +272,7 @@ export default function VanFleetPage() {
                       <span style={{
                         fontFamily: 'var(--font-body)', fontWeight: 600, fontSize: '10px',
                         letterSpacing: '0.1em', textTransform: 'uppercase',
-                        color: feat ? 'rgba(12,12,12,0.35)' : 'rgba(255,255,255,0.25)',
+                        color: feat ? 'rgba(12,12,12,0.62)' : 'rgba(255,255,255,0.55)',
                         border: `1px solid ${feat ? 'rgba(12,12,12,0.12)' : 'rgba(255,255,255,0.1)'}`,
                         padding: '3px 8px',
                       }}>
@@ -358,7 +291,7 @@ export default function VanFleetPage() {
                     </h3>
                     <p style={{
                       fontFamily: 'var(--font-body)', fontSize: '13px',
-                      color: feat ? 'rgba(12,12,12,0.42)' : 'rgba(255,255,255,0.32)',
+                      color: feat ? 'rgba(12,12,12,0.62)' : 'rgba(255,255,255,0.55)',
                       marginBottom: '24px',
                     }}>
                       {pkg.tagline}
@@ -386,14 +319,14 @@ export default function VanFleetPage() {
                         <li key={item} style={{ display: 'flex', alignItems: 'flex-start', gap: '10px' }}>
                           <span style={{
                             fontFamily: 'var(--font-body)', fontWeight: 600, fontSize: '11px',
-                            color: feat ? '#E84A0C' : 'rgba(255,255,255,0.2)',
+                            color: feat ? '#E84A0C' : 'rgba(255,255,255,0.55)',
                             flexShrink: 0, marginTop: '2px',
                           }}>
                             {feat ? '→' : '–'}
                           </span>
                           <span style={{
                             fontFamily: 'var(--font-body)', fontSize: '13px', lineHeight: 1.5,
-                            color: feat ? 'rgba(12,12,12,0.55)' : 'rgba(255,255,255,0.4)',
+                            color: feat ? 'rgba(12,12,12,0.62)' : 'rgba(255,255,255,0.6)',
                           }}>
                             {item}
                           </span>
@@ -441,10 +374,10 @@ export default function VanFleetPage() {
             style={{
               marginTop: '18px',
               fontFamily: 'var(--font-body)', fontSize: '12px', lineHeight: 1.7,
-              color: 'rgba(255,255,255,0.25)',
+              color: 'rgba(255,255,255,0.55)',
             }}
           >
-            <span style={{ color: 'rgba(255,255,255,0.45)', fontWeight: 600 }}>Note:</span>{' '}
+            <span style={{ color: 'rgba(255,255,255,0.55)', fontWeight: 600 }}>Note:</span>{' '}
             Van pricing is based on standard working vans. Heavily soiled or commercial-use interiors may require a custom quote, which we&apos;ll always confirm before we start.
           </motion.p>
 
@@ -478,7 +411,7 @@ export default function VanFleetPage() {
                 <span style={{ width: 20, height: '1.5px', background: '#E84A0C', flexShrink: 0 }} />
                 <span style={{
                   fontFamily: 'var(--font-body)', fontWeight: 600, fontSize: '11px',
-                  letterSpacing: '0.2em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.28)',
+                  letterSpacing: '0.2em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.55)',
                 }}>
                   Fleet Plans
                 </span>
@@ -494,7 +427,7 @@ export default function VanFleetPage() {
               </h2>
               <p style={{
                 fontFamily: 'var(--font-body)', fontSize: '15px', lineHeight: 1.75,
-                color: 'rgba(255,255,255,0.38)', marginBottom: '36px', maxWidth: '440px',
+                color: 'rgba(255,255,255,0.55)', marginBottom: '36px', maxWidth: '440px',
               }}>
                 Running 3 or more vehicles? We&apos;ll build a plan around your schedule and fleet size,
                 with discounted rates, priority slots and one point of contact.
@@ -518,7 +451,7 @@ export default function VanFleetPage() {
                   >
                     <span style={{
                       fontFamily: 'var(--font-body)', fontWeight: 600, fontSize: '13px',
-                      color: 'rgba(255,255,255,0.45)',
+                      color: 'rgba(255,255,255,0.55)',
                     }}>
                       {tier}
                     </span>
@@ -534,7 +467,7 @@ export default function VanFleetPage() {
 
               <p style={{
                 fontFamily: 'var(--font-body)', fontSize: '12px',
-                color: 'rgba(255,255,255,0.22)', lineHeight: 1.6,
+                color: 'rgba(255,255,255,0.55)', lineHeight: 1.6,
               }}>
                 Weekly, bi-weekly or monthly scheduling available. Get in touch and we&apos;ll put together a tailored proposal.
               </p>
@@ -574,7 +507,7 @@ export default function VanFleetPage() {
                     </p>
                     <p style={{
                       fontFamily: 'var(--font-body)', fontSize: '13px', lineHeight: 1.6,
-                      color: 'rgba(255,255,255,0.35)',
+                      color: 'rgba(255,255,255,0.55)',
                     }}>
                       {b.desc}
                     </p>
@@ -612,7 +545,7 @@ export default function VanFleetPage() {
                 <span style={{ width: 20, height: '1.5px', background: '#E84A0C', flexShrink: 0 }} />
                 <span style={{
                   fontFamily: 'var(--font-body)', fontWeight: 600, fontSize: '11px',
-                  letterSpacing: '0.2em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.28)',
+                  letterSpacing: '0.2em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.55)',
                 }}>
                   Get in Touch
                 </span>
@@ -628,7 +561,7 @@ export default function VanFleetPage() {
               </h2>
               <p style={{
                 fontFamily: 'var(--font-body)', fontSize: '15px', lineHeight: 1.75,
-                color: 'rgba(255,255,255,0.38)', maxWidth: '400px', marginBottom: '36px',
+                color: 'rgba(255,255,255,0.55)', maxWidth: '400px', marginBottom: '36px',
               }}>
                 Whether it&apos;s a single van or a full fleet, drop us a message and we&apos;ll
                 come back to you with a tailored quote, usually within a few hours.
@@ -644,7 +577,7 @@ export default function VanFleetPage() {
                     <span style={{
                       fontFamily: 'var(--font-body)', fontWeight: 600, fontSize: '10px',
                       letterSpacing: '0.18em', textTransform: 'uppercase',
-                      color: 'rgba(255,255,255,0.22)', width: '48px', flexShrink: 0,
+                      color: 'rgba(255,255,255,0.55)', width: '48px', flexShrink: 0,
                     }}>
                       {label}
                     </span>
@@ -690,7 +623,7 @@ export default function VanFleetPage() {
                   </h3>
                   <p style={{
                     fontFamily: 'var(--font-body)', fontSize: '14px', lineHeight: 1.7,
-                    color: 'rgba(255,255,255,0.38)',
+                    color: 'rgba(255,255,255,0.55)',
                   }}>
                     We&apos;ll be in touch within a few hours to discuss your requirements.
                   </p>
@@ -707,8 +640,9 @@ export default function VanFleetPage() {
                 >
                   <div style={{ display: 'grid', gap: '16px' }} className="grid-cols-1 sm:grid-cols-2">
                     <div>
-                      <label style={fieldLabel}>Your Name</label>
+                      <label htmlFor="fleet-name" style={fieldLabel}>Your Name</label>
                       <input
+                        id="fleet-name"
                         required type="text"
                         value={form.name}
                         onChange={e => setForm(f => ({ ...f, name: e.target.value }))}
@@ -719,8 +653,9 @@ export default function VanFleetPage() {
                       />
                     </div>
                     <div>
-                      <label style={fieldLabel}>Business Name</label>
+                      <label htmlFor="fleet-business" style={fieldLabel}>Business Name</label>
                       <input
+                        id="fleet-business"
                         type="text"
                         value={form.business}
                         onChange={e => setForm(f => ({ ...f, business: e.target.value }))}
@@ -734,8 +669,9 @@ export default function VanFleetPage() {
 
                   <div style={{ display: 'grid', gap: '16px' }} className="grid-cols-1 sm:grid-cols-2">
                     <div>
-                      <label style={fieldLabel}>Phone Number</label>
+                      <label htmlFor="fleet-phone" style={fieldLabel}>Phone Number</label>
                       <input
+                        id="fleet-phone"
                         required type="tel"
                         value={form.phone}
                         onChange={e => setForm(f => ({ ...f, phone: e.target.value }))}
@@ -746,14 +682,15 @@ export default function VanFleetPage() {
                       />
                     </div>
                     <div>
-                      <label style={fieldLabel}>Fleet Size</label>
+                      <label htmlFor="fleet-size" style={fieldLabel}>Fleet Size</label>
                       <select
+                        id="fleet-size"
                         value={form.fleet}
                         onChange={e => setForm(f => ({ ...f, fleet: e.target.value }))}
                         style={{
                           ...textInput,
                           appearance: 'none',
-                          color: form.fleet ? '#ffffff' : 'rgba(255,255,255,0.35)',
+                          color: form.fleet ? '#ffffff' : 'rgba(255,255,255,0.55)',
                         }}
                       >
                         <option value="" disabled>Select fleet size</option>
@@ -767,8 +704,9 @@ export default function VanFleetPage() {
                   </div>
 
                   <div>
-                    <label style={fieldLabel}>Tell Us More (optional)</label>
+                    <label htmlFor="fleet-message" style={fieldLabel}>Tell Us More (optional)</label>
                     <textarea
+                        id="fleet-message"
                       value={form.message}
                       onChange={e => setForm(f => ({ ...f, message: e.target.value }))}
                       placeholder="Vehicle types, frequency, any specific requirements..."
@@ -811,31 +749,7 @@ export default function VanFleetPage() {
         </div>
       </section>
 
-      {/* ── Footer strip ── */}
-      <div style={{
-        borderTop: '1px solid rgba(255,255,255,0.06)',
-        padding: 'clamp(20px, 3vw, 28px) clamp(24px, 5vw, 72px)',
-        display: 'flex', flexWrap: 'wrap', alignItems: 'center',
-        justifyContent: 'space-between', gap: '12px',
-        maxWidth: '1400px', margin: '0 auto',
-      }}>
-        <span style={{ fontFamily: 'var(--font-body)', fontSize: '12px', color: 'rgba(255,255,255,0.2)' }}>
-          © {YEAR} True To Detail · Hertfordshire
-        </span>
-        <a
-          href="/"
-          style={{
-            fontFamily: 'var(--font-body)', fontWeight: 600, fontSize: '11px',
-            letterSpacing: '0.1em', textTransform: 'uppercase',
-            color: 'rgba(255,255,255,0.3)', textDecoration: 'none',
-            transition: 'color 0.2s',
-          }}
-          onMouseEnter={e => (e.currentTarget.style.color = 'rgba(255,255,255,0.7)')}
-          onMouseLeave={e => (e.currentTarget.style.color = 'rgba(255,255,255,0.3)')}
-        >
-          Back to main site →
-        </a>
-      </div>
+      <SiteFooter />
 
     </div>
   )

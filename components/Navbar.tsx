@@ -1,6 +1,9 @@
 'use client'
 
+import Link from 'next/link'
 import { useState, useEffect } from 'react'
+import type { Session } from '@supabase/supabase-js'
+import { supabaseBrowser } from '@/lib/supabaseBrowser'
 
 const NAV_LINKS = [
   { label: 'About',    href: '#howitworks' },
@@ -13,6 +16,26 @@ export default function Navbar({ onBookNow }: { onBookNow: () => void }) {
   const [scrolled, setScrolled] = useState(false)
   const [open, setOpen]         = useState(false)
   const [hovered, setHovered]   = useState<string | null>(null)
+
+  // Cross-subdomain SSO (see lib/supabaseBrowser.ts): both this site and the
+  // Job System app read/write the same session cookie, so "My Account"
+  // becomes "Hi, <name>" the moment someone's signed in on either one.
+  const [session, setSession] = useState<Session | null>(null)
+  useEffect(() => {
+    supabaseBrowser.auth.getSession().then(({ data }) => setSession(data.session))
+    const { data: sub } = supabaseBrowser.auth.onAuthStateChange((_event, s) => setSession(s))
+    return () => sub.subscription.unsubscribe()
+  }, [])
+  const firstName =
+    (session?.user.user_metadata?.first_name as string | undefined) ||
+    session?.user.email?.split('@')[0] ||
+    null
+  const accountLabel = firstName ? `Hi, ${firstName}` : 'My Account'
+  // Both paths are this site's own — next.config.ts proxies them in from the
+  // Job System app, so signing in stays same-origin instead of jumping to
+  // app.truetodetail.co.uk. Signed out, this goes straight to the actual
+  // sign-in page rather than a popup.
+  const accountHref = session ? '/account' : '/account/login'
 
   useEffect(() => {
     const fn = () => setScrolled(window.scrollY > 40)
@@ -53,7 +76,7 @@ export default function Navbar({ onBookNow }: { onBookNow: () => void }) {
         >
 
           {/* Logo */}
-          <a
+          <Link
             href="/"
             onClick={(e) => {
               if (window.location.pathname === '/') {
@@ -95,7 +118,7 @@ export default function Navbar({ onBookNow }: { onBookNow: () => void }) {
             }}>
               DETAIL
             </span>
-          </a>
+          </Link>
 
           <div style={{ flex: 1 }} />
 
@@ -109,7 +132,7 @@ export default function Navbar({ onBookNow }: { onBookNow: () => void }) {
                   position: 'relative',
                   fontFamily: 'var(--font-body)', fontWeight: 500, fontSize: '13px',
                   letterSpacing: '0.04em',
-                  color: hovered === l.label ? '#ffffff' : 'rgba(255,255,255,0.52)',
+                  color: hovered === l.label ? '#ffffff' : 'rgba(255,255,255,0.55)',
                   textDecoration: 'none',
                   padding: '0 18px', height: '80px',
                   display: 'flex', alignItems: 'center',
@@ -139,26 +162,58 @@ export default function Navbar({ onBookNow }: { onBookNow: () => void }) {
             ))}
 
             <a
-              href="https://app.truetodetail.co.uk"
-              target="_blank"
-              rel="noopener noreferrer"
-              aria-label="Client Login"
-              title="Client Login"
+              href={accountHref}
               style={{
-                display: 'flex', alignItems: 'center', justifyContent: 'center',
-                width: '36px', height: '36px', flexShrink: 0,
-                color: hovered === 'login' ? '#ffffff' : 'rgba(255,255,255,0.52)',
-                background: hovered === 'login' ? 'rgba(255,255,255,0.08)' : 'transparent',
-                borderRadius: '50%', transition: 'color 0.2s, background 0.2s',
+                position: 'relative',
+                fontFamily: 'var(--font-body)', fontWeight: 500, fontSize: '13px',
+                letterSpacing: '0.04em',
+                color: hovered === 'account' ? '#ffffff' : 'rgba(255,255,255,0.55)',
+                textDecoration: 'none',
+                padding: '0 18px', height: '80px',
+                display: 'flex', alignItems: 'center',
+                cursor: 'pointer',
+                transition: 'color 0.2s',
+                flexShrink: 0,
+                whiteSpace: 'nowrap',
               }}
-              onMouseEnter={() => setHovered('login')}
+              onMouseEnter={() => setHovered('account')}
               onMouseLeave={() => setHovered(null)}
             >
-              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
-                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
-                <circle cx="12" cy="7" r="4" />
-              </svg>
+              <span
+                aria-hidden
+                style={{
+                  position: 'absolute',
+                  bottom: '20px', left: '18px', right: '18px',
+                  height: '1.5px',
+                  background: '#E84A0C',
+                  transformOrigin: 'left center',
+                  transform: `scaleX(${hovered === 'account' ? 1 : 0})`,
+                  transition: hovered === 'account'
+                    ? 'transform 0.28s cubic-bezier(0.22, 1, 0.36, 1)'
+                    : 'transform 0.18s cubic-bezier(0.55, 0, 1, 0.45)',
+                  pointerEvents: 'none',
+                }}
+              />
+              {accountLabel}
             </a>
+
+            {session ? (
+              <button
+                onClick={() => supabaseBrowser.auth.signOut()}
+                style={{
+                  fontFamily: 'var(--font-body)', fontWeight: 500, fontSize: '12px',
+                  letterSpacing: '0.04em', textTransform: 'uppercase',
+                  background: 'none', border: 'none', cursor: 'pointer',
+                  color: hovered === 'signout' ? '#ffffff' : 'rgba(255,255,255,0.55)',
+                  padding: '0 14px', height: '80px',
+                  transition: 'color 0.2s', flexShrink: 0,
+                }}
+                onMouseEnter={() => setHovered('signout')}
+                onMouseLeave={() => setHovered(null)}
+              >
+                Sign out
+              </button>
+            ) : null}
 
             <span style={{
               display: 'block', width: 1, height: 20,
@@ -254,7 +309,7 @@ export default function Navbar({ onBookNow }: { onBookNow: () => void }) {
               <div style={{ display: 'flex', alignItems: 'baseline', gap: '16px' }}>
                 <span style={{
                   fontFamily: 'var(--font-body)', fontSize: '10px', fontWeight: 600,
-                  color: 'rgba(255,255,255,0.2)', width: '20px',
+                  color: 'rgba(255,255,255,0.55)', width: '20px',
                 }}>
                   0{i + 1}
                 </span>
@@ -266,13 +321,12 @@ export default function Navbar({ onBookNow }: { onBookNow: () => void }) {
                   {l.label}
                 </span>
               </div>
-              <span style={{ color: 'rgba(255,255,255,0.18)', fontSize: '14px' }}>→</span>
+              <span style={{ color: 'rgba(255,255,255,0.55)', fontSize: '14px' }}>→</span>
             </a>
           ))}
+
           <a
-            href="https://app.truetodetail.co.uk"
-            target="_blank"
-            rel="noopener noreferrer"
+            href={accountHref}
             onClick={() => setOpen(false)}
             style={{
               display: 'flex', alignItems: 'center', justifyContent: 'space-between',
@@ -284,20 +338,39 @@ export default function Navbar({ onBookNow }: { onBookNow: () => void }) {
             <div style={{ display: 'flex', alignItems: 'baseline', gap: '16px' }}>
               <span style={{
                 fontFamily: 'var(--font-body)', fontSize: '10px', fontWeight: 600,
-                color: 'rgba(255,255,255,0.2)', width: '20px',
+                color: 'rgba(255,255,255,0.55)', width: '20px',
               }}>
                 0{NAV_LINKS.length + 1}
               </span>
               <span style={{
                 fontFamily: 'var(--font-display)',
                 fontSize: 'clamp(40px, 11vw, 64px)',
-                letterSpacing: '0.04em', color: '#E84A0C', lineHeight: 1,
+                letterSpacing: '0.04em', color: 'white', lineHeight: 1,
               }}>
-                Login
+                {accountLabel}
               </span>
             </div>
-            <span style={{ color: 'rgba(255,255,255,0.18)', fontSize: '14px' }}>→</span>
+            <span style={{ color: 'rgba(255,255,255,0.55)', fontSize: '14px' }}>→</span>
           </a>
+
+          {session ? (
+            <button
+              onClick={() => { setOpen(false); supabaseBrowser.auth.signOut() }}
+              style={{
+                display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+                width: '100%', padding: '16px 0',
+                background: 'none', border: 'none', cursor: 'pointer', textAlign: 'left',
+              }}
+            >
+              <span style={{
+                fontFamily: 'var(--font-body)', fontSize: '13px', fontWeight: 500,
+                letterSpacing: '0.06em', textTransform: 'uppercase',
+                color: 'rgba(255,255,255,0.55)',
+              }}>
+                Sign out
+              </span>
+            </button>
+          ) : null}
         </div>
 
         <div style={{
@@ -320,7 +393,7 @@ export default function Navbar({ onBookNow }: { onBookNow: () => void }) {
           </button>
           <p style={{
             fontFamily: 'var(--font-body)', fontSize: '11px',
-            color: 'rgba(255,255,255,0.2)', marginTop: '12px', letterSpacing: '0.06em',
+            color: 'rgba(255,255,255,0.55)', marginTop: '12px', letterSpacing: '0.06em',
           }}>
             07359 591800 · Mon–Sat 8am–7pm
           </p>

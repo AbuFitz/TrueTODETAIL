@@ -23,11 +23,18 @@ export default function Hero({ onBookNow }: { onBookNow: () => void }) {
       return () => clearTimeout(t)
     }
     if (isDeleting && displayText === '') {
-      setIsDeleting(false)
-      setWordIndex(i => (i + 1) % WORDS.length)
-      return
+      const t = setTimeout(() => {
+        setIsDeleting(false)
+        setWordIndex(i => (i + 1) % WORDS.length)
+      }, 120)
+      return () => clearTimeout(t)
     }
-    const speed = isDeleting ? 65 : 130
+    // Slower than a uniform interval, and jittered per character (±40ms)
+    // rather than perfectly even, so it reads as an actual person typing
+    // instead of a metronome.
+    const baseSpeed = isDeleting ? 95 : 190
+    const jitter = Math.floor(Math.random() * 80) - 40
+    const speed = Math.max(40, baseSpeed + jitter)
     const t = setTimeout(() => {
       setDisplayText(
         isDeleting
@@ -54,9 +61,11 @@ export default function Hero({ onBookNow }: { onBookNow: () => void }) {
         }}
       >
         {/* Background image */}
+        {/* No opacity fade: the photo is the page's largest paint and must be
+            visible straight from the server HTML, not after hydration. */}
         <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
+          initial={{ scale: 1.04 }}
+          animate={{ scale: 1 }}
           transition={{ duration: 1.2, ease }}
           style={{ position: 'absolute', inset: 0, zIndex: 0 }}
         >
@@ -123,7 +132,7 @@ export default function Hero({ onBookNow }: { onBookNow: () => void }) {
                 fontFamily: 'var(--font-body)',
                 fontSize: 'clamp(7px, 0.65vw, 10px)',
                 fontWeight: 600, letterSpacing: '0.2em', textTransform: 'uppercase',
-                color: 'rgba(255,255,255,0.45)', whiteSpace: 'pre-line',
+                color: 'rgba(255,255,255,0.55)', whiteSpace: 'pre-line',
                 display: 'block', marginTop: '5px', lineHeight: 1.5,
               }}>
                 {s.label}
@@ -144,19 +153,19 @@ export default function Hero({ onBookNow }: { onBookNow: () => void }) {
           }}
         >
           {/* Location label */}
-          <motion.p
+          <motion.h1
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 0.8, ease }}
             style={{
               fontFamily: 'var(--font-body)', fontSize: '11px', fontWeight: 600,
-              letterSpacing: '0.22em', textTransform: 'uppercase',
-              color: 'rgba(255,255,255,0.22)',
+              letterSpacing: '0.22em', textTransform: 'uppercase', lineHeight: 1.4, marginTop: 0,
+              color: 'rgba(255,255,255,0.55)',
               marginBottom: 'clamp(24px, 5vh, 56px)',
             }}
           >
-            Hertfordshire, UK
-          </motion.p>
+            Mobile Car Valeting · Hertfordshire
+          </motion.h1>
 
           {/* Typewriter headline — grows to fill available space */}
           <motion.div
@@ -192,7 +201,7 @@ export default function Hero({ onBookNow }: { onBookNow: () => void }) {
             <span style={{
               fontFamily: 'var(--font-display)',
               fontSize: 'clamp(48px, 11.5vw, 193px)',
-              letterSpacing: '0.01em', color: 'rgba(255,255,255,0.44)',
+              letterSpacing: '0.01em', color: 'rgba(255,255,255,0.55)',
               display: 'block', lineHeight: 0.9,
               paddingLeft: 'clamp(14px, 3vw, 48px)',
             }}>
@@ -202,7 +211,7 @@ export default function Hero({ onBookNow }: { onBookNow: () => void }) {
             <span style={{
               fontFamily: 'var(--font-display)',
               fontSize: 'clamp(38px, 9vw, 154px)',
-              letterSpacing: '0.01em', color: 'rgba(255,255,255,0.30)',
+              letterSpacing: '0.01em', color: 'rgba(255,255,255,0.55)',
               display: 'block', lineHeight: 0.9,
               paddingLeft: 'clamp(28px, 8vw, 128px)',
             }}>
@@ -225,7 +234,7 @@ export default function Hero({ onBookNow }: { onBookNow: () => void }) {
               <div style={{ width: '40px', height: '1px', background: 'rgba(255,255,255,0.42)' }} />
               <p style={{
                 fontFamily: 'var(--font-body)', fontSize: 'clamp(13px, 1.2vw, 15px)',
-                lineHeight: 1.72, color: 'rgba(255,255,255,0.42)',
+                lineHeight: 1.72, color: 'rgba(255,255,255,0.55)',
                 maxWidth: '300px', margin: 0,
               }}>
                 Mobile detailing delivered to your driveway.<br />
@@ -268,13 +277,13 @@ export default function Hero({ onBookNow }: { onBookNow: () => void }) {
       >
         {/* Full-bleed photo — car visible on the right half */}
         <motion.div
-          initial={{ scale: 1.08, opacity: 0 }}
-          animate={{ scale: 1, opacity: 1 }}
+          initial={{ scale: 1.08 }}
+          animate={{ scale: 1 }}
           transition={{ duration: 1.8, ease }}
           style={{ position: 'absolute', inset: 0, zIndex: 0 }}
         >
           <Image
-            src="https://images.unsplash.com/photo-1607860108855-64acf2078ed9?w=900&q=85&fit=crop"
+            src="https://images.unsplash.com/photo-1607860108855-64acf2078ed9?w=1800&q=90&fit=crop"
             alt="Professional mobile car detailing service near Hemel Hempstead Hertfordshire"
             fill priority sizes="100vw"
             style={{ objectFit: 'cover', objectPosition: '78% 35%' }}
@@ -315,14 +324,14 @@ export default function Hero({ onBookNow }: { onBookNow: () => void }) {
           }}
         >
           {/* Location */}
-          <motion.p
+          <motion.h1
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 0.7, ease }}
             style={{
               fontFamily: 'var(--font-body)', fontSize: '9px', fontWeight: 700,
-              letterSpacing: '0.22em', textTransform: 'uppercase',
-              color: 'rgba(255,255,255,0.28)', margin: 0,
+              letterSpacing: '0.22em', textTransform: 'uppercase', lineHeight: 1.4, marginTop: 0,
+              color: 'rgba(255,255,255,0.55)', margin: 0,
               display: 'flex', alignItems: 'center', gap: '7px',
             }}
           >
@@ -330,8 +339,8 @@ export default function Hero({ onBookNow }: { onBookNow: () => void }) {
               width: '4px', height: '4px', borderRadius: '50%',
               background: '#E84A0C', display: 'inline-block', flexShrink: 0,
             }} />
-            Hertfordshire, UK
-          </motion.p>
+            Mobile Car Valeting · Hertfordshire
+          </motion.h1>
 
           {/* Spacer — pushes headline to vertical centre */}
           <div style={{ flex: 1 }} />
@@ -345,10 +354,10 @@ export default function Hero({ onBookNow }: { onBookNow: () => void }) {
           >
             <div style={{
               fontFamily: 'var(--font-display)',
-              fontSize: 'clamp(74px, 21vw, 98px)',
+              fontSize: 'clamp(92px, 26vw, 122px)',
               letterSpacing: '0.01em', color: '#ffffff',
               lineHeight: 0.88,
-              minHeight: 'calc(clamp(74px, 21vw, 98px) * 0.88)',
+              minHeight: 'calc(clamp(92px, 26vw, 122px) * 0.88)',
               display: 'flex', alignItems: 'baseline',
             }}>
               <span>{displayText}</span>
@@ -366,8 +375,8 @@ export default function Hero({ onBookNow }: { onBookNow: () => void }) {
 
             <div style={{
               fontFamily: 'var(--font-display)',
-              fontSize: 'clamp(59px, 16.8vw, 78px)',
-              letterSpacing: '0.01em', color: 'rgba(255,255,255,0.30)',
+              fontSize: 'clamp(74px, 21vw, 98px)',
+              letterSpacing: '0.01em', color: 'rgba(255,255,255,0.55)',
               lineHeight: 0.88,
               paddingLeft: 'clamp(12px, 3vw, 20px)',
             }}>
@@ -376,8 +385,8 @@ export default function Hero({ onBookNow }: { onBookNow: () => void }) {
 
             <div style={{
               fontFamily: 'var(--font-display)',
-              fontSize: 'clamp(48px, 13.5vw, 64px)',
-              letterSpacing: '0.01em', color: 'rgba(255,255,255,0.16)',
+              fontSize: 'clamp(60px, 17vw, 80px)',
+              letterSpacing: '0.01em', color: 'rgba(255,255,255,0.55)',
               lineHeight: 0.88,
               paddingLeft: 'clamp(26px, 6.5vw, 42px)',
             }}>
@@ -395,7 +404,7 @@ export default function Hero({ onBookNow }: { onBookNow: () => void }) {
             transition={{ duration: 0.5, delay: 0.26, ease }}
             style={{
               fontFamily: 'var(--font-body)', fontSize: '11px', lineHeight: 1.6,
-              color: 'rgba(255,255,255,0.36)', margin: '0 0 14px',
+              color: 'rgba(255,255,255,0.55)', margin: '0 0 14px',
             }}
           >
             Mobile detailing to your door, no drop-off, fixed prices.
@@ -451,9 +460,9 @@ export default function Hero({ onBookNow }: { onBookNow: () => void }) {
                 {s.value}
               </span>
               <span style={{
-                fontFamily: 'var(--font-body)', fontSize: '7px', fontWeight: 600,
+                fontFamily: 'var(--font-body)', fontSize: '9px', fontWeight: 600,
                 letterSpacing: '0.1em', textTransform: 'uppercase',
-                color: 'rgba(255,255,255,0.28)',
+                color: 'rgba(255,255,255,0.55)',
                 display: 'block', marginTop: '4px', whiteSpace: 'pre-line', lineHeight: 1.4,
               }}>
                 {s.label}

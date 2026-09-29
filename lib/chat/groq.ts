@@ -6,12 +6,23 @@
 
 import Groq from 'groq-sdk'
 import { CHAT_TOOLS, executeTool, type ToolDef } from '@/lib/chat/tools'
-import { businessFactsText, pricingSummaryText, coverageSummaryText, vehicleLabelList } from '@/lib/chat/knowledge'
+import { vehicleLabelList } from '@/lib/chat/knowledge'
+import { buildSystemPrompt } from '@/lib/chat/prompt'
 import type { ChatTurn, ConversationState, ChatAction, ChatIntent } from '@/lib/chat/types'
 
-const EXTRACTION_MODEL = 'llama-3.1-8b-instant'
-const RESPONSE_MODEL = 'llama-3.3-70b-versatile'
+// Groq decommissioned llama-3.1-8b-instant and llama-3.3-70b-versatile on
+// 2026-08-16; these are its recommended replacements. Overridable from the
+// environment so the next retirement is a settings change, not a code change.
+const EXTRACTION_MODEL = process.env.GROQ_EXTRACTION_MODEL || 'openai/gpt-oss-20b'
+const RESPONSE_MODEL = process.env.GROQ_RESPONSE_MODEL || 'openai/gpt-oss-120b'
+
+// gpt-oss models reason before answering; keep that short so it can't eat the
+// token budget and leave an empty reply. Other models reject this parameter.
+function reasoningParams(model: string): { reasoning_effort?: 'low' } {
+  return model.startsWith('openai/gpt-oss') ? { reasoning_effort: 'low' } : {}
+}
 const MAX_TOOL_ITERATIONS = 4
+const REQUEST_TIMEOUT_MS = 10_000
 
 export class GroqUnavailableError extends Error {
   quotaExceeded: boolean
@@ -42,7 +53,9 @@ function toGroqMessages(turns: ChatTurn[]): Groq.Chat.Completions.ChatCompletion
 function getClient(): Groq {
   const apiKey = process.env.GROQ_API_KEY
   if (!apiKey) throw new GroqUnavailableError('GROQ_API_KEY not set', false)
-  return new Groq({ apiKey })
+  // The SDK retries twice by default and honours long retry-after headers on
+  // 429s. The rules engine is the fallback here, so fail fast instead.
+  return new Groq({ apiKey, timeout: REQUEST_TIMEOUT_MS, maxRetries: 0 })
 }
 
 const INTENTS: ChatIntent[] = [
@@ -90,8 +103,9 @@ export async function extractEntitiesGroq(
   try {
     const completion = await client.chat.completions.create({
       model: EXTRACTION_MODEL,
+      ...reasoningParams(EXTRACTION_MODEL),
       temperature: 0.1,
-      max_tokens: 1024,
+      max_tokens: 2048,
       messages: [
         { role: 'system', content: `Extract new customer facts from a car-detailing chat. Current known state (don't repeat what's already known unless it changed): ${JSON.stringify(state)}. Vehicle size categories in use: ${vehicleLabelList()}. Always call extract_state.` },
         ...toGroqMessages(recentTurns.slice(-6)),
@@ -115,8 +129,9 @@ export async function updateSummaryGroq(previousSummary: string, overflow: ChatT
   try {
     const completion = await client.chat.completions.create({
       model: EXTRACTION_MODEL,
+      ...reasoningParams(EXTRACTION_MODEL),
       temperature: 0.2,
-      max_tokens: 512,
+      max_tokens: 1024,
       messages: [
         { role: 'system', content: 'Update the running summary of a customer-service chat so far. Keep it short (max ~120 words) but preserve every concrete fact (names, vehicle, postcode, prices discussed, decisions made, concerns raised). Do not lose facts from the previous summary.' },
         { role: 'user', content: `Previous summary: ${previousSummary || '(none yet)'}\n\nEarlier messages to fold in:\n${overflow.map(t => `${t.role}: ${t.content}`).join('\n')}\n\nWrite the updated summary.` },
@@ -130,35 +145,6 @@ export async function updateSummaryGroq(previousSummary: string, overflow: ChatT
   }
 }
 
-function buildSystemPrompt(state: ConversationState): string {
-  return `You are Ava, the support and sales assistant embedded on the True To Detail website, a professional mobile car detailing and valeting business.
-
-You are a real conversational assistant, not a form. Read the full conversation state below before replying — if something is already known, never ask for it again. Reassess the customer's intent fresh each turn; it can change mid-conversation.
-
-Behaviour rules:
-- Acknowledge what the customer just said before moving the conversation forward. Don't open every reply with a greeting or "How can I help?" — only greet once, at the very start.
-- Ask for at most one or two missing pieces of information at a time. Never re-ask for something already in the conversation state below.
-- Keep replies short and conversational (2-4 sentences) unless the customer asks for a detailed comparison. No em dashes. No corporate fluff, no excessive exclamation marks.
-- Never state a price, coverage answer, availability, or booking-lookup result from memory — always call the matching tool and use its returned result.
-- Recommend packages based on what the customer describes without aggressive upselling.
-- If the request is bespoke/commercial (ceramic coating, paint correction, fleet), or the customer asks for a person, seems upset, or says you've got something wrong more than once, call request_human_support rather than continuing to guess.
-- When you have enough to describe a concrete booking (package, vehicle, ideally postcode and a date/time preference), call prepare_booking_summary and then tell the customer to confirm it via the Book Now button.
-
-## Business facts
-${businessFactsText()}
-
-## Pricing
-${pricingSummaryText()}
-
-## Coverage
-${coverageSummaryText()}
-
-## Conversation state (what's already known — do not re-ask for any of this)
-${JSON.stringify(state)}
-
-## Conversation summary so far
-${state.conversationSummary || '(conversation just started)'}`
-}
 
 export interface GroqResponseResult {
   text: string
@@ -179,6 +165,7 @@ export async function generateResponseGroq(
     ...toGroqMessages(recentTurns),
     { role: 'user', content: latestMessage },
   ]
+  const baseMessages = [...messages]
 
   let action: ChatAction = null
   let escalationReason: string | undefined
@@ -188,8 +175,9 @@ export async function generateResponseGroq(
     for (let i = 0; i < MAX_TOOL_ITERATIONS; i++) {
       const completion = await client.chat.completions.create({
         model: RESPONSE_MODEL,
+        ...reasoningParams(RESPONSE_MODEL),
         temperature: 0.4,
-        max_tokens: 1024,
+        max_tokens: 2048,
         messages,
         tools,
       })
@@ -220,6 +208,21 @@ export async function generateResponseGroq(
     return { text: '', action, escalationReason, bookingSummary }
   } catch (err) {
     if (isQuotaError(err)) throw new GroqUnavailableError('Groq quota exceeded during response generation', true)
+    // A rejected tool call shouldn't cost the customer a real answer: retry
+    // once without tools, answering from the knowledge in the system prompt.
+    try {
+      const plain = await client.chat.completions.create({
+        model: RESPONSE_MODEL,
+        ...reasoningParams(RESPONSE_MODEL),
+        temperature: 0.4,
+        max_tokens: 2048,
+        messages: baseMessages,
+      })
+      const text = plain.choices[0]?.message?.content?.trim()
+      if (text) return { text, action, escalationReason, bookingSummary }
+    } catch (retryErr) {
+      if (isQuotaError(retryErr)) throw new GroqUnavailableError('Groq quota exceeded during response generation', true)
+    }
     throw new GroqUnavailableError(`Groq call failed: ${err}`, false)
   }
 }

@@ -1,6 +1,9 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import { SiteNavbar, SiteFooter } from '@/components/SiteChrome'
+import BookNowButton from '@/components/BookNowButton'
+import { breadcrumbJsonLd, serviceJsonLd } from '@/lib/seo'
+import { jsonLdGraph } from '@/lib/jsonld'
 
 export const metadata: Metadata = {
   title: 'Interior Car Detailing Service | Hemel Hempstead & Hertfordshire',
@@ -16,26 +19,26 @@ export const metadata: Metadata = {
   },
 }
 
-const jsonLd = {
-  '@context': 'https://schema.org',
-  '@type': 'Service',
-  name: 'Interior Car Detailing',
-  provider: { '@type': 'LocalBusiness', name: 'True To Detail', url: 'https://www.truetodetail.co.uk', telephone: '+447359591800' },
-  areaServed: ['Hemel Hempstead', 'Watford', 'St Albans', 'Berkhamsted', 'Harpenden', 'Kings Langley', 'Tring', 'Abbots Langley', 'Chesham', 'Rickmansworth'],
-  serviceType: 'Interior Car Detailing',
-  url: 'https://www.truetodetail.co.uk/interior-car-detailing',
-}
+const jsonLd = jsonLdGraph(
+  breadcrumbJsonLd([['Home', '/'], ['Interior Car Detailing', '/interior-car-detailing']]),
+  serviceJsonLd({
+    name: 'Interior Car Detailing',
+    path: '/interior-car-detailing',
+    description: 'Mobile interior car detailing and valeting: deep vacuum, seat shampoo, carpet extraction, odour treatment and pet hair removal at your door.',
+    serviceType: 'Interior car detailing',
+  }),
+)
 
 export default function InteriorCarDetailingPage() {
   return (
     <>
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLd }} />
       <SiteNavbar />
       <main style={{ background: '#fff', minHeight: '100vh' }}>
         <div style={{ maxWidth: '860px', margin: '0 auto', padding: 'calc(80px + clamp(48px, 8vw, 96px)) clamp(24px, 5vw, 48px) clamp(48px, 8vw, 96px)' }}>
 
           <nav aria-label="Breadcrumb" style={{ marginBottom: '32px' }}>
-            <ol style={{ display: 'flex', gap: '8px', listStyle: 'none', padding: 0, margin: 0, fontSize: '13px', color: 'rgba(12,12,12,0.45)' }}>
+            <ol style={{ display: 'flex', gap: '8px', listStyle: 'none', padding: 0, margin: 0, fontSize: '13px', color: 'rgba(12,12,12,0.62)' }}>
               <li><Link href="/" style={{ color: '#E84A0C', textDecoration: 'none' }}>Home</Link></li>
               <li aria-hidden>›</li>
               <li><Link href="/mobile-car-detailing" style={{ color: '#E84A0C', textDecoration: 'none' }}>Mobile Car Detailing</Link></li>
@@ -112,16 +115,16 @@ export default function InteriorCarDetailingPage() {
           </section>
 
           <div style={{ display: 'flex', gap: '16px', flexWrap: 'wrap', marginBottom: '64px' }}>
-            <Link href="/" style={{ display: 'inline-block', background: '#E84A0C', color: '#fff', padding: '15px 36px', textDecoration: 'none', fontFamily: 'var(--font-body)', fontWeight: 700, fontSize: '12px', letterSpacing: '0.12em', textTransform: 'uppercase' }}>
+            <BookNowButton style={{ display: 'inline-block', background: '#E84A0C', color: '#fff', padding: '15px 36px', fontFamily: 'var(--font-body)', fontWeight: 700, fontSize: '12px', letterSpacing: '0.12em', textTransform: 'uppercase' }}>
               Book Your Detail
-            </Link>
+            </BookNowButton>
             <Link href="/exterior-car-detailing" style={{ display: 'inline-block', background: 'transparent', color: '#0C0C0C', padding: '15px 36px', textDecoration: 'none', fontFamily: 'var(--font-body)', fontWeight: 600, fontSize: '12px', letterSpacing: '0.12em', textTransform: 'uppercase', border: '1px solid rgba(12,12,12,0.2)' }}>
               Exterior Detailing →
             </Link>
           </div>
 
           <nav aria-label="Related services" style={{ borderTop: '1px solid rgba(12,12,12,0.08)', paddingTop: '32px' }}>
-            <p style={{ fontFamily: 'var(--font-body)', fontSize: '11px', fontWeight: 600, letterSpacing: '0.2em', textTransform: 'uppercase', color: 'rgba(12,12,12,0.35)', marginBottom: '16px' }}>Related Services</p>
+            <p style={{ fontFamily: 'var(--font-body)', fontSize: '11px', fontWeight: 600, letterSpacing: '0.2em', textTransform: 'uppercase', color: 'rgba(12,12,12,0.62)', marginBottom: '16px' }}>Related Services</p>
             <div style={{ display: 'flex', flexWrap: 'wrap', gap: '12px' }}>
               {[['Mobile Car Detailing', '/mobile-car-detailing'], ['Exterior Car Detailing', '/exterior-car-detailing'], ['Full Car Detail', '/full-car-detail'], ['Professional Car Valeting', '/professional-car-valeting']].map(([label, href]) => (
                 <Link key={href} href={href} style={{ fontSize: '14px', color: '#E84A0C', textDecoration: 'none' }}>{label}</Link>

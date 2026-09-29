@@ -1,7 +1,10 @@
 import type { Metadata } from 'next'
+import Script from 'next/script'
 import { Bebas_Neue, DM_Sans } from 'next/font/google'
 import SupportWidget from '@/components/SupportWidget'
 import CookieConsentBanner from '@/components/CookieConsentBanner'
+import { SITE_URL, localBusinessJsonLd, websiteJsonLd } from '@/lib/seo'
+import { jsonLdGraph } from '@/lib/jsonld'
 import './globals.css'
 
 // Google tag (Analytics/Ads) measurement ID. Not a secret: it's public in every
@@ -24,65 +27,60 @@ const dmSans = DM_Sans({
   display: 'swap',
 })
 
-const SITE_URL = 'https://www.truetodetail.co.uk'
+// Search Console / Bing Webmaster verification codes live in Vercel env vars
+// (they're public by design, but keeping them out of the repo means swapping
+// accounts never needs a code change). Empty until set.
+const verificationOther: Record<string, string> = {}
+if (process.env.NEXT_PUBLIC_BING_SITE_VERIFICATION) {
+  verificationOther['msvalidate.01'] = process.env.NEXT_PUBLIC_BING_SITE_VERIFICATION
+}
+
+const HOME_TITLE = 'Mobile Car Valeting & Detailing in Hemel Hempstead | True To Detail'
+const HOME_DESCRIPTION =
+  'Mobile car valeting, detailing and hand car washes at your door across Hemel Hempstead, Watford, St Albans and Herts. Fixed prices from £80. Book online.'
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   title: {
-    default: 'Mobile Car Detailing Near Hemel Hempstead | True To Detail',
+    default: HOME_TITLE,
     template: '%s | True To Detail',
   },
-  description:
-    'Professional mobile car detailing and valeting service covering Hemel Hempstead, Watford, St Albans, Berkhamsted and surrounding Hertfordshire areas. Interior, exterior and full detailing packages. We come to you.',
-  keywords: [
-    'mobile car detailing near Hemel Hempstead',
-    'mobile car valeting near me',
-    'car detailing near Hemel Hempstead',
-    'professional car detailing service near me',
-    'mobile car cleaning service near me',
-    'interior car detailing service',
-    'exterior car detailing service',
-    'professional car valet service',
-    'mobile car detailer near me',
-    'car detailing Watford',
-    'car detailing St Albans',
-    'car detailing Berkhamsted',
-    'car valeting Hertfordshire',
-    'ceramic coating Hemel Hempstead',
-    'paint correction Hertfordshire',
-    'mobile detailing Kings Langley',
-    'car detailing Harpenden',
-    'car detailing Tring',
-  ],
+  description: HOME_DESCRIPTION,
+  applicationName: 'True To Detail',
   authors: [{ name: 'True To Detail', url: SITE_URL }],
   creator: 'True To Detail',
   publisher: 'True To Detail',
+  category: 'Automotive',
   formatDetection: { telephone: true, email: true, address: true },
   alternates: {
-    canonical: SITE_URL,
+    canonical: '/',
+  },
+  verification: {
+    ...(process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION
+      ? { google: process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION }
+      : {}),
+    other: verificationOther,
   },
   openGraph: {
     type: 'website',
     locale: 'en_GB',
     url: SITE_URL,
     siteName: 'True To Detail',
-    title: 'Mobile Car Detailing Near Hemel Hempstead | True To Detail',
-    description:
-      'Professional mobile car detailing and valeting covering Hemel Hempstead, Watford, St Albans, Berkhamsted and all surrounding Hertfordshire towns. Book online today.',
+    title: HOME_TITLE,
+    description: HOME_DESCRIPTION,
     images: [
       {
         url: '/og-image.jpg',
         width: 1200,
         height: 630,
-        alt: 'True To Detail: Professional Mobile Car Detailing in Hertfordshire',
+        alt: 'True To Detail: mobile car valeting and detailing in Hertfordshire',
       },
     ],
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Mobile Car Detailing Near Hemel Hempstead | True To Detail',
-    description:
-      'Professional mobile car detailing and valeting in Hertfordshire. We come to you, no drop-off needed.',
+    title: HOME_TITLE,
+    description: HOME_DESCRIPTION,
     images: ['/og-image.jpg'],
   },
   robots: {
@@ -103,219 +101,10 @@ export const viewport = {
   themeColor: '#0C0C0C',
 }
 
-// JSON-LD Structured Data
-const jsonLd = {
-  '@context': 'https://schema.org',
-  '@graph': [
-    {
-      '@type': 'LocalBusiness',
-      '@id': `${SITE_URL}/#business`,
-      name: 'True To Detail',
-      description:
-        'Professional mobile car detailing and valeting service based in Hemel Hempstead, covering Hertfordshire and selected areas of Buckinghamshire, Bedfordshire and North West London within approximately 25 miles, including Watford, St Albans, Berkhamsted, Harpenden, Kings Langley, Rickmansworth, Tring, Chesham, Amersham, Borehamwood, Luton and Dunstable.',
-      url: SITE_URL,
-      telephone: '+447359591800',
-      email: 'info@truetodetail.co.uk',
-      logo: {
-        '@type': 'ImageObject',
-        url: `${SITE_URL}/logo.png`,
-      },
-      image: `${SITE_URL}/og-image.jpg`,
-      priceRange: '££',
-      currenciesAccepted: 'GBP',
-      paymentAccepted: 'Cash, Credit Card, Bank Transfer',
-      openingHoursSpecification: [
-        {
-          '@type': 'OpeningHoursSpecification',
-          dayOfWeek: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'],
-          opens: '08:00',
-          closes: '19:00',
-        },
-      ],
-      areaServed: [
-        { '@type': 'City', name: 'Hemel Hempstead' },
-        { '@type': 'City', name: 'Berkhamsted' },
-        { '@type': 'City', name: 'St Albans' },
-        { '@type': 'City', name: 'Watford' },
-        { '@type': 'City', name: 'Harpenden' },
-        { '@type': 'City', name: 'Kings Langley' },
-        { '@type': 'City', name: 'Abbots Langley' },
-        { '@type': 'City', name: 'Rickmansworth' },
-        { '@type': 'City', name: 'Tring' },
-        { '@type': 'City', name: 'Radlett' },
-        { '@type': 'City', name: 'Bushey' },
-        { '@type': 'City', name: 'Borehamwood' },
-        { '@type': 'City', name: 'Chesham' },
-        { '@type': 'City', name: 'Amersham' },
-        { '@type': 'City', name: 'Luton' },
-        { '@type': 'City', name: 'Dunstable' },
-        { '@type': 'City', name: 'Hatfield' },
-        { '@type': 'City', name: 'Welwyn Garden City' },
-        { '@type': 'City', name: 'Beaconsfield' },
-        { '@type': 'City', name: 'High Wycombe' },
-        { '@type': 'AdministrativeArea', name: 'Hertfordshire' },
-        { '@type': 'AdministrativeArea', name: 'Buckinghamshire' },
-        { '@type': 'AdministrativeArea', name: 'Bedfordshire' },
-      ],
-      hasOfferCatalog: {
-        '@type': 'OfferCatalog',
-        name: 'Car Detailing Services',
-        itemListElement: [
-          {
-            '@type': 'Offer',
-            itemOffered: {
-              '@type': 'Service',
-              name: 'Essential Car Detail',
-              description: 'Safe wash & dry, wheels cleaned, interior vacuum, dashboard wipe, glass cleaned and tyre dressing.',
-              url: `${SITE_URL}/mobile-car-detailing`,
-            },
-            price: '80.00',
-            priceCurrency: 'GBP',
-            priceSpecification: { '@type': 'PriceSpecification', minPrice: 80, maxPrice: 105, priceCurrency: 'GBP' },
-          },
-          {
-            '@type': 'Offer',
-            itemOffered: {
-              '@type': 'Service',
-              name: 'Full Valet Car Detail',
-              description: 'Everything in Essential, plus deep interior clean, seat shampoo, carpet extraction, door shuts cleaned and spray wax protection.',
-              url: `${SITE_URL}/interior-car-detailing`,
-            },
-            price: '140.00',
-            priceCurrency: 'GBP',
-            priceSpecification: { '@type': 'PriceSpecification', minPrice: 140, maxPrice: 175, priceCurrency: 'GBP' },
-          },
-          {
-            '@type': 'Offer',
-            itemOffered: {
-              '@type': 'Service',
-              name: 'Premium Full Car Detail',
-              description: 'Everything in Full Valet, plus clay bar decontamination, light machine polish, paint sealant, trim restoration and odour treatment.',
-              url: `${SITE_URL}/full-car-detail`,
-            },
-            price: '220.00',
-            priceCurrency: 'GBP',
-            priceSpecification: { '@type': 'PriceSpecification', minPrice: 220, maxPrice: 270, priceCurrency: 'GBP' },
-          },
-        ],
-      },
-      aggregateRating: {
-        '@type': 'AggregateRating',
-        ratingValue: '5',
-        reviewCount: '47',
-        bestRating: '5',
-        worstRating: '1',
-      },
-      review: [
-        {
-          '@type': 'Review',
-          reviewRating: { '@type': 'Rating', ratingValue: '5', bestRating: '5' },
-          author: { '@type': 'Person', name: 'James M.' },
-          reviewBody: 'Absolutely incredible results. My BMW looks better than it did from the showroom. The team are professional, punctual, and genuinely passionate about their work.',
-        },
-        {
-          '@type': 'Review',
-          reviewRating: { '@type': 'Rating', ratingValue: '5', bestRating: '5' },
-          author: { '@type': 'Person', name: 'Sarah K.' },
-          reviewBody: 'Used TTD for a full interior deep clean after my dog had basically destroyed it. They came to my house, sorted everything, and left it spotless. Cannot recommend enough.',
-        },
-        {
-          '@type': 'Review',
-          reviewRating: { '@type': 'Rating', ratingValue: '5', bestRating: '5' },
-          author: { '@type': 'Person', name: 'Daniel R.' },
-          reviewBody: "Fixed swirl marks I thought were permanent. Honest pricing, no upselling, and the ceramic coating has held up brilliantly. Five stars isn't enough.",
-        },
-      ],
-      sameAs: [
-        'https://www.instagram.com/truetodetail',
-        'https://www.tiktok.com/@truetodetail',
-        'https://www.facebook.com/truetodetail',
-      ],
-    },
-    {
-      '@type': 'WebSite',
-      '@id': `${SITE_URL}/#website`,
-      url: SITE_URL,
-      name: 'True To Detail',
-      description: 'Professional mobile car detailing and valeting in Hertfordshire',
-      publisher: { '@id': `${SITE_URL}/#business` },
-      potentialAction: {
-        '@type': 'SearchAction',
-        target: { '@type': 'EntryPoint', urlTemplate: `${SITE_URL}/?s={search_term_string}` },
-        'query-input': 'required name=search_term_string',
-      },
-    },
-    {
-      '@type': 'FAQPage',
-      mainEntity: [
-        {
-          '@type': 'Question',
-          name: 'How long does car detailing take?',
-          acceptedAnswer: {
-            '@type': 'Answer',
-            text: 'It depends on the package. Our Essential detail runs 2–3 hours, Full Valet 4–5 hours, and Premium Detail 6–7 hours. We confirm your exact arrival window on the morning of your booking.',
-          },
-        },
-        {
-          '@type': 'Question',
-          name: 'Do you offer mobile car detailing near me?',
-          acceptedAnswer: {
-            '@type': 'Answer',
-            text: 'Yes. True To Detail is a fully mobile service. We come directly to your home, workplace, or any convenient location. We cover Hemel Hempstead and surrounding areas including Watford, St Albans, Berkhamsted, Kings Langley, Harpenden, Tring, Abbots Langley, Chesham, Rickmansworth and nearby towns.',
-          },
-        },
-        {
-          '@type': 'Question',
-          name: 'What areas do you cover for mobile car detailing?',
-          acceptedAnswer: {
-            '@type': 'Answer',
-            text: 'True To Detail provides mobile car detailing services across Hemel Hempstead and surrounding areas including Watford, St Albans, Berkhamsted, Kings Langley, Harpenden, Tring, Abbots Langley, Chesham, Rickmansworth, Apsley, Leverstock Green, Redbourn, Boxmoor, Bovingdon, Markyate and other nearby Hertfordshire towns.',
-          },
-        },
-        {
-          '@type': 'Question',
-          name: 'What is included in a full car detail?',
-          acceptedAnswer: {
-            '@type': 'Answer',
-            text: 'Our Premium Detail includes everything in the Full Valet package, plus clay bar decontamination, light machine polish to reduce swirls and scratches, paint sealant and trim restoration.',
-          },
-        },
-        {
-          '@type': 'Question',
-          name: 'How often should I detail my car?',
-          acceptedAnswer: {
-            '@type': 'Answer',
-            text: 'For most drivers, we recommend a thorough detail every 3–6 months depending on usage. Regular maintenance details every 6–8 weeks help preserve the finish between full details and protect your paintwork year-round.',
-          },
-        },
-        {
-          '@type': 'Question',
-          name: 'Do I need to be home during the car detail?',
-          acceptedAnswer: {
-            '@type': 'Answer',
-            text: "No. As long as we can access the vehicle, you can carry on with your day. We'll message you when we arrive and again when the work is complete.",
-          },
-        },
-        {
-          '@type': 'Question',
-          name: 'What do I need to prepare before my car detail?',
-          acceptedAnswer: {
-            '@type': 'Answer',
-            text: 'Nothing. We bring our own power, water and all professional-grade equipment. Simply ensure the vehicle is accessible and we handle everything else.',
-          },
-        },
-        {
-          '@type': 'Question',
-          name: 'How do I pay for my car detailing service?',
-          acceptedAnswer: {
-            '@type': 'Answer',
-            text: 'Payment is due on the day of service. We accept card, bank transfer and cash. Your price is fixed at booking, with no hidden charges or last-minute changes.',
-          },
-        },
-      ],
-    },
-  ],
-}
+// Site-wide structured data: the business entity and the website. Page-level
+// schema (services, areas, FAQs) references this business by @id rather than
+// redefining it, and FAQ markup lives only on the page whose FAQ is visible.
+const jsonLd = jsonLdGraph(localBusinessJsonLd(), websiteJsonLd())
 
 export default function RootLayout({
   children,
@@ -350,7 +139,6 @@ export default function RootLayout({
             `,
           }}
         />
-        <script async src={`https://www.googletagmanager.com/gtag/js?id=${GA_MEASUREMENT_ID}`} />
         <script
           dangerouslySetInnerHTML={{
             __html: `gtag('js', new Date());\ngtag('config', '${GA_MEASUREMENT_ID}');`,
@@ -358,12 +146,18 @@ export default function RootLayout({
         />
         <script
           type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+          dangerouslySetInnerHTML={{ __html: jsonLd }}
         />
-        <link rel="canonical" href={SITE_URL} />
       </head>
       <body className="bg-white text-site-black font-body antialiased">
         {children}
+        {/*
+          gtag.js (~170 KB) loads after the page finishes loading so it never
+          competes with the hero image or hydration. The consent defaults and
+          config above only queue commands on dataLayer, which it processes
+          on arrival, so no pageview is lost.
+        */}
+        <Script src={`https://www.googletagmanager.com/gtag/js?id=${GA_MEASUREMENT_ID}`} strategy="lazyOnload" />
         <SupportWidget />
         <CookieConsentBanner />
       </body>

@@ -2,11 +2,14 @@ import type { Metadata } from 'next'
 import Link from 'next/link'
 import { AREAS, REGIONS } from '@/lib/areas'
 import { SiteNavbar, SiteFooter } from '@/components/SiteChrome'
+import BookNowButton from '@/components/BookNowButton'
+import { breadcrumbJsonLd } from '@/lib/seo'
+import { jsonLdGraph } from '@/lib/jsonld'
 
 export const metadata: Metadata = {
-  title: 'Areas We Cover | Mobile Car Detailing Across Hertfordshire',
+  title: 'Areas We Cover: Mobile Car Valeting Across Hertfordshire',
   description:
-    'True To Detail provides fully mobile car detailing across Hertfordshire and selected areas of Buckinghamshire and Bedfordshire, within roughly 25 miles of Hemel Hempstead. See full coverage by town.',
+    'True To Detail provides fully mobile car valeting and detailing across Hertfordshire and selected areas of Buckinghamshire and Bedfordshire, within roughly 25 miles of Hemel Hempstead. See full coverage by town.',
   alternates: {
     canonical: 'https://www.truetodetail.co.uk/areas',
   },
@@ -21,6 +24,10 @@ export const metadata: Metadata = {
 export default function AreasPage() {
   return (
     <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: jsonLdGraph(breadcrumbJsonLd([['Home', '/'], ['Areas We Cover', '/areas']])) }}
+      />
       <SiteNavbar />
       <main style={{ background: '#0C0C0C' }}>
 
@@ -29,7 +36,7 @@ export default function AreasPage() {
           <div style={{ maxWidth: '1100px', margin: '0 auto', padding: '0 clamp(24px, 5vw, 48px)' }}>
 
             <nav aria-label="Breadcrumb" style={{ marginBottom: '32px' }}>
-              <ol style={{ display: 'flex', gap: '8px', listStyle: 'none', padding: 0, margin: 0, fontSize: '13px', color: 'rgba(255,255,255,0.35)' }}>
+              <ol style={{ display: 'flex', gap: '8px', listStyle: 'none', padding: 0, margin: 0, fontSize: '13px', color: 'rgba(255,255,255,0.55)' }}>
                 <li><Link href="/" style={{ color: '#E84A0C', textDecoration: 'none' }}>Home</Link></li>
                 <li aria-hidden>›</li>
                 <li aria-current="page">Areas We Cover</li>
@@ -54,8 +61,8 @@ export default function AreasPage() {
             <p style={{ fontSize: '18px', lineHeight: 1.7, color: 'rgba(255,255,255,0.55)', marginBottom: '20px', fontWeight: 500, maxWidth: '720px' }}>
               Based in Hemel Hempstead, True To Detail provides fully mobile car detailing throughout Hertfordshire and selected areas of Buckinghamshire, Bedfordshire and North West London. Our standard service area covers approximately 25 miles from Hemel Hempstead.
             </p>
-            <p style={{ fontSize: '15px', lineHeight: 1.78, color: 'rgba(255,255,255,0.35)', maxWidth: '720px' }}>
-              Not sure if your postcode is covered? Message us on WhatsApp or call <a href="tel:+447359591800" style={{ color: '#E84A0C', textDecoration: 'none' }}>07359 591800</a> and we'll confirm straight away, or pick your town below for local postcodes, nearby villages and a map of the area.
+            <p style={{ fontSize: '15px', lineHeight: 1.78, color: 'rgba(255,255,255,0.55)', maxWidth: '720px' }}>
+              Not sure if your postcode is covered? Message us on WhatsApp or call <a href="tel:+447359591800" style={{ color: '#E84A0C', textDecoration: 'underline', textUnderlineOffset: '3px' }}>07359 591800</a> and we&apos;ll confirm straight away, or pick your town below for local postcodes, nearby villages and a map of the area.
             </p>
           </div>
         </section>
@@ -93,10 +100,10 @@ export default function AreasPage() {
                         }}>
                           {area.name}
                         </p>
-                        <p style={{ fontFamily: 'var(--font-body)', fontSize: '12px', color: 'rgba(12,12,12,0.4)', marginBottom: '10px' }}>
+                        <p style={{ fontFamily: 'var(--font-body)', fontSize: '12px', color: 'rgba(12,12,12,0.62)', marginBottom: '10px' }}>
                           {area.postcodes.join(' · ')}
                         </p>
-                        <p style={{ fontFamily: 'var(--font-body)', fontSize: '13px', lineHeight: 1.6, color: 'rgba(12,12,12,0.55)' }}>
+                        <p style={{ fontFamily: 'var(--font-body)', fontSize: '13px', lineHeight: 1.6, color: 'rgba(12,12,12,0.62)' }}>
                           {area.tagline}
                         </p>
                       </Link>
@@ -118,17 +125,16 @@ export default function AreasPage() {
               READY TO BOOK YOUR <span style={{ color: '#E84A0C' }}>DETAIL?</span>
             </h2>
             <div style={{ display: 'flex', gap: '16px', flexWrap: 'wrap' }}>
-              <Link
-                href="/"
+              <BookNowButton
                 style={{
                   display: 'inline-block', background: '#E84A0C', color: '#fff',
-                  padding: '15px 36px', textDecoration: 'none',
+                  padding: '15px 36px',
                   fontFamily: 'var(--font-body)', fontWeight: 700, fontSize: '12px',
                   letterSpacing: '0.12em', textTransform: 'uppercase',
                 }}
               >
                 Book Your Detail
-              </Link>
+              </BookNowButton>
               <Link href="/van-fleet" style={{ display: 'inline-block', background: 'transparent', color: '#fff', padding: '15px 36px', textDecoration: 'none', fontFamily: 'var(--font-body)', fontWeight: 600, fontSize: '12px', letterSpacing: '0.12em', textTransform: 'uppercase', border: '1px solid rgba(255,255,255,0.2)' }}>
                 Van & Fleet →
               </Link>

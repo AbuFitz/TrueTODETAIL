@@ -46,7 +46,7 @@ export default function Testimonials() {
             <span style={{ width: 20, height: '1.5px', background: '#E84A0C', flexShrink: 0 }} />
             <span style={{
               fontFamily: 'var(--font-body)', fontWeight: 600, fontSize: '11px',
-              letterSpacing: '0.2em', textTransform: 'uppercase', color: 'rgba(12,12,12,0.35)',
+              letterSpacing: '0.2em', textTransform: 'uppercase', color: 'rgba(12,12,12,0.62)',
             }}>
               What Clients Say
             </span>
@@ -63,7 +63,7 @@ export default function Testimonials() {
             </h2>
             <p style={{
               fontFamily: 'var(--font-body)', fontSize: '14px', lineHeight: 1.75,
-              color: 'rgba(12,12,12,0.42)', maxWidth: '260px',
+              color: 'rgba(12,12,12,0.62)', maxWidth: '260px',
             }}>
               100% mobile. Every review earned on a customer&apos;s driveway. No studio, no tricks.
             </p>
@@ -114,7 +114,7 @@ export default function Testimonials() {
               {/* Quote */}
               <p style={{
                 fontFamily: 'var(--font-body)', fontSize: '15px', lineHeight: 1.78,
-                color: 'rgba(12,12,12,0.6)',
+                color: 'rgba(12,12,12,0.62)',
                 flex: 1,
                 marginBottom: '28px',
               }}>
@@ -131,7 +131,7 @@ export default function Testimonials() {
                 </p>
                 <p style={{
                   fontFamily: 'var(--font-body)', fontSize: '12px',
-                  color: 'rgba(12,12,12,0.35)', marginTop: '3px',
+                  color: 'rgba(12,12,12,0.62)', marginTop: '3px',
                 }}>
                   {r.vehicle}
                 </p>

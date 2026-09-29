@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { Resend } from 'resend'
-import { fleetEnquiryEmail, FleetEnquiryData } from '@/lib/emails/templates'
+import { fleetEnquiryEmail, fleetEnquiryText, FleetEnquiryData } from '@/lib/emails/templates'
+import { allowRequest, clientIp } from '@/lib/rateLimit'
 
 export interface FleetEnquiryPayload {
   name: string
@@ -14,12 +15,24 @@ const PHONE_RE = /^[\d\s\+\-\(\)]{7,20}$/
 const VALID_FLEET_SIZES = ['1', '2', '3-4', '5-9', '10+', '']
 
 export async function POST(req: NextRequest) {
+  if (!allowRequest(`fleet:${clientIp(req)}`, 5, 10 * 60 * 1000)) {
+    return NextResponse.json({ error: 'Too many enquiries. Please call us on 07359 591800.' }, { status: 429 })
+  }
+
   let body: Partial<FleetEnquiryPayload>
 
   try {
     body = await req.json()
   } catch {
     return NextResponse.json({ error: 'Invalid JSON payload' }, { status: 400 })
+  }
+  if (!body || typeof body !== 'object' || Array.isArray(body)) {
+    return NextResponse.json({ error: 'Invalid JSON payload' }, { status: 400 })
+  }
+  for (const field of ['name', 'business', 'phone', 'fleet', 'message'] as const) {
+    if (body[field] !== undefined && body[field] !== null && typeof body[field] !== 'string') {
+      return NextResponse.json({ error: `Invalid field: ${field}` }, { status: 400 })
+    }
   }
 
   if (!body.name || !body.name.trim()) {
@@ -34,7 +47,7 @@ export async function POST(req: NextRequest) {
   if (!PHONE_RE.test(body.phone)) {
     return NextResponse.json({ error: 'Invalid phone number' }, { status: 400 })
   }
-  if (body.fleet !== undefined && !VALID_FLEET_SIZES.includes(body.fleet)) {
+  if (body.fleet != null && !VALID_FLEET_SIZES.includes(body.fleet)) {
     return NextResponse.json({ error: 'Invalid fleet size' }, { status: 400 })
   }
   if (body.message && body.message.length > 1000) {
@@ -62,8 +75,9 @@ export async function POST(req: NextRequest) {
       from: fromEmail,
       to: 'info@truetodetail.co.uk',
       replyTo: 'info@truetodetail.co.uk',
-      subject: `New Van & Fleet Enquiry: ${enquiry.business || enquiry.name}`,
+      subject: `New Van & Fleet Enquiry: ${(enquiry.business || enquiry.name).replace(/[\r\n]+/g, ' ')}`,
       html: fleetEnquiryEmail(enquiry),
+      text: fleetEnquiryText(enquiry),
     })
     if (result.error) {
       console.error('[fleet-enquiry] Resend error:', result.error)
