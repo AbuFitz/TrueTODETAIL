@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { PACKAGES, ADDONS, VEHICLE_LABELS as vehicleLabels, VEHICLE_GUIDE, VEHICLE_GUIDE_NOTE, TIME_SLOTS as timeSlots, type VehicleType } from '@/lib/pricing'
 import { formatBookingDate, formatShortDate, isSlotAvailable, ukNow } from '@/lib/slots'
 import { useDialogFocus } from '@/lib/useDialogFocus'
+import { guideTo } from '@/lib/guide'
 
 type Step = 1 | 2 | 3 | 4
 
@@ -222,7 +223,14 @@ export default function BookingModal({
     }, 400)
   }
 
-  const panelRef = useRef<HTMLDivElement>(null)
+  const panelRef    = useRef<HTMLDivElement>(null)
+  // Sections the form guides the customer to as they make each choice.
+  const vehicleRef  = useRef<HTMLDivElement>(null)
+  const packRef     = useRef<HTMLDivElement>(null)
+  const addonsRef   = useRef<HTMLDivElement>(null)
+  const timeRef     = useRef<HTMLDivElement>(null)
+  const locationRef = useRef<HTMLDivElement>(null)
+  const regRef      = useRef<HTMLDivElement>(null)
   useDialogFocus(panelRef, isOpen)
 
   // Escape closes the popup, as with any dialog.
@@ -355,7 +363,7 @@ export default function BookingModal({
 
               {/* Vehicle type comes first — a quick, easy first decision that
                   immediately unlocks exact pack prices below instead of ranges. */}
-              <div>
+              <div ref={vehicleRef}>
                 <p style={sectionHeading}>Vehicle</p>
                 <p style={fieldLabel}>What size is your vehicle?</p>
                 <div role="radiogroup" aria-label="Vehicle size" style={{ display: 'grid', gridTemplateColumns: 'repeat(3, minmax(0, 1fr))', gap: '6px' }}>
@@ -365,7 +373,7 @@ export default function BookingModal({
                       type="button"
                       role="radio"
                       aria-checked={vehicle === key}
-                      onClick={() => setVehicle(key)}
+                      onClick={() => { setVehicle(key); guideTo(pack ? addonsRef.current : packRef.current) }}
                       style={{
                         minWidth: 0, padding: '11px 10px', minHeight: '68px',
                         background: vehicle === key ? '#0C0C0C' : 'transparent',
@@ -389,14 +397,14 @@ export default function BookingModal({
               </div>
 
               {/* Pack selection */}
-              <div>
+              <div ref={packRef}>
                 <p style={sectionHeading}>Package</p>
                 <p style={fieldLabel}>Choose your package</p>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
                   {packOptions.map(p => (
                     <button
                       key={p.id}
-                      onClick={() => setPack(p.id)}
+                      onClick={() => { setPack(p.id); guideTo(vehicle ? addonsRef.current : vehicleRef.current) }}
                       style={{
                         width: '100%', padding: '16px 18px',
                         background: pack === p.id ? '#0C0C0C' : 'transparent',
@@ -427,7 +435,7 @@ export default function BookingModal({
               </div>
 
               {/* Add-ons */}
-              <div>
+              <div ref={addonsRef}>
                 <p style={sectionHeading}>Add-ons</p>
                 <p style={fieldLabel}>Optional extras</p>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
@@ -519,12 +527,13 @@ export default function BookingModal({
                         setDate(d)
                         // Drop a picked slot that isn't possible on the new date.
                         if (time && !isSlotAvailable(d, time)) setTime('')
+                        if (d) guideTo(timeRef.current)
                       }}
                       style={textInput}
                     />
                   </div>
 
-                  <div>
+                  <div ref={timeRef}>
                     <label style={fieldLabel}>Preferred Time Slot</label>
                     <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '6px' }}>
                       {timeSlots.map(t => {
@@ -532,7 +541,7 @@ export default function BookingModal({
                         const unavailable = Boolean(date) && !isSlotAvailable(date, t)
                         return (
                         <button
-                          key={t} type="button" onClick={() => setTime(t)}
+                          key={t} type="button" onClick={() => { setTime(t); guideTo(locationRef.current) }}
                           disabled={unavailable}
                           aria-disabled={unavailable}
                           title={unavailable ? 'This time has passed today' : undefined}
@@ -560,14 +569,14 @@ export default function BookingModal({
                 </div>
               </div>
 
-              <div style={{ borderTop: '1px solid rgba(12,12,12,0.08)', paddingTop: '24px' }}>
+              <div ref={locationRef} style={{ borderTop: '1px solid rgba(12,12,12,0.08)', paddingTop: '24px' }}>
                 <p style={sectionHeading}>Location &amp; Vehicle</p>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '20px', marginTop: '12px' }}>
                   <ValidatedField
                     label="Service Postcode"
                     value={address}
                     onChange={setAddress}
-                    onBlur={() => setPostcodeTouched(true)}
+                    onBlur={() => { setPostcodeTouched(true); if (postcodeValid && !carReg) guideTo(regRef.current, { highlight: false }) }}
                     placeholder="Enter your postcode"
                     maxLength={8}
                     touched={postcodeTouched}
@@ -578,6 +587,7 @@ export default function BookingModal({
                     letterSpacing="0.12em"
                   />
 
+                  <div ref={regRef}>
                   <ValidatedField
                     label="Vehicle Registration"
                     value={carReg}
@@ -592,6 +602,7 @@ export default function BookingModal({
                     uppercase
                     letterSpacing="0.1em"
                   />
+                  </div>
                 </div>
               </div>
             </form>
