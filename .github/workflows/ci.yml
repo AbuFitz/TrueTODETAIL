@@ -30,3 +30,16 @@ jobs:
         run: npx tsc --noEmit
       - name: Build
         run: npm run build
+      - name: Install browser for end-to-end tests
+        run: npx playwright install --with-deps chromium
+      - name: End-to-end tests
+        # Booking and chat flows in a real browser against the build above.
+        # No real booking is sent: the booking API is answered in the test.
+        run: npm run test:e2e
+      - name: Keep traces of failed end-to-end tests
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-traces
+          path: test-results/
+          retention-days: 7
