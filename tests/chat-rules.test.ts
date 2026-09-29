@@ -27,3 +27,11 @@ test('follow-up questions are not answered with the previous stock reply', () =>
   const [areas, cities] = conversation(['what areas?', 'what cities'])
   assert.notEqual(cities.text, areas.text)
 })
+
+test('no chat reply contains an em dash', () => {
+  const turns = conversation([
+    'hi', 'nah', 'how much is a full valet?', 'small car', 'what areas do you cover?',
+    'manchester?', 'can I reschedule my booking?', 'what if I am not happy?', 'asdfgh', 'qwerty', 'zxcvb',
+  ])
+  for (const t of turns) assert.ok(!t.text.includes('—'), `em dash in: ${t.text}`)
+})

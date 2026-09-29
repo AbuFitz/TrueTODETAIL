@@ -35,7 +35,7 @@ export const CHAT_TOOLS: ToolDef[] = [
   },
   {
     name: 'calculate_price',
-    description: 'Get the exact fixed price for a package + vehicle size + optional add-ons. Always call this before quoting any figure — never compute or state a price from memory.',
+    description: 'Get the exact fixed price for a package + vehicle size + optional add-ons. Always call this before quoting any figure, never compute or state a price from memory.',
     input_schema: {
       type: 'object',
       properties: {
@@ -58,13 +58,13 @@ export const CHAT_TOOLS: ToolDef[] = [
   },
   {
     name: 'check_availability',
-    description: 'Get the real fixed appointment time slots and confirmation policy. There is no live calendar — this returns the honest, fixed slot list and the confirmation window, never a fabricated "yes that slot is free".',
+    description: 'Get the real fixed appointment time slots and confirmation policy. There is no live calendar, this returns the honest, fixed slot list and the confirmation window, never a fabricated "yes that slot is free".',
     // Gemini rejects object schemas with no properties, so give it one optional field.
     input_schema: { type: 'object', properties: { date: { type: 'string', description: 'Optional date the customer asked about.' } } },
   },
   {
     name: 'lookup_booking',
-    description: 'Attempt to look up an existing booking. There is no chat-accessible booking database, so this always returns that lookups must go through phone/WhatsApp — call it so the assistant gives that honest answer rather than guessing.',
+    description: 'Attempt to look up an existing booking. There is no chat-accessible booking database, so this always returns that lookups must go through phone/WhatsApp, call it so the assistant gives that honest answer rather than guessing.',
     input_schema: {
       type: 'object',
       properties: {
@@ -86,7 +86,7 @@ export const CHAT_TOOLS: ToolDef[] = [
   },
   {
     name: 'prepare_booking_summary',
-    description: "Call this once you have enough information (package, vehicle, postcode, and ideally a date/time preference) to summarise a ready-to-book enquiry. This does NOT create a real booking — it only prepares a summary and prompts the customer to confirm via the site's Book Now flow, which handles real submission.",
+    description: "Call this once you have enough information (package, vehicle, postcode, and ideally a date/time preference) to summarise a ready-to-book enquiry. This does NOT create a real booking, it only prepares a summary and prompts the customer to confirm via the site's Book Now flow, which handles real submission.",
     input_schema: {
       type: 'object',
       properties: {
@@ -153,7 +153,7 @@ export function executeTool(name: string, input: Record<string, unknown>): ToolE
         output: {
           timeSlots: TIME_SLOTS,
           hours: BUSINESS_INFO.hours,
-          confirmationPolicy: `No live calendar exists — a requested slot is a preference, confirmed ${BUSINESS_INFO.bookingConfirmationWindow}.`,
+          confirmationPolicy: `No live calendar exists, a requested slot is a preference, confirmed ${BUSINESS_INFO.bookingConfirmationWindow}.`,
         },
       }
     }

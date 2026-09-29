@@ -389,7 +389,7 @@ export default function BookingModal({
                       </div>
                       <span style={{ fontFamily: 'var(--font-display)', fontSize: vehicle ? '22px' : '15px', color: pack === p.id ? '#E84A0C' : 'rgba(12,12,12,0.35)', letterSpacing: '0.02em', flexShrink: 0, marginLeft: '12px', textAlign: 'right' }}>
                         {vehicle
-                          ? `£${priceMap[p.id]?.[vehicle as VehicleType] ?? '—'}`
+                          ? `£${priceMap[p.id]?.[vehicle as VehicleType] ?? 0}`
                           : `£${Math.min(...Object.values(priceMap[p.id]))}–£${Math.max(...Object.values(priceMap[p.id]))}`}
                       </span>
                     </button>
@@ -465,8 +465,8 @@ export default function BookingModal({
                   )}
                 </div>
                 <div style={{ textAlign: 'right' }}>
-                  <p style={{ fontFamily: 'var(--font-body)', fontSize: '13px', color: 'rgba(255,255,255,0.45)', marginBottom: '3px' }}>{pack || '—'}</p>
-                  <p style={{ fontFamily: 'var(--font-body)', fontSize: '12px', color: 'rgba(255,255,255,0.25)' }}>{vehicle ? vehicleLabels[vehicle as VehicleType] : '—'}</p>
+                  <p style={{ fontFamily: 'var(--font-body)', fontSize: '13px', color: 'rgba(255,255,255,0.45)', marginBottom: '3px' }}>{pack || 'No package yet'}</p>
+                  <p style={{ fontFamily: 'var(--font-body)', fontSize: '12px', color: 'rgba(255,255,255,0.25)' }}>{vehicle ? vehicleLabels[vehicle as VehicleType] : 'No vehicle yet'}</p>
                 </div>
               </div>
             </div>
@@ -528,7 +528,7 @@ export default function BookingModal({
                     maxLength={8}
                     touched={postcodeTouched}
                     valid={postcodeValid}
-                    errorText="That doesn't look like a valid UK postcode — double-check it."
+                    errorText="That doesn't look like a valid UK postcode. Please double-check it."
                     helperText="We use this to confirm we cover your area."
                     uppercase
                     letterSpacing="0.12em"
@@ -543,7 +543,7 @@ export default function BookingModal({
                     maxLength={8}
                     touched={carRegTouched}
                     valid={carRegValid}
-                    errorText="That doesn't look like a valid registration — letters and numbers only."
+                    errorText="That doesn't look like a valid registration. Letters and numbers only."
                     helperText="Helps us confirm vehicle details before we arrive."
                     uppercase
                     letterSpacing="0.1em"
@@ -622,10 +622,10 @@ export default function BookingModal({
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '9px' }}>
                   {([
                     ['Pack',       pack],
-                    ['Vehicle',    vehicle ? vehicleLabels[vehicle as VehicleType] : '—'],
-                    ['Reg',        carReg || '—'],
-                    ['Date & Time', date && time ? `${date} · ${time}` : '—'],
-                    ['Postcode',   address || '—'],
+                    ['Vehicle',    vehicle ? vehicleLabels[vehicle as VehicleType] : 'Not set'],
+                    ['Reg',        carReg || 'Not set'],
+                    ['Date & Time', date && time ? `${date} · ${time}` : 'Not set'],
+                    ['Postcode',   address || 'Not set'],
                   ] as [string, string][]).map(([k, v]) => (
                     <div key={k} style={{ display: 'flex', justifyContent: 'space-between', gap: '16px' }}>
                       <span style={{ fontFamily: 'var(--font-body)', fontSize: '13px', color: 'rgba(12,12,12,0.4)', flexShrink: 0 }}>{k}</span>
@@ -644,7 +644,7 @@ export default function BookingModal({
                 <div style={{ borderTop: '1px solid rgba(12,12,12,0.08)', marginTop: '14px', paddingTop: '14px', display: 'flex', justifyContent: 'space-between', alignItems: 'baseline' }}>
                   <span style={{ fontFamily: 'var(--font-body)', fontWeight: 600, fontSize: '11px', letterSpacing: '0.12em', textTransform: 'uppercase', color: '#0C0C0C' }}>Total</span>
                   <span style={{ fontFamily: 'var(--font-display)', fontSize: '28px', color: '#0C0C0C' }}>
-                    {totalPrice !== null ? `£${totalPrice}` : '—'}
+                    {totalPrice !== null ? `£${totalPrice}` : '£0'}
                   </span>
                 </div>
               </div>

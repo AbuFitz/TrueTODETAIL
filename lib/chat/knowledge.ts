@@ -14,7 +14,7 @@ export function findAreaByPostcode(postcodeRaw: string): Area | null {
 
 export function coverageSummaryText(): string {
   const towns = AREAS.map(a => a.name).join(', ')
-  return `Based in ${BUSINESS_INFO.baseLocation}. Standard coverage is roughly a ${BUSINESS_INFO.coverageRadiusMiles}-mile radius. Towns regularly covered: ${towns}, plus villages/neighbourhoods around each. A town not on this list is very likely still covered if within about ${BUSINESS_INFO.coverageRadiusMiles} miles of ${BUSINESS_INFO.baseLocation} — confirm via WhatsApp/call. Full postcode lists live on /areas.`
+  return `Based in ${BUSINESS_INFO.baseLocation}. Standard coverage is roughly a ${BUSINESS_INFO.coverageRadiusMiles}-mile radius. Towns regularly covered: ${towns}, plus villages/neighbourhoods around each. A town not on this list is very likely still covered if within about ${BUSINESS_INFO.coverageRadiusMiles} miles of ${BUSINESS_INFO.baseLocation}, confirm via WhatsApp/call. Full postcode lists live on /areas.`
 }
 
 export function pricingSummaryText(): string {
@@ -26,16 +26,16 @@ export function pricingSummaryText(): string {
     'Packages (price varies by vehicle size: Small Car / Mid-Size / Large SUV & 4x4):',
     ...lines,
     `Add-ons (any package): ${addonLines}.`,
-    `Bespoke, quoted-only (never a fixed price — always requires a real quote): ${BESPOKE_SERVICES.join(', ')}.`,
+    `Bespoke, quoted-only (never a fixed price, always requires a real quote): ${BESPOKE_SERVICES.join(', ')}.`,
   ].join('\n')
 }
 
 export function businessFactsText(): string {
   return [
-    `Name: ${BUSINESS_INFO.name}. Fully mobile — comes to the customer, no drop-off.`,
+    `Name: ${BUSINESS_INFO.name}. Fully mobile, comes to the customer, no drop-off.`,
     `Hours: ${BUSINESS_INFO.hours}. Bookings confirmed ${BUSINESS_INFO.bookingConfirmationWindow}.`,
     `Contact: ${BUSINESS_INFO.phone} (call/WhatsApp), ${BUSINESS_INFO.email}.`,
-    `Payment: ${BUSINESS_INFO.paymentMethods.join(', ')} — ${BUSINESS_INFO.paymentTiming}. No deposit required.`,
+    `Payment: ${BUSINESS_INFO.paymentMethods.join(', ')}, ${BUSINESS_INFO.paymentTiming}. No deposit required.`,
     `Cancellation policy: ${BUSINESS_INFO.cancellationPolicy}`,
     `Satisfaction promise: ${BUSINESS_INFO.satisfactionPromise}`,
     `Fleet/commercial: ${BUSINESS_INFO.fleetDiscount} Point business enquiries to the Van & Fleet page/enquiry form for a manual quote.`,

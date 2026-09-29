@@ -10,6 +10,13 @@ const MAX_MESSAGE_LENGTH = 1000
 
 type Engine = 'gemini' | 'groq' | 'rules'
 
+// House style is no em dashes in anything a customer reads. The prompts ask
+// for this, but models slip, so every reply gets a final pass. En dashes in
+// ranges like "2–3 hours" are left alone.
+function withoutEmDashes(text: string): string {
+  return text.replace(/\s*—\s*/g, ', ').replace(/, ([.!?])/g, '$1')
+}
+
 // Short, key-free description of why a provider failed, returned alongside a
 // rules-engine reply so a silent fallback is visible from the browser's
 // network tab instead of looking like "the AI just isn't there".
@@ -161,7 +168,7 @@ export async function POST(req: NextRequest) {
   }
 
   return NextResponse.json({
-    reply: result.reply,
+    reply: withoutEmDashes(result.reply),
     conversationState: result.state,
     action: result.action,
     engine,

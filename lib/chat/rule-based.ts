@@ -121,14 +121,14 @@ export function runRuleBasedTurn(state: ConversationState, message: string, isFi
   let text: string
 
   if (GREETING_RE.test(message.trim()) && isFirstMessage) {
-    text = "Hey, welcome to True To Detail! I can help with pricing, coverage, or getting you booked in — what's on your mind?"
+    text = "Hey, welcome to True To Detail! I can help with pricing, coverage, or getting you booked in. What's on your mind?"
     return { text, state: next, action, escalationReason }
   }
 
   // Conversational filler isn't a failed answer — respond lightly and don't
   // let it count toward "couldn't handle this twice" escalation below.
   if (FILLER_RE.test(message.trim())) {
-    text = "No worries — I'm here if pricing, coverage, or booking comes to mind!"
+    text = "No worries, I'm here if pricing, coverage or booking comes to mind!"
     return { text, state: next, action, escalationReason }
   }
 
@@ -138,7 +138,7 @@ export function runRuleBasedTurn(state: ConversationState, message: string, isFi
   // it's a judgement call flagged as such rather than a hard no.
   if (OUT_OF_AREA_RE.test(message) && !next.postcode) {
     const place = message.match(OUT_OF_AREA_RE)?.[0] ?? 'that area'
-    text = `${place[0].toUpperCase()}${place.slice(1)} is a fair way outside our usual patch — we're based in ${BUSINESS_INFO.baseLocation} and cover roughly a ${BUSINESS_INFO.coverageRadiusMiles}-mile radius, so that's likely too far for us. Best to double check via WhatsApp/call on ${BUSINESS_INFO.phone} if you're close to the boundary.`
+    text = `${place[0].toUpperCase()}${place.slice(1)} is a fair way outside our usual patch. We're based in ${BUSINESS_INFO.baseLocation} and cover roughly a ${BUSINESS_INFO.coverageRadiusMiles}-mile radius, so that's likely too far for us. Best to double check via WhatsApp/call on ${BUSINESS_INFO.phone} if you're close to the boundary.`
     return { text, state: next, action, escalationReason }
   }
 
@@ -155,7 +155,7 @@ export function runRuleBasedTurn(state: ConversationState, message: string, isFi
     const result = executeTool('request_human_support', { reason: intent === 'complaint' ? `Complaint: "${message}"` : 'Customer asked to speak to a person.' })
     escalationReason = result.escalationReason
     action = { type: 'human_escalated' }
-    text = "I've flagged this for our team with everything we've discussed so far — they'll follow up directly. You're also welcome to call or WhatsApp us right now on " + BUSINESS_INFO.phone + "."
+    text = "I've flagged this for our team with everything we've discussed so far, and they'll follow up directly. You're also welcome to call or WhatsApp us right now on " + BUSINESS_INFO.phone + "."
     return { text, state: next, action, escalationReason }
   }
 
@@ -181,15 +181,15 @@ export function runRuleBasedTurn(state: ConversationState, message: string, isFi
       }
     }
     if (pkg && !vehicleGuess) {
-      text = `${coveragePrefix}For ${pkg}, what size is your vehicle — small car, mid-size, or a large SUV/4x4? Prices vary a bit by size.`
+      text = `${coveragePrefix}For ${pkg}, what size is your vehicle: small car, mid-size, or a large SUV/4x4? Prices vary a bit by size.`
       return { text, state: next, action, escalationReason }
     }
     const needsRecommendation = /stained|pet hair|hasn.t been cleaned|neglected|like new|selling (my|the) car|which (pack|package)|recommend/i.test(message)
     if (intent === 'package_recommendation' || needsRecommendation) {
-      text = `${coveragePrefix}If it's had a while since a proper clean, or has stains/pet hair, Full Valet is usually the right call — deep interior clean, seat shampoo and carpet extraction. For something needing real correction (swirl marks, dull paint, before a sale), Premium Detail goes further with clay bar decon and machine polish. Which sounds closer to what you need?`
+      text = `${coveragePrefix}If it's had a while since a proper clean, or has stains/pet hair, Full Valet is usually the right call: deep interior clean, seat shampoo and carpet extraction. For something needing real correction (swirl marks, dull paint, before a sale), Premium Detail goes further with clay bar decon and machine polish. Which sounds closer to what you need?`
       return { text, state: next, action, escalationReason }
     }
-    text = `${coveragePrefix}Our packages: Essential from £80, Full Valet (most popular) from £140, Premium Detail from £220 — exact price depends on vehicle size. Which one sounds right, and what's your vehicle?`
+    text = `${coveragePrefix}Our packages: Essential from £80, Full Valet (most popular) from £140, Premium Detail from £220. The exact price depends on vehicle size. Which one sounds right, and what's your vehicle?`
     return { text, state: next, action, escalationReason }
   }
 
@@ -216,13 +216,13 @@ export function runRuleBasedTurn(state: ConversationState, message: string, isFi
   if (intent === 'existing_booking' || intent === 'rescheduling_or_cancellation') {
     executeTool('lookup_booking', {})
     text = intent === 'rescheduling_or_cancellation'
-      ? `I can't pull up bookings from here, but rescheduling or cancelling is easy — call or WhatsApp us on ${BUSINESS_INFO.phone} (at least 24 hours notice avoids a late-cancellation fee).`
-      : `I don't have access to booking records from here — call or WhatsApp us on ${BUSINESS_INFO.phone} with your name or reference and we'll pull it up straight away.`
+      ? `I can't pull up bookings from here, but rescheduling or cancelling is easy. Call or WhatsApp us on ${BUSINESS_INFO.phone} (at least 24 hours notice avoids a late-cancellation fee).`
+      : `I don't have access to booking records from here. Call or WhatsApp us on ${BUSINESS_INFO.phone} with your name or reference and we'll pull it up straight away.`
     return { text, state: next, action, escalationReason }
   }
 
   if (intent === 'aftercare_question') {
-    text = `That's the kind of thing our team can give you a precise answer on for your specific job — WhatsApp or call ${BUSINESS_INFO.phone}. In general: ${BUSINESS_INFO.satisfactionPromise}`
+    text = `That's the kind of thing our team can give you a precise answer on for your specific job. WhatsApp or call ${BUSINESS_INFO.phone}. In general: ${BUSINESS_INFO.satisfactionPromise}`
     return { text, state: next, action, escalationReason }
   }
 
@@ -250,9 +250,9 @@ export function runRuleBasedTurn(state: ConversationState, message: string, isFi
     const result = executeTool('request_human_support', { reason: `Rule-based assistant couldn't confidently handle: ${next.unresolvedQuestions.join(' | ')}` })
     escalationReason = result.escalationReason
     action = { type: 'human_escalated' }
-    text = `I want to make sure you get a proper answer here — I've passed this on to our team with what we've discussed, they'll follow up directly. Or WhatsApp/call ${BUSINESS_INFO.phone} right now.`
+    text = `I want to make sure you get a proper answer here, so I've passed this on to our team with what we've discussed, they'll follow up directly. Or WhatsApp/call ${BUSINESS_INFO.phone} right now.`
   } else {
-    text = `I can help with pricing, coverage, or getting you booked in — what would be most useful? Or WhatsApp/call us on ${BUSINESS_INFO.phone}.`
+    text = `I can help with pricing, coverage, or getting you booked in. What would be most useful? Or WhatsApp/call us on ${BUSINESS_INFO.phone}.`
   }
   return { text, state: next, action, escalationReason }
 }
