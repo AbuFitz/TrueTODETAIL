@@ -25,13 +25,11 @@ const GREETING: Message = {
     "Hey, welcome to True To Detail! I can help with pricing, coverage, booking, or anything else on your mind. What can I help with?",
 }
 
+// Every page listens for this and opens the booking popup in place, so the
+// chat never needs to send the visitor away from what they were reading.
 function goToBooking() {
   if (typeof window === 'undefined') return
-  if (window.location.pathname !== '/') {
-    window.location.href = '/?book=1'
-  } else {
-    window.dispatchEvent(new Event('ttd:book-now'))
-  }
+  window.dispatchEvent(new Event('ttd:book-now'))
 }
 
 const QUICK_ACTIONS = [
