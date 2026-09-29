@@ -1,8 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { extractEntitiesGemini, generateResponseGemini, updateSummaryGemini, GeminiUnavailableError } from '@/lib/chat/gemini'
 import { extractEntitiesGroq, generateResponseGroq, updateSummaryGroq, GroqUnavailableError } from '@/lib/chat/groq'
-import { runRuleBasedTurn } from '@/lib/chat/rule-based'
+import { extractEntitiesRuleBased, runRuleBasedTurn } from '@/lib/chat/rule-based'
 import { mergeState, normaliseMessage, sanitizeState } from '@/lib/chat/state'
+import { withUkWording } from '@/lib/chat/uk'
 import { allowRequest, clientIp } from '@/lib/rateLimit'
 import type { ChatTurn, ConversationState, ChatAction } from '@/lib/chat/types'
 
@@ -112,7 +113,11 @@ async function runLlmTurn(provider: LlmProvider, incomingState: ConversationStat
   }
 
   let state: ConversationState = { ...incomingState, conversationSummary: summary, summarizedTurns }
-  const extracted = await provider.extract(state, recentTurns, message)
+  // The separate model pass for entities is only worth a call for longer messages
+  // or ones with numbers or dates in them. Short messages are covered by the rules,
+  // which halves how many calls each turn costs on the free tiers.
+  const worthAModelPass = message.trim().split(/\s+/).length > 8 || /\d/.test(message)
+  const extracted = worthAModelPass ? await provider.extract(state, recentTurns, message) : extractEntitiesRuleBased(message)
   state = mergeState(state, extracted)
 
   const result = await provider.respond(state, recentTurns, message)
@@ -220,7 +225,7 @@ export async function POST(req: NextRequest) {
   }
 
   return NextResponse.json({
-    reply: withoutEmDashes(withoutMarkdown(result.reply)).trim(),
+    reply: withUkWording(withoutEmDashes(withoutMarkdown(result.reply))).trim(),
     conversationState: result.state,
     action: result.action,
     engine,

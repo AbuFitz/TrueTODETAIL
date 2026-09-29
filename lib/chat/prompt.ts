@@ -3,7 +3,7 @@
 
 import { BUSINESS_INFO } from '@/lib/pricing'
 import { sizeGuideForPrompt } from '@/lib/chat/vehicle-size'
-import { businessFactsText, pricingSummaryText, coverageSummaryText } from '@/lib/chat/knowledge'
+import { faqText, businessFactsText, pricingSummaryText, coverageSummaryText } from '@/lib/chat/knowledge'
 import type { ConversationState } from '@/lib/chat/types'
 
 export function buildSystemPrompt(state: ConversationState): string {
@@ -38,6 +38,9 @@ ${businessFactsText()}
 
 ## Pricing
 ${pricingSummaryText()}
+
+## Frequently asked questions (answer from these when they fit, in your own short words)
+${faqText()}
 
 ## Vehicle sizes (UK terms)
 ${sizeGuideForPrompt()}
