@@ -1,8 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { Resend } from 'resend'
-import { notificationEmail, confirmationEmail, EmailData } from '@/lib/emails/templates'
+import { notificationEmail, confirmationEmail, notificationText, confirmationText, EmailData } from '@/lib/emails/templates'
 import { PACKAGES, ADDONS, VEHICLE_LABELS, TIME_SLOTS, calculatePrice, type VehicleType } from '@/lib/pricing'
 import { allowRequest, clientIp } from '@/lib/rateLimit'
+import { formatBookingDate, isSlotAvailable, isValidBookingDate } from '@/lib/slots'
 
 // Allows the job system's account.truetodetail.co.uk app (a separate origin
 // from this Next.js app) to post a booking from its own login page's quick
@@ -107,15 +108,18 @@ export async function POST(req: NextRequest) {
   if (!PHONE_RE.test(data.phone)) {
     return NextResponse.json({ error: 'Invalid phone number' }, { status: 400, headers: corsHeaders(origin) })
   }
-  // Date must be today or future (ISO yyyy-mm-dd)
-  const bookingDate = new Date(data.date)
-  const today = new Date()
-  today.setHours(0, 0, 0, 0)
-  if (isNaN(bookingDate.getTime()) || bookingDate < today) {
+  // Date must be today or later in UK time (ISO yyyy-mm-dd)
+  if (!isValidBookingDate(data.date)) {
     return NextResponse.json({ error: 'Invalid or past date' }, { status: 400, headers: corsHeaders(origin) })
   }
   if (!VALID_TIMES.includes(data.time)) {
     return NextResponse.json({ error: 'Invalid time slot' }, { status: 400, headers: corsHeaders(origin) })
+  }
+  if (!isSlotAvailable(data.date, data.time)) {
+    return NextResponse.json(
+      { error: 'That time has already passed today. Please pick a later slot or another day.' },
+      { status: 400, headers: corsHeaders(origin) },
+    )
   }
   // Name is optional, but cap length to keep it sane if provided.
   if (data.name && data.name.trim().length > 100) {
@@ -182,7 +186,7 @@ export async function POST(req: NextRequest) {
       pack: booking.pack,
       vehicle: VEHICLE_LABELS[booking.vehicle as VehicleType] ?? booking.vehicle,
       price: booking.price,
-      date: booking.date,
+      date: formatBookingDate(booking.date),
       time: booking.time,
       name: booking.name,
       phone: booking.phone,
@@ -202,8 +206,9 @@ export async function POST(req: NextRequest) {
         from: fromEmail,
         to: 'bookings@truetodetail.co.uk',
         replyTo: replyToEmail,
-        subject: `New Booking: ${booking.pack} · ${booking.date} · Ref ${booking.id}`,
+        subject: `New Booking: ${booking.pack} · ${formatBookingDate(booking.date)} · Ref ${booking.id}`,
         html: notificationEmail(emailData),
+        text: notificationText(emailData),
         headers: {
           Importance: 'high',
           'X-Priority': '1',
@@ -215,8 +220,9 @@ export async function POST(req: NextRequest) {
         from: fromEmail,
         to: booking.email,
         replyTo: replyToEmail,
-        subject: `Your Detail is Confirmed: ${booking.date}`,
+        subject: `Booking request received: ${formatBookingDate(booking.date)}`,
         html: confirmationEmail(emailData),
+        text: confirmationText(emailData),
       }),
     ])
   } else {

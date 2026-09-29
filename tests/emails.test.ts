@@ -1,6 +1,6 @@
 import { test } from 'node:test'
 import assert from 'node:assert/strict'
-import { confirmationEmail, notificationEmail, fleetEnquiryEmail } from '@/lib/emails/templates'
+import { confirmationEmail, notificationEmail, fleetEnquiryEmail, confirmationText, notificationText } from '@/lib/emails/templates'
 
 const EVIL = '<a href="https://evil.example/pay">Pay your deposit</a>'
 const booking = {
@@ -34,4 +34,13 @@ test('customer email never promises a one hour turnaround', () => {
   const html = confirmationEmail({ ...booking, name: 'Sarah', notes: '' })
   assert.ok(!/within (the|an|1) hour/i.test(html))
   assert.ok(html.includes('as soon as possible'))
+})
+
+test('plain-text versions carry the key booking details', () => {
+  const text = confirmationText({ ...booking, name: 'Sarah Mitchell', notes: '' })
+  assert.match(text, /^Hi Sarah,/)
+  assert.match(text, /Total: £155/)
+  assert.match(text, /not a confirmed booking yet/)
+  assert.ok(!text.includes('—'))
+  assert.match(notificationText(booking), /HIGH PRIORITY/)
 })

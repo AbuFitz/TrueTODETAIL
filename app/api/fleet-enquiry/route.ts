@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { Resend } from 'resend'
-import { fleetEnquiryEmail, FleetEnquiryData } from '@/lib/emails/templates'
+import { fleetEnquiryEmail, fleetEnquiryText, FleetEnquiryData } from '@/lib/emails/templates'
 import { allowRequest, clientIp } from '@/lib/rateLimit'
 
 export interface FleetEnquiryPayload {
@@ -69,6 +69,7 @@ export async function POST(req: NextRequest) {
       replyTo: 'info@truetodetail.co.uk',
       subject: `New Van & Fleet Enquiry: ${enquiry.business || enquiry.name}`,
       html: fleetEnquiryEmail(enquiry),
+      text: fleetEnquiryText(enquiry),
     })
     if (result.error) {
       console.error('[fleet-enquiry] Resend error:', result.error)

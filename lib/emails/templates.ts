@@ -428,3 +428,62 @@ export function chatEscalationEmail(raw: ChatEscalationData): string {
 
   return wrap(`Chat Escalation: ${d.reason}`, body)
 }
+
+/* Plain-text versions, sent alongside the HTML. Spam filters score
+   HTML-only mail worse, and some clients show only the text part. */
+
+const TEXT_FOOTER = 'True To Detail · Hertfordshire\n07359 591800 · info@truetodetail.co.uk\nhttps://www.truetodetail.co.uk'
+
+export function confirmationText(d: EmailData): string {
+  const first = d.name.trim() ? d.name.trim().split(' ')[0] : 'there'
+  return [
+    `Hi ${first},`,
+    '',
+    "We've got your booking request. We'll be in touch as soon as possible to confirm it.",
+    '',
+    `Preferred slot: ${d.date} at ${d.time}`,
+    `Postcode: ${d.address}`,
+    `Package: ${d.pack}`,
+    `Vehicle: ${d.vehicle} (${d.carReg})`,
+    ...(d.addons.length ? [`Add-ons: ${d.addons.join(', ')}`] : []),
+    `Total: £${d.price}`,
+    `Reference: ${d.id}`,
+    '',
+    'This is a request, not a confirmed booking yet. No prep needed, we bring everything, and payment is on the day.',
+    '',
+    'Any questions? Reply to this email, call 07359 591800, or WhatsApp us.',
+    '',
+    TEXT_FOOTER,
+  ].join('\n')
+}
+
+export function notificationText(d: EmailData): string {
+  return [
+    'HIGH PRIORITY: new booking request, respond as soon as possible.',
+    '',
+    `Ref: ${d.id}`,
+    `Package: ${d.pack}`,
+    `Preferred: ${d.date} at ${d.time}, ${d.address}`,
+    '',
+    `Name: ${d.name.trim() || 'Not provided'}`,
+    `Phone: ${d.phone}`,
+    `Email: ${d.email}`,
+    '',
+    `Vehicle: ${d.vehicle}, reg ${d.carReg}`,
+    `Add-ons: ${d.addons.length ? d.addons.join(', ') : 'None'}`,
+    ...(d.notes ? [`Notes: ${d.notes}`] : []),
+    `Total: £${d.price}`,
+  ].join('\n')
+}
+
+export function fleetEnquiryText(d: FleetEnquiryData): string {
+  return [
+    'New van & fleet enquiry',
+    '',
+    `Name: ${d.name}`,
+    `Business: ${d.business || 'Not given'}`,
+    `Phone: ${d.phone}`,
+    `Fleet size: ${d.fleetSize || 'Not given'}`,
+    ...(d.message ? ['', `Message: ${d.message}`] : []),
+  ].join('\n')
+}

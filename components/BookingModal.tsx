@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { PACKAGES, ADDONS, VEHICLE_LABELS as vehicleLabels, TIME_SLOTS as timeSlots, type VehicleType } from '@/lib/pricing'
+import { isSlotAvailable, ukNow } from '@/lib/slots'
 
 type Step = 1 | 2 | 3 | 4
 
@@ -483,8 +484,14 @@ export default function BookingModal({
                     <label style={fieldLabel}>Preferred Date</label>
                     <input
                       type="date" required
-                      min={new Date().toISOString().split('T')[0]}
-                      value={date} onChange={e => setDate(e.target.value)}
+                      min={ukNow().date}
+                      value={date}
+                      onChange={e => {
+                        const d = e.target.value
+                        setDate(d)
+                        // Drop a picked slot that isn't possible on the new date.
+                        if (time && !isSlotAvailable(d, time)) setTime('')
+                      }}
                       style={textInput}
                     />
                   </div>
@@ -492,14 +499,22 @@ export default function BookingModal({
                   <div>
                     <label style={fieldLabel}>Preferred Time Slot</label>
                     <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '6px' }}>
-                      {timeSlots.map(t => (
+                      {timeSlots.map(t => {
+                        // Slots already passed today (or within the hour) can't be picked.
+                        const unavailable = Boolean(date) && !isSlotAvailable(date, t)
+                        return (
                         <button
                           key={t} type="button" onClick={() => setTime(t)}
+                          disabled={unavailable}
+                          aria-disabled={unavailable}
+                          title={unavailable ? 'This time has passed today' : undefined}
                           style={{
                             padding: '13px 8px',
                             border: `1px solid ${time === t ? '#0C0C0C' : 'rgba(12,12,12,0.1)'}`,
                             background: time === t ? '#0C0C0C' : 'transparent',
-                            cursor: 'pointer',
+                            cursor: unavailable ? 'not-allowed' : 'pointer',
+                            opacity: unavailable ? 0.3 : 1,
+                            textDecoration: unavailable ? 'line-through' : 'none',
                             fontFamily: 'var(--font-body)', fontWeight: 600, fontSize: '13px',
                             color: time === t ? '#ffffff' : 'rgba(12,12,12,0.5)',
                             transition: 'all 0.15s',
@@ -507,7 +522,8 @@ export default function BookingModal({
                         >
                           {t}
                         </button>
-                      ))}
+                        )
+                      })}
                     </div>
                     <p style={{ fontFamily: 'var(--font-body)', fontSize: '11px', color: 'rgba(12,12,12,0.28)', marginTop: '10px' }}>
                       Exact arrival window confirmed as soon as possible.
