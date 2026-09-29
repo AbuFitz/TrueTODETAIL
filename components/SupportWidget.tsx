@@ -3,6 +3,7 @@
 import { useState, useRef, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { emptyConversationState, type ConversationState, type ChatAction } from '@/lib/chat/types'
+import { useDialogFocus } from '@/lib/useDialogFocus'
 
 const ease = [0.22, 1, 0.36, 1] as [number, number, number, number]
 
@@ -75,13 +76,16 @@ export default function SupportWidget() {
     listRef.current?.scrollTo({ top: listRef.current.scrollHeight, behavior: 'smooth' })
   }, [messages, sending])
 
+  // Focus lands in the message box, Tab stays in the panel, the page behind
+  // stops scrolling, and focus returns to the launcher on close.
+  const panelRef = useRef<HTMLDivElement>(null)
+  useDialogFocus(panelRef, open, inputRef)
+
   useEffect(() => {
-    if (open) {
-      document.body.style.overflow = 'hidden'
-      const t = setTimeout(() => inputRef.current?.focus(), 250)
-      return () => { clearTimeout(t); document.body.style.overflow = '' }
-    }
-    document.body.style.overflow = ''
+    if (!open) return
+    const onKey = (e: KeyboardEvent) => { if (e.key === 'Escape') setOpen(false) }
+    window.addEventListener('keydown', onKey)
+    return () => window.removeEventListener('keydown', onKey)
   }, [open])
 
   const handleSend = async (e: React.FormEvent) => {
@@ -169,6 +173,10 @@ export default function SupportWidget() {
               style={{ position: 'fixed', inset: 0, zIndex: 85, background: 'rgba(12,12,12,0.25)' }}
             />
             <motion.div
+              ref={panelRef}
+              role="dialog"
+              aria-modal="true"
+              aria-label="Support chat"
               initial={{ opacity: 0, y: 16, scale: 0.97 }}
               animate={{ opacity: 1, y: 0, scale: 1 }}
               exit={{ opacity: 0, y: 16, scale: 0.97 }}

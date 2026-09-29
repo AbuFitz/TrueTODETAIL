@@ -1,9 +1,10 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { PACKAGES, ADDONS, VEHICLE_LABELS as vehicleLabels, TIME_SLOTS as timeSlots, type VehicleType } from '@/lib/pricing'
 import { formatBookingDate, formatShortDate, isSlotAvailable, ukNow } from '@/lib/slots'
+import { useDialogFocus } from '@/lib/useDialogFocus'
 
 type Step = 1 | 2 | 3 | 4
 
@@ -221,6 +222,9 @@ export default function BookingModal({
     }, 400)
   }
 
+  const panelRef = useRef<HTMLDivElement>(null)
+  useDialogFocus(panelRef, isOpen)
+
   // Escape closes the popup, as with any dialog.
   useEffect(() => {
     if (!isOpen) return
@@ -245,6 +249,7 @@ export default function BookingModal({
       />
 
       <motion.div
+        ref={panelRef}
         initial={{ x: '100%' }}
         animate={{ x: 0 }}
         transition={{ duration: 0.42, ease }}
