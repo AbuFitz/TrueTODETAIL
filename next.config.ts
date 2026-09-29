@@ -20,6 +20,22 @@ const nextConfig: NextConfig = {
       },
     ],
   },
+  // Baseline hardening on every page: no framing by other sites
+  // (clickjacking on the booking form), no MIME sniffing, no full URLs
+  // leaked in referrers, and no device features the site doesn't use.
+  async headers() {
+    return [
+      {
+        source: '/(.*)',
+        headers: [
+          { key: 'X-Frame-Options', value: 'SAMEORIGIN' },
+          { key: 'X-Content-Type-Options', value: 'nosniff' },
+          { key: 'Referrer-Policy', value: 'strict-origin-when-cross-origin' },
+          { key: 'Permissions-Policy', value: 'geolocation=(self), camera=(), microphone=(), payment=(), usb=()' },
+        ],
+      },
+    ]
+  },
   async rewrites() {
     return [
       { source: '/account', destination: `${APP_URL}/account` },
