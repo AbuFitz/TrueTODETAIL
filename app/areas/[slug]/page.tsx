@@ -64,7 +64,7 @@ export default async function AreaPage({ params }: { params: Promise<{ slug: str
           <div style={{ maxWidth: '900px', margin: '0 auto', padding: '0 clamp(24px, 5vw, 48px)' }}>
 
             <nav aria-label="Breadcrumb" style={{ marginBottom: '32px' }}>
-              <ol style={{ display: 'flex', flexWrap: 'wrap', gap: '8px', listStyle: 'none', padding: 0, margin: 0, fontSize: '13px', color: 'rgba(255,255,255,0.55)' }}>
+              <ol style={{ display: 'flex', flexWrap: 'wrap', gap: '8px', listStyle: 'none', padding: 0, margin: 0, fontSize: '13px', color: 'rgba(255,255,255,0.35)' }}>
                 <li><Link href="/" style={{ color: '#E84A0C', textDecoration: 'none' }}>Home</Link></li>
                 <li aria-hidden>›</li>
                 <li><Link href="/areas" style={{ color: '#E84A0C', textDecoration: 'none' }}>Areas We Cover</Link></li>
@@ -117,9 +117,9 @@ export default async function AreaPage({ params }: { params: Promise<{ slug: str
             <p style={{ fontSize: '15px', lineHeight: 1.78, color: 'rgba(12,12,12,0.62)', marginBottom: '8px' }}>
               We also regularly cover: {area.neighbourhoods.join(', ')}.
             </p>
-            <p style={{ fontSize: '14px', lineHeight: 1.7, color: 'rgba(12,12,12,0.62)' }}>
+            <p style={{ fontSize: '14px', lineHeight: 1.7, color: 'rgba(12,12,12,0.45)' }}>
               {area.driveTime} Not sure your exact postcode is included? Message us on WhatsApp or call{' '}
-              <a href="tel:+447359591800" style={{ color: '#E84A0C', textDecoration: 'underline', textUnderlineOffset: '3px' }}>07359 591800</a> and we&apos;ll confirm straight away.
+              <a href="tel:+447359591800" style={{ color: '#E84A0C', textDecoration: 'none' }}>07359 591800</a> and we&apos;ll confirm straight away.
             </p>
           </div>
         </section>
@@ -149,7 +149,7 @@ export default async function AreaPage({ params }: { params: Promise<{ slug: str
             <h2 style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(28px, 4vw, 44px)', letterSpacing: '0.02em', color: '#ffffff', marginBottom: '16px' }}>
               WORKING IN {area.name.toUpperCase()}
             </h2>
-            <p style={{ fontSize: '15px', lineHeight: 1.78, color: 'rgba(255,255,255,0.55)' }}>
+            <p style={{ fontSize: '15px', lineHeight: 1.78, color: 'rgba(255,255,255,0.5)' }}>
               {area.localParagraph}
             </p>
           </div>
@@ -179,7 +179,7 @@ export default async function AreaPage({ params }: { params: Promise<{ slug: str
                     <tr key={p.id}>
                       <th scope="row" style={{ textAlign: 'left', padding: '12px 10px', borderBottom: '1px solid rgba(12,12,12,0.08)', fontWeight: 600, color: '#0C0C0C' }}>
                         {p.id}
-                        <span style={{ display: 'block', fontWeight: 400, fontSize: '12px', color: 'rgba(12,12,12,0.62)' }}>{p.duration}</span>
+                        <span style={{ display: 'block', fontWeight: 400, fontSize: '12px', color: 'rgba(12,12,12,0.45)' }}>{p.duration}</span>
                       </th>
                       {VEHICLES.map((v) => (
                         <td key={v} style={{ textAlign: 'right', padding: '12px 10px', borderBottom: '1px solid rgba(12,12,12,0.08)', color: '#0C0C0C' }}>£{p.price[v]}</td>
@@ -196,7 +196,7 @@ export default async function AreaPage({ params }: { params: Promise<{ slug: str
             </ul>
             <p style={{ fontSize: '15px', lineHeight: 1.78, color: 'rgba(12,12,12,0.62)' }}>
               Looking for a car wash in {area.name}? Our Essential package is a proper hand wash done on your driveway, which is far kinder to paintwork than a brush car wash, plus a quick interior tidy.
-              See our <Link href="/mobile-car-wash" style={{ color: '#C53D08', textDecoration: 'underline', textUnderlineOffset: '3px' }}>mobile car wash</Link> page for what&apos;s included.
+              See our <Link href="/mobile-car-wash" style={{ color: '#E84A0C', textDecoration: 'none' }}>mobile car wash</Link> page for what&apos;s included.
             </p>
           </div>
         </section>
@@ -213,7 +213,7 @@ export default async function AreaPage({ params }: { params: Promise<{ slug: str
                   <p style={{ fontFamily: 'var(--font-body)', fontWeight: 700, fontSize: '15px', color: '#0C0C0C', marginBottom: '8px' }}>
                     {faq.q}
                   </p>
-                  <p style={{ fontFamily: 'var(--font-body)', fontSize: '14px', lineHeight: 1.72, color: 'rgba(12,12,12,0.62)' }}>
+                  <p style={{ fontFamily: 'var(--font-body)', fontSize: '14px', lineHeight: 1.72, color: 'rgba(12,12,12,0.58)' }}>
                     {faq.a}
                   </p>
                 </div>
@@ -245,7 +245,7 @@ export default async function AreaPage({ params }: { params: Promise<{ slug: str
             </div>
 
             <nav aria-label="Nearby areas" style={{ borderTop: '1px solid rgba(255,255,255,0.1)', paddingTop: '32px' }}>
-              <p style={{ fontFamily: 'var(--font-body)', fontSize: '11px', fontWeight: 600, letterSpacing: '0.2em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.55)', marginBottom: '16px' }}>
+              <p style={{ fontFamily: 'var(--font-body)', fontSize: '11px', fontWeight: 600, letterSpacing: '0.2em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.3)', marginBottom: '16px' }}>
                 Nearby Areas We Also Cover
               </p>
               <div style={{ display: 'flex', flexWrap: 'wrap', gap: '12px' }}>
@@ -254,7 +254,7 @@ export default async function AreaPage({ params }: { params: Promise<{ slug: str
                     {a.name}
                   </Link>
                 ))}
-                <Link href="/areas" style={{ fontSize: '14px', color: 'rgba(255,255,255,0.55)', textDecoration: 'none' }}>
+                <Link href="/areas" style={{ fontSize: '14px', color: 'rgba(255,255,255,0.4)', textDecoration: 'none' }}>
                   View all areas →
                 </Link>
               </div>

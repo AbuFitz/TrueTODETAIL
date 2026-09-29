@@ -28,7 +28,7 @@ export default function BookingCTA({ onBookNow }: { onBookNow: () => void }) {
           <span style={{ width: 20, height: '1.5px', background: '#E84A0C', flexShrink: 0 }} />
           <span style={{
             fontFamily: 'var(--font-body)', fontWeight: 600, fontSize: '11px',
-            letterSpacing: '0.2em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.55)',
+            letterSpacing: '0.2em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.28)',
           }}>
             Get Booked In
           </span>
@@ -73,7 +73,7 @@ export default function BookingCTA({ onBookNow }: { onBookNow: () => void }) {
 
             <p style={{
               fontFamily: 'var(--font-body)', fontSize: '15px', lineHeight: 1.78,
-              color: 'rgba(255,255,255,0.55)', maxWidth: '340px',
+              color: 'rgba(255,255,255,0.38)', maxWidth: '340px',
               marginBottom: 'clamp(28px, 4vw, 44px)',
             }}>
               Mobile. Professional. Fixed prices. We come to your door, no drop-off, no waiting around, just results.
@@ -102,7 +102,7 @@ export default function BookingCTA({ onBookNow }: { onBookNow: () => void }) {
                   fontFamily: 'var(--font-body)', fontWeight: 600, fontSize: '12px',
                   letterSpacing: '0.08em', textTransform: 'uppercase',
                   border: '1px solid rgba(255,255,255,0.12)',
-                  color: 'rgba(255,255,255,0.55)', textDecoration: 'none',
+                  color: 'rgba(255,255,255,0.45)', textDecoration: 'none',
                   padding: '17px 24px',
                   display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px',
                   transition: 'all 0.2s',
@@ -113,7 +113,7 @@ export default function BookingCTA({ onBookNow }: { onBookNow: () => void }) {
                 }}
                 onMouseLeave={e => {
                   e.currentTarget.style.borderColor = 'rgba(255,255,255,0.12)'
-                  e.currentTarget.style.color = 'rgba(255,255,255,0.55)'
+                  e.currentTarget.style.color = 'rgba(255,255,255,0.45)'
                 }}
               >
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
@@ -163,7 +163,7 @@ export default function BookingCTA({ onBookNow }: { onBookNow: () => void }) {
                 <p style={{
                   fontFamily: 'var(--font-body)', fontWeight: 600, fontSize: '10px',
                   letterSpacing: '0.2em', textTransform: 'uppercase',
-                  color: 'rgba(255,255,255,0.55)', marginBottom: '10px',
+                  color: 'rgba(255,255,255,0.22)', marginBottom: '10px',
                 }}>
                   {tile.label}
                 </p>
@@ -176,7 +176,7 @@ export default function BookingCTA({ onBookNow }: { onBookNow: () => void }) {
                 </p>
                 <p style={{
                   fontFamily: 'var(--font-body)', fontSize: '13px', lineHeight: 1.65,
-                  color: 'rgba(255,255,255,0.55)',
+                  color: 'rgba(255,255,255,0.28)',
                 }}>
                   {tile.detail}
                 </p>
@@ -208,7 +208,7 @@ export default function BookingCTA({ onBookNow }: { onBookNow: () => void }) {
               <span key={fact} style={{
                 fontFamily: 'var(--font-body)', fontWeight: 500, fontSize: '12px',
                 letterSpacing: '0.06em', textTransform: 'uppercase',
-                color: 'rgba(255,255,255,0.55)',
+                color: 'rgba(255,255,255,0.28)',
               }}>
                 {fact}
               </span>

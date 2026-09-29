@@ -202,7 +202,7 @@ export default function SupportWidget() {
                   <p style={{
                     fontFamily: 'var(--font-body)', fontSize: '10px', fontWeight: 600,
                     letterSpacing: '0.2em', textTransform: 'uppercase',
-                    color: 'rgba(255,255,255,0.55)', marginBottom: '4px',
+                    color: 'rgba(255,255,255,0.3)', marginBottom: '4px',
                   }}>
                     True To Detail
                   </p>

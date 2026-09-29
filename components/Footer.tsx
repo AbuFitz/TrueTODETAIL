@@ -83,7 +83,7 @@ export default function Footer({ onBookNow }: { onBookNow: () => void }) {
 
           <p style={{
             fontFamily: 'var(--font-body)', fontSize: '14px', lineHeight: 1.72,
-            color: 'rgba(12,12,12,0.62)', marginBottom: '24px', maxWidth: '220px',
+            color: 'rgba(12,12,12,0.42)', marginBottom: '24px', maxWidth: '220px',
           }}>
             Professional mobile car detailing in Hertfordshire. We come to you.
           </p>
@@ -93,11 +93,11 @@ export default function Footer({ onBookNow }: { onBookNow: () => void }) {
               href="tel:+447359591800"
               style={{
                 fontFamily: 'var(--font-body)', fontSize: '13px',
-                color: 'rgba(12,12,12,0.62)', textDecoration: 'none',
+                color: 'rgba(12,12,12,0.38)', textDecoration: 'none',
                 transition: 'color 0.2s',
               }}
               onMouseEnter={e => (e.currentTarget.style.color = '#0C0C0C')}
-              onMouseLeave={e => (e.currentTarget.style.color = 'rgba(12,12,12,0.62)')}
+              onMouseLeave={e => (e.currentTarget.style.color = 'rgba(12,12,12,0.38)')}
             >
               07359 591800
             </a>
@@ -105,11 +105,11 @@ export default function Footer({ onBookNow }: { onBookNow: () => void }) {
               href="mailto:info@truetodetail.co.uk"
               style={{
                 fontFamily: 'var(--font-body)', fontSize: '13px',
-                color: 'rgba(12,12,12,0.62)', textDecoration: 'none',
+                color: 'rgba(12,12,12,0.38)', textDecoration: 'none',
                 transition: 'color 0.2s',
               }}
               onMouseEnter={e => (e.currentTarget.style.color = '#0C0C0C')}
-              onMouseLeave={e => (e.currentTarget.style.color = 'rgba(12,12,12,0.62)')}
+              onMouseLeave={e => (e.currentTarget.style.color = 'rgba(12,12,12,0.38)')}
             >
               info@truetodetail.co.uk
             </a>
@@ -121,7 +121,7 @@ export default function Footer({ onBookNow }: { onBookNow: () => void }) {
           <p style={{
             fontFamily: 'var(--font-body)', fontWeight: 600, fontSize: '10px',
             letterSpacing: '0.2em', textTransform: 'uppercase',
-            color: 'rgba(12,12,12,0.62)', marginBottom: '20px',
+            color: 'rgba(12,12,12,0.25)', marginBottom: '20px',
           }}>
             Navigation
           </p>
@@ -137,11 +137,11 @@ export default function Footer({ onBookNow }: { onBookNow: () => void }) {
                 href={href}
                 style={{
                   fontFamily: 'var(--font-body)', fontSize: '14px',
-                  color: 'rgba(12,12,12,0.62)', textDecoration: 'none',
+                  color: 'rgba(12,12,12,0.38)', textDecoration: 'none',
                   transition: 'color 0.2s',
                 }}
                 onMouseEnter={e => (e.currentTarget.style.color = '#0C0C0C')}
-                onMouseLeave={e => (e.currentTarget.style.color = 'rgba(12,12,12,0.62)')}
+                onMouseLeave={e => (e.currentTarget.style.color = 'rgba(12,12,12,0.38)')}
               >
                 {label}
               </a>
@@ -152,7 +152,7 @@ export default function Footer({ onBookNow }: { onBookNow: () => void }) {
           <p style={{
             fontFamily: 'var(--font-body)', fontWeight: 600, fontSize: '10px',
             letterSpacing: '0.2em', textTransform: 'uppercase',
-            color: 'rgba(12,12,12,0.62)', marginBottom: '14px', marginTop: '28px',
+            color: 'rgba(12,12,12,0.25)', marginBottom: '14px', marginTop: '28px',
           }}>
             Our Services
           </p>
@@ -171,11 +171,11 @@ export default function Footer({ onBookNow }: { onBookNow: () => void }) {
                 href={href}
                 style={{
                   fontFamily: 'var(--font-body)', fontSize: '13px',
-                  color: 'rgba(12,12,12,0.62)', textDecoration: 'none',
+                  color: 'rgba(12,12,12,0.38)', textDecoration: 'none',
                   transition: 'color 0.2s',
                 }}
                 onMouseEnter={e => (e.currentTarget.style.color = '#E84A0C')}
-                onMouseLeave={e => (e.currentTarget.style.color = 'rgba(12,12,12,0.62)')}
+                onMouseLeave={e => (e.currentTarget.style.color = 'rgba(12,12,12,0.38)')}
               >
                 {label}
               </a>
@@ -188,14 +188,14 @@ export default function Footer({ onBookNow }: { onBookNow: () => void }) {
           <p style={{
             fontFamily: 'var(--font-body)', fontWeight: 600, fontSize: '10px',
             letterSpacing: '0.2em', textTransform: 'uppercase',
-            color: 'rgba(12,12,12,0.62)', marginBottom: '20px',
+            color: 'rgba(12,12,12,0.25)', marginBottom: '20px',
           }}>
             Book A Detail
           </p>
 
           <p style={{
             fontFamily: 'var(--font-body)', fontSize: '14px', lineHeight: 1.72,
-            color: 'rgba(12,12,12,0.62)', marginBottom: '24px',
+            color: 'rgba(12,12,12,0.42)', marginBottom: '24px',
           }}>
             Mon–Sat, 8am–7pm<br />
             Hertfordshire &amp; surrounds
@@ -230,7 +230,7 @@ export default function Footer({ onBookNow }: { onBookNow: () => void }) {
           <p style={{
             fontFamily: 'var(--font-body)', fontWeight: 600, fontSize: '10px',
             letterSpacing: '0.2em', textTransform: 'uppercase',
-            color: 'rgba(12,12,12,0.62)', marginBottom: '20px',
+            color: 'rgba(12,12,12,0.25)', marginBottom: '20px',
           }}>
             Areas We Cover
           </p>
@@ -244,11 +244,11 @@ export default function Footer({ onBookNow }: { onBookNow: () => void }) {
                 href={`/areas/${area.slug}`}
                 style={{
                   fontFamily: 'var(--font-body)', fontSize: '13px',
-                  color: 'rgba(12,12,12,0.62)', textDecoration: 'none',
+                  color: 'rgba(12,12,12,0.38)', textDecoration: 'none',
                   whiteSpace: 'nowrap', transition: 'color 0.2s',
                 }}
                 onMouseEnter={e => (e.currentTarget.style.color = '#E84A0C')}
-                onMouseLeave={e => (e.currentTarget.style.color = 'rgba(12,12,12,0.62)')}
+                onMouseLeave={e => (e.currentTarget.style.color = 'rgba(12,12,12,0.38)')}
               >
                 {area.name}
               </a>
@@ -330,7 +330,7 @@ export default function Footer({ onBookNow }: { onBookNow: () => void }) {
         }}>
           <span style={{
             fontFamily: 'var(--font-body)', fontSize: '11px',
-            color: 'rgba(12,12,12,0.62)', letterSpacing: '0.04em',
+            color: 'rgba(12,12,12,0.25)', letterSpacing: '0.04em',
           }}>
             © {YEAR} True To Detail · Hertfordshire, UK
           </span>
@@ -345,12 +345,12 @@ export default function Footer({ onBookNow }: { onBookNow: () => void }) {
                 rel="noopener noreferrer"
                 aria-label={s.label}
                 style={{
-                  color: 'rgba(12,12,12,0.62)',
+                  color: 'rgba(12,12,12,0.28)',
                   display: 'flex', alignItems: 'center',
                   transition: 'color 0.2s',
                 }}
                 onMouseEnter={e => (e.currentTarget.style.color = '#E84A0C')}
-                onMouseLeave={e => (e.currentTarget.style.color = 'rgba(12,12,12,0.62)')}
+                onMouseLeave={e => (e.currentTarget.style.color = 'rgba(12,12,12,0.28)')}
               >
                 {s.icon}
               </a>
@@ -368,11 +368,11 @@ export default function Footer({ onBookNow }: { onBookNow: () => void }) {
                 href={href}
                 style={{
                   fontFamily: 'var(--font-body)', fontSize: '11px',
-                  color: 'rgba(12,12,12,0.62)', textDecoration: 'none', letterSpacing: '0.04em',
+                  color: 'rgba(12,12,12,0.28)', textDecoration: 'none', letterSpacing: '0.04em',
                   transition: 'color 0.2s',
                 }}
                 onMouseEnter={e => (e.currentTarget.style.color = '#0C0C0C')}
-                onMouseLeave={e => (e.currentTarget.style.color = 'rgba(12,12,12,0.62)')}
+                onMouseLeave={e => (e.currentTarget.style.color = 'rgba(12,12,12,0.28)')}
               >
                 {label}
               </a>

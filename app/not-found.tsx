@@ -26,7 +26,7 @@ export default function NotFound() {
           </p>
           <h1 style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(56px, 10vw, 120px)', lineHeight: 0.9, color: '#ffffff', letterSpacing: '0.01em', marginBottom: '24px' }}>
             WRONG<br />
-            <span style={{ color: 'rgba(255,255,255,0.55)' }}>TURN<span style={{ color: '#E84A0C' }}>.</span></span>
+            <span style={{ color: 'rgba(255,255,255,0.35)' }}>TURN<span style={{ color: '#E84A0C' }}>.</span></span>
           </h1>
           <p style={{ fontSize: '17px', lineHeight: 1.7, color: 'rgba(255,255,255,0.6)', maxWidth: '520px', marginBottom: '36px' }}>
             That page doesn&apos;t exist, or it has moved. You can still book a mobile valet or detail right here, or head to one of these instead.

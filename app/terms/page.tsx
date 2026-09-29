@@ -20,7 +20,7 @@ export default function TermsPage() {
             display: 'inline-flex', alignItems: 'center', gap: '8px',
             fontFamily: 'var(--font-body)', fontSize: '12px', fontWeight: 600,
             letterSpacing: '0.12em', textTransform: 'uppercase',
-            color: 'rgba(12,12,12,0.62)', textDecoration: 'none',
+            color: 'rgba(12,12,12,0.38)', textDecoration: 'none',
             marginBottom: '48px',
           }}
         >
@@ -41,7 +41,7 @@ export default function TermsPage() {
         }}>
           TERMS &amp;<br />CONDITIONS
         </h1>
-        <p style={{ fontFamily: 'var(--font-body)', fontSize: '13px', color: 'rgba(12,12,12,0.62)', marginBottom: '48px' }}>
+        <p style={{ fontFamily: 'var(--font-body)', fontSize: '13px', color: 'rgba(12,12,12,0.38)', marginBottom: '48px' }}>
           Last updated: March 2025
         </p>
 
@@ -100,7 +100,7 @@ export default function TermsPage() {
               </h2>
               <p style={{
                 fontFamily: 'var(--font-body)', fontSize: '14px', lineHeight: 1.78,
-                color: 'rgba(12,12,12,0.62)', margin: 0,
+                color: 'rgba(12,12,12,0.55)', margin: 0,
               }}>
                 {section.body}
               </p>
