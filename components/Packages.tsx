@@ -517,13 +517,13 @@ export default function Packages({
                 fontFamily: 'var(--font-body)', fontWeight: 600, fontSize: '13px',
                 color: 'rgba(255,255,255,0.7)', marginBottom: '3px',
               }}>
-                Running a van or fleet?
+                Vans and fleets are coming soon
               </p>
               <p style={{
                 fontFamily: 'var(--font-body)', fontSize: '12px',
                 color: 'rgba(255,255,255,0.3)',
               }}>
-                We have dedicated commercial services, fleet pricing and business packages.
+                Van and fleet cleaning is on the way. Register your interest and we will tell you when it opens.
               </p>
             </div>
           </div>
@@ -540,7 +540,7 @@ export default function Packages({
             onMouseEnter={e => (e.currentTarget.style.opacity = '0.7')}
             onMouseLeave={e => (e.currentTarget.style.opacity = '1')}
           >
-            View Van & Fleet
+            Register interest
             <span style={{ fontSize: '14px' }}>→</span>
           </a>
         </motion.div>

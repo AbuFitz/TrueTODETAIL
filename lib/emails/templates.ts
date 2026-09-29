@@ -144,11 +144,11 @@ export function confirmationEmail(raw: EmailData): string {
 export function fleetEnquiryEmail(raw: FleetEnquiryData): string {
   const d = escapeFields(raw)
   return renderEmail({
-    title: `New Van & Fleet Enquiry: ${d.name}`,
+    title: `Van & Fleet Interest (Coming Soon): ${d.name}`,
     preheader: `${d.business || d.name}, fleet size ${d.fleetSize || 'not given'}`,
-    eyebrow: 'New van and fleet enquiry',
+    eyebrow: 'Van and fleet interest · coming soon',
     heading: d.business || d.name,
-    intro: `Please reply within a few hours by text or call to ${d.phone}.`,
+    intro: `Someone registered interest in the coming soon van and fleet service. Keep their details for launch, and a quick reply to ${d.phone} lets them know we have it.`,
     details: [
       rows([
         ['Name', d.name],

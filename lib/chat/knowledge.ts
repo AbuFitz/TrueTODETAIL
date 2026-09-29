@@ -39,7 +39,7 @@ export function businessFactsText(): string {
     `Payment: ${BUSINESS_INFO.paymentMethods.join(', ')}, ${BUSINESS_INFO.paymentTiming}. No deposit required.`,
     `Cancellation policy: ${BUSINESS_INFO.cancellationPolicy}`,
     `Satisfaction promise: ${BUSINESS_INFO.satisfactionPromise}`,
-    `Fleet/commercial: ${BUSINESS_INFO.fleetDiscount} Point business enquiries to the Van & Fleet page/enquiry form for a manual quote.`,
+    `Fleet/commercial: ${BUSINESS_INFO.fleetDiscount} Do not quote van or fleet prices or discounts and do not offer to book them. Point people to the register-your-interest form on the Van & Fleet page.`,
     `Membership: ${BUSINESS_INFO.membershipStatus}`,
     `Available appointment slots (fixed daily times, not a live calendar): ${TIME_SLOTS.join(', ')}.`,
   ].join('\n')

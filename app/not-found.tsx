@@ -11,7 +11,7 @@ const LINKS: [string, string][] = [
   ['Mobile car valeting', '/professional-car-valeting'],
   ['Mobile car wash', '/mobile-car-wash'],
   ['Full car detail', '/full-car-detail'],
-  ['Van & fleet', '/van-fleet'],
+  ['Van & fleet (coming soon)', '/van-fleet'],
   ['Areas we cover', '/areas'],
 ]
 

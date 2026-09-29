@@ -75,7 +75,7 @@ export async function POST(req: NextRequest) {
       from: fromEmail,
       to: 'info@truetodetail.co.uk',
       replyTo: 'info@truetodetail.co.uk',
-      subject: `New Van & Fleet Enquiry: ${(enquiry.business || enquiry.name).replace(/[\r\n]+/g, ' ')}`,
+      subject: `Van & Fleet interest (coming soon): ${(enquiry.business || enquiry.name).replace(/[\r\n]+/g, ' ')}`,
       html: fleetEnquiryEmail(enquiry),
       text: fleetEnquiryText(enquiry),
     })

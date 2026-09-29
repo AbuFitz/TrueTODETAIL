@@ -9,8 +9,22 @@ const NAV_LINKS = [
   { label: 'About',    href: '#howitworks' },
   { label: 'Packages', href: '#packages'   },
   { label: 'Areas',    href: '/areas'      },
-  { label: 'Fleet',    href: '/van-fleet'  },
+  { label: 'Fleet',    href: '/van-fleet', soon: true },
 ]
+
+/** Small "Soon" marker for a link to something that is not open yet. */
+function SoonTag({ large = false }: { large?: boolean }) {
+  return (
+    <span style={{
+      marginLeft: large ? '14px' : '8px', alignSelf: large ? 'center' : undefined,
+      fontFamily: 'var(--font-body)', fontWeight: 700,
+      fontSize: large ? '10px' : '9px', letterSpacing: '0.14em', textTransform: 'uppercase',
+      color: '#E84A0C', border: '1px solid rgba(232,74,12,0.55)', padding: '2px 6px', lineHeight: 1.3,
+    }}>
+      Soon
+    </span>
+  )
+}
 
 export default function Navbar({ onBookNow }: { onBookNow: () => void }) {
   const [scrolled, setScrolled] = useState(false)
@@ -158,6 +172,7 @@ export default function Navbar({ onBookNow }: { onBookNow: () => void }) {
                   }}
                 />
                 {l.label}
+                {'soon' in l && l.soon && <SoonTag />}
               </a>
             ))}
 
@@ -320,6 +335,7 @@ export default function Navbar({ onBookNow }: { onBookNow: () => void }) {
                 }}>
                   {l.label}
                 </span>
+                {'soon' in l && l.soon && <SoonTag large />}
               </div>
               <span style={{ color: 'rgba(255,255,255,0.18)', fontSize: '14px' }}>→</span>
             </a>

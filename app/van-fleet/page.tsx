@@ -125,13 +125,20 @@ export default function VanFleetPage() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.7, ease }}
           >
-            <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '24px' }}>
+            <div style={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: '10px 12px', marginBottom: '24px' }}>
               <span style={{ width: 24, height: '1.5px', background: '#E84A0C', flexShrink: 0 }} />
               <span style={{
                 fontFamily: 'var(--font-body)', fontWeight: 600, fontSize: '11px',
                 letterSpacing: '0.22em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.3)',
               }}>
-                Commercial & Fleet Services
+                Commercial &amp; Fleet Services
+              </span>
+              <span style={{
+                fontFamily: 'var(--font-body)', fontWeight: 700, fontSize: '10px',
+                letterSpacing: '0.16em', textTransform: 'uppercase',
+                color: '#ffffff', background: '#E84A0C', padding: '4px 9px', lineHeight: 1.2, whiteSpace: 'nowrap',
+              }}>
+                Coming soon
               </span>
             </div>
 
@@ -153,7 +160,22 @@ export default function VanFleetPage() {
             }}>
               Designed for working vehicles, fleets and business owners who need reliable,
               consistent cleaning, without the hassle of booking one car at a time.
+              This service is coming soon. Register your interest and we will tell you the moment it opens.
             </p>
+
+            <a
+              href="#enquire"
+              style={{
+                display: 'inline-flex', alignItems: 'center', gap: '12px',
+                marginBottom: 'clamp(28px, 4vw, 40px)',
+                background: '#E84A0C', color: '#ffffff', textDecoration: 'none',
+                fontFamily: 'var(--font-body)', fontWeight: 700, fontSize: '11px',
+                letterSpacing: '0.12em', textTransform: 'uppercase', padding: '16px 26px',
+              }}
+            >
+              Register your interest
+              <span style={{ width: 5, height: 5, borderRadius: '50%', background: 'rgba(255,255,255,0.5)' }} />
+            </a>
 
             {/* Stats — 3-col grid so they never wrap awkwardly on mobile */}
             <div style={{
@@ -161,7 +183,7 @@ export default function VanFleetPage() {
               gap: '1px', background: 'rgba(255,255,255,0.07)',
               border: '1px solid rgba(255,255,255,0.07)',
             }}>
-              {[['3', 'Van Packages'], ['10%+', 'Fleet Discount'], ['Same Day', 'Priority Slots']].map(([val, lab]) => (
+              {[['3', 'Planned Packages'], ['Fleet', 'Plans'], ['Soon', 'Launching']].map(([val, lab]) => (
                 <div key={lab} style={{
                   background: '#141414',
                   padding: 'clamp(14px, 2.5vw, 20px) clamp(12px, 2vw, 20px)',
@@ -209,7 +231,7 @@ export default function VanFleetPage() {
                 fontFamily: 'var(--font-body)', fontWeight: 600, fontSize: '11px',
                 letterSpacing: '0.2em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.28)',
               }}>
-                Van Services
+                Van Services · Coming Soon
               </span>
             </div>
             <h2 style={{
@@ -355,7 +377,7 @@ export default function VanFleetPage() {
                         e.currentTarget.style.color = feat ? 'white' : 'rgba(255,255,255,0.7)'
                       }}
                     >
-                      Enquire About This
+                      Register Interest
                       <span style={{ width: 5, height: 5, borderRadius: '50%', background: 'rgba(255,255,255,0.4)' }} />
                     </a>
 
@@ -378,7 +400,7 @@ export default function VanFleetPage() {
             }}
           >
             <span style={{ color: 'rgba(255,255,255,0.45)', fontWeight: 600 }}>Note:</span>{' '}
-            Van pricing is based on standard working vans. Heavily soiled or commercial-use interiors may require a custom quote, which we&apos;ll always confirm before we start.
+            These are planned packages and launch prices, confirmed when the service opens. Heavily soiled or commercial-use interiors may need a custom quote, which we&apos;ll always confirm before we start.
           </motion.p>
 
         </div>
@@ -413,7 +435,7 @@ export default function VanFleetPage() {
                   fontFamily: 'var(--font-body)', fontWeight: 600, fontSize: '11px',
                   letterSpacing: '0.2em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.28)',
                 }}>
-                  Fleet Plans
+                  Fleet Plans · Coming Soon
                 </span>
               </div>
               <h2 style={{
@@ -429,8 +451,8 @@ export default function VanFleetPage() {
                 fontFamily: 'var(--font-body)', fontSize: '15px', lineHeight: 1.75,
                 color: 'rgba(255,255,255,0.38)', marginBottom: '36px', maxWidth: '440px',
               }}>
-                Running 3 or more vehicles? We&apos;ll build a plan around your schedule and fleet size,
-                with discounted rates, priority slots and one point of contact.
+                Running 3 or more vehicles? We will build a plan around your schedule and fleet size,
+                with fleet rates, priority slots and one point of contact. Register your interest and we will talk it through.
               </p>
 
               {/* Discount tiers */}
@@ -469,7 +491,7 @@ export default function VanFleetPage() {
                 fontFamily: 'var(--font-body)', fontSize: '12px',
                 color: 'rgba(255,255,255,0.22)', lineHeight: 1.6,
               }}>
-                Weekly, bi-weekly or monthly scheduling available. Get in touch and we&apos;ll put together a tailored proposal.
+                Weekly, bi-weekly or monthly scheduling is planned. Rates are confirmed when the service opens.
               </p>
             </motion.div>
 
@@ -547,7 +569,7 @@ export default function VanFleetPage() {
                   fontFamily: 'var(--font-body)', fontWeight: 600, fontSize: '11px',
                   letterSpacing: '0.2em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.28)',
                 }}>
-                  Get in Touch
+                  Register Your Interest
                 </span>
               </div>
               <h2 style={{
@@ -556,15 +578,15 @@ export default function VanFleetPage() {
                 letterSpacing: '0.025em', color: '#ffffff', lineHeight: 0.88,
                 marginBottom: '28px',
               }}>
-                LET&apos;S TALK<br />
-                <span style={{ color: '#E84A0C' }}>BUSINESS.</span>
+                BE FIRST<br />
+                IN <span style={{ color: '#E84A0C' }}>LINE.</span>
               </h2>
               <p style={{
                 fontFamily: 'var(--font-body)', fontSize: '15px', lineHeight: 1.75,
                 color: 'rgba(255,255,255,0.38)', maxWidth: '400px', marginBottom: '36px',
               }}>
-                Whether it&apos;s a single van or a full fleet, drop us a message and we&apos;ll
-                come back to you with a tailored quote, usually within a few hours.
+                Van and fleet cleaning is coming soon. Whether it&apos;s a single van or a full fleet,
+                leave your details and we&apos;ll get in touch when it opens to talk through what you need.
               </p>
 
               <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
@@ -619,13 +641,13 @@ export default function VanFleetPage() {
                     fontFamily: 'var(--font-display)', fontSize: '36px',
                     letterSpacing: '0.03em', color: '#ffffff', lineHeight: 1, marginBottom: '12px',
                   }}>
-                    MESSAGE SENT
+                    YOU&apos;RE ON THE LIST
                   </h3>
                   <p style={{
                     fontFamily: 'var(--font-body)', fontSize: '14px', lineHeight: 1.7,
                     color: 'rgba(255,255,255,0.38)',
                   }}>
-                    We&apos;ll be in touch within a few hours to discuss your requirements.
+                    Thanks. We&apos;ll be in touch when van and fleet cleaning opens, and can talk through your requirements then.
                   </p>
                 </div>
               ) : (
@@ -733,7 +755,7 @@ export default function VanFleetPage() {
                     onMouseEnter={e => { if (!submitting) e.currentTarget.style.background = '#C53D08' }}
                     onMouseLeave={e => { if (!submitting) e.currentTarget.style.background = '#E84A0C' }}
                   >
-                    {submitting ? 'Sending...' : 'Send Enquiry'}
+                    {submitting ? 'Sending...' : 'Register Interest'}
                     {!submitting && <span style={{ width: 5, height: 5, borderRadius: '50%', background: 'rgba(255,255,255,0.5)' }} />}
                   </button>
                 </form>

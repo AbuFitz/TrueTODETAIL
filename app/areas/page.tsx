@@ -136,7 +136,7 @@ export default function AreasPage() {
                 Book Your Detail
               </BookNowButton>
               <Link href="/van-fleet" style={{ display: 'inline-block', background: 'transparent', color: '#fff', padding: '15px 36px', textDecoration: 'none', fontFamily: 'var(--font-body)', fontWeight: 600, fontSize: '12px', letterSpacing: '0.12em', textTransform: 'uppercase', border: '1px solid rgba(255,255,255,0.2)' }}>
-                Van & Fleet →
+                Van & Fleet · Coming soon →
               </Link>
             </div>
           </div>
