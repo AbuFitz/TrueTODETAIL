@@ -41,7 +41,7 @@ test('two different body types are ambiguous, not guessed', () => {
 test('guide text uses UK terms only and covers every size', () => {
   const t = sizeGuideText()
   assert.doesNotMatch(t, /sedan|wagon|minivan/i)
-  for (const g of Object.values(VEHICLE_GUIDE)) assert.ok(t.includes(g.body.toLowerCase()))
+  for (const g of Object.values(VEHICLE_GUIDE)) assert.ok(t.toLowerCase().includes(g.body.toLowerCase()))
   assert.ok(SIZE_HELP_RE.test('what size is my car'))
   assert.ok(SIZE_HELP_RE.test('how do I know which size'))
 })
@@ -86,4 +86,43 @@ test('chat: an American word is understood but never repeated', () => {
 test('chat: two body types ask instead of guessing', () => {
   const [r] = talk(['full valet for my hatchback or saloon'])
   assert.match(r.text, /more than one size/i)
+})
+
+test('chat: common questions get the real answers, not the stock reply', () => {
+  const asks: [string, RegExp][] = [
+    ['do i need to be there', /carry on with your day/i],
+    ['do you bring water and electric', /bring our own power, water/i],
+    ['how long does an essential take', /Essential takes 2.3 hrs/i],
+    ['can you do sundays', /closed on Sundays/i],
+    ['what about saturday morning', /Monday to Saturday/i],
+    ['its a ford transit', /Van & Fleet/i],
+    ['ref TTD-260929-5WBO', /can't look up bookings/i],
+  ]
+  for (const [ask, expected] of asks) {
+    const [r] = talk([ask])
+    assert.match(r.text, expected, ask)
+  }
+})
+
+test('chat: "ok book it" moves on instead of repeating the price', () => {
+  const t = talk(['how much for a full valet on my golf', 'ok book it'])
+  assert.notEqual(t[1].text, t[0].text)
+  assert.match(t[1].text, /Book Now/)
+  assert.equal(t[1].action?.type, 'open_booking')
+})
+
+test('chat: body type beats model name, and models map to the owner rule', () => {
+  assert.equal(resolveVehicleSize('mercedes c class coupe').size, 'small')
+  assert.equal(resolveVehicleSize('my 2008 ford focus').size, 'small')
+  assert.equal(resolveVehicleSize('a nissan juke').size, 'largesuv')
+  assert.equal(resolveVehicleSize('mini cooper').size, 'small')
+  assert.equal(resolveVehicleSize('what is up with the mini valet').size, null)
+})
+
+import { withUkWording } from '@/lib/chat/uk'
+
+test('UK wording is applied to whatever a model writes', () => {
+  assert.equal(withUkWording('A Sedan or a wagon, colors and tires included.'), 'A Saloon or an estate, colours and tyres included.')
+  assert.equal(withUkWording('minivans are large'), 'people carriers are large')
+  assert.doesNotMatch(withUkWording('Your sedan, SEDAN, Sedans'), /sedan/i)
 })

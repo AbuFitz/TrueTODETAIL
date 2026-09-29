@@ -11,9 +11,10 @@
 // real gaps instead of guessing upfront.
 
 import { executeTool } from '@/lib/chat/tools'
-import { BUSINESS_INFO, PACKAGES, VEHICLE_LABELS, type VehicleType } from '@/lib/pricing'
+import { BUSINESS_INFO, PACKAGES, TIME_SLOTS, VEHICLE_LABELS, type VehicleType } from '@/lib/pricing'
 import { AREAS, type Area } from '@/lib/areas'
 import { mergeState } from '@/lib/chat/state'
+import { FAQS } from '@/lib/faq'
 import { resolveVehicleSize, SIZE_HELP_RE, sizeGuideText } from '@/lib/chat/vehicle-size'
 import type { ConversationState, ChatAction, ChatIntent } from '@/lib/chat/types'
 
@@ -79,7 +80,7 @@ function classifyIntent(message: string): ChatIntent | null {
   return best?.intent ?? null
 }
 
-function extractEntitiesRuleBased(message: string): Record<string, unknown> {
+export function extractEntitiesRuleBased(message: string): Record<string, unknown> {
   const out: Record<string, unknown> = {}
   const pc = message.match(POSTCODE_SEARCH_RE)
   if (pc) out.postcode = `${pc[1]} ${pc[2]}`.toUpperCase()
@@ -163,7 +164,23 @@ function mentionedArea(message: string): { area: Area; place: string } | null {
 }
 
 const BESPOKE_RE = /\bceramic|paint correction|\bppf\b|paint protection film|\bwrap(ping)?\b/i
-const FLEET_RE = /\bfleet|\bvans\b|company (cars|vehicles)|business (cars|vehicles)|commercial vehicle/i
+const FLEET_RE = /\bfleet|\bvans?\b|transit|sprinter|vito|transporter|caddy|berlingo|vivaro|trafic|ducato|crafter|movano|company (cars|vehicles)|business (cars|vehicles)|commercial vehicle/i
+const CONFIRM_RE = /^\s*(ok(ay)?|yes|yeah|yep|yup|sure|go ahead|book it|do it|let'?s (do it|go)|please|sounds good|perfect|great|that one|lets go)\b/i
+
+const FAQ_PATTERNS: [RegExp, string][] = [
+  [/how long|how many hours|how much time|duration/i, 'How long'],
+  [/how often|how frequently|how regular/i, 'How often'],
+  [/(need|have|got) to be (home|there|in|around|present|with)|be (home|there|in)\b|\bpresent\b|leave (it|the car|you)|while i'?m (out|at work|away)/i, 'Do I need to be home'],
+  [/prepare|preparation|bring (your|any|own)|\bwater\b|electric|power supply|plug|hose|\bsupply\b|what do you need/i, 'What do I need to prepare'],
+  [/not happy|unhappy|redo|re-?do|come back and fix|guarantee/i, 'What if I'],
+  [/how do i pay|how to pay|when do i pay|pay (on|before|after)|payment|deposit|\bcash\b|bank transfer/i, 'How do I pay'],
+]
+
+function matchFaq(message: string) {
+  for (const [re, key] of FAQ_PATTERNS) if (re.test(message)) return FAQS.find(f => f.q.startsWith(key)) ?? null
+  return null
+}
+
 const OTHER_VEHICLE_RE = /\b(motor ?bikes?|motorcycles?|scooters?|boats?|caravans?|motorhomes?|camper ?vans?|lorr(y|ies)|hgvs?|buses|coaches|tractors?|jet ?skis?)\b/i
 
 interface Answer { text: string; action?: ChatAction; counts: boolean }
@@ -240,6 +257,49 @@ function answerTurn(next: ConversationState, extracted: Record<string, unknown>,
     const what = message.match(OTHER_VEHICLE_RE)?.[0]?.toLowerCase() ?? 'that'
     return {
       text: `Our packages are built for cars and vans. For ${what}, WhatsApp us a photo on ${BUSINESS_INFO.phone} and we'll let you know if we can help.`,
+      counts: true,
+    }
+  }
+
+  // A booking reference on its own: we cannot look it up from here.
+  if (/\bTTD-[A-Z0-9-]{6,}\b/i.test(message)) {
+    return {
+      text: `Thanks. I can't look up bookings from here, so please call or WhatsApp us on ${BUSINESS_INFO.phone} with that reference and the team will sort it straight away.`,
+      counts: true,
+    }
+  }
+
+  // Days and times we work.
+  if (/\b(sundays?|saturdays?|weekends?|bank holidays?|evenings?|early mornings?)\b/i.test(message) && !extracted.package) {
+    if (/\bsundays?\b/i.test(message)) {
+      return { text: `We're closed on Sundays. We run ${BUSINESS_INFO.hours}, so Saturday is the closest weekend option.`, counts: true }
+    }
+    return {
+      text: `We work ${BUSINESS_INFO.hours}, with slots at ${TIME_SLOTS.join(', ')}. Pick a preferred day and time in Book Now and we'll confirm ${BUSINESS_INFO.bookingConfirmationWindow}.`,
+      action: { type: 'open_booking' },
+      counts: true,
+    }
+  }
+
+  // Common questions, answered from the same list as the website's FAQ.
+  const faq = matchFaq(message)
+  if (faq) {
+    if (faq.q.startsWith('How long')) {
+      const pkg = extracted.package ? PACKAGES.find(p => p.id === extracted.package) : null
+      if (pkg) return { text: `${pkg.id} takes ${pkg.duration}. We work on your drive, so you can get on with your day. Want a price for it?`, counts: true }
+    } else if (!extracted.package) {
+      if (faq.q.startsWith('What do I need to prepare') && /water|electric|power/i.test(message)) {
+        return { text: 'Yes, we bring our own power, water and all the equipment, so there is nothing for you to set up. Just make sure the car is accessible.', counts: true }
+      }
+      return { text: faq.a, counts: true }
+    }
+  }
+
+  // "Yes / book it" once a package and size are known: point them at the booking form.
+  if (CONFIRM_RE.test(message) && next.enquiry.package && next.enquiry.vehicleSize) {
+    return {
+      text: `Brilliant. Tap Book Now and your ${next.enquiry.package} for a ${SIZE_PROSE[next.enquiry.vehicleSize as VehicleType]} will be ready to go. Just add a date, time and your details and the team confirms it ${BUSINESS_INFO.bookingConfirmationWindow}.`,
+      action: { type: 'open_booking' },
       counts: true,
     }
   }

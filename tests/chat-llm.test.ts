@@ -43,6 +43,15 @@ test('Gemini out of quota hands over to Groq, which does not retry', async () =>
   const r = await chat('do you cover st albans')
   assert.equal(r.engine, 'groq')
   assert.equal(r.reply, 'Yes, we cover St Albans.')
+  // A short message is covered by the rules, so only the reply costs a call.
+  assert.equal(seen.groq.length, 1)
+})
+
+test('a message with a postcode or date still gets the extra model pass', async () => {
+  providers.gemini = () => json({ error: { code: 429, message: 'Resource has been exhausted (e.g. check quota).', status: 'RESOURCE_EXHAUSTED' } }, 429)
+  providers.groq = (_u, b) => (isExtract(b) ? qCall('extract_state', { postcode: 'HP2 6EL' }) : qText('Great, we cover HP2.'))
+  const r = await chat('my postcode is HP2 6EL')
+  assert.equal(r.engine, 'groq')
   assert.equal(seen.groq.length, 2)
 })
 

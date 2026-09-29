@@ -3,6 +3,7 @@
 // list or policy in its own prompt text — it reads from here, which reads
 // from the same lib/pricing.ts and lib/areas.ts the rest of the site uses.
 
+import { FAQS } from '@/lib/faq'
 import { AREAS, type Area } from '@/lib/areas'
 import { PACKAGES, ADDONS, BESPOKE_SERVICES, BUSINESS_INFO, VEHICLE_LABELS, TIME_SLOTS } from '@/lib/pricing'
 
@@ -42,6 +43,10 @@ export function businessFactsText(): string {
     `Membership: ${BUSINESS_INFO.membershipStatus}`,
     `Available appointment slots (fixed daily times, not a live calendar): ${TIME_SLOTS.join(', ')}.`,
   ].join('\n')
+}
+
+export function faqText(): string {
+  return FAQS.map(f => `Q: ${f.q}\nA: ${f.a}`).join('\n')
 }
 
 export function vehicleLabelList(): string {
