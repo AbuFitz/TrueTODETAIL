@@ -52,6 +52,28 @@ export interface ChatEscalationData {
   createdAt:          string
 }
 
+// Every value that came from a visitor (name, notes, phone, email, fleet
+// message) is escaped before it touches the email HTML. Without this, anyone
+// could put links or markup in the booking form and have them sent, on our
+// letterhead, to any address they typed in.
+function esc(value: string): string {
+  return value
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;')
+}
+
+function escapeFields<T extends object>(data: T): T {
+  return Object.fromEntries(
+    Object.entries(data).map(([k, v]) => [
+      k,
+      typeof v === 'string' ? esc(v) : Array.isArray(v) ? v.map((x) => (typeof x === 'string' ? esc(x) : x)) : v,
+    ]),
+  ) as T
+}
+
 // Matches the live site's actual palette exactly (components use rgba(12,12,12,a)
 // over white for muted text — these are the solid-hex equivalents, since email
 // clients are inconsistent about rgba() text colour).
@@ -169,7 +191,8 @@ function row(label: string, value: string, highlight = false): string {
 /* ══════════════════════════════════════════════════════════════════════════
    TEMPLATE 1 — Staff notification (to bookings@truetodetail.co.uk)
    ══════════════════════════════════════════════════════════════════════════ */
-export function notificationEmail(d: EmailData): string {
+export function notificationEmail(raw: EmailData): string {
+  const d = escapeFields(raw)
   const addonsLine = d.addons.length > 0 ? d.addons.join(', ') : 'None'
 
   const body = `
@@ -246,7 +269,8 @@ export function notificationEmail(d: EmailData): string {
 /* ══════════════════════════════════════════════════════════════════════════
    TEMPLATE 2 — Customer confirmation
    ══════════════════════════════════════════════════════════════════════════ */
-export function confirmationEmail(d: EmailData): string {
+export function confirmationEmail(raw: EmailData): string {
+  const d = escapeFields(raw)
   const addonsLine = d.addons.length > 0 ? d.addons.join(', ') : 'None'
 
   const body = `
@@ -311,7 +335,8 @@ export function confirmationEmail(d: EmailData): string {
 /* ══════════════════════════════════════════════════════════════════════════
    TEMPLATE 3 — Van & Fleet enquiry notification (to info@truetodetail.co.uk)
    ══════════════════════════════════════════════════════════════════════════ */
-export function fleetEnquiryEmail(d: FleetEnquiryData): string {
+export function fleetEnquiryEmail(raw: FleetEnquiryData): string {
+  const d = escapeFields(raw)
   const body = `
   <tr>
     <td style="background:${brand.orange};padding:24px 32px;">
@@ -357,7 +382,8 @@ export function fleetEnquiryEmail(d: FleetEnquiryData): string {
 /* ══════════════════════════════════════════════════════════════════════════
    TEMPLATE 4 — Chat escalation to staff (to info@truetodetail.co.uk)
    ══════════════════════════════════════════════════════════════════════════ */
-export function chatEscalationEmail(d: ChatEscalationData): string {
+export function chatEscalationEmail(raw: ChatEscalationData): string {
+  const d = escapeFields(raw)
   const body = `
   <tr>
     <td style="background:${brand.orange};padding:24px 32px;">

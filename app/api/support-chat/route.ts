@@ -3,6 +3,7 @@ import { extractEntitiesGemini, generateResponseGemini, updateSummaryGemini, Gem
 import { extractEntitiesGroq, generateResponseGroq, updateSummaryGroq, GroqUnavailableError } from '@/lib/chat/groq'
 import { runRuleBasedTurn } from '@/lib/chat/rule-based'
 import { mergeState } from '@/lib/chat/state'
+import { allowRequest, clientIp } from '@/lib/rateLimit'
 import { emptyConversationState, type ChatTurn, type ConversationState, type ChatAction } from '@/lib/chat/types'
 
 const MAX_MESSAGE_LENGTH = 1000
@@ -86,6 +87,13 @@ async function runLlmTurn(provider: LlmProvider, incomingState: ConversationStat
 }
 
 export async function POST(req: NextRequest) {
+  if (!allowRequest(`chat:${clientIp(req)}`, 40, 10 * 60 * 1000)) {
+    return NextResponse.json(
+      { error: 'Too many messages', reply: "You're sending messages faster than I can keep up. Give it a few minutes, or WhatsApp/call us on 07359 591800." },
+      { status: 429 },
+    )
+  }
+
   let body: { message?: unknown; history?: unknown; conversationState?: unknown }
   try {
     body = await req.json()

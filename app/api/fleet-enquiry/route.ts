@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { Resend } from 'resend'
 import { fleetEnquiryEmail, FleetEnquiryData } from '@/lib/emails/templates'
+import { allowRequest, clientIp } from '@/lib/rateLimit'
 
 export interface FleetEnquiryPayload {
   name: string
@@ -14,6 +15,10 @@ const PHONE_RE = /^[\d\s\+\-\(\)]{7,20}$/
 const VALID_FLEET_SIZES = ['1', '2', '3-4', '5-9', '10+', '']
 
 export async function POST(req: NextRequest) {
+  if (!allowRequest(`fleet:${clientIp(req)}`, 5, 10 * 60 * 1000)) {
+    return NextResponse.json({ error: 'Too many enquiries. Please call us on 07359 591800.' }, { status: 429 })
+  }
+
   let body: Partial<FleetEnquiryPayload>
 
   try {

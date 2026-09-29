@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { Resend } from 'resend'
 import { notificationEmail, confirmationEmail, EmailData } from '@/lib/emails/templates'
 import { PACKAGES, ADDONS, VEHICLE_LABELS, TIME_SLOTS, calculatePrice, type VehicleType } from '@/lib/pricing'
+import { allowRequest, clientIp } from '@/lib/rateLimit'
 
 // Allows the job system's account.truetodetail.co.uk app (a separate origin
 // from this Next.js app) to post a booking from its own login page's quick
@@ -65,6 +66,13 @@ const ADDON_LABELS: Record<string, string> = Object.fromEntries(ADDONS.map(a => 
 
 export async function POST(req: NextRequest) {
   const origin = req.headers.get('origin')
+
+  if (!allowRequest(`booking:${clientIp(req)}`, 5, 10 * 60 * 1000)) {
+    return NextResponse.json(
+      { error: 'Too many booking requests. Please call or WhatsApp us on 07359 591800.' },
+      { status: 429, headers: corsHeaders(origin) },
+    )
+  }
   let body: Partial<BookingPayload>
 
   try {
