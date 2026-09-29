@@ -1,3 +1,5 @@
+import { AREA_LINKS } from '@/lib/area-links'
+
 export interface AreaFAQ {
   q: string
   a: string
@@ -260,6 +262,15 @@ export const AREAS: Area[] = [
     ],
   },
 ]
+
+// Fails the build if the footer's lightweight link list drifts from AREAS.
+{
+  const expected = AREAS.map((a) => `${a.slug}:${a.name}`).join('|')
+  const actual = AREA_LINKS.map((a) => `${a.slug}:${a.name}`).join('|')
+  if (expected !== actual) {
+    throw new Error('lib/area-links.ts is out of sync with AREAS in lib/areas.ts')
+  }
+}
 
 /** The n closest other areas by straight-line distance, for "nearby areas" links. */
 export function nearestAreas(area: Area, n: number): Area[] {

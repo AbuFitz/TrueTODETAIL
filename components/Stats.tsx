@@ -73,7 +73,7 @@ export default function Stats() {
                 {f.n}
               </span>
 
-              <h3
+              <h2
                 style={{
                   fontFamily: 'var(--font-display)',
                   fontSize: 'clamp(32px, 4vw, 52px)',
@@ -85,7 +85,7 @@ export default function Stats() {
                 }}
               >
                 {f.big}
-              </h3>
+              </h2>
 
               <p style={{
                 fontFamily: 'var(--font-body)', fontSize: '13px', lineHeight: 1.72,

@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react'
 import Navbar from './Navbar'
 import Footer from './Footer'
-import BookingModal from './BookingModal'
+import BookingModal from './LazyBookingModal'
 
 // Every page that isn't the homepage renders both SiteNavbar and SiteFooter
 // (never one without the other), so the actual modal instance lives here,

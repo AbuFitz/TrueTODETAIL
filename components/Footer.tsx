@@ -1,6 +1,6 @@
 'use client'
 
-import { AREAS } from '@/lib/areas'
+import { AREA_LINKS } from '@/lib/area-links'
 
 const YEAR = new Date().getFullYear()
 
@@ -92,11 +92,11 @@ export default function Footer({ onBookNow }: { onBookNow: () => void }) {
               href="tel:+447359591800"
               style={{
                 fontFamily: 'var(--font-body)', fontSize: '13px',
-                color: 'rgba(12,12,12,0.38)', textDecoration: 'none',
+                color: 'rgba(12,12,12,0.6)', textDecoration: 'none',
                 transition: 'color 0.2s',
               }}
               onMouseEnter={e => (e.currentTarget.style.color = '#0C0C0C')}
-              onMouseLeave={e => (e.currentTarget.style.color = 'rgba(12,12,12,0.38)')}
+              onMouseLeave={e => (e.currentTarget.style.color = 'rgba(12,12,12,0.6)')}
             >
               07359 591800
             </a>
@@ -104,11 +104,11 @@ export default function Footer({ onBookNow }: { onBookNow: () => void }) {
               href="mailto:info@truetodetail.co.uk"
               style={{
                 fontFamily: 'var(--font-body)', fontSize: '13px',
-                color: 'rgba(12,12,12,0.38)', textDecoration: 'none',
+                color: 'rgba(12,12,12,0.6)', textDecoration: 'none',
                 transition: 'color 0.2s',
               }}
               onMouseEnter={e => (e.currentTarget.style.color = '#0C0C0C')}
-              onMouseLeave={e => (e.currentTarget.style.color = 'rgba(12,12,12,0.38)')}
+              onMouseLeave={e => (e.currentTarget.style.color = 'rgba(12,12,12,0.6)')}
             >
               info@truetodetail.co.uk
             </a>
@@ -120,7 +120,7 @@ export default function Footer({ onBookNow }: { onBookNow: () => void }) {
           <p style={{
             fontFamily: 'var(--font-body)', fontWeight: 600, fontSize: '10px',
             letterSpacing: '0.2em', textTransform: 'uppercase',
-            color: 'rgba(12,12,12,0.25)', marginBottom: '20px',
+            color: 'rgba(12,12,12,0.55)', marginBottom: '20px',
           }}>
             Navigation
           </p>
@@ -136,11 +136,11 @@ export default function Footer({ onBookNow }: { onBookNow: () => void }) {
                 href={href}
                 style={{
                   fontFamily: 'var(--font-body)', fontSize: '14px',
-                  color: 'rgba(12,12,12,0.38)', textDecoration: 'none',
+                  color: 'rgba(12,12,12,0.6)', textDecoration: 'none',
                   transition: 'color 0.2s',
                 }}
                 onMouseEnter={e => (e.currentTarget.style.color = '#0C0C0C')}
-                onMouseLeave={e => (e.currentTarget.style.color = 'rgba(12,12,12,0.38)')}
+                onMouseLeave={e => (e.currentTarget.style.color = 'rgba(12,12,12,0.6)')}
               >
                 {label}
               </a>
@@ -151,7 +151,7 @@ export default function Footer({ onBookNow }: { onBookNow: () => void }) {
           <p style={{
             fontFamily: 'var(--font-body)', fontWeight: 600, fontSize: '10px',
             letterSpacing: '0.2em', textTransform: 'uppercase',
-            color: 'rgba(12,12,12,0.25)', marginBottom: '14px', marginTop: '28px',
+            color: 'rgba(12,12,12,0.55)', marginBottom: '14px', marginTop: '28px',
           }}>
             Our Services
           </p>
@@ -170,11 +170,11 @@ export default function Footer({ onBookNow }: { onBookNow: () => void }) {
                 href={href}
                 style={{
                   fontFamily: 'var(--font-body)', fontSize: '13px',
-                  color: 'rgba(12,12,12,0.38)', textDecoration: 'none',
+                  color: 'rgba(12,12,12,0.6)', textDecoration: 'none',
                   transition: 'color 0.2s',
                 }}
                 onMouseEnter={e => (e.currentTarget.style.color = '#E84A0C')}
-                onMouseLeave={e => (e.currentTarget.style.color = 'rgba(12,12,12,0.38)')}
+                onMouseLeave={e => (e.currentTarget.style.color = 'rgba(12,12,12,0.6)')}
               >
                 {label}
               </a>
@@ -187,7 +187,7 @@ export default function Footer({ onBookNow }: { onBookNow: () => void }) {
           <p style={{
             fontFamily: 'var(--font-body)', fontWeight: 600, fontSize: '10px',
             letterSpacing: '0.2em', textTransform: 'uppercase',
-            color: 'rgba(12,12,12,0.25)', marginBottom: '20px',
+            color: 'rgba(12,12,12,0.55)', marginBottom: '20px',
           }}>
             Book A Detail
           </p>
@@ -229,7 +229,7 @@ export default function Footer({ onBookNow }: { onBookNow: () => void }) {
           <p style={{
             fontFamily: 'var(--font-body)', fontWeight: 600, fontSize: '10px',
             letterSpacing: '0.2em', textTransform: 'uppercase',
-            color: 'rgba(12,12,12,0.25)', marginBottom: '20px',
+            color: 'rgba(12,12,12,0.55)', marginBottom: '20px',
           }}>
             Areas We Cover
           </p>
@@ -237,17 +237,17 @@ export default function Footer({ onBookNow }: { onBookNow: () => void }) {
             aria-label="Areas we cover"
             style={{ display: 'grid', gridTemplateColumns: 'repeat(2, auto)', columnGap: '20px', rowGap: '10px' }}
           >
-            {AREAS.map(area => (
+            {AREA_LINKS.map(area => (
               <a
                 key={area.slug}
                 href={`/areas/${area.slug}`}
                 style={{
                   fontFamily: 'var(--font-body)', fontSize: '13px',
-                  color: 'rgba(12,12,12,0.38)', textDecoration: 'none',
+                  color: 'rgba(12,12,12,0.6)', textDecoration: 'none',
                   whiteSpace: 'nowrap', transition: 'color 0.2s',
                 }}
                 onMouseEnter={e => (e.currentTarget.style.color = '#E84A0C')}
-                onMouseLeave={e => (e.currentTarget.style.color = 'rgba(12,12,12,0.38)')}
+                onMouseLeave={e => (e.currentTarget.style.color = 'rgba(12,12,12,0.6)')}
               >
                 {area.name}
               </a>
@@ -329,7 +329,7 @@ export default function Footer({ onBookNow }: { onBookNow: () => void }) {
         }}>
           <span style={{
             fontFamily: 'var(--font-body)', fontSize: '11px',
-            color: 'rgba(12,12,12,0.25)', letterSpacing: '0.04em',
+            color: 'rgba(12,12,12,0.55)', letterSpacing: '0.04em',
           }}>
             © {YEAR} True To Detail · Hertfordshire, UK
           </span>
@@ -344,12 +344,12 @@ export default function Footer({ onBookNow }: { onBookNow: () => void }) {
                 rel="noopener noreferrer"
                 aria-label={s.label}
                 style={{
-                  color: 'rgba(12,12,12,0.28)',
+                  color: 'rgba(12,12,12,0.5)',
                   display: 'flex', alignItems: 'center',
                   transition: 'color 0.2s',
                 }}
                 onMouseEnter={e => (e.currentTarget.style.color = '#E84A0C')}
-                onMouseLeave={e => (e.currentTarget.style.color = 'rgba(12,12,12,0.28)')}
+                onMouseLeave={e => (e.currentTarget.style.color = 'rgba(12,12,12,0.5)')}
               >
                 {s.icon}
               </a>
@@ -367,11 +367,11 @@ export default function Footer({ onBookNow }: { onBookNow: () => void }) {
                 href={href}
                 style={{
                   fontFamily: 'var(--font-body)', fontSize: '11px',
-                  color: 'rgba(12,12,12,0.28)', textDecoration: 'none', letterSpacing: '0.04em',
+                  color: 'rgba(12,12,12,0.5)', textDecoration: 'none', letterSpacing: '0.04em',
                   transition: 'color 0.2s',
                 }}
                 onMouseEnter={e => (e.currentTarget.style.color = '#0C0C0C')}
-                onMouseLeave={e => (e.currentTarget.style.color = 'rgba(12,12,12,0.28)')}
+                onMouseLeave={e => (e.currentTarget.style.color = 'rgba(12,12,12,0.5)')}
               >
                 {label}
               </a>

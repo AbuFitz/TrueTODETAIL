@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { faqJsonLd, jsonLdGraph } from '@/lib/seo'
+import { faqJsonLd, jsonLdGraph } from '@/lib/jsonld'
 
 const ease = [0.22, 1, 0.36, 1] as [number, number, number, number]
 

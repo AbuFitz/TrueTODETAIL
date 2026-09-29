@@ -59,9 +59,11 @@ export default function Hero({ onBookNow }: { onBookNow: () => void }) {
         }}
       >
         {/* Background image */}
+        {/* No opacity fade: the photo is the page's largest paint and must be
+            visible straight from the server HTML, not after hydration. */}
         <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
+          initial={{ scale: 1.04 }}
+          animate={{ scale: 1 }}
           transition={{ duration: 1.2, ease }}
           style={{ position: 'absolute', inset: 0, zIndex: 0 }}
         >
@@ -273,13 +275,13 @@ export default function Hero({ onBookNow }: { onBookNow: () => void }) {
       >
         {/* Full-bleed photo — car visible on the right half */}
         <motion.div
-          initial={{ scale: 1.08, opacity: 0 }}
-          animate={{ scale: 1, opacity: 1 }}
+          initial={{ scale: 1.08 }}
+          animate={{ scale: 1 }}
           transition={{ duration: 1.8, ease }}
           style={{ position: 'absolute', inset: 0, zIndex: 0 }}
         >
           <Image
-            src="https://images.unsplash.com/photo-1607860108855-64acf2078ed9?w=900&q=85&fit=crop"
+            src="https://images.unsplash.com/photo-1607860108855-64acf2078ed9?w=1800&q=90&fit=crop"
             alt="Professional mobile car detailing service near Hemel Hempstead Hertfordshire"
             fill priority sizes="100vw"
             style={{ objectFit: 'cover', objectPosition: '78% 35%' }}
@@ -456,9 +458,9 @@ export default function Hero({ onBookNow }: { onBookNow: () => void }) {
                 {s.value}
               </span>
               <span style={{
-                fontFamily: 'var(--font-body)', fontSize: '7px', fontWeight: 600,
+                fontFamily: 'var(--font-body)', fontSize: '9px', fontWeight: 600,
                 letterSpacing: '0.1em', textTransform: 'uppercase',
-                color: 'rgba(255,255,255,0.28)',
+                color: 'rgba(255,255,255,0.55)',
                 display: 'block', marginTop: '4px', whiteSpace: 'pre-line', lineHeight: 1.4,
               }}>
                 {s.label}

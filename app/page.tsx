@@ -9,7 +9,7 @@ import FAQ from '@/components/FAQ'
 import HowItWorks from '@/components/HowItWorks'
 import Testimonials from '@/components/Testimonials'
 import BookingCTA from '@/components/BookingCTA'
-import BookingModal from '@/components/BookingModal'
+import BookingModal from '@/components/LazyBookingModal'
 import Footer from '@/components/Footer'
 
 type VehicleType = 'small' | 'midsize' | 'largesuv'

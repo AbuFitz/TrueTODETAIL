@@ -3,7 +3,8 @@ import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { AREAS, getAreaBySlug, mapEmbedUrl, nearestAreas } from '@/lib/areas'
 import { PACKAGES, VEHICLE_LABELS, type VehicleType } from '@/lib/pricing'
-import { breadcrumbJsonLd, faqJsonLd, jsonLdGraph, serviceJsonLd } from '@/lib/seo'
+import { breadcrumbJsonLd, serviceJsonLd } from '@/lib/seo'
+import { faqJsonLd, jsonLdGraph } from '@/lib/jsonld'
 import { SiteNavbar, SiteFooter } from '@/components/SiteChrome'
 import BookNowButton from '@/components/BookNowButton'
 
@@ -116,7 +117,7 @@ export default async function AreaPage({ params }: { params: Promise<{ slug: str
             <p style={{ fontSize: '15px', lineHeight: 1.78, color: 'rgba(12,12,12,0.62)', marginBottom: '8px' }}>
               We also regularly cover: {area.neighbourhoods.join(', ')}.
             </p>
-            <p style={{ fontSize: '14px', lineHeight: 1.7, color: 'rgba(12,12,12,0.45)' }}>
+            <p style={{ fontSize: '14px', lineHeight: 1.7, color: 'rgba(12,12,12,0.62)' }}>
               {area.driveTime} Not sure your exact postcode is included? Message us on WhatsApp or call{' '}
               <a href="tel:+447359591800" style={{ color: '#E84A0C', textDecoration: 'none' }}>07359 591800</a> and we'll confirm straight away.
             </p>
@@ -178,7 +179,7 @@ export default async function AreaPage({ params }: { params: Promise<{ slug: str
                     <tr key={p.id}>
                       <th scope="row" style={{ textAlign: 'left', padding: '12px 10px', borderBottom: '1px solid rgba(12,12,12,0.08)', fontWeight: 600, color: '#0C0C0C' }}>
                         {p.id}
-                        <span style={{ display: 'block', fontWeight: 400, fontSize: '12px', color: 'rgba(12,12,12,0.45)' }}>{p.duration}</span>
+                        <span style={{ display: 'block', fontWeight: 400, fontSize: '12px', color: 'rgba(12,12,12,0.62)' }}>{p.duration}</span>
                       </th>
                       {VEHICLES.map((v) => (
                         <td key={v} style={{ textAlign: 'right', padding: '12px 10px', borderBottom: '1px solid rgba(12,12,12,0.08)', color: '#0C0C0C' }}>£{p.price[v]}</td>
@@ -195,7 +196,7 @@ export default async function AreaPage({ params }: { params: Promise<{ slug: str
             </ul>
             <p style={{ fontSize: '15px', lineHeight: 1.78, color: 'rgba(12,12,12,0.62)' }}>
               Looking for a car wash in {area.name}? Our Essential package is a proper hand wash done on your driveway, which is far kinder to paintwork than a brush car wash, plus a quick interior tidy.
-              See our <Link href="/mobile-car-wash" style={{ color: '#E84A0C', textDecoration: 'none' }}>mobile car wash</Link> page for what&apos;s included.
+              See our <Link href="/mobile-car-wash" style={{ color: '#C53D08', textDecoration: 'underline', textUnderlineOffset: '3px' }}>mobile car wash</Link> page for what&apos;s included.
             </p>
           </div>
         </section>

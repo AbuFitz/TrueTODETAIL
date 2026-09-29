@@ -3,7 +3,8 @@ import Link from 'next/link'
 import { AREAS, REGIONS } from '@/lib/areas'
 import { SiteNavbar, SiteFooter } from '@/components/SiteChrome'
 import BookNowButton from '@/components/BookNowButton'
-import { breadcrumbJsonLd, jsonLdGraph } from '@/lib/seo'
+import { breadcrumbJsonLd } from '@/lib/seo'
+import { jsonLdGraph } from '@/lib/jsonld'
 
 export const metadata: Metadata = {
   title: 'Areas We Cover: Mobile Car Valeting Across Hertfordshire',

@@ -2,7 +2,8 @@ import type { Metadata } from 'next'
 import Link from 'next/link'
 import { SiteNavbar, SiteFooter } from '@/components/SiteChrome'
 import BookNowButton from '@/components/BookNowButton'
-import { breadcrumbJsonLd, jsonLdGraph, serviceJsonLd } from '@/lib/seo'
+import { breadcrumbJsonLd, serviceJsonLd } from '@/lib/seo'
+import { jsonLdGraph } from '@/lib/jsonld'
 
 export const metadata: Metadata = {
   title: 'Interior Car Detailing Service | Hemel Hempstead & Hertfordshire',
@@ -37,7 +38,7 @@ export default function InteriorCarDetailingPage() {
         <div style={{ maxWidth: '860px', margin: '0 auto', padding: 'calc(80px + clamp(48px, 8vw, 96px)) clamp(24px, 5vw, 48px) clamp(48px, 8vw, 96px)' }}>
 
           <nav aria-label="Breadcrumb" style={{ marginBottom: '32px' }}>
-            <ol style={{ display: 'flex', gap: '8px', listStyle: 'none', padding: 0, margin: 0, fontSize: '13px', color: 'rgba(12,12,12,0.45)' }}>
+            <ol style={{ display: 'flex', gap: '8px', listStyle: 'none', padding: 0, margin: 0, fontSize: '13px', color: 'rgba(12,12,12,0.62)' }}>
               <li><Link href="/" style={{ color: '#E84A0C', textDecoration: 'none' }}>Home</Link></li>
               <li aria-hidden>›</li>
               <li><Link href="/mobile-car-detailing" style={{ color: '#E84A0C', textDecoration: 'none' }}>Mobile Car Detailing</Link></li>

@@ -4,7 +4,8 @@ import { SiteNavbar, SiteFooter } from '@/components/SiteChrome'
 import BookNowButton from '@/components/BookNowButton'
 import { AREAS } from '@/lib/areas'
 import { PACKAGES, VEHICLE_LABELS, type VehicleType } from '@/lib/pricing'
-import { breadcrumbJsonLd, faqJsonLd, jsonLdGraph, serviceJsonLd } from '@/lib/seo'
+import { breadcrumbJsonLd, serviceJsonLd } from '@/lib/seo'
+import { faqJsonLd, jsonLdGraph } from '@/lib/jsonld'
 
 const ESSENTIAL = PACKAGES.find((p) => p.id === 'Essential')!
 const FULL_VALET = PACKAGES.find((p) => p.id === 'Full Valet')!
@@ -68,7 +69,7 @@ export default function MobileCarWashPage() {
         <div style={{ maxWidth: '860px', margin: '0 auto', padding: 'calc(80px + clamp(48px, 8vw, 96px)) clamp(24px, 5vw, 48px) clamp(48px, 8vw, 96px)' }}>
 
           <nav aria-label="Breadcrumb" style={{ marginBottom: '32px' }}>
-            <ol style={{ display: 'flex', gap: '8px', listStyle: 'none', padding: 0, margin: 0, fontSize: '13px', color: 'rgba(12,12,12,0.45)' }}>
+            <ol style={{ display: 'flex', gap: '8px', listStyle: 'none', padding: 0, margin: 0, fontSize: '13px', color: 'rgba(12,12,12,0.62)' }}>
               <li><Link href="/" style={{ color: '#E84A0C', textDecoration: 'none' }}>Home</Link></li>
               <li aria-hidden>›</li>
               <li aria-current="page">Mobile Car Wash</li>
@@ -116,7 +117,7 @@ export default function MobileCarWashPage() {
               </table>
             </div>
             <p style={body}>
-              Want the inside done properly too? Our <Link href="/professional-car-valeting" style={{ color: '#E84A0C', textDecoration: 'none' }}>full valet</Link> adds seat shampoo, carpet extraction and spray wax.
+              Want the inside done properly too? Our <Link href="/professional-car-valeting" style={{ color: '#C53D08', textDecoration: 'underline', textUnderlineOffset: '3px' }}>full valet</Link> adds seat shampoo, carpet extraction and spray wax.
             </p>
           </section>
 

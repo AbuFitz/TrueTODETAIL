@@ -1,8 +1,10 @@
 import type { Metadata } from 'next'
+import Script from 'next/script'
 import { Bebas_Neue, DM_Sans } from 'next/font/google'
 import SupportWidget from '@/components/SupportWidget'
 import CookieConsentBanner from '@/components/CookieConsentBanner'
-import { SITE_URL, jsonLdGraph, localBusinessJsonLd, websiteJsonLd } from '@/lib/seo'
+import { SITE_URL, localBusinessJsonLd, websiteJsonLd } from '@/lib/seo'
+import { jsonLdGraph } from '@/lib/jsonld'
 import './globals.css'
 
 // Google tag (Analytics/Ads) measurement ID. Not a secret: it's public in every
@@ -137,7 +139,6 @@ export default function RootLayout({
             `,
           }}
         />
-        <script async src={`https://www.googletagmanager.com/gtag/js?id=${GA_MEASUREMENT_ID}`} />
         <script
           dangerouslySetInnerHTML={{
             __html: `gtag('js', new Date());\ngtag('config', '${GA_MEASUREMENT_ID}');`,
@@ -150,6 +151,13 @@ export default function RootLayout({
       </head>
       <body className="bg-white text-site-black font-body antialiased">
         {children}
+        {/*
+          gtag.js (~170 KB) loads after the page finishes loading so it never
+          competes with the hero image or hydration. The consent defaults and
+          config above only queue commands on dataLayer, which it processes
+          on arrival, so no pageview is lost.
+        */}
+        <Script src={`https://www.googletagmanager.com/gtag/js?id=${GA_MEASUREMENT_ID}`} strategy="lazyOnload" />
         <SupportWidget />
         <CookieConsentBanner />
       </body>
