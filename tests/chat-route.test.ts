@@ -105,3 +105,11 @@ test('fuzz: 3000 random messages through the rules engine all get a clean reply'
     assert.ok(JSON.stringify(state).length < 20_000, 'state keeps growing')
   }
 })
+
+test('the system prompt has every placeholder filled in', async () => {
+  const { buildSystemPrompt } = await import('@/lib/chat/prompt')
+  const prompt = buildSystemPrompt(emptyConversationState())
+  assert.doesNotMatch(prompt, /\$\{|undefined/)
+  assert.match(prompt, /give the customer 07359 591800 \(call or WhatsApp\) and info@truetodetail\.co\.uk/)
+  assert.doesNotMatch(prompt, /—/)
+})

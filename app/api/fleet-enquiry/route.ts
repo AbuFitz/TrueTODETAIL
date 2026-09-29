@@ -26,6 +26,14 @@ export async function POST(req: NextRequest) {
   } catch {
     return NextResponse.json({ error: 'Invalid JSON payload' }, { status: 400 })
   }
+  if (!body || typeof body !== 'object' || Array.isArray(body)) {
+    return NextResponse.json({ error: 'Invalid JSON payload' }, { status: 400 })
+  }
+  for (const field of ['name', 'business', 'phone', 'fleet', 'message'] as const) {
+    if (body[field] !== undefined && body[field] !== null && typeof body[field] !== 'string') {
+      return NextResponse.json({ error: `Invalid field: ${field}` }, { status: 400 })
+    }
+  }
 
   if (!body.name || !body.name.trim()) {
     return NextResponse.json({ error: 'Missing required field: name' }, { status: 400 })
@@ -39,7 +47,7 @@ export async function POST(req: NextRequest) {
   if (!PHONE_RE.test(body.phone)) {
     return NextResponse.json({ error: 'Invalid phone number' }, { status: 400 })
   }
-  if (body.fleet !== undefined && !VALID_FLEET_SIZES.includes(body.fleet)) {
+  if (body.fleet != null && !VALID_FLEET_SIZES.includes(body.fleet)) {
     return NextResponse.json({ error: 'Invalid fleet size' }, { status: 400 })
   }
   if (body.message && body.message.length > 1000) {
@@ -67,7 +75,7 @@ export async function POST(req: NextRequest) {
       from: fromEmail,
       to: 'info@truetodetail.co.uk',
       replyTo: 'info@truetodetail.co.uk',
-      subject: `New Van & Fleet Enquiry: ${enquiry.business || enquiry.name}`,
+      subject: `New Van & Fleet Enquiry: ${(enquiry.business || enquiry.name).replace(/[\r\n]+/g, ' ')}`,
       html: fleetEnquiryEmail(enquiry),
       text: fleetEnquiryText(enquiry),
     })

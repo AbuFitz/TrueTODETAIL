@@ -81,19 +81,32 @@ export async function POST(req: NextRequest) {
   } catch {
     return NextResponse.json({ error: 'Invalid JSON payload' }, { status: 400, headers: corsHeaders(origin) })
   }
+  if (!body || typeof body !== 'object' || Array.isArray(body)) {
+    return NextResponse.json({ error: 'Invalid JSON payload' }, { status: 400, headers: corsHeaders(origin) })
+  }
 
   // ── Required field presence — name is optional, everything else isn't ──
   const required: (keyof BookingPayload)[] = [
     'pack', 'vehicle', 'date', 'time', 'phone', 'email', 'address', 'carReg',
   ]
   for (const field of required) {
-    if (body[field] === undefined || body[field] === '') {
+    if (body[field] == null || body[field] === '') {
       return NextResponse.json({ error: `Missing required field: ${field}` }, { status: 400, headers: corsHeaders(origin) })
     }
   }
 
-  // ── Type-safe cast after presence check ──
-  const data = body as BookingPayload
+  // ── Every text field must really be text, or .trim() below would throw ──
+  const textFields: (keyof BookingPayload)[] = [...required, 'name', 'notes']
+  for (const field of textFields) {
+    if (body[field] !== undefined && body[field] !== null && typeof body[field] !== 'string') {
+      return NextResponse.json({ error: `Invalid field: ${field}` }, { status: 400, headers: corsHeaders(origin) })
+    }
+  }
+  if (body.addons !== undefined && (!Array.isArray(body.addons) || body.addons.some(a => typeof a !== 'string'))) {
+    return NextResponse.json({ error: 'Invalid addons format' }, { status: 400, headers: corsHeaders(origin) })
+  }
+
+  const data = { ...body, addons: body.addons ?? [] } as BookingPayload
 
   // ── Field validation ──
   if (!VALID_PACKS.includes(data.pack)) {
@@ -178,6 +191,11 @@ export async function POST(req: NextRequest) {
   const fromEmail = process.env.BOOKING_FROM_EMAIL ?? 'noreply@truetodetail.co.uk'
   const replyToEmail = 'bookings@truetodetail.co.uk'
 
+  // The staff email (and the webhook, if set) is the only record of a
+  // booking, so track whether either actually got through.
+  let staffNotified = false
+  let webhookDelivered = false
+
   if (resendKey) {
     const resend = new Resend(resendKey)
 
@@ -198,7 +216,7 @@ export async function POST(req: NextRequest) {
       createdAt: booking.createdAt,
     }
 
-    await Promise.allSettled([
+    const [staff] = await Promise.allSettled([
       // Staff notification — flagged high-importance so it stands out in the
       // inbox (Gmail/Outlook show a priority marker on these headers), since
       // every new booking needs a same-day response.
@@ -225,8 +243,13 @@ export async function POST(req: NextRequest) {
         text: confirmationText(emailData),
       }),
     ])
+    // Resend reports most failures in the result rather than by throwing.
+    staffNotified = staff.status === 'fulfilled' && !staff.value.error
+    if (!staffNotified) {
+      console.error('[booking] staff notification failed:', staff.status === 'fulfilled' ? staff.value.error : staff.reason)
+    }
   } else {
-    console.warn('[booking] RESEND_API_KEY not set — emails skipped')
+    console.warn('[booking] RESEND_API_KEY not set, emails skipped')
   }
 
   // ── Forward to webhook (e.g. Zapier / Make / n8n) ──
@@ -239,6 +262,7 @@ export async function POST(req: NextRequest) {
         body: JSON.stringify(booking),
         signal: AbortSignal.timeout(8000),
       })
+      webhookDelivered = res.ok
       if (!res.ok) {
         console.error('[booking] Webhook responded with', res.status)
       }
@@ -246,6 +270,16 @@ export async function POST(req: NextRequest) {
       // Non-fatal — log and continue
       console.error('[booking] Webhook delivery failed:', err)
     }
+  }
+
+  // If delivery is configured but nothing got through, the request would be
+  // lost while the customer thinks it was sent. Say so instead.
+  if ((resendKey || webhookUrl) && !staffNotified && !webhookDelivered) {
+    console.error(`[booking] ${booking.id} not delivered anywhere`, JSON.stringify(booking))
+    return NextResponse.json(
+      { error: "Sorry, we couldn't send your request just now. Please call or WhatsApp us on 07359 591800 and we'll book you in." },
+      { status: 502, headers: corsHeaders(origin) },
+    )
   }
 
   return NextResponse.json(
