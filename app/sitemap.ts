@@ -22,7 +22,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     page('/interior-car-detailing', 0.9),
     page('/exterior-car-detailing', 0.9),
     page('/full-car-detail', 0.9),
-    page('/van-fleet', 0.8),
+    page('/van-fleet', 0.4),
     page('/areas', 0.9),
     ...AREAS.map((area) => page(`/areas/${area.slug}`, 0.85)),
     page('/privacy', 0.3, 'yearly', LEGAL_UPDATED),

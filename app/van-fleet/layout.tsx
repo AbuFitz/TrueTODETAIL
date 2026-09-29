@@ -1,16 +1,16 @@
 import type { Metadata } from 'next'
 
 export const metadata: Metadata = {
-  title: 'Van & Fleet Cleaning in Hemel Hempstead & Hertfordshire',
+  title: 'Van & Fleet Cleaning: Coming Soon to Hertfordshire',
   description:
-    'Commercial van and fleet cleaning across Hemel Hempstead and Hertfordshire. Priority scheduling, consistent results and discounted rates for 3+ vehicles. Get a tailored quote.',
+    'Van and fleet cleaning from True To Detail is coming soon to Hemel Hempstead and Hertfordshire. Register your interest and we will let you know the moment it opens.',
   alternates: {
     canonical: 'https://www.truetodetail.co.uk/van-fleet',
   },
   openGraph: {
-    title: 'Van & Fleet Cleaning Services | True To Detail',
+    title: 'Van & Fleet Cleaning, Coming Soon | True To Detail',
     description:
-      'Commercial van and fleet cleaning across Hemel Hempstead and Hertfordshire. Priority scheduling, consistent results and discounted rates for 3+ vehicles.',
+      'Van and fleet cleaning is coming soon to Hemel Hempstead and Hertfordshire. Register your interest.',
     url: 'https://www.truetodetail.co.uk/van-fleet',
   },
 }

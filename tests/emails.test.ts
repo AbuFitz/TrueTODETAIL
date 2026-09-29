@@ -44,3 +44,39 @@ test('plain-text versions carry the key booking details', () => {
   assert.ok(!text.includes('—'))
   assert.match(notificationText(booking), /HIGH PRIORITY/)
 })
+
+import { chatEscalationEmail } from '@/lib/emails/templates'
+import { renderCustomerEmail } from '@/lib/emails/customer'
+
+const allEmails = (): Record<string, string> => ({
+  staffBooking: notificationEmail(booking),
+  customerRequest: confirmationEmail({ ...booking, name: 'Sarah', notes: '' }),
+  fleet: fleetEnquiryEmail({ name: 'Sam', business: 'Sam Vans', phone: '07700 900123', fleetSize: '5-9', message: 'Hello', createdAt: '' }),
+  chat: chatEscalationEmail({ reason: 'Wants a quote', conversationSummary: 'Asked about vans', customerName: 'Sam', phone: '07700 900123', email: 'a@b.co', postcode: 'HP1 3PT', createdAt: '' }),
+  ...Object.fromEntries((['received', 'booked_in', 'assigned', 'on_the_way', 'completed', 'cancelled'] as const).map((kind) => [
+    `customer_${kind}`,
+    renderCustomerEmail({
+      kind, reference: 'TTD-1', firstName: 'Sam', packageName: 'Full Valet', addons: [], price: 155, vehicle: 'Focus', registration: 'AB12CDE',
+      scheduledStart: '2030-06-12T09:00:00Z', postcode: 'HP2 6EL', trackingToken: 'tok_abcdef123456', hasAccount: false, email: 'sam@example.com',
+    }).html,
+  ])),
+})
+
+test('every email uses the same single-column layout with no boxes inside boxes', () => {
+  for (const [name, html] of Object.entries(allEmails())) {
+    assert.match(html, /name="viewport"/, name)
+    assert.match(html, /max-width:520px/, name)
+    // one wordmark, one button at most, same closing footer
+    assert.equal((html.match(/letter-spacing:0\.14em;text-transform:uppercase;color:#0C0C0C/g) ?? []).length, 1, `${name}: one wordmark`)
+    assert.match(html, /mobile car detailing in Hertfordshire/, name)
+    // nothing side by side and no fixed widths that could squeeze text on a phone
+    assert.doesNotMatch(html, /width="(?!100%)\d+"/, name)
+    assert.equal((html.match(/<td[^>]*width:\d+%/g) ?? []).length, 0, `${name}: no side-by-side cells`)
+    // no bordered or shaded panels inside the card
+    assert.equal((html.match(/border:1px solid/g) ?? []).length, 0, `${name}: no bordered boxes`)
+    assert.equal((html.match(/background:#(?!ffffff|F5F4F1|E84A0C)/gi) ?? []).length, 0, `${name}: no shaded panels`)
+    assert.doesNotMatch(html, /—/, name)
+    // phones get the full width: the outer padding and rounded card drop away
+    assert.match(html, /\.shell \{ padding:0 !important; \}/, name)
+  }
+})

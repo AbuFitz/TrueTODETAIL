@@ -166,7 +166,7 @@ export default function Footer({ onBookNow }: { onBookNow: () => void }) {
               ['Exterior Car Detailing',     '/exterior-car-detailing'],
               ['Full Car Detail Packages',   '/full-car-detail'],
               ['Professional Car Valeting',  '/professional-car-valeting'],
-              ['Van & Fleet Cleaning',       '/van-fleet'],
+              ['Van & Fleet (Coming Soon)',    '/van-fleet'],
             ].map(([label, href]) => (
               <a
                 key={label}

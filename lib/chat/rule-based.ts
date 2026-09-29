@@ -249,7 +249,7 @@ function answerTurn(next: ConversationState, extracted: Record<string, unknown>,
   }
   if (FLEET_RE.test(message)) {
     return {
-      text: `We do look after vans and fleets. ${BUSINESS_INFO.fleetDiscount} Pop your details into the enquiry form on our Van & Fleet page (/van-fleet) or call ${BUSINESS_INFO.phone} for a quote.`,
+      text: `Van and fleet cleaning is coming soon, so we cannot book or quote it just yet. You can register your interest on our Van & Fleet page (/van-fleet) and we will get in touch when it opens, or call ${BUSINESS_INFO.phone} if you have questions.`,
       counts: true,
     }
   }

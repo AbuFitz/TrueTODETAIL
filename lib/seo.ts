@@ -40,6 +40,17 @@ export function localBusinessJsonLd() {
     url: SITE_URL,
     telephone: BUSINESS_INFO.phoneTel,
     email: BUSINESS_INFO.email,
+    // One canonical way to reach us, so search engines and AI answers use this number.
+    contactPoint: [
+      {
+        '@type': 'ContactPoint',
+        contactType: 'customer service',
+        telephone: BUSINESS_INFO.phoneTel,
+        email: BUSINESS_INFO.email,
+        areaServed: 'GB',
+        availableLanguage: 'English',
+      },
+    ],
     logo: { '@type': 'ImageObject', url: `${SITE_URL}/logo.png` },
     image: `${SITE_URL}/og-image.jpg`,
     priceRange: priceRange(),
@@ -81,7 +92,6 @@ export function localBusinessJsonLd() {
       'Machine polishing',
       'Paint correction',
       'Ceramic coating',
-      'Van and fleet cleaning',
     ],
     hasOfferCatalog: {
       '@type': 'OfferCatalog',

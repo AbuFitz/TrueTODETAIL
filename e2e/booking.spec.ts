@@ -72,3 +72,41 @@ test('booking popup: a delivery failure tells the customer to call', async ({ pa
   await expect(popup.getByText(/07359 591800/)).toBeVisible()
   await expect(popup.getByText('REQUEST SENT.')).toHaveCount(0)
 })
+
+/** Distance from the top of the viewport to the top of an element, or null when it is off screen. */
+async function topOf(page: import('@playwright/test').Page, locator: import('@playwright/test').Locator) {
+  return locator.evaluate((el) => {
+    const r = el.getBoundingClientRect()
+    return r.bottom < 0 || r.top > window.innerHeight ? null : Math.round(r.top)
+  })
+}
+
+test('booking popup guides to the next part of each step after a choice', async ({ page }) => {
+  // A short window so the steps have to scroll, on phone and desktop alike.
+  const width = page.viewportSize()?.width ?? 1280
+  await page.setViewportSize({ width, height: 640 })
+  await page.goto('/', { waitUntil: 'networkidle' })
+  await page.evaluate(() => window.dispatchEvent(new CustomEvent('ttd:book-now')))
+  const popup = page.getByTestId('booking-modal')
+  await expect(popup).toBeVisible()
+
+  await popup.getByRole('radio', { name: /Mid-Size/ }).first().click()
+  await page.waitForTimeout(900)
+  expect(await topOf(page, popup.getByText('Choose your package')), 'packages in view after the size').not.toBeNull()
+
+  await popup.getByRole('button', { name: /Full Valet/ }).first().click()
+  await page.waitForTimeout(900)
+  const extras = popup.getByText('Optional extras')
+  const extrasTop = await topOf(page, extras)
+  expect(extrasTop, 'add-ons in view after the package').not.toBeNull()
+  expect(extrasTop!, 'add-ons brought up the screen, not left at the bottom').toBeLessThan(420)
+
+  await popup.getByRole('button', { name: /Next: Schedule/ }).click()
+  await popup.locator('input[type="date"]').fill('2030-01-15')
+  await page.waitForTimeout(900)
+  const slot = popup.getByRole('button', { name: '10:00 AM', exact: true })
+  expect(await topOf(page, slot), 'time slots in view after the date').not.toBeNull()
+  await slot.click()
+  await page.waitForTimeout(900)
+  expect(await topOf(page, popup.getByPlaceholder('Enter your postcode')), 'postcode in view after the time').not.toBeNull()
+})

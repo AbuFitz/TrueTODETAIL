@@ -31,7 +31,7 @@ export const VEHICLE_GUIDE: Record<VehicleType, { body: string; examples: string
 }
 
 export const VEHICLE_GUIDE_NOTE =
-  'Not sure? Pick the closest and we will confirm before we arrive. Vans are quoted on our van fleet page.'
+  'Not sure? Pick the closest and we will confirm before we arrive. Van and fleet cleaning is coming soon.'
 
 export interface PackageDef {
   id: string
@@ -133,6 +133,6 @@ export const BUSINESS_INFO = {
   cancellationPolicy:
     'Customers can cancel or reschedule any time; at least 24 hours notice is requested. Cancelling or no-showing with less than 24 hours notice may incur a fee of up to 50% of the agreed price.',
   satisfactionPromise: "If a customer isn't happy with the result, we come back and fix it.",
-  fleetDiscount: '10%+ off for 3 or more vehicles booked as a fleet, more for larger fleets.',
+  fleetDiscount: 'Van and fleet cleaning is coming soon. It is not bookable yet and has no confirmed prices or discounts.',
   membershipStatus: 'A monthly membership/maintenance plan is coming soon and is not bookable yet.',
 }

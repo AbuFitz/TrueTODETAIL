@@ -37,7 +37,7 @@ if (process.env.NEXT_PUBLIC_BING_SITE_VERIFICATION) {
 
 const HOME_TITLE = 'Mobile Car Valeting & Detailing in Hemel Hempstead | True To Detail'
 const HOME_DESCRIPTION =
-  'Mobile car valeting, detailing and hand car washes at your door across Hemel Hempstead, Watford, St Albans and Herts. Fixed prices from £80. Book online.'
+  'Mobile car valeting, detailing and hand car washes at your door across Hemel Hempstead, Watford, St Albans and Herts. Fixed prices from £80. Call 07359 591800.'
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
