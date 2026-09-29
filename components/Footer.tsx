@@ -49,17 +49,19 @@ export default function Footer({ onBookNow }: { onBookNow: () => void }) {
           display: 'grid',
           gap: 'clamp(32px, 5vw, 72px)',
         }}
-        className="grid-cols-1 sm:grid-cols-2 md:grid-cols-4"
+        className="grid-cols-1 sm:grid-cols-2 lg:grid-cols-4"
       >
 
         {/* Col 1 — Brand */}
         <div>
           <Link
             href="/"
-            style={{ textDecoration: 'none', display: 'inline-flex', alignItems: 'center', gap: '10px', marginBottom: '20px' }}
+            aria-label="True To Detail, home"
+            style={{ textDecoration: 'none', display: 'inline-flex', alignItems: 'center', gap: '0.23em', marginBottom: '20px', whiteSpace: 'nowrap', maxWidth: '100%' }}
+            className="footer-logo"
           >
-            <span style={{
-              fontFamily: 'var(--font-display)', fontSize: '44px',
+            <span className="footer-logo-text" style={{
+              fontFamily: 'var(--font-display)',
               letterSpacing: '0.05em', color: '#0C0C0C', lineHeight: 1,
             }}>
               TRUE TO
@@ -73,8 +75,8 @@ export default function Footer({ onBookNow }: { onBookNow: () => void }) {
                 flexShrink: 0, marginBottom: '-3px',
               }}
             />
-            <span style={{
-              fontFamily: 'var(--font-display)', fontSize: '44px',
+            <span className="footer-logo-text" style={{
+              fontFamily: 'var(--font-display)',
               letterSpacing: '0.05em', color: '#0C0C0C', lineHeight: 1,
             }}>
               DETAIL
@@ -236,7 +238,8 @@ export default function Footer({ onBookNow }: { onBookNow: () => void }) {
           </p>
           <nav
             aria-label="Areas we cover"
-            style={{ display: 'grid', gridTemplateColumns: 'repeat(2, auto)', columnGap: '20px', rowGap: '10px' }}
+            className="footer-areas"
+            style={{ display: 'grid', columnGap: '20px', rowGap: '10px' }}
           >
             {AREA_LINKS.map(area => (
               <a

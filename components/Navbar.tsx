@@ -123,7 +123,7 @@ export default function Navbar({ onBookNow }: { onBookNow: () => void }) {
           <div style={{ flex: 1 }} />
 
           {/* Desktop nav — Services + Packages + Book Now */}
-          <div className="hidden md:flex items-center" style={{ gap: 0 }}>
+          <div className="hidden lg:flex items-center" style={{ gap: 0 }}>
             {NAV_LINKS.map((l) => (
               <a
                 key={l.label}
@@ -241,7 +241,7 @@ export default function Navbar({ onBookNow }: { onBookNow: () => void }) {
             Mobile hamburger — wrapper div carries md:hidden so Tailwind's
             display:none is not overridden by the button's inline display:flex.
           */}
-          <div className="md:hidden">
+          <div className="lg:hidden">
           <button
             onClick={() => setOpen(!open)}
             aria-label={open ? 'Close menu' : 'Open menu'}
