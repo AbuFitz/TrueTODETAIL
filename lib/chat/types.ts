@@ -33,6 +33,8 @@ export interface EnquiryInfo {
   package: string | null
   requestedDate: string | null
   requestedTime: string | null
+  /** Vehicle size category once known: 'small' | 'midsize' | 'largesuv'. */
+  vehicleSize: string | null
   extras: string[]
 }
 
@@ -47,6 +49,8 @@ export interface ConversationState {
   collectedInformation: string[]
   unresolvedQuestions: string[]
   conversationSummary: string
+  /** How many history turns have already been folded into conversationSummary. */
+  summarizedTurns: number
   escalated: boolean
 }
 
@@ -57,11 +61,12 @@ export function emptyConversationState(): ConversationState {
     email: null,
     postcode: null,
     vehicle: { registration: null, make: null, model: null, year: null },
-    enquiry: { intent: null, service: null, package: null, requestedDate: null, requestedTime: null, extras: [] },
+    enquiry: { intent: null, service: null, package: null, requestedDate: null, requestedTime: null, vehicleSize: null, extras: [] },
     booking: null,
     collectedInformation: [],
     unresolvedQuestions: [],
     conversationSummary: '',
+    summarizedTurns: 0,
     escalated: false,
   }
 }

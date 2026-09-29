@@ -6,7 +6,8 @@
 
 import Groq from 'groq-sdk'
 import { CHAT_TOOLS, executeTool, type ToolDef } from '@/lib/chat/tools'
-import { businessFactsText, pricingSummaryText, coverageSummaryText, vehicleLabelList } from '@/lib/chat/knowledge'
+import { vehicleLabelList } from '@/lib/chat/knowledge'
+import { buildSystemPrompt } from '@/lib/chat/prompt'
 import type { ChatTurn, ConversationState, ChatAction, ChatIntent } from '@/lib/chat/types'
 
 // Groq decommissioned llama-3.1-8b-instant and llama-3.3-70b-versatile on
@@ -21,6 +22,7 @@ function reasoningParams(model: string): { reasoning_effort?: 'low' } {
   return model.startsWith('openai/gpt-oss') ? { reasoning_effort: 'low' } : {}
 }
 const MAX_TOOL_ITERATIONS = 4
+const REQUEST_TIMEOUT_MS = 10_000
 
 export class GroqUnavailableError extends Error {
   quotaExceeded: boolean
@@ -51,7 +53,9 @@ function toGroqMessages(turns: ChatTurn[]): Groq.Chat.Completions.ChatCompletion
 function getClient(): Groq {
   const apiKey = process.env.GROQ_API_KEY
   if (!apiKey) throw new GroqUnavailableError('GROQ_API_KEY not set', false)
-  return new Groq({ apiKey })
+  // The SDK retries twice by default and honours long retry-after headers on
+  // 429s. The rules engine is the fallback here, so fail fast instead.
+  return new Groq({ apiKey, timeout: REQUEST_TIMEOUT_MS, maxRetries: 0 })
 }
 
 const INTENTS: ChatIntent[] = [
@@ -141,35 +145,6 @@ export async function updateSummaryGroq(previousSummary: string, overflow: ChatT
   }
 }
 
-function buildSystemPrompt(state: ConversationState): string {
-  return `You are Ava, the support and sales assistant embedded on the True To Detail website, a professional mobile car detailing and valeting business.
-
-You are a real conversational assistant, not a form. Read the full conversation state below before replying, if something is already known, never ask for it again. Reassess the customer's intent fresh each turn; it can change mid-conversation.
-
-Behaviour rules:
-- Acknowledge what the customer just said before moving the conversation forward. Don't open every reply with a greeting or "How can I help?", only greet once, at the very start.
-- Ask for at most one or two missing pieces of information at a time. Never re-ask for something already in the conversation state below.
-- Keep replies short and conversational (2-4 sentences) unless the customer asks for a detailed comparison. No em dashes. No corporate fluff, no excessive exclamation marks.
-- Never state a price, coverage answer, availability, or booking-lookup result from memory, always call the matching tool and use its returned result.
-- Recommend packages based on what the customer describes without aggressive upselling.
-- If the request is bespoke/commercial (ceramic coating, paint correction, fleet), or the customer asks for a person, seems upset, or says you've got something wrong more than once, call request_human_support rather than continuing to guess.
-- When you have enough to describe a concrete booking (package, vehicle, ideally postcode and a date/time preference), call prepare_booking_summary and then tell the customer to confirm it via the Book Now button.
-
-## Business facts
-${businessFactsText()}
-
-## Pricing
-${pricingSummaryText()}
-
-## Coverage
-${coverageSummaryText()}
-
-## Conversation state (what's already known, do not re-ask for any of this)
-${JSON.stringify(state)}
-
-## Conversation summary so far
-${state.conversationSummary || '(conversation just started)'}`
-}
 
 export interface GroqResponseResult {
   text: string

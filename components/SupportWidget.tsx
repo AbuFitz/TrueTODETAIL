@@ -96,6 +96,8 @@ export default function SupportWidget() {
     setSending(true)
 
     try {
+      // The server gives each AI provider a fixed time before answering from
+      // its rules, so this only trips if the request itself is lost.
       const res = await fetch('/api/support-chat', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -104,6 +106,7 @@ export default function SupportWidget() {
           history: history.map((m) => ({ role: m.role, content: m.content })),
           conversationState,
         }),
+        signal: AbortSignal.timeout(45_000),
       })
       const json = await res.json()
       const reply: string = json.reply ?? `Sorry, something went wrong there. Try WhatsApp or give us a call on ${PHONE_DISPLAY}.`

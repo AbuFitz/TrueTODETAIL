@@ -75,7 +75,7 @@ export const CHAT_TOOLS: ToolDef[] = [
   {
     name: 'request_human_support',
     description:
-      'Escalate to a real staff member. Call this when: the customer explicitly asks for a person; a complaint is sensitive or the customer is upset; the enquiry needs a bespoke/commercial quote (ceramic coating, paint correction, fleet); the request falls outside available services; you are not confident you can answer correctly; or the customer says your answer is wrong more than once.',
+      'Hand the customer over to the team. This does not send a message to anyone, it returns the contact details to give the customer. Call this when: the customer explicitly asks for a person; a complaint is sensitive or the customer is upset; the enquiry needs a bespoke/commercial quote (ceramic coating, paint correction, fleet); the request falls outside available services; you are not confident you can answer correctly; or the customer says your answer is wrong more than once.',
     input_schema: {
       type: 'object',
       properties: {
@@ -169,7 +169,15 @@ export function executeTool(name: string, input: Record<string, unknown>): ToolE
 
     case 'request_human_support': {
       const reason = String(input.reason ?? 'Customer requested human assistance.')
-      return { output: { escalated: true, reason }, action: 'human_escalated', escalationReason: reason }
+      return {
+        output: {
+          notified: false,
+          reason,
+          instruction: `Nobody has been notified. Give the customer ${BUSINESS_INFO.phone} (call or WhatsApp, ${BUSINESS_INFO.hours}) and ${BUSINESS_INFO.email} so they can reach the team directly. Do not say the team will be in touch.`,
+        },
+        action: 'human_escalated',
+        escalationReason: reason,
+      }
     }
 
     case 'prepare_booking_summary': {
