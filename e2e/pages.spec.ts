@@ -20,3 +20,17 @@ test('unknown pages get the 404 page', async ({ page }) => {
   const res = await page.goto('/definitely-not-a-page')
   expect(res?.status()).toBe(404)
 })
+
+// Search engines read the JSON-LD blocks; one that doesn't parse is
+// silently ignored, losing rich results for that page.
+for (const path of PAGES) {
+  test(`${path} structured data is valid JSON with a type`, async ({ page }) => {
+    await page.goto(path)
+    const blocks = await page.locator('script[type="application/ld+json"]').allTextContents()
+    for (const raw of blocks) {
+      const data = JSON.parse(raw)
+      const items = Array.isArray(data) ? data : data['@graph'] ?? [data]
+      for (const item of items) expect(item['@type'], raw.slice(0, 80)).toBeTruthy()
+    }
+  })
+}
