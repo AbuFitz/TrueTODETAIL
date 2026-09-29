@@ -358,31 +358,34 @@ export default function BookingModal({
               <div>
                 <p style={sectionHeading}>Vehicle</p>
                 <p style={fieldLabel}>What size is your vehicle?</p>
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
+                <div role="radiogroup" aria-label="Vehicle size" style={{ display: 'grid', gridTemplateColumns: 'repeat(3, minmax(0, 1fr))', gap: '6px' }}>
                   {(Object.entries(vehicleLabels) as [VehicleType, string][]).map(([key, label]) => (
                     <button
                       key={key}
                       type="button"
+                      role="radio"
+                      aria-checked={vehicle === key}
                       onClick={() => setVehicle(key)}
-                      aria-pressed={vehicle === key}
                       style={{
-                        width: '100%', padding: '12px 14px',
+                        minWidth: 0, padding: '11px 10px', minHeight: '68px',
                         background: vehicle === key ? '#0C0C0C' : 'transparent',
                         border: `1px solid ${vehicle === key ? '#0C0C0C' : 'rgba(12,12,12,0.12)'}`,
                         cursor: 'pointer', textAlign: 'left', transition: 'all 0.15s',
-                        display: 'flex', flexDirection: 'column', gap: '3px',
+                        display: 'flex', flexDirection: 'column', justifyContent: 'space-between', gap: '4px',
                       }}
                     >
-                      <span style={{ fontFamily: 'var(--font-body)', fontWeight: 600, fontSize: '13px', color: vehicle === key ? '#ffffff' : '#0C0C0C', letterSpacing: '0.02em' }}>
-                        {label} <span style={{ fontWeight: 400, color: vehicle === key ? 'rgba(255,255,255,0.7)' : 'rgba(12,12,12,0.6)' }}>· {VEHICLE_GUIDE[key].body}</span>
+                      <span style={{ fontFamily: 'var(--font-body)', fontWeight: 600, fontSize: '12px', lineHeight: 1.25, color: vehicle === key ? '#ffffff' : '#0C0C0C' }}>
+                        {label}
                       </span>
-                      <span style={{ fontFamily: 'var(--font-body)', fontSize: '11.5px', color: vehicle === key ? 'rgba(255,255,255,0.6)' : 'rgba(12,12,12,0.5)' }}>
-                        e.g. {VEHICLE_GUIDE[key].examples}
+                      <span style={{ fontFamily: 'var(--font-body)', fontWeight: 400, fontSize: '10.5px', lineHeight: 1.3, color: vehicle === key ? 'rgba(255,255,255,0.7)' : 'rgba(12,12,12,0.55)' }}>
+                        {VEHICLE_GUIDE[key].body}
                       </span>
                     </button>
                   ))}
                 </div>
-                <p style={{ fontFamily: 'var(--font-body)', fontSize: '11.5px', color: 'rgba(12,12,12,0.5)', marginTop: '8px', lineHeight: 1.5 }}>{VEHICLE_GUIDE_NOTE}</p>
+                <p style={{ fontFamily: 'var(--font-body)', fontSize: '11.5px', color: 'rgba(12,12,12,0.5)', marginTop: '8px', lineHeight: 1.5 }}>
+                  {vehicle ? `e.g. ${VEHICLE_GUIDE[vehicle as VehicleType].examples}. ${VEHICLE_GUIDE_NOTE}` : VEHICLE_GUIDE_NOTE}
+                </p>
               </div>
 
               {/* Pack selection */}
