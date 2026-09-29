@@ -67,7 +67,7 @@ export default function Stats() {
                 display: 'block',
                 fontFamily: 'var(--font-body)', fontWeight: 600, fontSize: '10px',
                 letterSpacing: '0.22em', textTransform: 'uppercase',
-                color: 'rgba(12,12,12,0.62)',
+                color: 'rgba(12,12,12,0.25)',
                 marginBottom: '14px',
               }}>
                 {f.n}
@@ -89,7 +89,7 @@ export default function Stats() {
 
               <p style={{
                 fontFamily: 'var(--font-body)', fontSize: '13px', lineHeight: 1.72,
-                color: 'rgba(12,12,12,0.62)',
+                color: 'rgba(12,12,12,0.45)',
               }}>
                 {f.body}
               </p>
