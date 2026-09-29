@@ -28,8 +28,8 @@ test('van and fleet is advertised as coming soon, with no prices or discounts pr
   assert.match(r!.text, /\/van-fleet/)
 })
 
-test('every link to the van and fleet page says coming soon or soon', () => {
-  assert.match(read('components/Navbar.tsx'), /label: 'Fleet',\s+href: '\/van-fleet', soon: true/)
+test('the van and fleet page and its links say coming soon (the nav link stays plain)', () => {
+  assert.doesNotMatch(read('components/Navbar.tsx'), /soon/i, 'the nav link is plain: Fleet')
   assert.match(read('components/Footer.tsx'), /Van & Fleet \(Coming Soon\)/)
   assert.match(read('components/Packages.tsx'), /Vans and fleets are coming soon/)
   assert.match(read('app/areas/page.tsx'), /Van & Fleet · Coming soon/)
