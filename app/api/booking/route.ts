@@ -3,6 +3,8 @@ import { Resend } from 'resend'
 import { notificationEmail, confirmationEmail, notificationText, confirmationText, EmailData } from '@/lib/emails/templates'
 import { PACKAGES, ADDONS, VEHICLE_LABELS, TIME_SLOTS, calculatePrice, type VehicleType } from '@/lib/pricing'
 import { allowRequest, clientIp } from '@/lib/rateLimit'
+import { callRpc, portalDbConfigured } from '@/lib/portalDb'
+import { renderCustomerEmail } from '@/lib/emails/customer'
 import { formatBookingDate, isSlotAvailable, isValidBookingDate } from '@/lib/slots'
 
 // Allows the job system's account.truetodetail.co.uk app (a separate origin
@@ -185,6 +187,40 @@ export async function POST(req: NextRequest) {
     createdAt,
   }
 
+  // ── Store the request in the portal, so staff see it and the customer gets a tracking link ──
+  // Best effort: if the portal database is not reachable or rejects it (for
+  // example a postcode outside the service area), the emails below still go
+  // out exactly as before and the team follows up by email.
+  let trackingToken: string | null = null
+  let storedStart = ''
+  let storedPackage = ''
+  let customerHasAccount = false
+  if (portalDbConfigured()) {
+    try {
+      const stored = await callRpc<{ reference: string; tracking_token: string; scheduled_start: string; package_name: string }>('submit_website_booking', {
+        p_pack: booking.pack,
+        p_vehicle: booking.vehicle,
+        p_date: booking.date,
+        p_time: booking.time,
+        p_name: booking.name,
+        p_phone: booking.phone,
+        p_email: booking.email,
+        p_postcode: booking.address,
+        p_car_reg: booking.carReg,
+        p_addons: booking.addons,
+        p_notes: booking.notes || null,
+      })
+      booking.id = stored.reference
+      trackingToken = stored.tracking_token
+      storedStart = stored.scheduled_start
+      storedPackage = stored.package_name
+      const tracked = await callRpc<{ customer_has_account?: boolean } | null>('get_tracked_booking', { p_token: trackingToken }).catch(() => null)
+      customerHasAccount = tracked?.customer_has_account === true
+    } catch (err) {
+      console.warn('[booking] not stored in the portal:', err instanceof Error ? err.message : err)
+    }
+  }
+
   // ── Email via Resend ──
   // Sent from a no-reply address; replies are routed to the monitored inbox instead.
   const resendKey = process.env.RESEND_API_KEY
@@ -238,9 +274,30 @@ export async function POST(req: NextRequest) {
         from: fromEmail,
         to: booking.email,
         replyTo: replyToEmail,
-        subject: `Booking request received: ${formatBookingDate(booking.date)}`,
-        html: confirmationEmail(emailData),
-        text: confirmationText(emailData),
+        ...(trackingToken
+          ? (() => {
+              const r = renderCustomerEmail({
+                kind: 'received',
+                reference: booking.id,
+                firstName: booking.name ? booking.name.split(' ')[0] : null,
+                packageName: storedPackage || booking.pack,
+                addons: booking.addons.map(a => ADDON_LABELS[a] ?? a),
+                price,
+                vehicle: VEHICLE_LABELS[booking.vehicle as VehicleType] ?? booking.vehicle,
+                registration: booking.carReg,
+                scheduledStart: storedStart,
+                postcode: booking.address,
+                trackingToken,
+                hasAccount: customerHasAccount,
+                email: booking.email,
+              })
+              return { subject: r.subject, html: r.html, text: r.text }
+            })()
+          : {
+              subject: `Booking request received: ${formatBookingDate(booking.date)}`,
+              html: confirmationEmail(emailData),
+              text: confirmationText(emailData),
+            }),
       }),
     ])
     // Resend reports most failures in the result rather than by throwing.
