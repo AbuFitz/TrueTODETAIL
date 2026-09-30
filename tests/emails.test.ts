@@ -80,3 +80,10 @@ test('every email uses the same single-column layout with no boxes inside boxes'
     assert.match(html, /\.shell \{ padding:0 !important; \}/, name)
   }
 })
+
+test('the call button dials only the digits the visitor typed, never characters from escaping', () => {
+  const html = notificationEmail({ ...booking, name: 'Sam', phone: "07700 900'123", notes: '' })
+  assert.match(html, /href="tel:07700900123"/)
+  const fleet = fleetEnquiryEmail({ name: 'Sam', business: '', phone: '+44 7700 <900123>', fleetSize: '', message: '', createdAt: '' })
+  assert.match(fleet, /href="tel:\+447700900123"/)
+})
