@@ -75,16 +75,16 @@ export default function CookieConsentBanner() {
         position: 'fixed', left: 0, right: 0, bottom: 0, zIndex: 80,
         background: '#0C0C0C',
         borderTop: '1px solid rgba(255,255,255,0.1)',
-        padding: 'clamp(16px, 3vw, 24px) clamp(20px, 4vw, 48px)',
+        padding: 'clamp(12px, 3vw, 24px) clamp(20px, 4vw, 48px)',
       }}
     >
       <div style={{
         maxWidth: '1200px', margin: '0 auto',
         display: 'flex', flexWrap: 'wrap', alignItems: 'center',
-        justifyContent: 'space-between', gap: '16px 24px',
+        justifyContent: 'space-between', gap: '12px 24px',
       }}>
         <p style={{
-          fontFamily: 'var(--font-body)', fontSize: '13px', lineHeight: 1.6,
+          fontFamily: 'var(--font-body)', fontSize: '13px', lineHeight: 1.5,
           color: 'rgba(255,255,255,0.6)', margin: 0, maxWidth: '640px', flex: '1 1 320px',
         }}>
           We use essential cookies to run this site, and optional analytics/advertising cookies to understand traffic and measure ads, only with your consent.{' '}
