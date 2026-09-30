@@ -100,3 +100,106 @@ test('portal email: only the portal and the site may call it from a browser', as
   const bad = await portalEmailOPTIONS(new NextRequest('http://localhost/api/portal-email', { method: 'OPTIONS', headers: { origin: 'https://evil.example' } }))
   assert.equal(bad.headers.get('access-control-allow-origin'), null)
 })
+
+// --- Who is emailed after a portal booking -------------------------------------------------
+
+const BOOKING_ID = '22222222-2222-4222-8222-222222222222'
+const claimFor = (over: Record<string, unknown> = {}) => ({
+  kind: 'booked_in', reference: 'TTD-ABC12345', source: 'portal',
+  customer_email: 'sam@example.com', customer_first_name: 'Sam', customer_has_account: true,
+  package_name: 'Full Valet Car Detail', addon_labels: ['Steam Clean'], price: 190,
+  vehicle_description: 'Ford Focus', vehicle_registration: 'AB12CDE',
+  scheduled_start: '2030-06-12T09:00:00Z', postcode: 'HP2 6EL', cancellation_reason: null,
+  tracking_token: 'tok_abcdef123456', detailer_first_name: null, detailer_vehicle: null, ...over,
+})
+
+/** Runs the real route with only the network faked: the database's claim, and the email provider. */
+async function bookingEmails(claim: Record<string, unknown> | null, opts: { customerSendFails?: boolean } = {}) {
+  process.env.RESEND_API_KEY = 're_test'
+  process.env.NEXT_PUBLIC_SUPABASE_URL = 'https://db.example'
+  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY = 'anon'
+  const realFetch = globalThis.fetch
+  const sent: { to: string; subject: string; text: string; html: string }[] = []
+  const rpcs: string[] = []
+  globalThis.fetch = (async (url: string | URL | Request, init?: RequestInit) => {
+    const u = String(url)
+    if (u.includes('/rpc/')) {
+      rpcs.push(u.split('/rpc/')[1]!)
+      return new Response(JSON.stringify(u.endsWith('claim_booking_email') ? claim : null), { status: 200, headers: { 'content-type': 'application/json' } })
+    }
+    if (u.includes('api.resend.com')) {
+      const b = JSON.parse(String(init?.body))
+      const to = Array.isArray(b.to) ? b.to[0] : b.to
+      const isCustomer = to !== 'bookings@truetodetail.co.uk'
+      sent.push({ to, subject: b.subject, text: b.text ?? '', html: b.html ?? '' })
+      if (isCustomer && opts.customerSendFails) {
+        return new Response(JSON.stringify({ name: 'application_error', message: 'provider down', statusCode: 500 }), { status: 500, headers: { 'content-type': 'application/json' } })
+      }
+      return new Response(JSON.stringify({ id: 'email_1' }), { status: 200, headers: { 'content-type': 'application/json' } })
+    }
+    return realFetch(url, init)
+  }) as typeof fetch
+  try {
+    const r = await portal({ bookingId: BOOKING_ID, kind: (claim?.kind as string) ?? 'booked_in' }, { authorization: 'Bearer user-jwt' })
+    return { ...r, sent, rpcs }
+  } finally {
+    globalThis.fetch = realFetch
+    delete process.env.RESEND_API_KEY
+    delete process.env.NEXT_PUBLIC_SUPABASE_URL
+    delete process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
+  }
+}
+
+test('a portal booking emails the customer a confirmation and the team a full notice', async () => {
+  const r = await bookingEmails(claimFor())
+  assert.equal(r.status, 200)
+  assert.equal(r.body.sent, true)
+  assert.equal(r.body.staffNotified, true)
+  const customer = r.sent.find((e) => e.to === 'sam@example.com')!
+  const team = r.sent.find((e) => e.to === 'bookings@truetodetail.co.uk')!
+  assert.ok(customer && team, 'both emails were sent')
+  assert.match(customer.subject, /You are booked in for/)
+  assert.match(team.subject, /New portal booking: Full Valet Car Detail/)
+  assert.match(team.subject, /TTD-ABC12345/)
+  assert.doesNotMatch(team.subject, /NOT sent/)
+  for (const part of ['Sam', 'sam@example.com', 'Steam Clean', '£190', 'Ford Focus', 'AB12CDE', 'HP2 6EL', 'Confirmation email sent to sam@example.com'])
+    assert.ok(team.text.includes(part), `the team notice says ${part}`)
+  assert.match(team.text, new RegExp(`/admin/bookings/${BOOKING_ID}`))
+  assert.match(team.html, new RegExp(`/admin/bookings/${BOOKING_ID}`))
+})
+
+test('the team still hears about a portal booking when the customer has no email address', async () => {
+  const r = await bookingEmails(claimFor({ customer_email: null }))
+  assert.equal(r.body.sent, false)
+  assert.equal(r.body.staffNotified, true)
+  assert.equal(r.sent.length, 1)
+  assert.equal(r.sent[0]!.to, 'bookings@truetodetail.co.uk')
+  assert.match(r.sent[0]!.subject, /customer email NOT sent/)
+  assert.match(r.sent[0]!.text, /no email address on file/)
+  assert.ok(r.rpcs.includes('release_booking_email'), 'the claim is released so it can be retried')
+})
+
+test('the team still hears about a portal booking when sending the customer email fails', async () => {
+  const r = await bookingEmails(claimFor(), { customerSendFails: true })
+  assert.equal(r.status, 502)
+  assert.equal(r.body.sent, false)
+  assert.equal(r.body.staffNotified, true)
+  const team = r.sent.find((e) => e.to === 'bookings@truetodetail.co.uk')!
+  assert.match(team.subject, /customer email NOT sent/)
+  assert.match(team.text, /sending failed/)
+  assert.ok(r.rpcs.includes('release_booking_email'), 'the claim is released so it can be retried')
+})
+
+test('only a portal booking notifies the team from here: other sources and other emails do not', async () => {
+  for (const claim of [claimFor({ source: 'website' }), claimFor({ source: 'staff' }), claimFor({ kind: 'assigned' }), claimFor({ kind: 'completed' })]) {
+    const r = await bookingEmails(claim)
+    assert.equal(r.sent.filter((e) => e.to === 'bookings@truetodetail.co.uk').length, 0, `${claim.kind}/${claim.source} sends no team notice`)
+    assert.equal(r.body.staffNotified, false)
+  }
+})
+
+test('customer and team emails cannot be hijacked by booking text', async () => {
+  const r = await bookingEmails(claimFor({ customer_first_name: '<script>alert(1)</script>', package_name: '"><img src=x>' }))
+  const team = r.sent.find((e) => e.to === 'bookings@truetodetail.co.uk')!
+  assert.doesNotMatch(team.html, /<script>|<img src=x/)
+})

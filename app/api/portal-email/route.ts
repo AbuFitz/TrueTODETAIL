@@ -3,6 +3,8 @@ import { Resend } from 'resend'
 import { allowRequest, clientIp } from '@/lib/rateLimit'
 import { callRpc, portalDbConfigured, PortalDbError } from '@/lib/portalDb'
 import { renderCustomerEmail, ukWhen, type CustomerEmailKind } from '@/lib/emails/customer'
+import { esc } from '@/lib/emails/layout'
+import { APP_URL } from '@/lib/appUrl'
 
 // The portal (app.truetodetail.co.uk) asks this endpoint to send the emails
 // for bookings made or handled there. Who may trigger which email is decided
@@ -105,14 +107,67 @@ export async function POST(req: NextRequest) {
     callRpc('release_booking_email', { p_booking_id: bookingId, p_kind: kind, p_detailer_token: (detailerToken as string | null | undefined) ?? null }, jwt)
       .catch(e => console.error('[portal-email] release failed:', e instanceof Error ? e.message : e))
 
-  if (!claim.customer_email) {
-    await release()
-    return reply({ sent: false, reason: 'This customer has no email address' })
-  }
-
   const fromEmail = process.env.BOOKING_FROM_EMAIL ?? 'noreply@truetodetail.co.uk'
   const replyTo = 'bookings@truetodetail.co.uk'
   const resend = new Resend(resendKey)
+
+  // A booking a customer makes themselves in the portal is confirmed at once, so the
+  // team is told about it whatever happens to the customer's own email: a missing
+  // address or a failed send must never mean the business does not hear about a job.
+  const tellTeam = async (outcome: 'sent' | 'no-address' | 'failed'): Promise<boolean> => {
+    if (claim.kind !== 'booked_in' || claim.source !== 'portal') return false
+    const when = ukWhen(claim.scheduled_start)
+    const who = claim.customer_first_name ?? 'A customer'
+    const link = `${APP_URL}/admin/bookings/${bookingId}`
+    const customerLine =
+      outcome === 'sent'
+        ? `Confirmation email sent to ${claim.customer_email}.`
+        : outcome === 'no-address'
+          ? 'NO confirmation email was sent: this customer has no email address on file. Please contact them.'
+          : `NO confirmation email was sent: sending failed. Please resend it from the booking page${claim.customer_email ? ` (${claim.customer_email})` : ''}.`
+    const rows: [string, string][] = [
+      ['Reference', claim.reference],
+      ['Customer', `${who}${claim.customer_email ? ` (${claim.customer_email})` : ''}`],
+      ['When', when],
+      ['Package', claim.package_name + (claim.addon_labels?.length ? ` + ${claim.addon_labels.join(', ')}` : '')],
+      ['Vehicle', [claim.vehicle_description, claim.vehicle_registration].filter(Boolean).join(' · ') || 'Not given'],
+      ['Where', claim.postcode ?? 'Not given'],
+      ['Price', claim.price != null ? `£${Number(claim.price).toFixed(Number(claim.price) % 1 ? 2 : 0)}` : 'Not given'],
+    ]
+    const text = [
+      `${who} booked ${claim.package_name} for ${when} in the portal. It is already confirmed; assign a detailer in the admin console.`,
+      '',
+      ...rows.map(([l, v]) => `${l}: ${v}`),
+      '',
+      customerLine,
+      `Open the booking: ${link}`,
+    ].join('\n')
+    const html = `<div style="font-family:-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;font-size:15px;line-height:22px;color:#0C0C0C;max-width:520px">`
+      + `<p style="margin:0 0 14px"><strong>${esc(who)}</strong> booked <strong>${esc(claim.package_name)}</strong> for ${esc(when)} in the portal. It is already confirmed; assign a detailer in the admin console.</p>`
+      + rows.map(([l, v]) => `<p style="margin:0 0 6px"><span style="color:#6f6d66">${esc(l)}:</span> ${esc(v)}</p>`).join('')
+      + `<p style="margin:14px 0;${outcome === 'sent' ? '' : 'color:#B42318;font-weight:700'}">${esc(customerLine)}</p>`
+      + `<p style="margin:0"><a href="${esc(link)}" style="color:#C53D08;font-weight:700">Open the booking</a></p></div>`
+    try {
+      const res = await resend.emails.send({
+        from: fromEmail,
+        to: 'bookings@truetodetail.co.uk',
+        subject: `New portal booking: ${claim.package_name} · ${when} · ${claim.reference}${outcome === 'sent' ? '' : ' (customer email NOT sent)'}`,
+        text,
+        html,
+      })
+      if ('error' in res && res.error) throw res.error
+      return true
+    } catch (e) {
+      console.error('[portal-email] staff note failed:', e instanceof Error ? e.message : e)
+      return false
+    }
+  }
+
+  if (!claim.customer_email) {
+    const staffNotified = await tellTeam('no-address')
+    await release()
+    return reply({ sent: false, staffNotified, reason: 'This customer has no email address' })
+  }
 
   const rendered = renderCustomerEmail({
     kind: claim.kind as CustomerEmailKind,
@@ -144,20 +199,12 @@ export async function POST(req: NextRequest) {
 
   if ('error' in sent && sent.error) {
     console.error('[portal-email] send failed:', sent.error)
+    const staffNotified = await tellTeam('failed')
     await release()
-    return reply({ error: 'The email could not be sent', sent: false }, 502)
+    return reply({ error: 'The email could not be sent', sent: false, staffNotified }, 502)
   }
 
-  // A booking a customer makes themselves in the portal is confirmed at once,
-  // so tell the team as well.
-  if (claim.kind === 'booked_in' && claim.source === 'portal') {
-    resend.emails.send({
-      from: fromEmail,
-      to: 'bookings@truetodetail.co.uk',
-      subject: `New portal booking: ${claim.package_name} · ${ukWhen(claim.scheduled_start)} · ${claim.reference}`,
-      text: `${claim.customer_first_name ?? 'A customer'} booked ${claim.package_name} for ${ukWhen(claim.scheduled_start)} in the portal (${claim.postcode ?? ''}). It is already confirmed; assign a detailer in the admin console.`,
-    }).catch(e => console.error('[portal-email] staff note failed:', e))
-  }
+  const staffNotified = await tellTeam('sent')
 
-  return reply({ sent: true })
+  return reply({ sent: true, staffNotified })
 }
