@@ -515,13 +515,13 @@ export default function Packages({
             <div>
               <p style={{
                 fontFamily: 'var(--font-body)', fontWeight: 600, fontSize: '13px',
-                color: 'rgba(255,255,255,0.7)', marginBottom: '3px',
+                color: 'rgba(255,255,255,0.88)', marginBottom: '3px',
               }}>
                 Vans and fleets are coming soon
               </p>
               <p style={{
                 fontFamily: 'var(--font-body)', fontSize: '12px',
-                color: 'rgba(255,255,255,0.3)',
+                color: 'rgba(255,255,255,0.58)',
               }}>
                 Van and fleet cleaning is on the way. Register your interest and we will tell you when it opens.
               </p>

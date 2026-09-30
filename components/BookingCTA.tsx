@@ -141,7 +141,7 @@ export default function BookingCTA({ onBookNow }: { onBookNow: () => void }) {
               {
                 label: 'Working Hours',
                 value: 'Mon–Sat, 8am–7pm',
-                detail: 'Book online any time. We confirm within 2 hours.',
+                detail: 'Book online any time. We confirm as soon as possible, during working hours.',
               },
               {
                 label: 'Get In Touch',
@@ -203,7 +203,7 @@ export default function BookingCTA({ onBookNow }: { onBookNow: () => void }) {
             gap: '14px',
           }}
         >
-          {['Confirmed within 1 hour', 'Payment on the day', 'Mon–Sat, 8am–7pm'].flatMap((fact, i) => {
+          {['Confirmed as soon as possible', 'Payment on the day', 'Mon–Sat, 8am–7pm'].flatMap((fact, i) => {
             const text = (
               <span key={fact} style={{
                 fontFamily: 'var(--font-body)', fontWeight: 500, fontSize: '12px',

@@ -3,7 +3,12 @@
 @tailwind utilities;
 
 /* ── Base ── */
-html { scroll-behavior: smooth; }
+html { scroll-behavior: auto; }
+@media (prefers-reduced-motion: no-preference) {
+  html { scroll-behavior: smooth; }
+}
+/* In-page links (#packages, #enquire) land below the fixed navigation, not under it. */
+[id] { scroll-margin-top: 88px; }
 *, *::before, *::after { box-sizing: border-box; }
 
 body {
@@ -36,6 +41,22 @@ body {
 ::-webkit-scrollbar { width: 3px; }
 ::-webkit-scrollbar-track { background: #F5F4F1; }
 ::-webkit-scrollbar-thumb { background: #E84A0C; }
+
+/* ── Press feedback: buttons give a little under a finger or click ── */
+button:not(:disabled) { transition: transform 0.14s cubic-bezier(0.2, 0.8, 0.3, 1); }
+button:not(:disabled):active { transform: scale(0.985); }
+
+/* ── Reduced motion: no loops, no travel. State still changes, it just does not move. ── */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    animation-delay: 0ms !important;
+    transition-duration: 0.001ms !important;
+    transition-delay: 0ms !important;
+  }
+  .animate-marquee { animation: none !important; transform: none; }
+}
 
 /* ── Focus ── */
 :focus-visible { outline: 2px solid #E84A0C; outline-offset: 3px; }
