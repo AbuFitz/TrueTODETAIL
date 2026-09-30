@@ -1,4 +1,5 @@
 import type { Metadata } from 'next'
+import MotionProvider from '@/components/MotionProvider'
 import Script from 'next/script'
 import { Bebas_Neue, DM_Sans } from 'next/font/google'
 import SupportWidget from '@/components/SupportWidget'
@@ -150,7 +151,7 @@ export default function RootLayout({
         />
       </head>
       <body className="bg-white text-site-black font-body antialiased">
-        {children}
+        <MotionProvider>{children}</MotionProvider>
         {/*
           gtag.js (~170 KB) loads after the page finishes loading so it never
           competes with the hero image or hydration. The consent defaults and
