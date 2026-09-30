@@ -112,7 +112,7 @@ export function notificationEmail(raw: EmailData): string {
       ]),
     ],
     after: d.notes ? [labelled('Customer notes', d.notes)] : [],
-    cta: { href: `tel:${d.phone.replace(/[^\d+]/g, '')}`, label: `Call ${d.name.trim().split(' ')[0] || 'the customer'}` },
+    cta: { href: `tel:${raw.phone.replace(/[^\d+]/g, '')}`, label: `Call ${d.name.trim().split(' ')[0] || 'the customer'}` },
     footer: 'staff',
   })
 }
@@ -158,7 +158,7 @@ export function fleetEnquiryEmail(raw: FleetEnquiryData): string {
       ]),
     ],
     after: d.message ? [labelled('Message', d.message)] : [],
-    cta: { href: `tel:${d.phone.replace(/[^\d+]/g, '')}`, label: `Call ${d.name.trim().split(' ')[0] || 'them'}` },
+    cta: { href: `tel:${raw.phone.replace(/[^\d+]/g, '')}`, label: `Call ${d.name.trim().split(' ')[0] || 'them'}` },
     footer: 'staff',
   })
 }
