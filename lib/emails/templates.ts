@@ -117,6 +117,60 @@ export function notificationEmail(raw: EmailData): string {
   })
 }
 
+export interface PortalRequestData {
+  reference: string
+  name: string
+  phone: string | null
+  email: string | null
+  hasAccount: boolean
+  pack: string
+  addons: string[]
+  vehicle: string
+  price: number | null
+  when: string
+  address: string
+  notes: string | null
+  adminUrl: string
+}
+
+/*
+  Staff alert for a request a customer made in the portal. It is not booked in
+  until the team accepts it, so the email says what to do: call or text the
+  customer if anything needs changing, amend it, then accept it in the admin.
+*/
+export function portalRequestEmail(raw: PortalRequestData): string {
+  const d = escapeFields(raw)
+  const first = d.name.trim().split(' ')[0] || 'the customer'
+  return renderEmail({
+    title: `New portal request: ${d.pack} · ${d.when} · ${d.reference}`,
+    preheader: `${d.name.trim() || 'A customer'} asked for ${d.pack}, ${d.when}. Accept it or get in touch.`,
+    eyebrow: `New portal request · Ref ${d.reference}`,
+    heading: d.pack,
+    intro: `Asked for ${d.when} at ${d.address}. It is not booked in until you accept it. Call or text ${first} first if anything needs changing, amend it in the admin, then accept it. Amending sends them no email.`,
+    details: [
+      groupTitle('Customer'),
+      rows([
+        ['Name', d.name.trim() || 'Not provided'],
+        ['Phone', d.phone ? tel(d.phone) : 'Not provided'],
+        ['Email', d.email ? mail(d.email) : 'Not provided'],
+        ['Account', d.hasAccount ? 'Has an account' : 'No account yet'],
+      ]),
+      groupTitle('Request'),
+      rows([
+        ['Package', d.pack],
+        ['Vehicle', d.vehicle],
+        ['When', d.when],
+        ['Address', d.address],
+        ['Add-ons', d.addons.length > 0 ? d.addons.join(', ') : 'None'],
+        ['Total', d.price != null ? `£${Number(d.price).toFixed(Number(d.price) % 1 ? 2 : 0)}` : 'Not set'],
+      ]),
+    ],
+    after: d.notes ? [labelled('Customer notes', d.notes)] : [],
+    cta: { href: raw.adminUrl, label: 'Open the request in the admin' },
+    footer: 'staff',
+  })
+}
+
 /* Customer: booking request received (used when the portal is not connected). */
 export function confirmationEmail(raw: EmailData): string {
   const d = escapeFields(raw)

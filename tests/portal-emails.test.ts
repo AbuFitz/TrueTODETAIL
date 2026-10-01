@@ -2,6 +2,7 @@ import { test } from 'node:test'
 import assert from 'node:assert/strict'
 import { NextRequest } from 'next/server'
 import { renderCustomerEmail, ukWhen, type CustomerEmailData, type CustomerEmailKind } from '@/lib/emails/customer'
+import { portalRequestEmail } from '@/lib/emails/templates'
 import { POST as portalEmailPOST, OPTIONS as portalEmailOPTIONS } from '@/app/api/portal-email/route'
 
 const base: CustomerEmailData = {
@@ -35,6 +36,46 @@ test('the account invite shows only for people without an account, and never on 
   assert.doesNotMatch(renderCustomerEmail({ ...base, hasAccount: true }).html, /Create your account/)
   assert.doesNotMatch(renderCustomerEmail({ ...base, kind: 'cancelled' }).html, /Create your account/)
   assert.match(renderCustomerEmail(base).html, /account\/create\?email=sam%40example\.com/)
+})
+
+test('the tracking link is in every version, and an account holder is told to sign in instead of being invited', () => {
+  for (const hasAccount of [false, true]) {
+    for (const kind of ['received', 'booked_in'] as CustomerEmailKind[]) {
+      const r = renderCustomerEmail({ ...base, kind, hasAccount })
+      assert.match(r.html, /account\/track\/tok_abcdef123456/)
+      assert.match(r.text, /account\/track\/tok_abcdef123456/)
+      if (hasAccount) {
+        assert.match(r.html, /It is in your account too/)
+        assert.match(r.html, /account\/login/)
+        assert.doesNotMatch(r.html, /Create your account/)
+      } else {
+        assert.match(r.html, /Create your account/)
+        assert.doesNotMatch(r.html, /It is in your account too/)
+      }
+    }
+  }
+  assert.doesNotMatch(renderCustomerEmail({ ...base, kind: 'on_the_way', hasAccount: true }).html, /It is in your account too/)
+})
+
+test('the request received email says it is not confirmed and promises a call or text before any change', () => {
+  const r = renderCustomerEmail({ ...base, kind: 'received' })
+  assert.match(r.html, /not a confirmed booking until we confirm it/)
+  assert.match(r.html, /call or text you first/)
+})
+
+test('the team alert for a portal request has the customer, the request and a way in, and escapes what customers typed', () => {
+  const html = portalRequestEmail({
+    reference: 'TTD-ABC12345', name: 'Sam <b>Fox</b>', phone: '07700 900123', email: 'sam@example.com', hasAccount: false,
+    pack: 'Full Valet Car Detail', addons: ['Engine Bay Clean'], vehicle: 'Ford Focus · AB12CDE', price: 195,
+    when: 'Wednesday 12 June at 10:00am', address: '1 Test Road, HP2 6EL', notes: '<script>x</script>', adminUrl: 'https://app.truetodetail.co.uk/admin/bookings/abc',
+  })
+  assert.match(html, /tel:07700 900123/)
+  assert.match(html, /mailto:sam@example.com/)
+  assert.match(html, /No account yet/)
+  assert.match(html, /not booked in until you accept it/)
+  assert.match(html, /href="https:\/\/app\.truetodetail\.co\.uk\/admin\/bookings\/abc"/)
+  assert.doesNotMatch(html, /<script>x|<b>Fox/)
+  assert.doesNotMatch(html, /—|--/)
 })
 
 test('customer supplied text cannot inject markup', () => {
