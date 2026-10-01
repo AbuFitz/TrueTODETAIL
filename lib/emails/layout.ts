@@ -69,6 +69,18 @@ export function orangeLink(href: string, label: string): string {
   return `<a href="${href}" style="font-family:${FONT};font-size:15px;font-weight:600;color:${colour.orange};text-decoration:none;">${label}</a>`
 }
 
+/** The brand logo, hosted on the website (public/brand), on a dark band across the top of the card. */
+export function logoBand(): string {
+  return `<tr><td style="background:${colour.dark};padding:18px 20px;border-radius:10px 10px 0 0;line-height:0;"><a href="${SITE}" style="text-decoration:none;"><img src="${SITE}/brand/logo-email.png" width="86" height="27" alt="True To Detail" style="display:block;border:0;outline:none;text-decoration:none;width:86px;height:27px;font-family:${FONT};font-size:13px;font-weight:800;letter-spacing:0.14em;text-transform:uppercase;color:#ffffff;"></a></td></tr>`
+}
+
+/** Instagram, TikTok and Facebook icons, hosted on the website. */
+export function socialIcons(): string {
+  const one = (href: string, file: string, alt: string) =>
+    `<td style="padding-right:8px;"><a href="${href}" target="_blank" style="display:inline-block;"><img src="${SITE}/brand/${file}" width="28" height="28" alt="${alt}" style="display:block;border:0;width:28px;height:28px;"></a></td>`
+  return `<table role="presentation" cellpadding="0" cellspacing="0" style="margin-top:14px;"><tr>${one('https://www.instagram.com/truetodetail', 'icon-instagram.png', 'Instagram')}${one('https://www.tiktok.com/@truetodetail', 'icon-tiktok.png', 'TikTok')}${one('https://www.facebook.com/truetodetail', 'icon-facebook.png', 'Facebook')}</tr></table>`
+}
+
 export interface EmailParts {
   title: string
   preheader: string
@@ -89,7 +101,7 @@ export interface EmailParts {
 
 export function renderEmail(p: EmailParts): string {
   const rows: string[] = []
-  rows.push(section(`<a href="${SITE}" style="font-family:${FONT};font-size:13px;font-weight:800;letter-spacing:0.14em;text-transform:uppercase;color:${colour.dark};text-decoration:none;">True <span style="color:${colour.orange};">To</span> Detail</a>`, 24))
+  rows.push(logoBand())
   rows.push(section(`${p.eyebrow ? eyebrow(p.eyebrow) : ''}${heading(p.heading)}${p.intro ? paragraph(p.intro, { top: 12 }) : ''}`))
   if (p.details && p.details.length) {
     rows.push(section(`<div style="border-top:1px solid ${colour.line};padding-top:18px;">${p.details.join('')}</div>`))
@@ -106,7 +118,7 @@ export function renderEmail(p: EmailParts): string {
     : p.footer === 'auth'
     ? `Need a hand? Call or WhatsApp <a href="tel:${PHONE_TEL}" style="color:${colour.dark};text-decoration:none;font-weight:600;">${PHONE}</a>.<br>True To Detail, mobile car detailing in Hertfordshire.`
     : `Questions? Reply to this email or call or WhatsApp <a href="tel:${PHONE_TEL}" style="color:${colour.dark};text-decoration:none;font-weight:600;">${PHONE}</a>.<br>True To Detail, mobile car detailing in Hertfordshire.`
-  rows.push(section(`<p style="margin:0;font-family:${FONT};font-size:13px;line-height:20px;color:${colour.muted};border-top:1px solid ${colour.line};padding-top:16px;">${footer}</p>`, 24).replace('padding:24px 20px 0;', 'padding:24px 20px 24px;'))
+  rows.push(section(`<p style="margin:0;font-family:${FONT};font-size:13px;line-height:20px;color:${colour.muted};border-top:1px solid ${colour.line};padding-top:16px;">${footer}</p>${p.footer === 'staff' ? '' : socialIcons()}`, 24).replace('padding:24px 20px 0;', 'padding:24px 20px 24px;'))
 
   return `<!DOCTYPE html>
 <html lang="en-GB">
