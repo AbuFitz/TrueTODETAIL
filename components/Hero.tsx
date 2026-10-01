@@ -270,7 +270,7 @@ export default function Hero({ onBookNow }: { onBookNow: () => void }) {
         className="flex flex-col md:hidden"
         style={{
           position: 'relative',
-          minHeight: 'calc(100svh - 80px)',
+          minHeight: 'calc(100svh - 80px - var(--cookie-banner-h, 0px))',
           background: '#0C0C0C',
           overflow: 'hidden',
         }}

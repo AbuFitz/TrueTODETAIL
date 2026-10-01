@@ -75,26 +75,26 @@ export default function CookieConsentBanner() {
         position: 'fixed', left: 0, right: 0, bottom: 0, zIndex: 80,
         background: '#0C0C0C',
         borderTop: '1px solid rgba(255,255,255,0.1)',
-        padding: 'clamp(12px, 3vw, 24px) clamp(20px, 4vw, 48px)',
+        padding: 'clamp(10px, 3vw, 24px) clamp(16px, 4vw, 48px)',
       }}
     >
       <div style={{
         maxWidth: '1200px', margin: '0 auto',
         display: 'flex', flexWrap: 'wrap', alignItems: 'center',
-        justifyContent: 'space-between', gap: '12px 24px',
+        justifyContent: 'space-between', gap: '10px 24px',
       }}>
         <p style={{
           fontFamily: 'var(--font-body)', fontSize: '13px', lineHeight: 1.5,
           color: 'rgba(255,255,255,0.6)', margin: 0, maxWidth: '640px', flex: '1 1 320px',
         }}>
-          We use essential cookies to run this site, and optional analytics/advertising cookies to understand traffic and measure ads, only with your consent.{' '}
+          Essential cookies run this site. Analytics and advertising cookies are used only with your consent.{' '}
           <Link href="/cookies" style={{ color: '#E84A0C', textDecoration: 'underline' }}>Read our Cookie Policy</Link>.
         </p>
-        <div style={{ display: 'flex', gap: '10px', flexShrink: 0 }}>
+        <div style={{ display: 'flex', gap: '10px', flex: '1 1 220px', maxWidth: '320px' }}>
           <button
             onClick={() => choose(false)}
             style={{
-              padding: '12px 20px', background: 'transparent', border: '1px solid rgba(255,255,255,0.25)',
+              flex: 1, padding: '10px 16px', background: 'transparent', border: '1px solid rgba(255,255,255,0.25)',
               color: 'rgba(255,255,255,0.75)', cursor: 'pointer',
               fontFamily: 'var(--font-body)', fontWeight: 600, fontSize: '11px',
               letterSpacing: '0.08em', textTransform: 'uppercase',
@@ -105,7 +105,7 @@ export default function CookieConsentBanner() {
           <button
             onClick={() => choose(true)}
             style={{
-              padding: '12px 20px', background: '#E84A0C', border: 'none',
+              flex: 1, padding: '10px 16px', background: '#E84A0C', border: 'none',
               color: '#fff', cursor: 'pointer',
               fontFamily: 'var(--font-body)', fontWeight: 700, fontSize: '11px',
               letterSpacing: '0.08em', textTransform: 'uppercase',
