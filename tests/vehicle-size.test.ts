@@ -3,14 +3,14 @@ import assert from 'node:assert/strict'
 import { resolveVehicleSize, sizeGuideText, SIZE_HELP_RE } from '@/lib/chat/vehicle-size'
 import { VEHICLE_GUIDE } from '@/lib/pricing'
 
-test('hatchbacks, coupes and small crossovers are small', () => {
-  for (const m of ['I have a hatchback', 'its a coupe', 'Ford Fiesta', 'VW Golf please', 'small car', 'small', 'Vauxhall Mokka', 'Nissan Juke', 'Renault Captur']) {
+test('hatchbacks and coupes are small', () => {
+  for (const m of ['I have a hatchback', 'its a coupe', 'Ford Fiesta', 'VW Golf please', 'small car', 'small']) {
     assert.equal(resolveVehicleSize(m).size, 'small', m)
   }
 })
 
 test('saloons and estates are mid-size', () => {
-  for (const m of ['a saloon', 'Skoda Octavia estate', 'BMW 3 Series', 'mid-size', 'medium car', 'medium', 'Range Rover Evoque', 'Nissan Qashqai', 'a Kia Sportage']) {
+  for (const m of ['a saloon', 'Skoda Octavia estate', 'BMW 3 Series', 'mid-size', 'medium car', 'medium', 'Range Rover Evoque', 'Nissan Qashqai', 'a Kia Sportage', 'Vauxhall Mokka', 'Nissan Juke', 'Renault Captur', 'a crossover', 'compact SUV', 'a small SUV']) {
     assert.equal(resolveVehicleSize(m).size, 'midsize', m)
   }
 })
@@ -19,15 +19,6 @@ test('SUVs, 4x4s and people carriers are large', () => {
   for (const m of ['SUV', 'a 4x4', 'people carrier', 'Range Rover', 'Range Rover Sport', 'Land Rover Discovery', 'BMW X5', 'big car', 'seven seater']) {
     assert.equal(resolveVehicleSize(m).size, 'largesuv', m)
   }
-})
-
-test('small and compact crossovers are not guessed, we ask for the make and model', () => {
-  for (const m of ['a small SUV', 'compact SUV', 'a crossover', 'baby crossover']) {
-    const r = resolveVehicleSize(m)
-    assert.equal(r.size, null, m)
-    assert.equal(r.ambiguous, true, m)
-  }
-  assert.equal(resolveVehicleSize('Nissan Juke crossover').size, 'small')
 })
 
 test('American words are understood', () => {
@@ -69,8 +60,8 @@ function talk(messages: string[]) {
 
 test('chat: an unsure customer gets the size guide, not a guessed price', () => {
   const [r] = talk(['what size is my car'])
-  assert.match(r.text, /hatchbacks, coupes and small crossovers/i)
-  assert.match(r.text, /saloons, estates and compact SUVs/i)
+  assert.match(r.text, /hatchbacks and coupes/i)
+  assert.match(r.text, /saloons, estates, crossovers and compact SUVs/i)
   assert.doesNotMatch(r.text, /£\d/)
 })
 
@@ -123,7 +114,7 @@ test('chat: "ok book it" moves on instead of repeating the price', () => {
 test('chat: body type beats model name, and models map to the owner rule', () => {
   assert.equal(resolveVehicleSize('mercedes c class coupe').size, 'small')
   assert.equal(resolveVehicleSize('my 2008 ford focus').size, 'small')
-  assert.equal(resolveVehicleSize('a nissan juke').size, 'small')
+  assert.equal(resolveVehicleSize('a nissan juke').size, 'midsize')
   assert.equal(resolveVehicleSize('mini cooper').size, 'small')
   assert.equal(resolveVehicleSize('what is up with the mini valet').size, null)
 })

@@ -20,7 +20,7 @@ export function coverageSummaryText(): string {
 
 export function pricingSummaryText(): string {
   const lines = PACKAGES.map(p =>
-    `${p.id} (${p.duration}): £${p.price.small}/£${p.price.midsize}/£${p.price.largesuv} (Small Car: hatchbacks, coupes and small crossovers / Mid-Size: saloons, estates and compact SUVs / Large SUV or 4x4: large SUVs, 4x4s and people carriers). ${p.description} Includes: ${p.includes.join(', ')}.`
+    `${p.id} (${p.duration}): £${p.price.small}/£${p.price.midsize}/£${p.price.largesuv} (Small Car: hatchbacks and coupes / Mid-Size: saloons, estates, crossovers and compact SUVs / Large SUV or 4x4: large SUVs, 4x4s and people carriers). ${p.description} Includes: ${p.includes.join(', ')}.`
   )
   const addonLines = ADDONS.map(a => `${a.label} +£${a.price}`).join(', ')
   return [
