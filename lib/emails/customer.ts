@@ -42,10 +42,21 @@ export const trackUrl = (token: string) => `${SITE}/account/track/${encodeURICom
 export const createAccountUrl = (email: string, token: string) =>
   `${SITE}/account/create?email=${encodeURIComponent(email)}&from=${encodeURIComponent(token)}`
 
-/** The account invite: a plain block under the button, not a box of its own. */
-function accountInvite(d: CustomerEmailData): string {
-  if (d.hasAccount || d.kind === 'cancelled') return ''
-  return `<p style="margin:0 0 6px;font-family:${FONT};font-size:17px;line-height:23px;font-weight:700;color:${c.dark};">Make it easier next time</p>${paragraph('A free account keeps your cars and addresses, lets you rebook in two taps and track every visit in one place.', { small: true })}<p style="margin:12px 0 0;">${orangeLink(createAccountUrl(d.email, d.trackingToken), 'Create your account &rarr;')}</p>`
+export const loginUrl = () => `${SITE}/account/login`
+
+/**
+ * What sits under the tracking button, by who the customer is. Someone without
+ * an account gets an invite that also attaches this booking to it; someone with
+ * an account is told they can sign in to see it with the rest of their visits.
+ * The tracking link itself works for both, with no sign-in.
+ */
+function accountBlock(d: CustomerEmailData): string {
+  if (d.kind === 'cancelled') return ''
+  if (!d.hasAccount) {
+    return `<p style="margin:0 0 6px;font-family:${FONT};font-size:17px;line-height:23px;font-weight:700;color:${c.dark};">Make it easier next time</p>${paragraph('A free account keeps your cars and addresses, lets you rebook in two taps and track every visit in one place.', { small: true })}<p style="margin:12px 0 0;">${orangeLink(createAccountUrl(d.email, d.trackingToken), 'Create your account &rarr;')}</p>`
+  }
+  if (d.kind !== 'received' && d.kind !== 'booked_in') return ''
+  return `<p style="margin:0 0 6px;font-family:${FONT};font-size:17px;line-height:23px;font-weight:700;color:${c.dark};">It is in your account too</p>${paragraph('Sign in to see this booking with the rest of your visits, rebook in two taps or manage it.', { small: true })}<p style="margin:12px 0 0;">${orangeLink(loginUrl(), 'Sign in &rarr;')}</p>`
 }
 
 interface Copy { subject: string; heading: string; intro: string; cta: string; footnote?: string }
@@ -58,9 +69,9 @@ function copyFor(d: CustomerEmailData): Copy {
       return {
         subject: `We have your request for ${when}`,
         heading: 'Request received',
-        intro: `${hi}thanks for choosing True To Detail. We are checking your slot and will confirm it shortly. You do not need to do anything else.`,
+        intro: `${hi}thanks for choosing True To Detail. We have your request and we will check the slot and confirm it with you. If anything needs changing we will call or text you first. You do not need to do anything else.`,
         cta: 'Follow your request',
-        footnote: 'This is not a confirmed booking until we confirm it. Payment is on the day.',
+        footnote: 'This is not a confirmed booking until we confirm it. Your link below updates the moment we do. Payment is on the day.',
       }
     case 'booked_in':
       return {
@@ -124,7 +135,7 @@ export function renderCustomerEmail(d: CustomerEmailData): RenderedEmail {
       : [],
     cta: { href: link, label: esc(copy.cta) },
     ...(copy.footnote ? { footnote: copy.footnote } : {}),
-    ...(accountInvite(d) ? { aside: accountInvite(d) } : {}),
+    ...(accountBlock(d) ? { aside: accountBlock(d) } : {}),
     footer: 'customer',
   })
 
