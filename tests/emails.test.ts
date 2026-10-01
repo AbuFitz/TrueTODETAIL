@@ -66,15 +66,17 @@ test('every email uses the same single-column layout with no boxes inside boxes'
   for (const [name, html] of Object.entries(allEmails())) {
     assert.match(html, /name="viewport"/, name)
     assert.match(html, /max-width:520px/, name)
-    // one wordmark, one button at most, same closing footer
-    assert.equal((html.match(/letter-spacing:0\.14em;text-transform:uppercase;color:#0C0C0C/g) ?? []).length, 1, `${name}: one wordmark`)
+    // one logo, one button at most, same closing footer
+    assert.equal((html.match(/brand\/logo-email\.png/g) ?? []).length, 1, `${name}: one logo`)
     assert.match(html, /mobile car detailing in Hertfordshire/, name)
     // nothing side by side and no fixed widths that could squeeze text on a phone
-    assert.doesNotMatch(html, /width="(?!100%)\d+"/, name)
+    assert.doesNotMatch(html, /<(?:table|td)[^>]*width="(?!100%)\d+"/, name)
     assert.equal((html.match(/<td[^>]*width:\d+%/g) ?? []).length, 0, `${name}: no side-by-side cells`)
     // no bordered or shaded panels inside the card
     assert.equal((html.match(/border:1px solid/g) ?? []).length, 0, `${name}: no bordered boxes`)
-    assert.equal((html.match(/background:#(?!ffffff|F5F4F1|E84A0C)/gi) ?? []).length, 0, `${name}: no shaded panels`)
+    assert.equal((html.match(/background:#(?!ffffff|F5F4F1|E84A0C|0C0C0C)/gi) ?? []).length, 0, `${name}: no shaded panels`)
+    // the only dark panel is the logo band across the top
+    assert.equal((html.match(/background:#0C0C0C/gi) ?? []).length, 1, `${name}: only the logo band is dark`)
     assert.doesNotMatch(html, /—/, name)
     // phones get the full width: the outer padding and rounded card drop away
     assert.match(html, /\.shell \{ padding:0 !important; \}/, name)

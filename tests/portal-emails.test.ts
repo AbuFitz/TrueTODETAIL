@@ -25,7 +25,7 @@ test('every customer email is single column, fluid and short of double hyphens',
     assert.match(html, /max-width:520px/)
     assert.match(html, /name="viewport"/)
     // nothing that can squeeze on a phone: no fixed pixel widths on tables or side by side cells
-    assert.doesNotMatch(html, /width="(?!100%)\d+"/)
+    assert.doesNotMatch(html, /<(?:table|td)[^>]*width="(?!100%)\d+"/)
     assert.equal((html.match(/<td[^>]*width:\d+%/g) ?? []).length, 0)
     assert.match(text, /account\/track\/tok_abcdef123456/)
   }
