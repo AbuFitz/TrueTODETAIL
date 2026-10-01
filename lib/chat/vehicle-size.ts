@@ -1,7 +1,7 @@
 // Turns what a customer says about their car into one of our three sizes.
-// Sizing by how big the car is, not just its body type: hatchbacks, coupes and
-// small crossovers (Vauxhall Mokka, Nissan Juke) are small; saloons, estates and
-// compact SUVs (Range Rover Evoque, Nissan Qashqai) are mid-size; large SUVs,
+// Sizing by how big the car is, not just its body type: hatchbacks and coupes
+// are small; saloons, estates, crossovers and compact SUVs (Vauxhall Mokka,
+// Nissan Juke, Range Rover Evoque, Nissan Qashqai) are mid-size; large SUVs,
 // 4x4s and people carriers are large. UK body-type names only
 // in anything we say; American words ("sedan", "wagon") are understood when a
 // customer types them but never repeated back.
@@ -10,24 +10,17 @@ import { VEHICLE_GUIDE, VEHICLE_LABELS, type VehicleType } from '@/lib/pricing'
 
 // Body type words always win over model names: "C Class coupe" is a coupe.
 const BODY_PATTERNS: [VehicleType, RegExp][] = [
-  ['largesuv', /\b(suv|4x4|4wd|awd|off[\s-]?road(er)?|pick[\s-]?up|people[\s-]?carrier|mpv|minivan|seven[\s-]?seat(er)?|7[\s-]?seat(er)?)\b|\b(large|big)[\s-]?(size[d]?\s*)?(car|vehicle)\b|^\s*(large|big)\s*[.!]?\s*$/i],
-  ['midsize', /\b(mid[\s-]?size(d)?|medium[\s-]?(size[d]?|car|vehicle)|saloon|sedan|estate|wagon|touring|avant)\b|^\s*(mid|medium|middle)\s*[.!]?\s*$/i],
-  ['small', /\b(small[\s-]?(size[d]?\s*)?(car|vehicle)|hatch(back)?|coupe|coupé|supermini|city car|compact)\b|^\s*small\s*[.!]?\s*$/i],
+  ['largesuv', /\b((?<!(?:small|compact|baby|mini|little)[\s-])suv|4x4|4wd|awd|off[\s-]?road(er)?|pick[\s-]?up|people[\s-]?carrier|mpv|minivan|seven[\s-]?seat(er)?|7[\s-]?seat(er)?)\b|\b(large|big)[\s-]?(size[d]?\s*)?(car|vehicle)\b|^\s*(large|big)\s*[.!]?\s*$/i],
+  ['midsize', /\b(crossover|(?:small|compact|baby|mini|little)[\s-]suv|mid[\s-]?size(d)?|medium[\s-]?(size[d]?|car|vehicle)|saloon|sedan|estate|wagon|touring|avant)\b|^\s*(mid|medium|middle)\s*[.!]?\s*$/i],
+  ['small', /\b(small[\s-]?(size[d]?\s*)?(car|vehicle)|hatch(back)?|coupe|coupé|supermini|city car|compact(?![\s-]suv))\b|^\s*small\s*[.!]?\s*$/i],
 ]
-
-// A "small SUV", "compact SUV" or plain "crossover" could be small, mid-size or
-// large depending on the model, so it is never guessed: we ask for the make and model.
-const VAGUE_RE = /\b(small|compact|baby|mini|little)\s+(suv|crossover|4x4)\b|\bcrossover\b/i
 
 // Common UK models, used only when no body type word is given.
 const MODEL_PATTERNS: [VehicleType, RegExp][] = [
   ['largesuv', /\b(range rover(?!\s+evoque)|land rover|defender|discovery|velar|kodiaq|x[4-7]|q[78]|gle|galaxy|touran|sharan|alhambra|zafira|scenic|s[\s-]?max)\b/i],
-  ['midsize', /\b(3[\s-]?series|5[\s-]?series|c[\s-]?class|e[\s-]?class|a4|a6|mondeo|octavia|superb|passat|insignia|accord|corolla|camry|mazda\s?6|i40|xf|xe|s60|v60|v70|evoque|qashqai|kuga|tiguan|sportage|tucson|karoq|rav4|cr[\s-]?v|duster|x[1-3]|q[35]|glc)\b/i],
-  ['small', /\b(mini(?!\s*(valet|detail|clean|service))|fiesta|polo|corsa|golf|focus|clio|micra|yaris|fiat 500|aygo|c1|i10|i20|astra|a1|a3|1[\s-]?series|tt|mx[\s-]?5|swift|picanto|sandero|ibiza|megane|civic|mokka|juke|captur|puma|ecosport|t[\s-]?roc|t[\s-]?cross|arona)\b/i],
+  ['midsize', /\b(3[\s-]?series|5[\s-]?series|c[\s-]?class|e[\s-]?class|a4|a6|mondeo|octavia|superb|passat|insignia|accord|corolla|camry|mazda\s?6|i40|xf|xe|s60|v60|v70|evoque|qashqai|kuga|tiguan|sportage|tucson|karoq|rav4|cr[\s-]?v|duster|x[1-3]|q[35]|glc|mokka|juke|captur|puma|ecosport|t[\s-]?roc|t[\s-]?cross|arona)\b/i],
+  ['small', /\b(mini(?!\s*(valet|detail|clean|service))|fiesta|polo|corsa|golf|focus|clio|micra|yaris|fiat 500|aygo|c1|i10|i20|astra|a1|a3|1[\s-]?series|tt|mx[\s-]?5|swift|picanto|sandero|ibiza|megane|civic)\b/i],
 ]
-
-const collectModels = (message: string): VehicleType[] =>
-  MODEL_PATTERNS.filter(([, re]) => re.test(message)).map(([size]) => size)
 
 /** Every distinct size the message points at (usually zero or one). */
 export function detectVehicleSizes(message: string): VehicleType[] {
@@ -41,10 +34,9 @@ export function detectVehicleSizes(message: string): VehicleType[] {
   return collect(MODEL_PATTERNS)
 }
 
-// A named model settles it ("Nissan Juke crossover"); otherwise a vague SUV or
-// crossover is ambiguous. When two body types are named, a large one wins.
+// When two body types are named, a large one wins; a "compact SUV" or
+// "crossover" is mid-size.
 export function resolveVehicleSize(message: string): { size: VehicleType | null; ambiguous: boolean } {
-  if (VAGUE_RE.test(message) && collectModels(message).length === 0) return { size: null, ambiguous: true }
   const found = detectVehicleSizes(message)
   if (found.length === 0) return { size: null, ambiguous: false }
   if (found.length === 1) return { size: found[0], ambiguous: false }
