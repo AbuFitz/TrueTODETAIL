@@ -73,13 +73,6 @@ export default async function AreaPage({ params }: { params: Promise<{ slug: str
               </ol>
             </nav>
 
-            <p style={{
-              fontFamily: 'var(--font-body)', fontWeight: 600, fontSize: '11px',
-              letterSpacing: '0.2em', textTransform: 'uppercase',
-              color: '#E84A0C', marginBottom: '16px',
-            }}>
-              {area.county} · {area.distanceMiles === 0 ? 'Home base' : `~${area.distanceMiles} miles from base`}
-            </p>
             <h1 style={{
               fontFamily: 'var(--font-display)', fontSize: 'clamp(40px, 6vw, 72px)',
               letterSpacing: '0.02em', color: '#ffffff', lineHeight: 0.92, marginBottom: '24px',

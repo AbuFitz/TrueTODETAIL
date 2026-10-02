@@ -5,9 +5,10 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { PACKAGES, ADDONS, VEHICLE_LABELS as vehicleLabels, VEHICLE_GUIDE, VEHICLE_GUIDE_NOTE, TIME_SLOTS as timeSlots, type VehicleType } from '@/lib/pricing'
 import { formatBookingDate, formatShortDate, isSlotAvailable, ukNow } from '@/lib/slots'
 import { useDialogFocus } from '@/lib/useDialogFocus'
-import { guideTo } from '@/lib/guide'
 
-type Step = 1 | 2 | 3 | 4
+// One question per screen. 'done' is the confirmation after the request is sent.
+type Question = 'size' | 'package' | 'extras' | 'when' | 'where' | 'details' | 'review'
+type Step = Question | 'done'
 
 interface BookingModalProps {
   isOpen: boolean
@@ -27,7 +28,15 @@ const CAR_REG_RE  = /^[A-Z0-9]{2,8}$/
 const packOptions = PACKAGES
 const priceMap: Record<string, Record<VehicleType, number>> = Object.fromEntries(PACKAGES.map(p => [p.id, p.price]))
 
-const STEP_LABELS = ['Vehicle & Pack', 'Schedule', 'Your Details']
+const QUESTIONS: { key: Question; title: string; hint: string }[] = [
+  { key: 'size',    title: 'Car size',          hint: 'This sets the price.' },
+  { key: 'package', title: 'Package',           hint: 'Pick the level of detail.' },
+  { key: 'extras',  title: 'Extras',            hint: 'Optional. Add whatever helps.' },
+  { key: 'when',    title: 'Date and time',     hint: 'Pick a day, then a time.' },
+  { key: 'where',   title: 'Where and which car', hint: 'We come to you.' },
+  { key: 'details', title: 'Your details',      hint: 'So we can confirm with you.' },
+  { key: 'review',  title: 'Check and send',    hint: 'Last look before it goes.' },
+]
 const ease = [0.22, 1, 0.36, 1] as [number, number, number, number]
 
 const fieldLabel: React.CSSProperties = {
@@ -49,6 +58,52 @@ const textInput: React.CSSProperties = {
   // 16px avoids iOS Safari zooming the page in when a field is focused.
   fontFamily: 'var(--font-body)', fontSize: '16px', color: '#0C0C0C',
   outline: 'none', background: 'white', boxSizing: 'border-box' as const,
+}
+
+/** Seven days starting weekOffset weeks after today (UK date), as YYYY-MM-DD. */
+function weekDates(weekOffset: number): string[] {
+  const start = new Date(`${ukNow().date}T00:00:00Z`)
+  return Array.from({ length: 7 }, (_, i) => {
+    const d = new Date(start)
+    d.setUTCDate(start.getUTCDate() + weekOffset * 7 + i)
+    return d.toISOString().slice(0, 10)
+  })
+}
+
+function monthLabel(days: string[]): string {
+  const f = (d: string, o: Intl.DateTimeFormatOptions) =>
+    new Intl.DateTimeFormat('en-GB', { timeZone: 'UTC', ...o }).format(new Date(`${d}T00:00:00Z`))
+  const a = f(days[0], { month: 'long', year: 'numeric' })
+  const b = f(days[6], { month: 'long', year: 'numeric' })
+  return a === b ? a : `${f(days[0], { month: 'short' })} to ${b}`
+}
+
+/** A tappable choice, the same shape for size, package and every other pick-one list. */
+function Choice({ selected, onClick, role, children }: { selected: boolean; onClick: () => void; role?: 'radio'; children: React.ReactNode }) {
+  return (
+    <button
+      type="button"
+      role={role}
+      aria-checked={role ? selected : undefined}
+      aria-pressed={role ? undefined : selected}
+      onClick={onClick}
+      style={{
+        width: '100%', textAlign: 'left', cursor: 'pointer', minHeight: '56px',
+        padding: '12px 16px', display: 'flex', alignItems: 'center', gap: '14px',
+        background: selected ? 'rgba(232,74,12,0.07)' : '#ffffff',
+        border: `1px solid ${selected ? '#E84A0C' : 'rgba(12,12,12,0.12)'}`,
+        boxShadow: selected ? '0 0 0 1px #E84A0C' : 'none',
+      }}
+    >
+      <span aria-hidden style={{
+        width: 20, height: 20, borderRadius: '50%', flexShrink: 0,
+        border: `2px solid ${selected ? '#E84A0C' : 'rgba(12,12,12,0.2)'}`,
+        background: selected ? '#E84A0C' : '#ffffff',
+        display: 'flex', alignItems: 'center', justifyContent: 'center',
+      }}>{selected && <CheckIcon size={9} />}</span>
+      <span style={{ flex: 1, minWidth: 0 }}>{children}</span>
+    </button>
+  )
 }
 
 function CheckIcon({ size = 9, color = 'white' }: { size?: number; color?: string }) {
@@ -137,10 +192,11 @@ export default function BookingModal({
   initialPack    = '',
   initialVehicle = '',
 }: BookingModalProps) {
-  const [step,           setStep]           = useState<Step>(1)
+  const [step,           setStep]           = useState<Step>('size')
   const [pack,           setPack]           = useState(initialPack)
   const [vehicle,        setVehicle]        = useState<VehicleType | ''>(initialVehicle as VehicleType | '')
   const [selectedAddons, setSelectedAddons] = useState<string[]>([])
+  const [weekOffset,     setWeekOffset]     = useState(0)
   const [date,           setDate]           = useState('')
   const [time,           setTime]           = useState('')
   const [address,        setAddress]        = useState('')
@@ -168,22 +224,24 @@ export default function BookingModal({
   const addonTotal  = ADDONS.filter(a => selectedAddons.includes(a.id)).reduce((s, a) => s + a.price, 0)
   const totalPrice  = basePrice !== null ? basePrice + addonTotal : null
 
-  // Price is always shown on Step 1, even before pack/vehicle are picked — as
-  // a range that narrows down to an exact total once both are selected.
-  const allPrices  = Object.values(priceMap).flatMap(v => Object.values(v))
-  const overallMin = Math.min(...allPrices)
-  const overallMax = Math.max(...allPrices)
-  const packPrices = pack ? Object.values(priceMap[pack]) : []
-  const packMin    = packPrices.length ? Math.min(...packPrices) : null
-  const packMax    = packPrices.length ? Math.max(...packPrices) : null
-
   const toggleAddon = (id: string) =>
     setSelectedAddons(prev => prev.includes(id) ? prev.filter(a => a !== id) : [...prev, id])
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    setPhoneTouched(true); setEmailTouched(true)
-    if (!phoneValid || !emailValid) return
+  const at = step === 'done' ? QUESTIONS.length : QUESTIONS.findIndex(q => q.key === step)
+  // No price until the package step, where the customer first sees what things cost.
+  const priced = totalPrice !== null && at >= QUESTIONS.findIndex(q => q.key === 'package')
+
+  const canContinue: Record<Question, boolean> = {
+    size: Boolean(vehicle),
+    package: Boolean(pack),
+    extras: true,
+    when: Boolean(date) && Boolean(time) && isSlotAvailable(date, time),
+    where: postcodeValid && carRegValid,
+    details: phoneValid && emailValid,
+    review: true,
+  }
+
+  const send = async () => {
     setSubmitting(true)
     setApiError('')
     try {
@@ -200,11 +258,10 @@ export default function BookingModal({
       const json = await res.json()
       if (!res.ok) {
         setApiError(json.error ?? 'Something went wrong. Please try again.')
-        setSubmitting(false)
         return
       }
       setBookingId(json.booking?.id ?? '')
-      setStep(4)
+      setStep('done')
     } catch {
       setApiError('Network error. Please check your connection and try again.')
     } finally {
@@ -212,25 +269,34 @@ export default function BookingModal({
     }
   }
 
+  const next = () => {
+    if (step === 'done') return
+    if (step === 'where') { setPostcodeTouched(true); setCarRegTouched(true) }
+    if (step === 'details') { setPhoneTouched(true); setEmailTouched(true) }
+    if (!canContinue[step]) return
+    if (step === 'review') { void send(); return }
+    setApiError('')
+    setStep(QUESTIONS[at + 1].key)
+  }
+
+  const back = () => {
+    if (step === 'done' || at === 0) return
+    setApiError('')
+    setStep(QUESTIONS[at - 1].key)
+  }
+
   const handleClose = () => {
     onClose()
     setTimeout(() => {
-      setStep(1); setPack(initialPack); setVehicle(initialVehicle as VehicleType | '')
+      setStep('size'); setPack(initialPack); setVehicle(initialVehicle as VehicleType | '')
       setSelectedAddons([]); setCarReg('')
       setName(''); setPhone(''); setEmail(''); setAddress(''); setNotes('')
-      setDate(''); setTime(''); setApiError(''); setBookingId('')
+      setWeekOffset(0); setDate(''); setTime(''); setApiError(''); setBookingId('')
       setPostcodeTouched(false); setCarRegTouched(false); setPhoneTouched(false); setEmailTouched(false)
     }, 400)
   }
 
-  const panelRef    = useRef<HTMLDivElement>(null)
-  // Sections the form guides the customer to as they make each choice.
-  const vehicleRef  = useRef<HTMLDivElement>(null)
-  const packRef     = useRef<HTMLDivElement>(null)
-  const addonsRef   = useRef<HTMLDivElement>(null)
-  const timeRef     = useRef<HTMLDivElement>(null)
-  const locationRef = useRef<HTMLDivElement>(null)
-  const regRef      = useRef<HTMLDivElement>(null)
+  const panelRef = useRef<HTMLDivElement>(null)
   useDialogFocus(panelRef, isOpen)
 
   // Escape closes the popup, as with any dialog.
@@ -242,6 +308,16 @@ export default function BookingModal({
   })
 
   if (!isOpen) return null
+
+  const question = step === 'done' ? null : QUESTIONS[at]
+  const days = weekDates(weekOffset)
+  const addonText = ADDONS.filter(a => selectedAddons.includes(a.id)).map(a => a.label).join(', ')
+  const buttonStyle: React.CSSProperties = {
+    flex: 1, minHeight: '52px', padding: '0 24px', background: '#E84A0C', color: '#ffffff', border: 'none',
+    cursor: 'pointer', fontFamily: 'var(--font-body)', fontWeight: 600, fontSize: '12px',
+    letterSpacing: '0.1em', textTransform: 'uppercase', display: 'flex', alignItems: 'center',
+    justifyContent: 'center', gap: '10px', transition: 'background 0.2s',
+  }
 
   return (
     <div
@@ -265,589 +341,379 @@ export default function BookingModal({
           position: 'relative', zIndex: 1,
           width: '100%', maxWidth: '520px',
           height: '100dvh',
-          background: '#ffffff',
+          background: '#0C0C0C',
           display: 'flex', flexDirection: 'column',
-          overflow: 'hidden',
+          overflow: 'hidden', touchAction: 'manipulation',
         }}
       >
 
-        {/* ── Header ── */}
-        <div style={{ background: '#0C0C0C', padding: '24px 32px 20px', flexShrink: 0 }}>
-          <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', marginBottom: '22px' }}>
-            <div>
-              <p style={{
-                fontFamily: 'var(--font-body)', fontSize: '10px', fontWeight: 600,
-                letterSpacing: '0.22em', textTransform: 'uppercase',
-                color: 'rgba(255,255,255,0.28)', marginBottom: '6px',
-              }}>
-                {step === 4 ? 'Booking Requested' : 'Mobile Detailing · Hertfordshire'}
-              </p>
-              <h2 id="booking-modal-title" style={{
-                fontFamily: 'var(--font-display)', fontSize: '28px',
-                letterSpacing: '0.04em', color: '#ffffff', lineHeight: 1,
-              }}>
-                {step === 4 ? 'REQUEST SENT.' : <>BOOK YOUR <span style={{ color: '#E84A0C' }}>DETAIL</span></>}
-              </h2>
-            </div>
+        {/* ── Header: the question, on black ── */}
+        <div style={{ background: '#0C0C0C', padding: '18px 24px 18px', flexShrink: 0 }}>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '12px' }}>
+            <p style={{
+              fontFamily: 'var(--font-body)', fontSize: '10px', fontWeight: 600,
+              letterSpacing: '0.22em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.4)',
+            }}>
+              {step === 'done' ? 'Request sent' : `Step ${at + 1} of ${QUESTIONS.length}`}
+            </p>
             <button
               onClick={handleClose}
               aria-label="Close"
               style={{
-                width: 36, height: 36, background: 'rgba(255,255,255,0.07)',
+                width: 44, height: 44, margin: '-8px -8px -8px 0', background: 'transparent',
                 border: 'none', cursor: 'pointer', flexShrink: 0,
                 display: 'flex', alignItems: 'center', justifyContent: 'center',
-                color: 'rgba(255,255,255,0.5)', fontSize: '16px', transition: 'background 0.2s, color 0.2s',
+                color: 'rgba(255,255,255,0.6)', fontSize: '18px',
               }}
-              onMouseEnter={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.15)'; e.currentTarget.style.color = '#fff' }}
-              onMouseLeave={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.07)'; e.currentTarget.style.color = 'rgba(255,255,255,0.5)' }}
             >
               ✕
             </button>
           </div>
 
-          {/* Numbered stepper — clearer sense of progress than a plain bar */}
-          {step < 4 && (
-            <div style={{ display: 'flex', alignItems: 'flex-start' }}>
-              {STEP_LABELS.map((label, i) => {
-                const stepNum = (i + 1) as Step
-                const isDone = stepNum < step
-                const isActive = stepNum === step
-                return (
-                  <div key={label} style={{ display: 'flex', alignItems: 'flex-start', flex: i < STEP_LABELS.length - 1 ? 1 : undefined }}>
-                    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '6px', flexShrink: 0 }}>
-                      <div style={{
-                        width: 22, height: 22, borderRadius: '50%', flexShrink: 0,
-                        background: isDone ? '#16a34a' : isActive ? '#E84A0C' : 'rgba(255,255,255,0.12)',
-                        display: 'flex', alignItems: 'center', justifyContent: 'center',
-                        fontFamily: 'var(--font-body)', fontSize: '10px', fontWeight: 700,
-                        color: isDone || isActive ? '#ffffff' : 'rgba(255,255,255,0.4)',
-                        transition: 'background 0.3s',
-                      }}>
-                        {isDone ? <CheckIcon size={9} /> : stepNum}
-                      </div>
-                      <span style={{
-                        fontFamily: 'var(--font-body)', fontSize: '9px', fontWeight: 600,
-                        letterSpacing: '0.04em', textTransform: 'uppercase', textAlign: 'center',
-                        color: isActive ? '#ffffff' : 'rgba(255,255,255,0.35)', whiteSpace: 'nowrap',
-                      }}>
-                        {label}
-                      </span>
-                    </div>
-                    {i < STEP_LABELS.length - 1 && (
-                      <div style={{
-                        flex: 1, height: '2px', marginTop: '10px', marginLeft: '4px', marginRight: '4px',
-                        background: isDone ? '#16a34a' : 'rgba(255,255,255,0.12)', transition: 'background 0.3s',
-                      }} />
-                    )}
-                  </div>
-                )
-              })}
-            </div>
+          {step !== 'done' && (
+            <ol aria-label="Booking steps" style={{ display: 'grid', gridTemplateColumns: 'repeat(7, 1fr)', gap: '4px', listStyle: 'none', padding: 0, margin: '10px 0 14px' }}>
+              {QUESTIONS.map((q, i) => (
+                <li key={q.key} aria-current={i === at ? 'step' : undefined} style={{ height: 4, background: i <= at ? '#E84A0C' : 'rgba(255,255,255,0.18)' }} />
+              ))}
+            </ol>
+          )}
+
+          <h2 id="booking-modal-title" style={{
+            fontFamily: 'var(--font-display)', fontSize: '34px',
+            letterSpacing: '0.03em', color: '#ffffff', lineHeight: 1,
+            marginTop: step === 'done' ? '8px' : 0,
+          }}>
+            {step === 'done' ? 'REQUEST SENT.' : <>{question!.title.toUpperCase()}<span style={{ color: '#E84A0C' }}>.</span></>}
+          </h2>
+          {question && (
+            <p style={{ fontFamily: 'var(--font-body)', fontSize: '13px', color: 'rgba(255,255,255,0.55)', marginTop: '6px' }}>
+              {question.hint}
+            </p>
           )}
         </div>
 
-        {/* ── Scrollable body ── */}
-        <div style={{ flex: 1, overflowY: 'auto', padding: '32px' }}>
-          <AnimatePresence mode="wait">
-            <motion.div
-              key={step}
-              initial={{ opacity: 0, y: 12 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -12 }}
-              transition={{ duration: 0.22, ease }}
-            >
+        {/* ── The answer, on a white sheet ── */}
+        <form
+          id="booking-step-form"
+          noValidate
+          onSubmit={e => { e.preventDefault(); next() }}
+          style={{ flex: 1, minHeight: 0, background: '#ffffff', borderTopLeftRadius: 24, borderTopRightRadius: 24, display: 'flex', flexDirection: 'column' }}
+        >
+          <div data-testid="booking-scroll" style={{ flex: 1, minHeight: 0, overflowY: 'auto', overscrollBehavior: 'contain', padding: '22px 24px 12px' }}>
+            <AnimatePresence mode="wait">
+              <motion.div
+                key={step}
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -10 }}
+                transition={{ duration: 0.2, ease }}
+              >
 
-          {/* ── STEP 1: Vehicle, Pack, Add-ons ── */}
-          {step === 1 && (
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '28px' }}>
-
-              {/* Vehicle type comes first — a quick, easy first decision that
-                  immediately unlocks exact pack prices below instead of ranges. */}
-              <div ref={vehicleRef}>
-                <p style={sectionHeading}>Vehicle</p>
-                <p style={fieldLabel}>What size is your vehicle?</p>
-                <div role="radiogroup" aria-label="Vehicle size" style={{ display: 'grid', gridTemplateColumns: 'repeat(3, minmax(0, 1fr))', gap: '6px' }}>
-                  {(Object.entries(vehicleLabels) as [VehicleType, string][]).map(([key, label]) => (
-                    <button
-                      key={key}
-                      type="button"
-                      role="radio"
-                      aria-checked={vehicle === key}
-                      onClick={() => { setVehicle(key); guideTo(pack ? addonsRef.current : packRef.current) }}
-                      style={{
-                        minWidth: 0, padding: '11px 10px', minHeight: '68px',
-                        background: vehicle === key ? '#0C0C0C' : 'transparent',
-                        border: `1px solid ${vehicle === key ? '#0C0C0C' : 'rgba(12,12,12,0.12)'}`,
-                        cursor: 'pointer', textAlign: 'left', transition: 'all 0.15s',
-                        display: 'flex', flexDirection: 'column', justifyContent: 'space-between', gap: '4px',
-                      }}
-                    >
-                      <span style={{ fontFamily: 'var(--font-body)', fontWeight: 600, fontSize: '12px', lineHeight: 1.25, color: vehicle === key ? '#ffffff' : '#0C0C0C' }}>
-                        {label}
-                      </span>
-                      <span style={{ fontFamily: 'var(--font-body)', fontWeight: 400, fontSize: '10.5px', lineHeight: 1.3, color: vehicle === key ? 'rgba(255,255,255,0.7)' : 'rgba(12,12,12,0.55)' }}>
-                        {VEHICLE_GUIDE[key].body}
-                      </span>
-                    </button>
-                  ))}
-                </div>
-                <p style={{ fontFamily: 'var(--font-body)', fontSize: '11.5px', color: 'rgba(12,12,12,0.5)', marginTop: '8px', lineHeight: 1.5 }}>
-                  {vehicle ? `e.g. ${VEHICLE_GUIDE[vehicle as VehicleType].examples}. ${VEHICLE_GUIDE_NOTE}` : VEHICLE_GUIDE_NOTE}
-                </p>
-              </div>
-
-              {/* Pack selection */}
-              <div ref={packRef}>
-                <p style={sectionHeading}>Package</p>
-                <p style={fieldLabel}>Choose your package</p>
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
-                  {packOptions.map(p => (
-                    <button
-                      key={p.id}
-                      onClick={() => { setPack(p.id); guideTo(vehicle ? addonsRef.current : vehicleRef.current) }}
-                      style={{
-                        width: '100%', padding: '16px 18px',
-                        background: pack === p.id ? '#0C0C0C' : 'transparent',
-                        border: `1px solid ${pack === p.id ? '#0C0C0C' : 'rgba(12,12,12,0.1)'}`,
-                        cursor: 'pointer',
-                        display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-                        textAlign: 'left', transition: 'all 0.15s',
-                      }}
-                      onMouseEnter={e => { if (pack !== p.id) e.currentTarget.style.borderColor = 'rgba(12,12,12,0.3)' }}
-                      onMouseLeave={e => { if (pack !== p.id) e.currentTarget.style.borderColor = 'rgba(12,12,12,0.1)' }}
-                    >
-                      <div>
-                        <span style={{ fontFamily: 'var(--font-body)', fontWeight: 600, fontSize: '15px', color: pack === p.id ? '#ffffff' : '#0C0C0C', display: 'block', marginBottom: '3px' }}>
-                          {p.id}
-                        </span>
-                        <span style={{ fontFamily: 'var(--font-body)', fontSize: '12px', color: pack === p.id ? 'rgba(255,255,255,0.42)' : 'rgba(12,12,12,0.38)' }}>
-                          {p.tagline} · {p.duration}
-                        </span>
-                      </div>
-                      <span style={{ fontFamily: 'var(--font-display)', fontSize: vehicle ? '22px' : '15px', color: pack === p.id ? '#E84A0C' : 'rgba(12,12,12,0.35)', letterSpacing: '0.02em', flexShrink: 0, marginLeft: '12px', textAlign: 'right' }}>
-                        {vehicle
-                          ? `£${priceMap[p.id]?.[vehicle as VehicleType] ?? 0}`
-                          : `£${Math.min(...Object.values(priceMap[p.id]))}–£${Math.max(...Object.values(priceMap[p.id]))}`}
-                      </span>
-                    </button>
-                  ))}
-                </div>
-              </div>
-
-              {/* Add-ons */}
-              <div ref={addonsRef}>
-                <p style={sectionHeading}>Add-ons</p>
-                <p style={fieldLabel}>Optional extras</p>
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
-                  {ADDONS.map(addon => {
-                    const selected = selectedAddons.includes(addon.id)
-                    return (
-                      <button
-                        key={addon.id}
-                        onClick={() => toggleAddon(addon.id)}
-                        style={{
-                          width: '100%', padding: '13px 16px',
-                          background: selected ? 'rgba(232,74,12,0.06)' : 'transparent',
-                          border: `1px solid ${selected ? '#E84A0C' : 'rgba(12,12,12,0.1)'}`,
-                          cursor: 'pointer',
-                          display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-                          textAlign: 'left', transition: 'all 0.15s',
-                        }}
-                      >
-                        <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                          <span style={{
-                            width: 16, height: 16, flexShrink: 0,
-                            border: `1.5px solid ${selected ? '#E84A0C' : 'rgba(12,12,12,0.2)'}`,
-                            background: selected ? '#E84A0C' : 'transparent',
-                            display: 'flex', alignItems: 'center', justifyContent: 'center',
-                            transition: 'all 0.15s',
-                          }}>
-                            {selected && <CheckIcon size={9} />}
-                          </span>
-                          <span style={{ fontFamily: 'var(--font-body)', fontSize: '13px', fontWeight: 500, color: selected ? '#0C0C0C' : 'rgba(12,12,12,0.6)' }}>
-                            {addon.label}
-                          </span>
-                        </div>
-                        <span style={{ fontFamily: 'var(--font-display)', fontSize: '16px', color: selected ? '#E84A0C' : 'rgba(12,12,12,0.3)', flexShrink: 0 }}>
-                          +£{addon.price}
-                        </span>
-                      </button>
-                    )
-                  })}
-                </div>
-              </div>
-
-              {/* Price preview — always visible: a range that narrows to an exact total */}
-              <div style={{ background: '#0C0C0C', padding: '20px 24px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                <div>
-                  <p style={{ fontFamily: 'var(--font-body)', fontSize: '10px', fontWeight: 600, letterSpacing: '0.18em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.3)', marginBottom: '4px' }}>
-                    {totalPrice !== null ? (addonTotal > 0 ? 'Total inc. add-ons' : 'Your Price') : pack ? `${pack} Price Range` : 'Price Range'}
-                  </p>
-                  <span style={{ fontFamily: 'var(--font-display)', fontSize: '44px', color: '#ffffff', letterSpacing: '0.02em', lineHeight: 1 }}>
-                    {totalPrice !== null
-                      ? `£${totalPrice}`
-                      : pack
-                        ? `£${packMin}–£${packMax}`
-                        : `£${overallMin}–£${overallMax}`}
-                  </span>
-                  {totalPrice !== null && addonTotal > 0 && (
-                    <p style={{ fontFamily: 'var(--font-body)', fontSize: '11px', color: 'rgba(255,255,255,0.25)', marginTop: '4px' }}>
-                      Base £{basePrice} + add-ons £{addonTotal}
-                    </p>
-                  )}
-                  {totalPrice === null && (
-                    <p style={{ fontFamily: 'var(--font-body)', fontSize: '11px', color: 'rgba(255,255,255,0.25)', marginTop: '4px' }}>
-                      {pack ? 'Depends on vehicle size' : 'Select a vehicle and pack for your exact price'}
-                    </p>
-                  )}
-                </div>
-                <div style={{ textAlign: 'right' }}>
-                  <p style={{ fontFamily: 'var(--font-body)', fontSize: '13px', color: 'rgba(255,255,255,0.45)', marginBottom: '3px' }}>{pack || 'No package yet'}</p>
-                  <p style={{ fontFamily: 'var(--font-body)', fontSize: '12px', color: 'rgba(255,255,255,0.25)' }}>{vehicle ? vehicleLabels[vehicle as VehicleType] : 'No vehicle yet'}</p>
-                </div>
-              </div>
-            </div>
-          )}
-
-          {/* ── STEP 2: Date, Time, Address, Car Reg ── */}
-          {step === 2 && (
-            <form id="step2-form" onSubmit={e => { e.preventDefault(); setStep(3) }} style={{ display: 'flex', flexDirection: 'column', gap: '28px' }}>
-
-              <div>
-                <p style={sectionHeading}>Date &amp; Time</p>
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '20px', marginTop: '12px' }}>
+                {step === 'size' && (
                   <div>
-                    <label style={fieldLabel}>Preferred Date</label>
-                    <input
-                      type="date" required
-                      min={ukNow().date}
-                      value={date}
-                      onChange={e => {
-                        const d = e.target.value
-                        setDate(d)
-                        // Drop a picked slot that isn't possible on the new date.
-                        if (time && !isSlotAvailable(d, time)) setTime('')
-                        if (d) guideTo(timeRef.current)
-                      }}
-                      style={textInput}
-                    />
+                    <div role="radiogroup" aria-label="Vehicle size" style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                      {(Object.entries(vehicleLabels) as [VehicleType, string][]).map(([key, label]) => (
+                        <Choice key={key} role="radio" selected={vehicle === key} onClick={() => setVehicle(key)}>
+                          <span style={{ display: 'block', fontFamily: 'var(--font-body)', fontWeight: 600, fontSize: '15px', color: '#0C0C0C' }}>{label}</span>
+                          <span style={{ display: 'block', fontFamily: 'var(--font-body)', fontSize: '13px', lineHeight: 1.35, color: 'rgba(12,12,12,0.75)' }}>{VEHICLE_GUIDE[key].body}</span>
+                          <span style={{ display: 'block', fontFamily: 'var(--font-body)', fontSize: '11.5px', lineHeight: 1.35, color: 'rgba(12,12,12,0.5)' }}>{VEHICLE_GUIDE[key].examples}</span>
+                        </Choice>
+                      ))}
+                    </div>
+                    <p style={{ fontFamily: 'var(--font-body)', fontSize: '11.5px', color: 'rgba(12,12,12,0.5)', marginTop: '10px', lineHeight: 1.45 }}>
+                      {VEHICLE_GUIDE_NOTE}
+                    </p>
                   </div>
+                )}
 
-                  <div ref={timeRef}>
-                    <label style={fieldLabel}>Preferred Time Slot</label>
-                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '6px' }}>
-                      {timeSlots.map(t => {
-                        // Slots already passed today (or within the hour) can't be picked.
-                        const unavailable = Boolean(date) && !isSlotAvailable(date, t)
+                {step === 'package' && (
+                  <div role="radiogroup" aria-label="Package" style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                    {packOptions.map(p => (
+                      <Choice key={p.id} role="radio" selected={pack === p.id} onClick={() => setPack(p.id)}>
+                        <span style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '12px' }}>
+                          <span style={{ minWidth: 0 }}>
+                            <span style={{ display: 'block', fontFamily: 'var(--font-body)', fontWeight: 600, fontSize: '15px', color: '#0C0C0C' }}>{p.id}</span>
+                            <span style={{ display: 'block', fontFamily: 'var(--font-body)', fontSize: '12.5px', color: 'rgba(12,12,12,0.55)' }}>{p.tagline} · {p.duration}</span>
+                          </span>
+                          <span style={{ fontFamily: 'var(--font-display)', fontSize: '28px', lineHeight: 1, color: '#0C0C0C', flexShrink: 0 }}>
+                            £{priceMap[p.id]?.[vehicle as VehicleType] ?? 0}
+                          </span>
+                        </span>
+                      </Choice>
+                    ))}
+                  </div>
+                )}
+
+                {step === 'extras' && (
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                    {ADDONS.map(addon => {
+                      const selected = selectedAddons.includes(addon.id)
+                      return (
+                        <Choice key={addon.id} selected={selected} onClick={() => toggleAddon(addon.id)}>
+                          <span style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '12px' }}>
+                            <span style={{ fontFamily: 'var(--font-body)', fontSize: '14px', fontWeight: 500, color: '#0C0C0C' }}>{addon.label}</span>
+                            <span style={{ fontFamily: 'var(--font-body)', fontSize: '13px', fontWeight: 600, color: 'rgba(12,12,12,0.5)', flexShrink: 0 }}>+£{addon.price}</span>
+                          </span>
+                        </Choice>
+                      )
+                    })}
+                  </div>
+                )}
+
+                {step === 'when' && (
+                  <div>
+                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                      <p style={{ fontFamily: 'var(--font-body)', fontWeight: 700, fontSize: '12px', letterSpacing: '0.12em', textTransform: 'uppercase', color: 'rgba(12,12,12,0.5)' }}>
+                        {monthLabel(days)}
+                      </p>
+                      <div style={{ display: 'flex', gap: '6px' }}>
+                        {([['Earlier week', -1, '‹'], ['Later week', 1, '›']] as const).map(([label, d, glyph]) => (
+                          <button
+                            key={label} type="button" aria-label={label}
+                            disabled={(d === -1 && weekOffset === 0) || (d === 1 && weekOffset >= 11)}
+                            onClick={() => setWeekOffset(w => w + d)}
+                            style={{ width: 44, height: 44, border: '1px solid rgba(12,12,12,0.12)', background: '#ffffff', cursor: 'pointer', fontSize: '20px', lineHeight: 1, opacity: (d === -1 && weekOffset === 0) || (d === 1 && weekOffset >= 11) ? 0.3 : 1 }}
+                          >
+                            {glyph}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+                    <div role="group" aria-label="Day" style={{ display: 'grid', gridTemplateColumns: 'repeat(7, minmax(0, 1fr))', gap: '6px', marginTop: '10px' }}>
+                      {days.map(d => {
+                        const full = !timeSlots.some(t => isSlotAvailable(d, t))
+                        const [wd, dayNum] = formatShortDate(d).split(' ')
+                        const selected = date === d
                         return (
-                        <button
-                          key={t} type="button" onClick={() => { setTime(t); guideTo(locationRef.current) }}
-                          disabled={unavailable}
-                          aria-disabled={unavailable}
-                          title={unavailable ? 'This time has passed today' : undefined}
-                          style={{
-                            padding: '13px 8px',
-                            border: `1px solid ${time === t ? '#0C0C0C' : 'rgba(12,12,12,0.1)'}`,
-                            background: time === t ? '#0C0C0C' : 'transparent',
-                            cursor: unavailable ? 'not-allowed' : 'pointer',
-                            opacity: unavailable ? 0.3 : 1,
-                            textDecoration: unavailable ? 'line-through' : 'none',
-                            fontFamily: 'var(--font-body)', fontWeight: 600, fontSize: '13px',
-                            color: time === t ? '#ffffff' : 'rgba(12,12,12,0.5)',
-                            transition: 'all 0.15s',
-                          }}
-                        >
-                          {t}
-                        </button>
+                          <button
+                            key={d} type="button" disabled={full} aria-pressed={selected} aria-label={formatBookingDate(d)}
+                            onClick={() => { setDate(d); if (time && !isSlotAvailable(d, time)) setTime('') }}
+                            style={{
+                              minHeight: '64px', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
+                              border: `1px solid ${selected ? '#E84A0C' : 'rgba(12,12,12,0.12)'}`,
+                              background: selected ? '#E84A0C' : '#ffffff', color: selected ? '#ffffff' : '#0C0C0C',
+                              cursor: full ? 'not-allowed' : 'pointer', opacity: full ? 0.3 : 1,
+                            }}
+                          >
+                            <span style={{ fontFamily: 'var(--font-body)', fontSize: '10px', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.05em', opacity: 0.8 }}>{wd}</span>
+                            <span style={{ fontFamily: 'var(--font-display)', fontSize: '24px', lineHeight: 1 }}>{dayNum}</span>
+                          </button>
                         )
                       })}
                     </div>
-                    <p style={{ fontFamily: 'var(--font-body)', fontSize: '11px', color: 'rgba(12,12,12,0.28)', marginTop: '10px' }}>
-                      Exact arrival window confirmed as soon as possible.
+
+                    <p style={{ fontFamily: 'var(--font-body)', fontWeight: 700, fontSize: '12px', letterSpacing: '0.12em', textTransform: 'uppercase', color: 'rgba(12,12,12,0.5)', marginTop: '18px' }}>Time</p>
+                    <div role="group" aria-label="Time" style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '8px', marginTop: '10px' }}>
+                      {timeSlots.map(t => {
+                        // Slots already passed today (or within the hour) can't be picked.
+                        const unavailable = !date || !isSlotAvailable(date, t)
+                        const selected = time === t
+                        return (
+                          <button
+                            key={t} type="button" onClick={() => setTime(t)}
+                            disabled={unavailable} aria-pressed={selected}
+                            title={unavailable && date ? 'This time has passed today' : undefined}
+                            style={{
+                              minHeight: '48px',
+                              border: `1px solid ${selected ? '#E84A0C' : 'rgba(12,12,12,0.12)'}`,
+                              background: selected ? '#E84A0C' : '#ffffff', color: selected ? '#ffffff' : '#0C0C0C',
+                              cursor: unavailable ? 'not-allowed' : 'pointer', opacity: unavailable ? 0.3 : 1,
+                              textDecoration: unavailable && date ? 'line-through' : 'none',
+                              fontFamily: 'var(--font-body)', fontWeight: 600, fontSize: '14px',
+                            }}
+                          >
+                            {t}
+                          </button>
+                        )
+                      })}
+                    </div>
+                    <p style={{ fontFamily: 'var(--font-body)', fontSize: '11.5px', color: 'rgba(12,12,12,0.5)', marginTop: '10px' }}>
+                      {date ? 'Exact arrival window confirmed as soon as possible.' : 'Pick a day to see the times.'}
                     </p>
                   </div>
-                </div>
-              </div>
-
-              <div ref={locationRef} style={{ borderTop: '1px solid rgba(12,12,12,0.08)', paddingTop: '24px' }}>
-                <p style={sectionHeading}>Location &amp; Vehicle</p>
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '20px', marginTop: '12px' }}>
-                  <ValidatedField
-                    label="Service Postcode"
-                    value={address}
-                    onChange={setAddress}
-                    onBlur={() => { setPostcodeTouched(true); if (postcodeValid && !carReg) guideTo(regRef.current, { highlight: false }) }}
-                    placeholder="Enter your postcode"
-                    maxLength={8}
-                    touched={postcodeTouched}
-                    valid={postcodeValid}
-                    errorText="That doesn't look like a valid UK postcode. Please double-check it."
-                    helperText="We use this to confirm we cover your area."
-                    uppercase
-                    letterSpacing="0.12em"
-                  />
-
-                  <div ref={regRef}>
-                  <ValidatedField
-                    label="Vehicle Registration"
-                    value={carReg}
-                    onChange={setCarReg}
-                    onBlur={() => setCarRegTouched(true)}
-                    placeholder="e.g. AB12 CDE"
-                    maxLength={8}
-                    touched={carRegTouched}
-                    valid={carRegValid}
-                    errorText="That doesn't look like a valid registration. Letters and numbers only."
-                    helperText="Helps us confirm vehicle details before we arrive."
-                    uppercase
-                    letterSpacing="0.1em"
-                  />
-                  </div>
-                </div>
-              </div>
-            </form>
-          )}
-
-          {/* ── STEP 3: Contact + Summary ── */}
-          {step === 3 && (
-            <form id="step3-form" noValidate onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
-              <div>
-                <p style={sectionHeading}>Your Details</p>
-              </div>
-
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-                <div>
-                  <label style={fieldLabel}>Full Name (optional)</label>
-                  <input
-                    type="text" value={name}
-                    onChange={e => setName(e.target.value)}
-                    placeholder="John Smith"
-                    style={textInput}
-                  />
-                </div>
-
-                <ValidatedField
-                  label="Phone"
-                  value={phone}
-                  onChange={setPhone}
-                  onBlur={() => setPhoneTouched(true)}
-                  placeholder="07700 900000"
-                  type="tel"
-                  touched={phoneTouched}
-                  valid={phoneValid}
-                  errorText="Please enter a valid phone number."
-                  helperText="We'll text to confirm your slot."
-                />
-              </div>
-
-              <ValidatedField
-                label="Email"
-                value={email}
-                onChange={setEmail}
-                onBlur={() => setEmailTouched(true)}
-                placeholder="john@example.com"
-                type="email"
-                touched={emailTouched}
-                valid={emailValid}
-                errorText="Please enter a valid email address."
-                helperText="Your booking confirmation goes here."
-              />
-
-              <div>
-                <label style={fieldLabel}>Notes (optional)</label>
-                <textarea
-                  value={notes} onChange={e => setNotes(e.target.value)}
-                  placeholder="Access notes, specific concerns..."
-                  rows={3}
-                  maxLength={1000}
-                  style={{ ...textInput, resize: 'none' }}
-                />
-                {notes.length > 800 && (
-                  <p style={{ fontFamily: 'var(--font-body)', fontSize: '11px', color: notes.length >= 1000 ? '#dc2626' : 'rgba(12,12,12,0.28)', marginTop: '6px' }}>
-                    {notes.length}/1000
-                  </p>
                 )}
-              </div>
 
-              {/* Summary */}
-              <div style={{ background: '#F5F4F1', padding: '20px', borderTop: '3px solid #E84A0C' }}>
-                <p style={{ fontFamily: 'var(--font-body)', fontWeight: 700, fontSize: '10px', letterSpacing: '0.16em', textTransform: 'uppercase', color: 'rgba(12,12,12,0.35)', marginBottom: '14px' }}>
-                  Booking Summary
-                </p>
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '9px' }}>
-                  {([
-                    ['Pack',       pack],
-                    ['Vehicle',    vehicle ? vehicleLabels[vehicle as VehicleType] : 'Not set'],
-                    ['Reg',        carReg || 'Not set'],
-                    ['Date & Time', date && time ? `${formatShortDate(date)} · ${time}` : 'Not set'],
-                    ['Postcode',   address || 'Not set'],
-                  ] as [string, string][]).map(([k, v]) => (
-                    <div key={k} style={{ display: 'flex', justifyContent: 'space-between', gap: '16px' }}>
-                      <span style={{ fontFamily: 'var(--font-body)', fontSize: '13px', color: 'rgba(12,12,12,0.4)', flexShrink: 0 }}>{k}</span>
-                      <span style={{ fontFamily: 'var(--font-body)', fontWeight: 600, fontSize: '13px', color: '#0C0C0C', textAlign: 'right', maxWidth: '220px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{v}</span>
+                {step === 'where' && (
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '18px' }}>
+                    <ValidatedField
+                      label="Service Postcode"
+                      value={address}
+                      onChange={setAddress}
+                      onBlur={() => setPostcodeTouched(true)}
+                      placeholder="Enter your postcode"
+                      maxLength={8}
+                      touched={postcodeTouched}
+                      valid={postcodeValid}
+                      errorText="That doesn't look like a valid UK postcode. Please double-check it."
+                      helperText="We use this to confirm we cover your area."
+                      uppercase
+                      letterSpacing="0.12em"
+                    />
+                    <ValidatedField
+                      label="Vehicle Registration"
+                      value={carReg}
+                      onChange={setCarReg}
+                      onBlur={() => setCarRegTouched(true)}
+                      placeholder="e.g. AB12 CDE"
+                      maxLength={8}
+                      touched={carRegTouched}
+                      valid={carRegValid}
+                      errorText="That doesn't look like a valid registration. Letters and numbers only."
+                      helperText="Helps us confirm vehicle details before we arrive."
+                      uppercase
+                      letterSpacing="0.1em"
+                    />
+                  </div>
+                )}
+
+                {step === 'details' && (
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+                    <div>
+                      <label style={fieldLabel}>Full Name (optional)</label>
+                      <input type="text" value={name} onChange={e => setName(e.target.value)} placeholder="John Smith" autoComplete="name" style={textInput} />
                     </div>
-                  ))}
-                  {selectedAddons.length > 0 && (
-                    <div style={{ display: 'flex', justifyContent: 'space-between', gap: '16px' }}>
-                      <span style={{ fontFamily: 'var(--font-body)', fontSize: '13px', color: 'rgba(12,12,12,0.4)', flexShrink: 0 }}>Add-ons</span>
-                      <span style={{ fontFamily: 'var(--font-body)', fontWeight: 600, fontSize: '13px', color: '#0C0C0C', textAlign: 'right', maxWidth: '220px' }}>
-                        {ADDONS.filter(a => selectedAddons.includes(a.id)).map(a => a.label).join(', ')}
-                      </span>
+                    <ValidatedField
+                      label="Phone"
+                      value={phone}
+                      onChange={setPhone}
+                      onBlur={() => setPhoneTouched(true)}
+                      placeholder="07700 900000"
+                      type="tel"
+                      touched={phoneTouched}
+                      valid={phoneValid}
+                      errorText="Please enter a valid phone number."
+                      helperText="We'll text to confirm your slot."
+                    />
+                    <ValidatedField
+                      label="Email"
+                      value={email}
+                      onChange={setEmail}
+                      onBlur={() => setEmailTouched(true)}
+                      placeholder="john@example.com"
+                      type="email"
+                      touched={emailTouched}
+                      valid={emailValid}
+                      errorText="Please enter a valid email address."
+                      helperText="Your booking confirmation goes here."
+                    />
+                  </div>
+                )}
+
+                {step === 'review' && (
+                  <div>
+                    <div style={{ background: '#F5F4F1', borderTop: '3px solid #E84A0C', padding: '16px 18px' }}>
+                      <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                        {([
+                          ['Pack',        pack],
+                          ['Vehicle',     vehicle ? vehicleLabels[vehicle as VehicleType] : 'Not set'],
+                          ['Reg',         carReg || 'Not set'],
+                          ['Date & Time', date && time ? `${formatShortDate(date)} · ${time}` : 'Not set'],
+                          ['Postcode',    address || 'Not set'],
+                          ...(addonText ? [['Add-ons', addonText]] : []),
+                        ] as [string, string][]).map(([k, v]) => (
+                          <div key={k} style={{ display: 'flex', justifyContent: 'space-between', gap: '16px' }}>
+                            <span style={{ fontFamily: 'var(--font-body)', fontSize: '13px', color: 'rgba(12,12,12,0.45)', flexShrink: 0 }}>{k}</span>
+                            <span style={{ fontFamily: 'var(--font-body)', fontWeight: 600, fontSize: '13px', color: '#0C0C0C', textAlign: 'right' }}>{v}</span>
+                          </div>
+                        ))}
+                      </div>
+                      <div style={{ borderTop: '1px solid rgba(12,12,12,0.08)', marginTop: '12px', paddingTop: '12px', display: 'flex', justifyContent: 'space-between', alignItems: 'baseline' }}>
+                        <span style={{ fontFamily: 'var(--font-body)', fontWeight: 600, fontSize: '11px', letterSpacing: '0.12em', textTransform: 'uppercase' }}>Total</span>
+                        <span style={{ fontFamily: 'var(--font-display)', fontSize: '28px' }}>£{totalPrice ?? 0}</span>
+                      </div>
                     </div>
-                  )}
-                </div>
-                <div style={{ borderTop: '1px solid rgba(12,12,12,0.08)', marginTop: '14px', paddingTop: '14px', display: 'flex', justifyContent: 'space-between', alignItems: 'baseline' }}>
-                  <span style={{ fontFamily: 'var(--font-body)', fontWeight: 600, fontSize: '11px', letterSpacing: '0.12em', textTransform: 'uppercase', color: '#0C0C0C' }}>Total</span>
-                  <span style={{ fontFamily: 'var(--font-display)', fontSize: '28px', color: '#0C0C0C' }}>
-                    {totalPrice !== null ? `£${totalPrice}` : '£0'}
-                  </span>
-                </div>
-              </div>
+                    <label style={{ ...fieldLabel, marginTop: '14px', marginBottom: '8px' }}>Anything we should know? (optional)</label>
+                    <textarea
+                      value={notes} onChange={e => setNotes(e.target.value)}
+                      placeholder="Access notes, specific concerns..."
+                      rows={2} maxLength={1000}
+                      style={{ ...textInput, resize: 'none' }}
+                    />
+                    <p style={{ fontFamily: 'var(--font-body)', fontSize: '11.5px', lineHeight: 1.5, color: 'rgba(12,12,12,0.5)', marginTop: '8px' }}>
+                      This sends us a request. It is not a booking until we confirm it with you. Payment is on the day.
+                    </p>
+                    {apiError && (
+                      <div role="alert" style={{ borderLeft: '2px solid #ef4444', background: '#fef2f2', padding: '12px 14px', marginTop: '10px', fontFamily: 'var(--font-body)', fontSize: '13px', color: '#dc2626' }}>
+                        {apiError}
+                      </div>
+                    )}
+                  </div>
+                )}
 
-              {apiError && (
-                <div style={{ borderLeft: '2px solid #ef4444', background: '#fef2f2', padding: '14px 16px', fontFamily: 'var(--font-body)', fontSize: '13px', color: '#dc2626' }}>
-                  {apiError}
-                </div>
-              )}
-            </form>
-          )}
+                {step === 'done' && (
+                  <div style={{ textAlign: 'center', paddingTop: '4px' }}>
+                    <motion.div
+                      initial={{ scale: 0.6, opacity: 0 }}
+                      animate={{ scale: 1, opacity: 1 }}
+                      transition={{ duration: 0.4, ease }}
+                      style={{ width: 64, height: 64, background: '#E84A0C', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 18px', borderRadius: '50%' }}
+                    >
+                      <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                        <polyline points="20 6 9 17 4 12" />
+                      </svg>
+                    </motion.div>
+                    <h3 style={{ fontFamily: 'var(--font-display)', fontSize: '32px', letterSpacing: '0.03em', color: '#0C0C0C', lineHeight: 1, marginBottom: '10px' }}>
+                      THANK YOU
+                    </h3>
+                    {bookingId && (
+                      <p style={{ fontFamily: 'var(--font-body)', fontSize: '10px', fontWeight: 600, letterSpacing: '0.2em', textTransform: 'uppercase', color: 'rgba(12,12,12,0.4)', marginBottom: '14px' }}>
+                        Ref: {bookingId}
+                      </p>
+                    )}
+                    <p style={{ fontFamily: 'var(--font-body)', fontSize: '15px', lineHeight: 1.65, color: 'rgba(12,12,12,0.6)', maxWidth: '340px', margin: '0 auto 20px' }}>
+                      We&apos;ll be in touch by text and email as soon as possible to confirm your slot on{' '}
+                      <strong style={{ color: '#0C0C0C' }}>{formatBookingDate(date)}</strong> at{' '}
+                      <strong style={{ color: '#0C0C0C' }}>{time}</strong>.
+                    </p>
+                    <div style={{ background: '#F5F4F1', padding: '16px 18px', textAlign: 'left' }}>
+                      {([['Pack', pack], ['Reg', carReg], ['Postcode', address], ...(addonText ? [['Add-ons', addonText]] : [])] as [string, string][]).map(([k, v]) => (
+                        <div key={k} style={{ display: 'flex', justifyContent: 'space-between', gap: '16px', fontFamily: 'var(--font-body)', fontSize: '13px', marginBottom: '6px' }}>
+                          <span style={{ color: 'rgba(12,12,12,0.45)' }}>{k}</span>
+                          <span style={{ fontWeight: 600, color: '#0C0C0C', textAlign: 'right' }}>{v}</span>
+                        </div>
+                      ))}
+                      <div style={{ borderTop: '1px solid rgba(12,12,12,0.08)', marginTop: '8px', paddingTop: '10px', display: 'flex', justifyContent: 'space-between', alignItems: 'baseline' }}>
+                        <span style={{ fontFamily: 'var(--font-body)', fontWeight: 600, fontSize: '11px', letterSpacing: '0.12em', textTransform: 'uppercase' }}>Total</span>
+                        <span style={{ fontFamily: 'var(--font-display)', fontSize: '24px' }}>£{totalPrice}</span>
+                      </div>
+                    </div>
+                  </div>
+                )}
 
-          {/* ── STEP 4: Confirmation ── */}
-          {step === 4 && (
-            <div style={{ textAlign: 'center', paddingTop: '8px' }}>
-              <motion.div
-                initial={{ scale: 0.6, opacity: 0 }}
-                animate={{ scale: 1, opacity: 1 }}
-                transition={{ duration: 0.4, ease }}
-                style={{ width: 72, height: 72, background: '#E84A0C', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 24px', borderRadius: '50%' }}
-              >
-                <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                  <polyline points="20 6 9 17 4 12" />
-                </svg>
               </motion.div>
+            </AnimatePresence>
+          </div>
 
-              <h3 style={{ fontFamily: 'var(--font-display)', fontSize: '36px', letterSpacing: '0.03em', color: '#0C0C0C', lineHeight: 1, marginBottom: '12px' }}>
-                THANK YOU
-              </h3>
-              {bookingId && (
-                <p style={{ fontFamily: 'var(--font-body)', fontSize: '10px', fontWeight: 600, letterSpacing: '0.2em', textTransform: 'uppercase', color: 'rgba(12,12,12,0.28)', marginBottom: '16px' }}>
-                  Ref: {bookingId}
-                </p>
-              )}
-              <p style={{ fontFamily: 'var(--font-body)', fontSize: '15px', lineHeight: 1.72, color: 'rgba(12,12,12,0.5)', maxWidth: '340px', margin: '0 auto 28px' }}>
-                We&apos;ll be in touch by text and email as soon as possible to confirm your slot on{' '}
-                <strong style={{ color: '#0C0C0C' }}>{formatBookingDate(date)}</strong> at{' '}
-                <strong style={{ color: '#0C0C0C' }}>{time}</strong>.
-              </p>
-
-              <div style={{ background: '#F5F4F1', padding: '20px', textAlign: 'left', marginBottom: '24px' }}>
-                {[
-                  ['Pack',     pack],
-                  ['Reg',      carReg],
-                  ['Postcode', address],
-                ].map(([k, v]) => (
-                  <div key={k} style={{ display: 'flex', justifyContent: 'space-between', fontFamily: 'var(--font-body)', fontSize: '13px', marginBottom: '8px' }}>
-                    <span style={{ color: 'rgba(12,12,12,0.4)' }}>{k}</span>
-                    <span style={{ fontWeight: 600, color: '#0C0C0C', maxWidth: '220px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{v}</span>
-                  </div>
-                ))}
-                {selectedAddons.length > 0 && (
-                  <div style={{ display: 'flex', justifyContent: 'space-between', fontFamily: 'var(--font-body)', fontSize: '13px', marginBottom: '8px' }}>
-                    <span style={{ color: 'rgba(12,12,12,0.4)' }}>Add-ons</span>
-                    <span style={{ fontWeight: 600, color: '#0C0C0C', maxWidth: '220px', textAlign: 'right' }}>
-                      {ADDONS.filter(a => selectedAddons.includes(a.id)).map(a => a.label).join(', ')}
-                    </span>
-                  </div>
+          {/* ── Footer: back and continue, always in the same place ── */}
+          <div style={{ borderTop: '1px solid rgba(12,12,12,0.08)', padding: '12px 24px calc(12px + env(safe-area-inset-bottom))', flexShrink: 0, background: '#ffffff', display: 'flex', gap: '10px' }}>
+            {step === 'done' ? (
+              <button type="button" onClick={handleClose} style={{ ...buttonStyle, background: '#0C0C0C' }}>Done</button>
+            ) : (
+              <>
+                {at > 0 && (
+                  <button
+                    type="button" onClick={back}
+                    style={{
+                      minHeight: '52px', padding: '0 20px', border: '1px solid rgba(12,12,12,0.15)', background: 'transparent', cursor: 'pointer',
+                      fontFamily: 'var(--font-body)', fontWeight: 600, fontSize: '12px', letterSpacing: '0.1em', textTransform: 'uppercase', color: 'rgba(12,12,12,0.6)', flexShrink: 0,
+                    }}
+                  >
+                    ← Back
+                  </button>
                 )}
-                <div style={{ borderTop: '1px solid rgba(12,12,12,0.08)', marginTop: '10px', paddingTop: '14px', display: 'flex', justifyContent: 'space-between', alignItems: 'baseline' }}>
-                  <span style={{ fontFamily: 'var(--font-body)', fontWeight: 600, fontSize: '11px', letterSpacing: '0.12em', textTransform: 'uppercase' }}>Total</span>
-                  <span style={{ fontFamily: 'var(--font-display)', fontSize: '24px' }}>£{totalPrice}</span>
-                </div>
-              </div>
-
-              <button
-                onClick={handleClose}
-                style={{
-                  width: '100%', padding: '17px 24px',
-                  background: '#0C0C0C', color: 'white', border: 'none', cursor: 'pointer',
-                  fontFamily: 'var(--font-body)', fontWeight: 600, fontSize: '11px',
-                  letterSpacing: '0.14em', textTransform: 'uppercase',
-                  display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-                  transition: 'background 0.2s',
-                }}
-                onMouseEnter={e => (e.currentTarget.style.background = '#E84A0C')}
-                onMouseLeave={e => (e.currentTarget.style.background = '#0C0C0C')}
-              >
-                Done
-                <span style={{ width: 5, height: 5, borderRadius: '50%', background: 'rgba(255,255,255,0.4)' }} />
-              </button>
-            </div>
-          )}
-
-            </motion.div>
-          </AnimatePresence>
-        </div>
-
-        {/* ── Footer nav ── */}
-        {step < 4 && (
-          <div style={{ borderTop: '1px solid rgba(12,12,12,0.06)', padding: '16px 32px', flexShrink: 0, background: 'white', display: 'flex', gap: '10px' }}>
-            {step > 1 && (
-              <button
-                type="button"
-                onClick={() => { setStep(s => (s - 1) as Step); setApiError('') }}
-                style={{
-                  padding: '15px 20px', border: '1px solid rgba(12,12,12,0.12)',
-                  background: 'transparent', cursor: 'pointer',
-                  fontFamily: 'var(--font-body)', fontWeight: 600, fontSize: '11px',
-                  letterSpacing: '0.1em', textTransform: 'uppercase', color: 'rgba(12,12,12,0.45)',
-                  transition: 'border-color 0.2s', flexShrink: 0,
-                }}
-                onMouseEnter={e => e.currentTarget.style.borderColor = 'rgba(12,12,12,0.35)'}
-                onMouseLeave={e => e.currentTarget.style.borderColor = 'rgba(12,12,12,0.12)'}
-              >
-                ← Back
-              </button>
-            )}
-
-            {step === 1 && (
-              <button
-                type="button" onClick={() => setStep(2)} disabled={!pack || !vehicle}
-                style={{ flex: 1, padding: '15px 24px', background: '#E84A0C', color: '#ffffff', border: 'none', cursor: 'pointer', fontFamily: 'var(--font-body)', fontWeight: 600, fontSize: '11px', letterSpacing: '0.1em', textTransform: 'uppercase', display: 'flex', alignItems: 'center', justifyContent: 'space-between', opacity: !pack || !vehicle ? 0.4 : 1, transition: 'background 0.2s' }}
-                onMouseEnter={e => { if (pack && vehicle) e.currentTarget.style.background = '#C53D08' }}
-                onMouseLeave={e => { if (pack && vehicle) e.currentTarget.style.background = '#E84A0C' }}
-              >
-                {!vehicle ? 'Select your vehicle size' : !pack ? 'Select a package' : 'Next: Schedule'}
-                <span style={{ width: 5, height: 5, borderRadius: '50%', background: 'rgba(255,255,255,0.5)' }} />
-              </button>
-            )}
-
-            {step === 2 && (
-              <button
-                type="submit" form="step2-form" disabled={!date || !time || !postcodeValid || !carRegValid}
-                onClick={() => { setPostcodeTouched(true); setCarRegTouched(true) }}
-                style={{ flex: 1, padding: '15px 24px', background: '#E84A0C', color: '#ffffff', border: 'none', cursor: 'pointer', fontFamily: 'var(--font-body)', fontWeight: 600, fontSize: '11px', letterSpacing: '0.1em', textTransform: 'uppercase', display: 'flex', alignItems: 'center', justifyContent: 'space-between', opacity: !date || !time || !postcodeValid || !carRegValid ? 0.4 : 1, transition: 'background 0.2s' }}
-                onMouseEnter={e => { if (date && time && postcodeValid && carRegValid) e.currentTarget.style.background = '#C53D08' }}
-                onMouseLeave={e => { if (date && time && postcodeValid && carRegValid) e.currentTarget.style.background = '#E84A0C' }}
-              >
-                {!date ? 'Select a date' : !time ? 'Select a time' : !postcodeValid ? 'Enter your postcode' : !carRegValid ? 'Enter vehicle registration' : 'Next: Your Details'}
-                <span style={{ width: 5, height: 5, borderRadius: '50%', background: 'rgba(255,255,255,0.5)' }} />
-              </button>
-            )}
-
-            {step === 3 && (
-              <button
-                type="submit" form="step3-form" disabled={submitting}
-                style={{ flex: 1, padding: '15px 24px', background: '#E84A0C', color: '#ffffff', border: 'none', cursor: 'pointer', fontFamily: 'var(--font-body)', fontWeight: 600, fontSize: '11px', letterSpacing: '0.1em', textTransform: 'uppercase', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '10px', opacity: submitting ? 0.7 : 1, transition: 'background 0.2s' }}
-                onMouseEnter={e => { if (!submitting) e.currentTarget.style.background = '#C53D08' }}
-                onMouseLeave={e => { if (!submitting) e.currentTarget.style.background = '#E84A0C' }}
-              >
-                {submitting ? (
-                  <><span className="animate-spin" style={{ width: 14, height: 14, border: '2px solid rgba(255,255,255,0.3)', borderTopColor: 'white', borderRadius: '50%', display: 'inline-block' }} />Sending...</>
-                ) : 'Confirm Booking'}
-              </button>
+                <button
+                  type="submit"
+                  disabled={!canContinue[step] || submitting}
+                  style={{ ...buttonStyle, opacity: !canContinue[step] || submitting ? 0.4 : 1 }}
+                >
+                  {submitting ? (
+                    <><span className="animate-spin" style={{ width: 14, height: 14, border: '2px solid rgba(255,255,255,0.3)', borderTopColor: 'white', borderRadius: '50%', display: 'inline-block' }} />Sending...</>
+                  ) : step === 'review' ? 'Send request' : priced ? `Continue · £${totalPrice}` : 'Continue'}
+                </button>
+              </>
             )}
           </div>
-        )}
+        </form>
       </motion.div>
     </div>
   )
