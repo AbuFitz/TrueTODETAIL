@@ -75,13 +75,6 @@ section { isolation: isolate; }
 }
 
 
-/* Footer logo: full size when the brand column is wide (phones, tablets),
-   scaled to fit the narrower column on laptop screens, never wrapping. */
-.footer-logo-text { font-size: 44px; }
-@media (min-width: 768px) {
-  .footer-logo-text { font-size: clamp(28px, 2.3vw + 2px, 37px); }
-}
-
 /* Town links: one column while the footer column is narrow, two when there is room. */
 .footer-areas { grid-template-columns: 1fr; }
 @media (min-width: 640px) and (max-width: 1023px) { .footer-areas { grid-template-columns: repeat(2, auto); } }

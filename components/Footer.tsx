@@ -54,35 +54,6 @@ export default function Footer({ onBookNow }: { onBookNow: () => void }) {
 
         {/* Col 1 — Brand */}
         <div>
-          <Link
-            href="/"
-            aria-label="True To Detail, home"
-            style={{ textDecoration: 'none', display: 'inline-flex', alignItems: 'center', gap: '0.23em', marginBottom: '20px', whiteSpace: 'nowrap', maxWidth: '100%' }}
-            className="footer-logo"
-          >
-            <span className="footer-logo-text" style={{
-              fontFamily: 'var(--font-display)',
-              letterSpacing: '0.05em', color: '#0C0C0C', lineHeight: 1,
-            }}>
-              TRUE TO
-            </span>
-            <span
-              aria-hidden
-              style={{
-                display: 'inline-block', width: '9px', height: '13px',
-                background: '#E84A0C',
-                borderRadius: '50% 50% 45% 45% / 55% 55% 45% 45%',
-                flexShrink: 0, marginBottom: '-3px',
-              }}
-            />
-            <span className="footer-logo-text" style={{
-              fontFamily: 'var(--font-display)',
-              letterSpacing: '0.05em', color: '#0C0C0C', lineHeight: 1,
-            }}>
-              DETAIL
-            </span>
-          </Link>
-
           <p style={{
             fontFamily: 'var(--font-body)', fontSize: '14px', lineHeight: 1.72,
             color: 'rgba(12,12,12,0.42)', marginBottom: '24px', maxWidth: '220px',
@@ -283,25 +254,24 @@ export default function Footer({ onBookNow }: { onBookNow: () => void }) {
         in-flow bottom bar (~60px), and the watermark below is taken out
         of flow (absolute) — without an explicit minHeight, overflow:
         hidden clips the box down to that ~60px, leaving only a sliver of
-        the watermark visible instead of the intended tall band it's
-        stamped into.
+        the watermark visible. It is tall enough for the whole word, so the
+        letters are never cut off at the bottom, and there is no rule above it.
       */}
       <div style={{
-        position: 'relative', overflow: 'hidden', minHeight: 'clamp(150px, 15vw, 230px)',
-        borderTop: '1px solid rgba(12,12,12,0.06)',
+        position: 'relative', overflow: 'hidden', minHeight: 'clamp(220px, 21vw, 360px)',
         display: 'flex', flexDirection: 'column', justifyContent: 'flex-end',
       }}>
         <div
           aria-hidden
           style={{
-            position: 'absolute', left: 0, right: 0, bottom: 'clamp(-28px, -3vw, -10px)',
+            position: 'absolute', left: 0, right: 0, bottom: 'clamp(8px, 1vw, 16px)',
             zIndex: 0, pointerEvents: 'none',
             display: 'flex', alignItems: 'center', gap: 'clamp(6px, 1vw, 18px)',
             fontFamily: 'var(--font-display)',
             // High floor on purpose — on mobile this should overflow off the
             // edges and get cropped by the wrapper's overflow: hidden, not
             // shrink down to politely fit the viewport.
-            fontSize: 'clamp(170px, 19vw, 300px)',
+            fontSize: 'clamp(190px, 17.4vw, 300px)',
             letterSpacing: '0.04em',
             color: 'rgba(12,12,12,0.05)',
             lineHeight: 0.85,

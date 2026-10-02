@@ -17,27 +17,13 @@ async function noSidewaysScroll(page: Page, label: string) {
 }
 
 for (const [w, h] of SIZES) {
-  test(`logos and layout fit at ${w}x${h}`, async ({ page }) => {
+  test(`pages fit at ${w}x${h}`, async ({ page }) => {
     await page.setViewportSize({ width: w, height: h })
     for (const path of PAGES) {
       await page.goto(path, { waitUntil: 'networkidle' })
       await noSidewaysScroll(page, `${path} at ${w}x${h}`)
-      // Footer logo stays on one line and inside its column.
-      const logo = page.locator('.footer-logo')
-      await logo.scrollIntoViewIfNeeded()
-      const box = await logo.boundingBox()
-      const oneLine = await page.evaluate(() => {
-        const el = document.querySelector('.footer-logo') as HTMLElement
-        const spans = [...el.querySelectorAll('.footer-logo-text')] as HTMLElement[]
-        return spans.every((s) => s.getBoundingClientRect().height < parseFloat(getComputedStyle(s).fontSize) * 1.4)
-      })
-      expect(oneLine, `footer logo wraps at ${w}x${h} on ${path}`).toBe(true)
-      expect(box!.x + box!.width, `footer logo overflows the screen at ${w}x${h}`).toBeLessThanOrEqual(w)
-      const inColumn = await page.evaluate(() => {
-        const el = document.querySelector('.footer-logo') as HTMLElement
-        return el.scrollWidth <= (el.parentElement as HTMLElement).clientWidth + 1
-      })
-      expect(inColumn, `footer logo wider than its column at ${w}x${h}`).toBe(true)
+      // The footer carries the watermark only, no logo of its own.
+      await expect(page.locator('footer a[aria-label="True To Detail, home"]')).toHaveCount(0)
     }
   })
 
