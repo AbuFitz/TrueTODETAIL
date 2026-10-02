@@ -3,6 +3,7 @@ import { extractEntitiesGemini, generateResponseGemini, updateSummaryGemini, Gem
 import { extractEntitiesGroq, generateResponseGroq, updateSummaryGroq, GroqUnavailableError } from '@/lib/chat/groq'
 import { extractEntitiesRuleBased, runRuleBasedTurn } from '@/lib/chat/rule-based'
 import { mergeState, normaliseMessage, sanitizeState } from '@/lib/chat/state'
+import { INJECTION_REPLY, isPromptInjection, replyProblems } from '@/lib/chat/guard'
 import { withUkWording } from '@/lib/chat/uk'
 import { allowRequest, clientIp } from '@/lib/rateLimit'
 import type { ChatTurn, ConversationState, ChatAction } from '@/lib/chat/types'
@@ -130,6 +131,13 @@ async function runLlmTurn(provider: LlmProvider, incomingState: ConversationStat
   // next tier gets a go instead of the customer getting a canned apology.
   if (!result.text?.trim() && !result.action) throw new Error('model returned an empty reply')
 
+  // Nothing a model says reaches a customer without passing the reply checks;
+  // a failed one is treated like any other failed turn and the next tier answers.
+  if (result.text?.trim()) {
+    const problems = replyProblems(result.text)
+    if (problems.length) throw new Error(`reply failed the checks: ${problems.join('; ')}`)
+  }
+
   return {
     reply: result.text?.trim() || (result.action?.type === 'open_booking'
       ? "I've put that together for you. Hit Book Now to pick your date and send the request."
@@ -182,6 +190,14 @@ export async function POST(req: NextRequest) {
   const trimmedMessage = normaliseMessage(message)
   if (!trimmedMessage) {
     return NextResponse.json({ error: 'Missing message' }, { status: 400 })
+  }
+  // Attempts to change the rules or pull out the instructions are answered here, without a model.
+  if (isPromptInjection(trimmedMessage)) {
+    return NextResponse.json({
+      reply: INJECTION_REPLY,
+      conversationState: incomingState,
+      engine: 'rules' as Engine,
+    })
   }
   let result: TurnResult | null = null
   let engine: Engine = 'rules'
