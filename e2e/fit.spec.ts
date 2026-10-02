@@ -43,7 +43,7 @@ for (const [w, h] of SIZES) {
     expect(box.y + box.height, 'popup runs off the bottom of the screen').toBeLessThanOrEqual(h + 1)
     await noSidewaysScroll(page, `booking popup at ${w}x${h}`)
     // The step button must be reachable without scrolling the page.
-    const next = page.getByTestId('booking-modal').getByRole('button', { name: /Select your vehicle size|Next|Confirm/ }).last()
+    const next = page.getByTestId('booking-modal').getByRole('button', { name: /Continue|Send request|Done/ }).last()
     const nb = (await next.boundingBox())!
     expect(nb.y + nb.height, 'the popup button is below the screen').toBeLessThanOrEqual(h + 1)
     await page.keyboard.press('Escape')
